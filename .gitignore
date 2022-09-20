@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,gradle,intellij,visualstudiocode,python,react,windows,git
 
 # Spring Cloud Config
-./backend/config-server/src/main/resources/application.yml
+./backend/config-service/src/main/resources/application.yml
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
