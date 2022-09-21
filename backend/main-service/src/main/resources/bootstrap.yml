@@ -4,4 +4,13 @@ spring:
       uri: http://127.0.0.1:8888
       name: main-service
   profiles:
-    active: dev
+    active: local
+    group:
+      "local": "console-logging"
+      "dev": "file-logging,console-logging,performance-logging"
+      "prod": "file-logging"
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    root: info
