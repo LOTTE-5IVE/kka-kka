@@ -1,8 +1,0 @@
-spring:
-  application:
-    name: main-service
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health, busrefresh
