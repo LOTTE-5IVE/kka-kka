@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @AllArgsConstructor
 public class NaverClient {
 
+    private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String GRANT_TYPE = "authorization_code";
     private static final String ACCESS_TOKEN = "access_token";
     private static final String BEARER = "Bearer ";
@@ -24,7 +25,7 @@ public class NaverClient {
     public NaverUserProfile getUserDetail(SocialProviderCodeDto socialProviderCodeDto) {
         final String accessToken = getAccessToken(socialProviderCodeDto.getCode());
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", BEARER + accessToken);
+        headers.add(AUTHORIZATION_HEADER, BEARER + accessToken);
 
         final ResponseEntity<String> response = restTemplate.exchange(
                 naverOauthInfo.getProfileRequestUrl(),
