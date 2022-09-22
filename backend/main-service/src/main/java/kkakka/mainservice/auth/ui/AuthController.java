@@ -19,9 +19,9 @@ public class AuthController {
 
     @GetMapping("/login/token")
     public ResponseEntity<Void> login(
-//            @RequestBody CodeRequest codeRequest
+            @RequestBody SocialProviderCodeRequest socialProviderCodeRequest
     ) {
-        authService.createToken();
+        authService.createToken(socialProviderCodeRequest.toDto());
         return ResponseEntity.ok().build();
     }
 }

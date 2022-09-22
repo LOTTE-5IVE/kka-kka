@@ -1,8 +1,7 @@
 package kkakka.mainservice.auth.infrastructure;
 
+import kkakka.mainservice.auth.application.dto.SocialProviderCodeDto;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,19 +16,13 @@ public class NaverClient {
     private static final String GRANT_TYPE = "authorization_code";
     private static final String ACCESS_TOKEN = "access_token";
     private static final String BEARER = "Bearer ";
-    private static final String code = "";
-    private static final String mytoken = "";
-    private static final Logger log = LoggerFactory.getLogger(NaverClient.class);
 
     private final ClientResponseConverter converter;
     private final RestTemplate restTemplate;
     private final NaverOauthInfo naverOauthInfo;
 
-    public NaverUserProfile getUserDetail() {
-        // TODO: 실제 토큰으로 바꾸기
-        // final String accessToken = getAccessToken();
-
-        final String accessToken = mytoken;
+    public NaverUserProfile getUserDetail(SocialProviderCodeDto socialProviderCodeDto) {
+        final String accessToken = getAccessToken(socialProviderCodeDto.getCode());
         final HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", BEARER + accessToken);
 
@@ -42,7 +35,9 @@ public class NaverClient {
         return converter.extractDataAsAccount(response.getBody());
     }
 
-    public String getAccessToken() {
+    public String getAccessToken(String code) {
+        final HttpHeaders headers = new HttpHeaders();
+
         final ResponseEntity<String> response = restTemplate.exchange(
                 naverOauthInfo.getAccessTokenRequestUrl(),
                 HttpMethod.POST,
@@ -53,7 +48,8 @@ public class NaverClient {
                                 naverOauthInfo.getClientKey(),
                                 code,
                                 naverOauthInfo.getState()
-                        ))
+                        )),
+                        headers
                 ),
                 String.class
         );
