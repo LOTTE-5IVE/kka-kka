@@ -1,15 +1,25 @@
 package kkakka.mainservice.auth.application;
 
-import kkakka.mainservice.auth.application.dto.SocialProviderCodeDto;
+import kkakka.mainservice.auth.infrastructure.NaverClient;
+import kkakka.mainservice.auth.ui.dto.CodeRequest;
 import kkakka.mainservice.auth.ui.dto.TokenDto;
+import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@AllArgsConstructor
 public class AuthService {
 
-    public TokenDto createToken(SocialProviderCodeDto socialProviderCodeDto) {
+    private final NaverClient naverClient;
+    private final Logger log = LoggerFactory.getLogger(AuthService.class);
+
+    public TokenDto createToken() {
+        final String accessToken = naverClient.getAccessToken();
+        log.info(accessToken);
         return TokenDto.create("empty-token");
     }
 }
