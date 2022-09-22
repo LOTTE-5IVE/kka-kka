@@ -6,9 +6,12 @@ import kkakka.mainservice.product.domain.Product;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,18 +24,28 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<ResponseCategory> getProductsByCategoryId(Long categoryId) {
+    public Page<ResponseCategory> getProductsByCategoryId(Long categoryId, Pageable pageable) {
 
-        List<Product> products = categoryRepository.findByCategoryId(categoryId);
+
+        Page<Product> products = categoryRepository.findByCategoryId(categoryId,pageable);
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        List<ResponseCategory> result = new ArrayList<>();
-        products.forEach(v -> {
-            result.add(mapper.map(v, ResponseCategory.class));
-        });
+        Page<ResponseCategory> responseCategories = products.map(p ->
+                        new ResponseCategory(p.getProductId(),
+                                p.getName(),
+                                p.getPrice(),
+                                p.getImage_url(),
+                                p.getDiscount(),
+                                p.getRegistered_at()
+                        ));
 
-        return result;
+//        List<ResponseCategory> result = new ArrayList<>();
+//        products.forEach(v -> {
+//            result.add(mapper.map(v, ResponseCategory.class));
+//        });
+
+        return responseCategories;
     }
 }

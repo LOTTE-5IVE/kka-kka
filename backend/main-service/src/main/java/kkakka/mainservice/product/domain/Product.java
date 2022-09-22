@@ -1,7 +1,8 @@
 package kkakka.mainservice.product.domain;
 
 import kkakka.mainservice.category.domain.Category;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -10,19 +11,19 @@ import java.util.Date;
 
 @Entity
 @Table(name = "product")
-@Data
+@Getter
 @NoArgsConstructor
 public class Product {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PRODUCT_ID")
     private Long productId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CATEGORY_ID")
     private Category category;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String name;
     private int price;
     private int stock;

@@ -1,6 +1,8 @@
 package kkakka.mainservice.category.domain;
 
 import kkakka.mainservice.product.domain.Product;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -10,28 +12,18 @@ import java.util.List;
 @Entity
 @Table(name = "category")
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class Category {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CATEGORY_ID")
+    @Column(name = "CATEGORY_ID", nullable = false)
     private Long categoryId;
 
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "category")
-    private List<Product> productList = new ArrayList<Product>();
-
-    public List<Product> getProductList() {
-        return productList;
-    }
-
     public Category(String name) {
-        this.name = name;
-    }
-
-    public Category(Long categoryId, String name) {
-        this.categoryId = categoryId;
         this.name = name;
     }
 }
