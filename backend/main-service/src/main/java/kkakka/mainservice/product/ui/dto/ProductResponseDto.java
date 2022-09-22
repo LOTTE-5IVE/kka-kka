@@ -1,6 +1,5 @@
 package kkakka.mainservice.product.ui.dto;
 
-import kkakka.mainservice.category.domain.Category;
 import lombok.Data;
 
 @Data

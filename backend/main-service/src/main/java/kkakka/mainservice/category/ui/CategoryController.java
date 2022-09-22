@@ -4,11 +4,10 @@ import kkakka.mainservice.category.application.CategoryService;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.category.ui.dto.ResponseCategory;
-import kkakka.mainservice.product.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,17 +44,14 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}")
-    public ResponseEntity<List<ResponseCategory>> getCategories(@PathVariable("categoryId") Long categoryId) {
-        Pageable pageable = PageRequest.of(0,3);
+    public ResponseEntity<List<ResponseCategory>> getCategories(@PathVariable("categoryId") Long categoryId,
+                                                                @PageableDefault(size = 2) Pageable pageable) {
+        Page<ResponseCategory> result = categoryService.getProductsByCategoryId(categoryId, pageable);
 
-//        List<ResponseCategory> result = categoryService.getProductsByCategoryId(categoryId,pageable);
-        Page<ResponseCategory> result = categoryService.getProductsByCategoryId(categoryId,pageable);
-
-        System.out.println("getTotalPages: " + result.getTotalPages());
-        System.out.println("getTotalElements: " + result.getTotalElements());
-        System.out.println("getNumber: " + result.getNumber());
+        System.out.println("전체 페이지 수: " + result.getTotalPages());
+        System.out.println("전체 상품목록 수: " + result.getTotalElements());
+        System.out.println("현재 페이지(기본0) : " + result.getNumber());
         System.out.println("hasNext: " + result.hasNext());
-
 
         return ResponseEntity.status(HttpStatus.OK).body(result.getContent());
     }
