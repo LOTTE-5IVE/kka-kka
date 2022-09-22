@@ -38,4 +38,12 @@ public class Product {
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     private Date registered_at;
 
+    public Product(Category category, String name, int price, int stock, String image_url, String detail_image_url) {
+        this.category = category;
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+        this.image_url = image_url;
+        this.detail_image_url = detail_image_url;
+    }
 }

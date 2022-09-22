@@ -1,5 +1,6 @@
 package kkakka.mainservice.product.ui;
 
+import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,11 @@ public class ProductController {
 
     @PostConstruct
     public void init() {
+        Category category = new Category(1L,"비스킷/샌드");
+        productRepository.save(new Product(category,"롯데 제로 초콜릿칩 쿠키 168g",4480,10,"https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png","상세URL"));
+        productRepository.save(new Product(category,"롯데 제로 초콜릿칩 쿠키 168g",4480,10,"https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png","상세URL"));
+        productRepository.save(new Product(category,"롯데 제로 초콜릿칩 쿠키 168g",4480,10,"https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png","상세URL"));
+        productRepository.save(new Product(category,"롯데 제로 초콜릿칩 쿠키 168g",4480,10,"https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png","상세URL"));
+        productRepository.save(new Product(category,"롯데 제로 초콜릿칩 쿠키 168g",4480,10,"https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png","상세URL"));
     }
 }
