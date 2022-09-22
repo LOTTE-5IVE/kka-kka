@@ -3,6 +3,7 @@ package kkakka.mainservice.auth.infrastructure;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,14 @@ public class ClientResponseConverter {
         try {
             return objectMapper.readTree(json).get(dataName).asText();
         } catch (JsonProcessingException e) {
+            throw new IllegalStateException();
+        }
+    }
+
+    public NaverUserProfile extractDataAsAccount(String json) {
+        try {
+            return objectMapper.readValue(json, NaverUserProfile.class);
+        } catch (IOException e) {
             throw new IllegalStateException();
         }
     }

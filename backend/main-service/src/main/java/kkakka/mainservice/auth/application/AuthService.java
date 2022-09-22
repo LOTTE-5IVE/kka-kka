@@ -1,7 +1,7 @@
 package kkakka.mainservice.auth.application;
 
 import kkakka.mainservice.auth.infrastructure.NaverClient;
-import kkakka.mainservice.auth.ui.dto.CodeRequest;
+import kkakka.mainservice.auth.infrastructure.NaverUserProfile;
 import kkakka.mainservice.auth.ui.dto.TokenDto;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -18,8 +18,7 @@ public class AuthService {
     private final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     public TokenDto createToken() {
-        final String accessToken = naverClient.getAccessToken();
-        log.info(accessToken);
+        final NaverUserProfile userDetail = naverClient.getUserDetail();
         return TokenDto.create("empty-token");
     }
 }
