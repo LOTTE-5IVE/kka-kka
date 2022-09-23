@@ -1,8 +1,9 @@
 package kkakka.mainservice.auth.infrastructure.naver;
 
+import kkakka.mainservice.auth.application.SocialClient;
+import kkakka.mainservice.auth.application.UserProfile;
 import kkakka.mainservice.auth.application.dto.SocialProviderCodeDto;
 import kkakka.mainservice.auth.infrastructure.ClientResponseConverter;
-import kkakka.mainservice.auth.infrastructure.NaverUserProfile;
 import kkakka.mainservice.auth.infrastructure.naver.dto.NaverTokenRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -14,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 @AllArgsConstructor
-public class NaverClient {
+public class NaverClient implements SocialClient {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String GRANT_TYPE = "authorization_code";
@@ -25,7 +26,7 @@ public class NaverClient {
     private final RestTemplate restTemplate;
     private final NaverOauthInfo naverOauthInfo;
 
-    public NaverUserProfile getUserDetail(SocialProviderCodeDto socialProviderCodeDto) {
+    public UserProfile getUserProfile(SocialProviderCodeDto socialProviderCodeDto) {
         final String accessToken = getAccessToken(socialProviderCodeDto.getCode());
         final HttpHeaders headers = new HttpHeaders();
         headers.add(AUTHORIZATION_HEADER, BEARER + accessToken);
@@ -39,7 +40,7 @@ public class NaverClient {
         return converter.extractDataAsAccount(response.getBody());
     }
 
-    public String getAccessToken(String code) {
+    private String getAccessToken(String code) {
         final HttpHeaders headers = new HttpHeaders();
 
         final ResponseEntity<String> response = restTemplate.exchange(

@@ -2,6 +2,7 @@ package kkakka.mainservice.auth.ui;
 
 import kkakka.mainservice.auth.application.AuthService;
 import kkakka.mainservice.auth.ui.dto.SocialProviderCodeRequest;
+import kkakka.mainservice.auth.ui.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +18,10 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login/token")
-    public ResponseEntity<Void> login(
+    public ResponseEntity<TokenDto> login(
             @RequestBody SocialProviderCodeRequest socialProviderCodeRequest
     ) {
-        authService.createToken(socialProviderCodeRequest.toDto());
-        return ResponseEntity.ok().build();
+        final TokenDto token = authService.createToken(socialProviderCodeRequest.toDto());
+        return ResponseEntity.ok().body(token);
     }
 }

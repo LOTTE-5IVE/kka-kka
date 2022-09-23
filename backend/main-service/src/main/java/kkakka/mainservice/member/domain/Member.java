@@ -7,7 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import kkakka.mainservice.auth.infrastructure.NaverUserProfile;
+import kkakka.mainservice.auth.application.UserProfile;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,9 +40,9 @@ public class Member {
         return new Member(id, provider, name, email, phone, address, ageGroup, grade);
     }
 
-    public static Member create(NaverUserProfile naverUserProfile, Provider provider) {
-        return new Member(null, provider, naverUserProfile.getName(),
-                naverUserProfile.getEmail(), naverUserProfile.getPhone(), "",
-                naverUserProfile.getAgeGroup(), Grade.BRONZE);
+    public static Member create(UserProfile userProfile, Provider provider) {
+        return new Member(null, provider, userProfile.getName(),
+                userProfile.getEmail(), userProfile.getPhone(), "",
+                userProfile.getAgeGroup(), Grade.BRONZE);
     }
 }

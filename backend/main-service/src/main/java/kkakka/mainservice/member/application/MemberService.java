@@ -1,6 +1,6 @@
 package kkakka.mainservice.member.application;
 
-import kkakka.mainservice.auth.infrastructure.NaverUserProfile;
+import kkakka.mainservice.auth.application.UserProfile;
 import kkakka.mainservice.member.domain.Member;
 import kkakka.mainservice.member.domain.Provider;
 import kkakka.mainservice.member.domain.repository.MemberRepository;
@@ -16,7 +16,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Member createMember(NaverUserProfile userProfile) {
+    public Member createMember(UserProfile userProfile) {
         return memberRepository.save(
                 Member.create(
                         userProfile,
