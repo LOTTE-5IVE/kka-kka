@@ -22,15 +22,15 @@ public class Product {
 
     @Column(nullable = false)
     private String name;
-    private int price;
-    private int stock;
+    private Integer price;
+    private Integer stock;
 
     @Column(nullable = true)
     private String image_url;
     private String detail_image_url;
     private String nutrition_info_url;
     @ColumnDefault("0")
-    private int discount;
+    private Integer discount;
 
     @Column(nullable = false, updatable = false, insertable = false)
     @ColumnDefault(value = "CURRENT_TIMESTAMP")

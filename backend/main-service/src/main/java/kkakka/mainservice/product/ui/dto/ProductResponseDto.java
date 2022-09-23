@@ -8,8 +8,8 @@ public class ProductResponseDto {
     private Long productId;
     private String categoryName;
     private String name;
-    private int price;
-    private int stock;
+    private Integer price;
+    private Integer stock;
     private String image_url;
     private String detail_image_url;
     private String nutrition_info_url;

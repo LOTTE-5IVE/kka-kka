@@ -10,8 +10,8 @@ import java.util.Date;
 public class ResponseCategory {
     private Long productId;
     private String name;
-    private int price;
+    private Integer price;
     private String image_url;
-    private int discount;
+    private Integer discount;
     private Date registered_at;
 }

@@ -1,5 +1,7 @@
 package kkakka.mainservice.cart.domain;
 
+import kkakka.mainservice.member.domain.Member;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,5 +10,8 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-    
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
+    private Member member;
 }
