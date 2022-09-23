@@ -22,10 +22,9 @@ import java.util.List;
 @RequestMapping("/category")
 public class CategoryController {
 
-    CategoryRepository categoryRepository;
-    CategoryService categoryService;
+    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
-    @Autowired
     public CategoryController(CategoryRepository categoryRepository, CategoryService categoryService) {
         this.categoryRepository = categoryRepository;
         this.categoryService = categoryService;

@@ -1,6 +1,7 @@
 package kkakka.mainservice.cart.domain;
 
 import kkakka.mainservice.product.domain.Product;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -8,16 +9,15 @@ import javax.persistence.*;
 @Entity
 @Table(name = "cartitem")
 @NoArgsConstructor
+@Getter
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CART_ID")
     private Cart cart;
-    @OneToOne
-    @JoinColumn(name = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
     private Integer coupon_id;
@@ -32,4 +32,13 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", coupon_id=" + coupon_id +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
+    }
 }
