@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    @Query(value = "SELECT p from Product p join fetch p.category where p.category.categoryId = :categoryId"
-            , countQuery = "SELECT count(p) FROM Product p where p.category.categoryId = :categoryId")
+    @Query(value = "SELECT p from Product p join fetch p.category where p.category.id = :categoryId"
+            , countQuery = "SELECT count(p) FROM Product p where p.category.id = :categoryId")
     Page<Product> findByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
 
 }

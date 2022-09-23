@@ -1,7 +1,7 @@
 package kkakka.mainservice.category.application;
 
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
-import kkakka.mainservice.category.ui.dto.ResponseCategory;
+import kkakka.mainservice.category.ui.dto.ResponseCategoryProducts;
 import kkakka.mainservice.product.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,17 +18,17 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Page<ResponseCategory> getProductsByCategoryId(Long categoryId, Pageable pageable) {
+    public Page<ResponseCategoryProducts> getProductsByCategoryId(Long categoryId, Pageable pageable) {
 
         Page<Product> products = categoryRepository.findByCategoryId(categoryId, pageable);
-        Page<ResponseCategory> responseCategories = products.map(p ->
-                new ResponseCategory(p.getProductId(),
+        Page<ResponseCategoryProducts> responseCategoryProducts = products.map(p ->
+                new ResponseCategoryProducts(p.getId(),
                         p.getName(),
                         p.getPrice(),
                         p.getImage_url(),
                         p.getDiscount(),
                         p.getRegistered_at()
                 ));
-        return responseCategories;
+        return responseCategoryProducts;
     }
 }

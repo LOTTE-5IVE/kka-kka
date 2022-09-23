@@ -8,6 +8,8 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ProductService {
 
@@ -18,14 +20,14 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public ProductResponseDto getProductByProductId(Long productId) {
-        Product productDetail = productRepository.findByProductId(productId);
+    public ProductResponseDto getProductDetail(Long productId) {
+        Optional<Product> productDetail = productRepository.findById(productId);
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        ProductResponseDto result = mapper.map(productDetail, ProductResponseDto.class);
+        ProductResponseDto result = mapper.map(productDetail.get(), ProductResponseDto.class);
 
-        result.setCategoryName(productDetail.getCategory().getName());
+        result.setCategoryName(productDetail.get().getCategory().getName());
 
         return result;
     }

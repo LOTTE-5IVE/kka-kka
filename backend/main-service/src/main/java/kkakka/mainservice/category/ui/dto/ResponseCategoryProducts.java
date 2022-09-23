@@ -7,8 +7,8 @@ import java.util.Date;
 
 @Data
 @AllArgsConstructor
-public class ResponseCategory {
-    private Long productId;
+public class ResponseCategoryProducts {
+    private Long id;
     private String name;
     private Integer price;
     private String image_url;

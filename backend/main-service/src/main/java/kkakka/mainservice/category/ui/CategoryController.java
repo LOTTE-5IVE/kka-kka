@@ -3,7 +3,7 @@ package kkakka.mainservice.category.ui;
 import kkakka.mainservice.category.application.CategoryService;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
-import kkakka.mainservice.category.ui.dto.ResponseCategory;
+import kkakka.mainservice.category.ui.dto.ResponseCategoryProducts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,9 +44,9 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}")
-    public ResponseEntity<List<ResponseCategory>> getCategories(@PathVariable("categoryId") Long categoryId,
-                                                                @PageableDefault(size = 2) Pageable pageable) {
-        Page<ResponseCategory> result = categoryService.getProductsByCategoryId(categoryId, pageable);
+    public ResponseEntity<List<ResponseCategoryProducts>> getCategories(@PathVariable("categoryId") Long categoryId,
+                                                                        @PageableDefault(size = 2) Pageable pageable) {
+        Page<ResponseCategoryProducts> result = categoryService.getProductsByCategoryId(categoryId, pageable);
 
         System.out.println("전체 페이지 수: " + result.getTotalPages());
         System.out.println("전체 상품목록 수: " + result.getTotalElements());

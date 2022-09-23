@@ -11,7 +11,6 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-    @OneToOne
-    private Member member;
+//    @OneToOne
+//    private Member member;
 }
