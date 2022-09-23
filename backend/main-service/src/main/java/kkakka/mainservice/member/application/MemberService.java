@@ -16,6 +16,12 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
+    public Member findOrCreateMember(UserProfile userProfile) {
+        return memberRepository
+                .findByProviderId(userProfile.getId())
+                .orElseGet(() -> createMember(userProfile));
+    }
+
     public Member createMember(UserProfile userProfile) {
         return memberRepository.save(
                 Member.create(

@@ -23,8 +23,7 @@ public class AuthService {
                 socialProviderCodeDto.getProviderName());
         final UserProfile userProfile = socialClient.getUserProfile(socialProviderCodeDto);
 
-        final Member member = memberService.createMember(userProfile);
+        final Member member = memberService.findOrCreateMember(userProfile);
         return TokenDto.create(jwtTokenProvider.generateToken(member.getId().toString()));
     }
-
 }

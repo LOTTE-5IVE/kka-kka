@@ -1,5 +1,6 @@
 package kkakka.mainservice.member.domain;
 
+import java.util.Objects;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -44,5 +45,22 @@ public class Member {
         return new Member(null, provider, userProfile.getName(),
                 userProfile.getEmail(), userProfile.getPhone(), "",
                 userProfile.getAgeGroup(), Grade.BRONZE);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Member member = (Member) o;
+        return id.equals(member.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

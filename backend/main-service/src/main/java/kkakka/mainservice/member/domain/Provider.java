@@ -1,5 +1,6 @@
 package kkakka.mainservice.member.domain;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
@@ -24,5 +25,23 @@ public class Provider {
 
     public static Provider create(String providerId, ProviderName providerName) {
         return new Provider(providerId, providerName);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Provider provider = (Provider) o;
+        return Objects.equals(providerId, provider.providerId)
+                && providerName == provider.providerName;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(providerId, providerName);
     }
 }

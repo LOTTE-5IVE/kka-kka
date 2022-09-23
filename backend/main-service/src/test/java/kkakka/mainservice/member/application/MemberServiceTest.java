@@ -15,7 +15,7 @@ class MemberServiceTest {
     @Autowired
     MemberService memberService;
 
-    @DisplayName("회원 생성 테스트 - 성공")
+    @DisplayName("회원 생성 - 성공")
     @Test
     void createMemberSuccess() {
         // given
@@ -27,5 +27,21 @@ class MemberServiceTest {
 
         // then
         assertThat(member.getId()).isNotNull();
+    }
+
+    @DisplayName("회원 조회 혹은 생성 - 성공")
+    @Test
+    void findOrCreateMemberSuccess(){
+        // given
+        final NaverUserProfile 네이버회원01 = new NaverUserProfile("1234", "네이버회원01", "test@email.com",
+                "20~29", "010-0000-0000");
+
+        // when
+        final Member createdMember = memberService.findOrCreateMember(네이버회원01);
+        final Member findMember = memberService.findOrCreateMember(네이버회원01);
+
+        // then
+        assertThat(createdMember.getProvider().equals(findMember.getProvider())).isTrue();
+        assertThat(createdMember.equals(findMember)).isTrue();
     }
 }
