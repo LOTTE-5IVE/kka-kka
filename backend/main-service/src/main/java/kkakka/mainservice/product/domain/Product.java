@@ -15,8 +15,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PRODUCT_ID")
-    private Long productId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
