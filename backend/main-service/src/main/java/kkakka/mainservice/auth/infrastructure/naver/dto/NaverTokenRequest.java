@@ -1,4 +1,4 @@
-package kkakka.mainservice.auth.infrastructure;
+package kkakka.mainservice.auth.infrastructure.naver.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

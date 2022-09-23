@@ -1,9 +1,8 @@
 package kkakka.mainservice.auth.application;
 
 import kkakka.mainservice.auth.application.dto.SocialProviderCodeDto;
-import kkakka.mainservice.auth.infrastructure.NaverClient;
+import kkakka.mainservice.auth.infrastructure.naver.NaverClient;
 import kkakka.mainservice.auth.infrastructure.NaverUserProfile;
-import kkakka.mainservice.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.auth.ui.dto.TokenDto;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

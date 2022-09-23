@@ -4,10 +4,12 @@ import kkakka.mainservice.auth.application.dto.SocialProviderCodeDto;
 import kkakka.mainservice.auth.domain.ProviderName;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 public class SocialProviderCodeRequest {
 
     private String code;

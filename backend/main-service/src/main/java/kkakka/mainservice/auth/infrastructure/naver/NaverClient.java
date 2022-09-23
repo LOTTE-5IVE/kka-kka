@@ -1,6 +1,9 @@
-package kkakka.mainservice.auth.infrastructure;
+package kkakka.mainservice.auth.infrastructure.naver;
 
 import kkakka.mainservice.auth.application.dto.SocialProviderCodeDto;
+import kkakka.mainservice.auth.infrastructure.ClientResponseConverter;
+import kkakka.mainservice.auth.infrastructure.NaverUserProfile;
+import kkakka.mainservice.auth.infrastructure.naver.dto.NaverTokenRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

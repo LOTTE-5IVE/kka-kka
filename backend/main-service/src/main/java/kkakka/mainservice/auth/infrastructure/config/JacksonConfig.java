@@ -1,6 +1,5 @@
-package kkakka.mainservice.auth.infrastructure;
+package kkakka.mainservice.auth.infrastructure.config;
 
-import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
