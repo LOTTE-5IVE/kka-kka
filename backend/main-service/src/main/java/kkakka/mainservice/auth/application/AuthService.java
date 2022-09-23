@@ -18,6 +18,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberService memberService;
 
+    @Transactional
     public TokenDto createToken(SocialProviderCodeDto socialProviderCodeDto) {
         final SocialClient socialClient = socialLoginStrategyFactory.mapSocialClient(
                 socialProviderCodeDto.getProviderName());
