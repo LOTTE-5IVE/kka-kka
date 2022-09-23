@@ -19,8 +19,8 @@ public class CartController {
     }
 
     @PostMapping("/carts")
-    public ResponseEntity<String> saveCartItem(@RequestBody CartRequestDto cartItem) {
-        cartService.saveCartItem(cartItem);
+    public ResponseEntity<String> saveCartItem(@RequestBody CartRequestDto cartRequestDto) {
+        cartService.saveCartItem(cartRequestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("success");
     }

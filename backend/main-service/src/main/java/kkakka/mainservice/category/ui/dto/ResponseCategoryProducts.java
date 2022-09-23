@@ -14,6 +14,6 @@ public class ResponseCategoryProducts {
     private String name;
     private Integer price;
     private String imageUrl;
-    private Integer disCount;
+    private Integer discount;
     private Date registeredAt;
 }

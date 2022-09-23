@@ -29,29 +29,28 @@ public class CartService {
         this.memberRepository = memberRepository;
     }
 
-    public String saveCartItem(CartRequestDto cartItem) {
+    public String saveCartItem(CartRequestDto cartRequestDto) {
 
         /* 테스트 데이터 */
-        Optional<Member> member = memberRepository.findById(cartItem.getMemberId());
+        Optional<Member> member = memberRepository.findById(cartRequestDto.getMemberId());
 
         /* 로그인 상태 체크 */
 
         /* 장바구니 존재 유무 체크 ex) 장바구니에 담아둔 아이템 있는지 */
         Cart cart = new Cart();
-        cart = cartRepository.findByMemberId(cartItem.getMemberId());
+        cart = cartRepository.findByMemberId(cartRequestDto.getMemberId());
         if (cart == null) {
             cartRepository.save(new Cart(member.get()));
-            cart = cartRepository.findByMemberId(cartItem.getMemberId());
+            cart = cartRepository.findByMemberId(cartRequestDto.getMemberId());
         }
 
         /* 현재 장바구니에 동일한 상품 있는지 체크 */
-        CartItem item = cartItemRepository.findByMemberIdandProductId(member.get().getId(), cartItem.getProductId()); // Test용 Member
+        CartItem item = cartItemRepository.findByMemberIdandProductId(member.get().getId(), cartRequestDto.getProductId()); // Test용 Member
 //        System.out.println(item.toString());
 
         /* 장바구니 아이템 추가 */
-        Optional<Product> product = productRepository.findById(cartItem.getProductId());
-
-        cartItemRepository.save(new CartItem(cart, product.get(), cartItem.getQuantity()));
+        Optional<Product> product = productRepository.findById(cartRequestDto.getProductId());
+        cartItemRepository.save(new CartItem(cart, product.get(), cartRequestDto.getQuantity()));
 
         return "";
     }

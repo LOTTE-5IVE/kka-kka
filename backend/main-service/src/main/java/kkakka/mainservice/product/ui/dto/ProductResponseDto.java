@@ -13,7 +13,7 @@ public class ProductResponseDto {
     private String imageUrl;
     private String detailImageUrl;
     private String nutritionInfoUrl;
-    private int disCount;
+    private int discount;
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;

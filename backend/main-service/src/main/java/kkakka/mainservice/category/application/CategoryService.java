@@ -3,7 +3,6 @@ package kkakka.mainservice.category.application;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.category.ui.dto.ResponseCategoryProducts;
 import kkakka.mainservice.product.domain.Product;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class CategoryService {
                 new ResponseCategoryProducts(p.getId(),
                         p.getName(),
                         p.getPrice(),
-                        p.getImage_url(),
+                        p.getImageUrl(),
                         p.getDiscount(),
                         p.getRegistered_at()
                 ));
