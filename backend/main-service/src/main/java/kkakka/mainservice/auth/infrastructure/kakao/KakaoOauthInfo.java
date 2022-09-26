@@ -7,7 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource("classpath:bootstrap.yml")
 @NoArgsConstructor
 @Getter
 public class KakaoOauthInfo {
