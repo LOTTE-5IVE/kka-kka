@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Map;
+import kkakka.mainservice.auth.application.UserProfile;
+import kkakka.mainservice.auth.infrastructure.naver.NaverUserProfile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -33,10 +35,9 @@ public class ClientResponseConverter {
         }
     }
 
-    public NaverUserProfile extractDataAsAccount(String json) {
+    public <T> T extractDataAsAccount(String json, Class<T> profileType) {
         try {
-            final JsonNode jsonNode = objectMapper.readTree(json).get("response");
-            return objectMapper.treeToValue(jsonNode, NaverUserProfile.class);
+            return objectMapper.readValue(json, profileType);
         } catch (IOException e) {
             throw new IllegalStateException();
         }

@@ -20,7 +20,7 @@ public class NaverClient implements SocialClient {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String GRANT_TYPE = "authorization_code";
     private static final String ACCESS_TOKEN = "access_token";
-    private static final String BEARER = "Bearer ";
+    private static final String BEARER = "Bearer %s";
 
     private final ClientResponseConverter converter;
     private final RestTemplate restTemplate;
@@ -29,7 +29,7 @@ public class NaverClient implements SocialClient {
     public UserProfile getUserProfile(SocialProviderCodeDto socialProviderCodeDto) {
         final String accessToken = getAccessToken(socialProviderCodeDto.getCode());
         final HttpHeaders headers = new HttpHeaders();
-        headers.add(AUTHORIZATION_HEADER, BEARER + accessToken);
+        headers.add(AUTHORIZATION_HEADER, String.format(BEARER, accessToken));
 
         final ResponseEntity<String> response = restTemplate.exchange(
                 naverOauthInfo.getProfileRequestUrl(),
@@ -37,7 +37,7 @@ public class NaverClient implements SocialClient {
                 new HttpEntity<>(headers),
                 String.class
         );
-        return converter.extractDataAsAccount(response.getBody());
+        return converter.extractDataAsAccount(response.getBody(), NaverUserProfile.class);
     }
 
     private String getAccessToken(String code) {
