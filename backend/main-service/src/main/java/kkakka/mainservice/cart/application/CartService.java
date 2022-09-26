@@ -74,4 +74,11 @@ public class CartService {
 
         return result;
     }
+
+    @Transactional
+    public boolean deleteCartItem(Long cartItemId) {
+        cartItemRepository.deleteCartItemById(cartItemId);
+
+        return true;
+    }
 }

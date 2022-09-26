@@ -20,4 +20,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     @Query("UPDATE CartItem c SET c.quantity = c.quantity + :quantity where c.id = :cartItemId")
     int updateCartItemQuantity(@Param("quantity") Integer quantity, @Param("cartItemId") Long cartItemId);
 
+    @Modifying(clearAutomatically = true)
+    @Query("DELETE CartItem c where c.id = :cartItemId")
+    int deleteCartItemById(@Param("cartItemId") Long cartItemId);
 }

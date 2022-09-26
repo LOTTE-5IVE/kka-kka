@@ -30,12 +30,19 @@ public class CartController {
     }
 
     @GetMapping("/cart")
-    public ResponseEntity<List<CartResponseDto>> showMemberCartItemList(){
-        List<CartResponseDto> result = cartService.findAllCartItemByMember(new Member(1L,"신우주"));
+    public ResponseEntity<List<CartResponseDto>> showMemberCartItemList() {
+        /* 테스트 데이터 멤버 객체 어떻게 전달 받을지 생각해보기 */
+        List<CartResponseDto> result = cartService.findAllCartItemByMember(new Member(1L, "신우주"));
 
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @DeleteMapping("/cart")
+    public ResponseEntity<String> removeCartItem() {
+        cartService.deleteCartItem(1L);
+
+        return ResponseEntity.status(HttpStatus.OK).body("success");
+    }
 
 }
