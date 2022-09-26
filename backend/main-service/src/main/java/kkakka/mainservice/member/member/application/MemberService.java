@@ -1,9 +1,9 @@
-package kkakka.mainservice.member.application;
+package kkakka.mainservice.member.member.application;
 
 import kkakka.mainservice.auth.application.UserProfile;
-import kkakka.mainservice.member.domain.Member;
-import kkakka.mainservice.member.domain.Provider;
-import kkakka.mainservice.member.domain.repository.MemberRepository;
+import kkakka.mainservice.member.member.domain.Member;
+import kkakka.mainservice.member.member.domain.Provider;
+import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

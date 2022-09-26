@@ -1,4 +1,4 @@
-package kkakka.mainservice.member.domain;
+package kkakka.mainservice.member.member.domain;
 
 import java.util.Objects;
 import javax.persistence.Column;

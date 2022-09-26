@@ -1,10 +1,10 @@
 package kkakka.mainservice.auth.application;
 
 import kkakka.mainservice.auth.application.dto.SocialProviderCodeDto;
-import kkakka.mainservice.auth.infrastructure.JwtTokenProvider;
+import kkakka.mainservice.member.auth.util.JwtTokenProvider;
 import kkakka.mainservice.auth.ui.dto.TokenDto;
-import kkakka.mainservice.member.application.MemberService;
-import kkakka.mainservice.member.domain.Member;
+import kkakka.mainservice.member.member.application.MemberService;
+import kkakka.mainservice.member.member.domain.Member;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

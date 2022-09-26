@@ -3,7 +3,8 @@ package kkakka.mainservice.member.application;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import kkakka.mainservice.auth.infrastructure.naver.NaverUserProfile;
-import kkakka.mainservice.member.domain.Member;
+import kkakka.mainservice.member.member.domain.Member;
+import kkakka.mainservice.member.member.application.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
