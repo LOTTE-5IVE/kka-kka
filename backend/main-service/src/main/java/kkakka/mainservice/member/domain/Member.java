@@ -1,17 +1,15 @@
 package kkakka.mainservice.member.domain;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 //import kkakka.mainservice.auth.application.UserProfile;
+import kkakka.mainservice.order.domain.Order;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -31,6 +29,9 @@ public class Member {
     private String phone;
     private String address;
     private String ageGroup;
+
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders = new ArrayList<>();
 
 //    @Enumerated(EnumType.STRING)
 //    private Grade grade;
