@@ -33,7 +33,6 @@ public class CartService {
         this.memberRepository = memberRepository;
     }
 
-    @Transactional
     public String saveCartItem(CartRequestDto cartRequestDto) {
 
         /* 테스트 데이터 */
