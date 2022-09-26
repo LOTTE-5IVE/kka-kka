@@ -58,12 +58,7 @@ public class ProductController {
     public ResponseEntity<List<ResponseCategoryProducts>> showCategoryProducts(@RequestParam("category") Long categoryId,
                                                                         Pageable pageable) {
         Page<ResponseCategoryProducts> result = categoryService.getProductsByCategoryId(categoryId, pageable);
-
-        System.out.println("전체 페이지 수: " + result.getTotalPages());
-        System.out.println("전체 상품목록 수: " + result.getTotalElements());
-        System.out.println("현재 페이지(기본0) : " + result.getNumber());
-        System.out.println("hasNext: " + result.hasNext());
-
+        
         return ResponseEntity.status(HttpStatus.OK).body(result.getContent());
     }
 }
