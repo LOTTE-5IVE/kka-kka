@@ -22,27 +22,33 @@ public class CartController {
         this.cartService = cartService;
     }
 
+    /* 장바구니 추가 */
     @PostMapping("/cart")
     public ResponseEntity<String> saveCartItem(@RequestBody CartRequestDto cartRequestDto) {
-        cartService.saveCartItem(cartRequestDto);
 
+        cartService.saveCartItem(cartRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("success");
     }
 
     @GetMapping("/cart")
     public ResponseEntity<List<CartResponseDto>> showMemberCartItemList() {
-        /* 테스트 데이터 멤버 객체 어떻게 전달 받을지 생각해보기 */
+
+        /* 멤버 객체 어떻게 전달 받을지 생각해보기 */
         List<CartResponseDto> result = cartService.findAllCartItemByMember(new Member(1L, "신우주"));
-
-
+        if (result == null || result.isEmpty()) {
+            return ResponseEntity.badRequest().body(null);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @DeleteMapping("/cart")
-    public ResponseEntity<String> removeCartItem() {
-        cartService.deleteCartItem(1L);
+    public ResponseEntity<String> removeCartItem(@RequestBody List<CartRequestDto> cartRequestDto) {
+
+        cartRequestDto.forEach(c -> {
+            System.out.println(c.getCartItemId());
+            cartService.deleteCartItem(c.getCartItemId());
+        });
 
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
-
 }

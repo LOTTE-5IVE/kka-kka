@@ -33,7 +33,7 @@ public class CartService {
         this.memberRepository = memberRepository;
     }
 
-    public String saveCartItem(CartRequestDto cartRequestDto) {
+    public boolean saveCartItem(CartRequestDto cartRequestDto) {
 
         /* 테스트 데이터 */
         Optional<Member> member = memberRepository.findById(cartRequestDto.getMemberId());
@@ -44,7 +44,7 @@ public class CartService {
         Cart cart = new Cart();
         cart = cartRepository.findByMemberId(cartRequestDto.getMemberId());
         if (cart == null) {
-            cartRepository.save(new Cart(member.get()));
+            cartRepository.save(new Cart(member.get())); // 장바구니 없으면 생성
             cart = cartRepository.findByMemberId(cartRequestDto.getMemberId());
         }
 
@@ -53,19 +53,21 @@ public class CartService {
         CartItem item = cartItemRepository.findByMemberIdandProductId(member.get().getId(), cartRequestDto.getProductId()); // Test용 Member
         if (item != null) {
             cartItemRepository.updateCartItemQuantity(cartRequestDto.getQuantity(), item.getId());
-            return "";
+            return true;
         }
 
         /* 장바구니 아이템 추가 */
         Optional<Product> product = productRepository.findById(cartRequestDto.getProductId());
         cartItemRepository.save(new CartItem(cart, product.get(), cartRequestDto.getQuantity()));
 
-        return "";
+        return true;
     }
 
+    /* 멤버 장바구니 목록 조회 */
     public List<CartResponseDto> findAllCartItemByMember(Member member) {
 
         List<CartItem> cartItemList = cartItemRepository.findAllByMemberId(member.getId());
+
         List<CartResponseDto> result = new ArrayList<>();
         cartItemList.forEach(c -> {
             result.add(CartResponseDto.from(c));
@@ -74,6 +76,7 @@ public class CartService {
         return result;
     }
 
+    /* 장바구니 아이템 삭제 */
     @Transactional
     public boolean deleteCartItem(Long cartItemId) {
         cartItemRepository.deleteCartItemById(cartItemId);
