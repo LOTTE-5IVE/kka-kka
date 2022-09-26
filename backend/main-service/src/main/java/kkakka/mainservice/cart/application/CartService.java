@@ -49,8 +49,9 @@ public class CartService {
             cart = cartRepository.findByMemberId(cartRequestDto.getMemberId());
         }
 
-        /* 현재 장바구니에 동일한 상품 있는지 체크 */
-        /* 동일 상품 있으면 기존 수량 업데이트 */
+        /* 현재 장바구니에 동일한 상품 있는지 체크
+        /* 동일 상품 있으면 기존 수량 업데이트
+         */
         CartItem item = cartItemRepository. findByMemberIdandProductId(member.get().getId(), cartRequestDto.getProductId()); // Test용 Member
         if (item != null) {
             cartItemRepository.updateCartItemQuantity(cartRequestDto.getQuantity(), item.getId());
@@ -80,8 +81,8 @@ public class CartService {
     /* 장바구니 아이템 삭제 */
     @Transactional
     public boolean deleteCartItem(Long cartItemId) {
-        cartItemRepository.deleteCartItemById(cartItemId);
 
+        cartItemRepository.deleteCartItemById(cartItemId);
         return true;
     }
 }
