@@ -45,7 +45,6 @@ public class CartController {
     public ResponseEntity<String> removeCartItem(@RequestBody List<CartRequestDto> cartRequestDto) {
 
         cartRequestDto.forEach(c -> {
-            System.out.println(c.getCartItemId());
             cartService.deleteCartItem(c.getCartItemId());
         });
 
