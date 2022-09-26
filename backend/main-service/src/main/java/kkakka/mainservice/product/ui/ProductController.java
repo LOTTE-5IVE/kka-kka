@@ -47,7 +47,7 @@ public class ProductController {
         productRepository.save(new Product(category, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10, "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png", "상세URL"));
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping("/productView={productId}")
     public ResponseEntity<ProductResponseDto> showProductDetail(@PathVariable("productId") Long productId) {
 
         ProductResponseDto responseDto = productService.getProductDetail(productId);
