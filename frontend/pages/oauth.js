@@ -9,7 +9,9 @@ export default function oauth() {
     if (state.includes('naver')) {
       return 'NAVER'
     }
-    return 'KAKAO'
+    if (state.includes('kakao')) {
+      return 'KAKAO'
+    }
   }
 
   const {code, state} = router.query;
