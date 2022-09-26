@@ -31,12 +31,4 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    @Override
-    public String toString() {
-        return "CartItem{" +
-                "id=" + id +
-                ", coupon_id=" + coupon_id +
-                ", quantity=" + quantity +
-                '}';
-    }
 }

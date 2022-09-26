@@ -6,15 +6,13 @@ import kkakka.mainservice.cart.domain.repository.CartItemRepository;
 import kkakka.mainservice.cart.domain.repository.CartRepository;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
-import kkakka.mainservice.common.config.MapperConfig;
 import kkakka.mainservice.member.domain.Member;
 import kkakka.mainservice.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
-import kkakka.mainservice.product.ui.dto.ProductResponseDto;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +33,7 @@ public class CartService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     public String saveCartItem(CartRequestDto cartRequestDto) {
 
         /* 테스트 데이터 */
@@ -51,8 +50,12 @@ public class CartService {
         }
 
         /* 현재 장바구니에 동일한 상품 있는지 체크 */
+        /* 동일 상품 있으면 기존 수량 업데이트 */
         CartItem item = cartItemRepository.findByMemberIdandProductId(member.get().getId(), cartRequestDto.getProductId()); // Test용 Member
-//        System.out.println(item.toString());
+        if (item != null) {
+            cartItemRepository.updateCartItemQuantity(cartRequestDto.getQuantity(), item.getId());
+            return "";
+        }
 
         /* 장바구니 아이템 추가 */
         Optional<Product> product = productRepository.findById(cartRequestDto.getProductId());
