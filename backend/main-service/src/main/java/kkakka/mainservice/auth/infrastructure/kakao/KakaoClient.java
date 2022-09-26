@@ -1,10 +1,10 @@
-package kkakka.mainservice.auth.infrastructure.naver;
+package kkakka.mainservice.auth.infrastructure.kakao;
 
 import kkakka.mainservice.auth.application.SocialClient;
 import kkakka.mainservice.auth.application.UserProfile;
 import kkakka.mainservice.auth.application.dto.SocialProviderCodeDto;
 import kkakka.mainservice.auth.infrastructure.ClientResponseConverter;
-import kkakka.mainservice.auth.infrastructure.naver.dto.NaverTokenRequest;
+import kkakka.mainservice.auth.infrastructure.kakao.dto.KakaoTokenRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,49 +15,42 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 @AllArgsConstructor
-public class NaverClient implements SocialClient {
+public class KakaoClient implements SocialClient {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String CONTENT_TYPE_HEADER = "Content-type";
+    private static final String DEFAULT_CHARSET = "application/x-www-form-urlencoded;charset=utf-8";
+
     private static final String GRANT_TYPE = "authorization_code";
     private static final String ACCESS_TOKEN = "access_token";
     private static final String BEARER = "Bearer %s";
 
     private final ClientResponseConverter converter;
     private final RestTemplate restTemplate;
-    private final NaverOauthInfo naverOauthInfo;
+    private final KakaoOauthInfo kakaoOauthInfo;
 
+    @Override
     public UserProfile getUserProfile(SocialProviderCodeDto socialProviderCodeDto) {
-        final String accessToken = getAccessToken(socialProviderCodeDto.getCode());
+        final String accessToken = accessToken(socialProviderCodeDto.getCode());
         final HttpHeaders headers = new HttpHeaders();
         headers.add(AUTHORIZATION_HEADER, String.format(BEARER, accessToken));
 
         final ResponseEntity<String> response = restTemplate.exchange(
-                naverOauthInfo.getProfileRequestUrl(),
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                String.class
-        );
-        return converter.extractDataAsAccount(response.getBody(), NaverUserProfile.class);
+                kakaoOauthInfo.getProfileRequestUrl(), HttpMethod.GET, new HttpEntity<>(headers),
+                String.class);
+        return converter.extractDataAsAccount(response.getBody(), KakaoUserProfile.class);
     }
 
-    private String getAccessToken(String code) {
-        final HttpHeaders headers = new HttpHeaders();
+    private String accessToken(String code) {
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(CONTENT_TYPE_HEADER, DEFAULT_CHARSET);
 
         final ResponseEntity<String> response = restTemplate.exchange(
-                naverOauthInfo.getAccessTokenRequestUrl(),
-                HttpMethod.POST,
-                new HttpEntity<>(
-                        converter.convertHttpBody(new NaverTokenRequest(
-                                GRANT_TYPE,
-                                naverOauthInfo.getClientId(),
-                                naverOauthInfo.getClientKey(),
-                                code,
-                                naverOauthInfo.getState()
-                        )),
-                        headers
-                ),
-                String.class
-        );
+                kakaoOauthInfo.getAccessTokenRequestUrl(), HttpMethod.POST, new HttpEntity<>(
+                        converter.convertHttpBody(
+                                new KakaoTokenRequest(GRANT_TYPE, kakaoOauthInfo.getRedirectUrl(),
+                                        kakaoOauthInfo.getClientId(), kakaoOauthInfo.getClientKey(),
+                                        code)), httpHeaders), String.class);
         return converter.extractDataAsString(response.getBody(), ACCESS_TOKEN);
     }
 }
