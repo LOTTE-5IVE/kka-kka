@@ -1,19 +1,20 @@
 package kkakka.mainservice.product.ui;
 
+import kkakka.mainservice.category.application.CategoryService;
 import kkakka.mainservice.category.domain.Category;
+import kkakka.mainservice.category.ui.dto.ResponseCategoryProducts;
 import kkakka.mainservice.product.application.ProductService;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.product.ui.dto.ProductResponseDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -21,10 +22,13 @@ public class ProductController {
 
     private final ProductRepository productRepository;
     private final ProductService productService;
+    private final CategoryService categoryService;
 
-    public ProductController(ProductRepository productRepository, ProductService productService) {
+    public ProductController(ProductRepository productRepository, ProductService productService
+            , CategoryService categoryService) {
         this.productRepository = productRepository;
         this.productService = productService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/health_check")
@@ -48,5 +52,18 @@ public class ProductController {
 
         ProductResponseDto responseDto = productService.getProductDetail(productId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<List<ResponseCategoryProducts>> showCategoryProducts(@RequestParam("category") Long categoryId,
+                                                                        Pageable pageable) {
+        Page<ResponseCategoryProducts> result = categoryService.getProductsByCategoryId(categoryId, pageable);
+
+        System.out.println("전체 페이지 수: " + result.getTotalPages());
+        System.out.println("전체 상품목록 수: " + result.getTotalElements());
+        System.out.println("현재 페이지(기본0) : " + result.getNumber());
+        System.out.println("hasNext: " + result.hasNext());
+
+        return ResponseEntity.status(HttpStatus.OK).body(result.getContent());
     }
 }

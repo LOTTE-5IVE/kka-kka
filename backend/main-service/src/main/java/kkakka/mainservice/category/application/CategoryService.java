@@ -20,13 +20,7 @@ public class CategoryService {
 
         Page<Product> products = categoryRepository.findByCategoryId(categoryId, pageable);
         Page<ResponseCategoryProducts> responseCategoryProducts = products.map(p ->
-                new ResponseCategoryProducts(p.getId(),
-                        p.getName(),
-                        p.getPrice(),
-                        p.getImageUrl(),
-                        p.getDiscount(),
-                        p.getRegistered_at()
-                ));
+                ResponseCategoryProducts.from(p));
         return responseCategoryProducts;
     }
 }

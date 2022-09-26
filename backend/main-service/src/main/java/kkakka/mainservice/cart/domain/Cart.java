@@ -30,8 +30,4 @@ public class Cart {
     public Cart(Member member) {
         this(null, null, member);
     }
-
-    public static Cart create(Member member) {
-        return new Cart(null, null, member);
-    }
 }
