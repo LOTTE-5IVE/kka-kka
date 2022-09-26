@@ -24,7 +24,6 @@ public class CartItem {
 
     @Column(nullable = false)
     private Integer quantity;
-    private Integer price;
 
     public CartItem(Cart cart, Product product, Integer quantity) {
         this.cart = cart;
@@ -38,7 +37,6 @@ public class CartItem {
                 "id=" + id +
                 ", coupon_id=" + coupon_id +
                 ", quantity=" + quantity +
-                ", price=" + price +
                 '}';
     }
 }

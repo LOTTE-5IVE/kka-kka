@@ -1,5 +1,6 @@
 package kkakka.mainservice.product.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import kkakka.mainservice.category.domain.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

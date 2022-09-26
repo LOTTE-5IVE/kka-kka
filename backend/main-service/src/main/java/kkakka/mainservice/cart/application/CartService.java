@@ -5,12 +5,18 @@ import kkakka.mainservice.cart.domain.CartItem;
 import kkakka.mainservice.cart.domain.repository.CartItemRepository;
 import kkakka.mainservice.cart.domain.repository.CartRepository;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
+import kkakka.mainservice.cart.ui.dto.CartResponseDto;
+import kkakka.mainservice.common.config.MapperConfig;
 import kkakka.mainservice.member.domain.Member;
 import kkakka.mainservice.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
+import kkakka.mainservice.product.ui.dto.ProductResponseDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,4 +61,14 @@ public class CartService {
         return "";
     }
 
+    public List<CartResponseDto> findAllCartItemByMember(Member member) {
+
+        List<CartItem> cartItemList = cartItemRepository.findAllByMemberId(member.getId());
+        List<CartResponseDto> result = new ArrayList<>();
+        cartItemList.forEach(c -> {
+            result.add(CartResponseDto.from(c));
+        });
+
+        return result;
+    }
 }
