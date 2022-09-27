@@ -1,8 +1,6 @@
 package kkakka.mainservice.cart.ui;
 
 
-import static kkakka.mainservice.cart.TestDataLoader.MEMBER;
-
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -17,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static kkakka.mainservice.cart.TestDataLoader.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
@@ -30,15 +30,16 @@ class CartAcceptanceTest extends AcceptanceTest {
     @Autowired
     private CartService cartService;
 
-    @Order(1)
-    @DisplayName("장바구니 추가")
     @Test
-    void saveCartItem() {
-        IntStream.rangeClosed(1,5).forEach(
+    @DisplayName("장바구니 추가")
+    @Order(1)
+    void testSaveCartItem() {
+
+        IntStream.rangeClosed(1, 3).forEach(
                 i -> {
                     // given
-                    CartRequestDto cartRequestDto = new CartRequestDto(1L, (long)i, 1, null);
-        //when
+                    CartRequestDto cartRequestDto = new CartRequestDto(1L, (long) i, 1, null);
+                    //when
                     ExtractableResponse<Response> response = RestAssured.given().log().all()
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .body(cartRequestDto)
@@ -46,16 +47,16 @@ class CartAcceptanceTest extends AcceptanceTest {
                             .post("/carts/cart")
                             .then()
                             .log().all().extract();
-        //then
+                    //then
                     assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
                 }
         );
     }
 
-    @Order(2)
-    @DisplayName("장바구니 조회")
     @Test
-    void showMemberCartItemList() {
+    @DisplayName("장바구니 조회")
+    @Order(2)
+    void testShowMemberCartItemList() {
 
         //given
         Member member = MEMBER;
@@ -68,12 +69,31 @@ class CartAcceptanceTest extends AcceptanceTest {
                 .get("/carts/cart")
                 .then()
                 .log().all().extract();
-
+        //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
-//
-//    @Test
-//    void removeCartItem() {
-//    }
 
+    @Test
+    @DisplayName("장바구니 아이템 삭제")
+    @Order(3)
+    void testRemoveCartItem() {
+
+        //given
+        List<Long> cartItemId = new ArrayList<>();
+        cartItemId.add(1L);
+        cartItemId.add(2L);
+        cartItemId.add(3L);
+
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .queryParam("cartItemId", cartItemId)
+                .when()
+                .delete("/carts/cart")
+                .then()
+                .log().all().extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
 }

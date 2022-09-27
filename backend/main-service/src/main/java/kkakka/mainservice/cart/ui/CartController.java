@@ -4,7 +4,6 @@ import kkakka.mainservice.cart.application.CartService;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
 import kkakka.mainservice.member.domain.Member;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,12 +37,11 @@ public class CartController {
     }
 
     @DeleteMapping("/cart")
-    public ResponseEntity<String> removeCartItem(@RequestBody List<CartRequestDto> cartRequestDto) {
+    public ResponseEntity<String> removeCartItem(@RequestParam List<Long> cartItemId) {
 
-        cartRequestDto.forEach(c -> {
-            cartService.deleteCartItem(c.getCartItemId());
+        cartItemId.forEach(c -> {
+            cartService.deleteCartItem(c);
         });
-
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
 }
