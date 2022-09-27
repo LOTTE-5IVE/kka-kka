@@ -34,10 +34,11 @@ public class CartService {
     }
 
     @Transactional
-    public boolean saveCartItem(CartRequestDto cartRequestDto) {
+    public CartResponseDto saveCartItem(CartRequestDto cartRequestDto) {
 
         /* 테스트 데이터 */
         Optional<Member> member = memberRepository.findById(cartRequestDto.getMemberId());
+        CartResponseDto returnValue = null;
 
         /* 로그인 상태 체크 */
 
@@ -53,16 +54,21 @@ public class CartService {
         /* 동일 상품 있으면 기존 수량 업데이트
          */
         CartItem item = cartItemRepository. findByMemberIdandProductId(member.get().getId(), cartRequestDto.getProductId()); // Test용 Member
+
         if (item != null) {
             cartItemRepository.updateCartItemQuantity(cartRequestDto.getQuantity(), item.getId());
-            return true;
+            returnValue = CartResponseDto.from(item);
+            return returnValue;
         }
 
         /* 장바구니 아이템 추가 */
         Optional<Product> product = productRepository.findById(cartRequestDto.getProductId());
-        cartItemRepository.save(new CartItem(cart, product.get(), cartRequestDto.getQuantity()));
+        CartItem cartItem = new CartItem(cart, product.get(), cartRequestDto.getQuantity());
+        cartItemRepository.save(cartItem);
 
-        return true;
+        returnValue = CartResponseDto.from(cartItem);
+
+        return returnValue;
     }
 
     /* 멤버 장바구니 목록 조회 */

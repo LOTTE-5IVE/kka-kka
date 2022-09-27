@@ -23,10 +23,10 @@ public class CartController {
 
     /* 장바구니 추가 */
     @PostMapping("/cart")
-    public ResponseEntity<String> saveCartItem(@RequestBody CartRequestDto cartRequestDto) {
+    public ResponseEntity<CartResponseDto> saveCartItem(@RequestBody CartRequestDto cartRequestDto) {
 
-        cartService.saveCartItem(cartRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("success");
+        CartResponseDto responseDto = cartService.saveCartItem(cartRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @GetMapping("/cart")
