@@ -2,8 +2,8 @@ package kkakka.mainservice.member.auth.util;
 
 import javax.servlet.http.HttpServletRequest;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
+import kkakka.mainservice.member.auth.ui.Authority;
 import kkakka.mainservice.member.auth.ui.LoginMember;
-import kkakka.mainservice.member.auth.ui.LoginMember.Authority;
 import lombok.AllArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

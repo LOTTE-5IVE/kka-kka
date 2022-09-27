@@ -1,5 +1,6 @@
 package kkakka.mainservice.member.auth.ui;
 
+import com.netflix.discovery.converters.Auto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +17,11 @@ public class LoginMember {
         this(null, authority);
     }
 
-    public enum Authority {
+    public boolean isAnonymous() {
+        return this.authority.isAnonymous();
+    }
 
-        ANONYMOUS,
-        MEMBER
+    public boolean isMember() {
+        return this.authority.isMember();
     }
 }
