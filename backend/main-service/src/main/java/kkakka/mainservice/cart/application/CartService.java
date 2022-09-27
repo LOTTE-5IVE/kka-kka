@@ -40,20 +40,13 @@ public class CartService {
         Optional<Member> member = memberRepository.findById(cartRequestDto.getMemberId());
         CartResponseDto returnValue = null;
 
-        /* 로그인 상태 체크 */
-
         /* 장바구니 존재 유무 체크 ex) 장바구니에 담아둔 아이템 있는지 */
-        Cart cart = new Cart();
-        cart = cartRepository.findByMemberId(cartRequestDto.getMemberId());
-        if (cart == null) {
-            cartRepository.save(new Cart(member.get())); // 장바구니 없으면 생성
-            cart = cartRepository.findByMemberId(cartRequestDto.getMemberId());
-        }
+        Cart cart = findOrCreateCart(member.get());
 
         /* 현재 장바구니에 동일한 상품 있는지 체크
         /* 동일 상품 있으면 기존 수량 업데이트
          */
-        CartItem item = cartItemRepository. findByMemberIdandProductId(member.get().getId(), cartRequestDto.getProductId()); // Test용 Member
+        CartItem item = cartItemRepository.findByMemberIdandProductId(member.get().getId(), cartRequestDto.getProductId()); // Test용 Member
 
         if (item != null) {
             cartItemRepository.updateCartItemQuantity(cartRequestDto.getQuantity(), item.getId());
@@ -90,5 +83,13 @@ public class CartService {
 
         cartItemRepository.deleteCartItemById(cartItemId);
         return true;
+    }
+
+    public Cart findOrCreateCart(Member member) {
+        return cartRepository.findByMemberId(member.getId()).orElseGet(() -> createCart(member));
+    }
+
+    public Cart createCart(Member member) {
+        return cartRepository.save(new Cart(member));
     }
 }

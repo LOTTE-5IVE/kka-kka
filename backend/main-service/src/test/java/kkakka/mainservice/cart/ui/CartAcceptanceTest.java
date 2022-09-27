@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static kkakka.mainservice.cart.TestDataLoader.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,23 +34,20 @@ class CartAcceptanceTest extends AcceptanceTest {
     @Order(1)
     void testSaveCartItem() {
 
-        IntStream.rangeClosed(1, 3).forEach(
-                i -> {
-                    // given
-                    CartRequestDto cartRequestDto = new CartRequestDto(1L, (long) i, 1, null);
-                    //when
-                    ExtractableResponse<Response> response = RestAssured.given().log().all()
-                            .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .body(cartRequestDto)
-                            .when()
-                            .post("/carts/cart")
-                            .then()
-                            .log().all().extract();
-                    //then
-                    assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-                }
-        );
+        CartRequestDto cartRequestDto = new CartRequestDto(1L, 1L, 1, null);
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(cartRequestDto)
+                .when()
+                .post("/carts/cart")
+                .then()
+                .log().all().extract();
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
+
+
 
     @Test
     @DisplayName("장바구니 조회")
