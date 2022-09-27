@@ -53,6 +53,7 @@ public class KakaoUserProfile implements UserProfile {
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     private static class KakaoAccount {
+
         private String email;
         @JsonProperty(value = "age_range")
         private String ageGroup;

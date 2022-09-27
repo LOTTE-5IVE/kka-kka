@@ -4,14 +4,14 @@ import javax.servlet.http.HttpServletRequest;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.Authority;
 import kkakka.mainservice.member.auth.ui.LoginMember;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final JwtTokenProvider jwtTokenProvider;

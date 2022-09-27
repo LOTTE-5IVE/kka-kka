@@ -4,7 +4,7 @@ import java.util.List;
 import kkakka.mainservice.member.auth.infrastructure.LoginInterceptor;
 import kkakka.mainservice.member.auth.util.AuthenticationPrincipalArgumentResolver;
 import kkakka.mainservice.member.auth.util.JwtTokenProvider;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final JwtTokenProvider jwtTokenProvider;

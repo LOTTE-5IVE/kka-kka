@@ -5,13 +5,13 @@ import javax.servlet.http.HttpServletResponse;
 import kkakka.mainservice.member.auth.exception.AuthorizationException;
 import kkakka.mainservice.member.auth.util.AuthorizationExtractor;
 import kkakka.mainservice.member.auth.util.JwtTokenProvider;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class LoginInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider jwtTokenProvider;
