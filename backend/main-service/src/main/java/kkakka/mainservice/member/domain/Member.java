@@ -52,4 +52,17 @@ public class Member {
         this.id = id;
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", email='" + email + '\'' +
+            ", phone='" + phone + '\'' +
+            ", address='" + address + '\'' +
+            ", ageGroup='" + ageGroup + '\'' +
+            ", orders=" + orders +
+            '}';
+    }
 }
