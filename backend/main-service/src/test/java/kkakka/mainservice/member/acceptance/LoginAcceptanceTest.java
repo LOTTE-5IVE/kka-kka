@@ -28,7 +28,7 @@ public class LoginAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .post("/auth/login/token")
+                .post("/api/auth/login/token")
                 .then().log().all().extract();
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -48,7 +48,7 @@ public class LoginAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .post("/auth/login/token")
+                .post("/api/auth/login/token")
                 .then().log().all().extract();
 
         // then
