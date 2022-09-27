@@ -7,7 +7,9 @@ import kkakka.mainservice.member.domain.Member;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -22,26 +24,33 @@ public class CartController {
 
     /* 장바구니 추가 */
     @PostMapping("/cart")
-    public ResponseEntity<CartResponseDto> saveCartItem(@RequestBody CartRequestDto cartRequestDto) {
+    public ResponseEntity<String> saveCartItem(@RequestBody CartRequestDto cartRequestDto) {
 
-        CartResponseDto responseDto = cartService.saveCartItem(cartRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+        Long memberId = cartService.saveOrUpdateCartItem(cartRequestDto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{memberId}")
+                .buildAndExpand(memberId)
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/cart")
-    public ResponseEntity<List<CartResponseDto>> showMemberCartItemList() {
+    @GetMapping("/cart/{memberId}")
+    public ResponseEntity<List<CartResponseDto>> showMemberCartItemList(@PathVariable("memberId") Long memberId) {
 
-        /* 멤버 객체 어떻게 전달 받을지 생각해보기 */
+        /*
+        TODO: 멤버 객체 전달 받기
+         */
         List<CartResponseDto> result = cartService.findAllCartItemByMember(new Member(1L, "신우주"));
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @DeleteMapping("/cart")
-    public ResponseEntity<String> removeCartItem(@RequestParam List<Long> cartItemId) {
+    @DeleteMapping("/{cartItemId}")
+    public ResponseEntity<Void> removeCartItem(@PathVariable("cartItemId") List<Long> cartItemId) {
 
         cartItemId.forEach(c -> {
             cartService.deleteCartItem(c);
         });
-        return ResponseEntity.status(HttpStatus.OK).body("success");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

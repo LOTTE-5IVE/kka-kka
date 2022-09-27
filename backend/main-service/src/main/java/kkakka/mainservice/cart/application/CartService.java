@@ -34,34 +34,30 @@ public class CartService {
     }
 
     @Transactional
-    public CartResponseDto saveCartItem(CartRequestDto cartRequestDto) {
+    public Long saveOrUpdateCartItem(CartRequestDto cartRequestDto) {
 
         /* 테스트 데이터 */
         Optional<Member> member = memberRepository.findById(cartRequestDto.getMemberId());
-        CartResponseDto returnValue = null;
 
-        /* 장바구니 존재 유무 체크 ex) 장바구니에 담아둔 아이템 있는지 */
         Cart cart = findOrCreateCart(member.get());
+        Optional<CartItem> cartItem = Optional.ofNullable(
+                cartItemRepository.findByMemberIdandProductId(member.get().getId(), cartRequestDto.getProductId())
+        );
 
-        /* 현재 장바구니에 동일한 상품 있는지 체크
-        /* 동일 상품 있으면 기존 수량 업데이트
-         */
-        CartItem item = cartItemRepository.findByMemberIdandProductId(member.get().getId(), cartRequestDto.getProductId()); // Test용 Member
-
-        if (item != null) {
-            cartItemRepository.updateCartItemQuantity(cartRequestDto.getQuantity(), item.getId());
-            returnValue = CartResponseDto.from(item);
-            return returnValue;
+        // 동일 상품 이미 있으면 수량 업데이트
+        if (cartItem.isPresent()) {
+            Integer preQuantiry = cartItem.get().getQuantity();
+            cartItem.get().setQuantity(preQuantiry + cartRequestDto.getQuantity());
+            cartItemRepository.save(cartItem.get());
+            return member.get().getId();
         }
 
         /* 장바구니 아이템 추가 */
         Optional<Product> product = productRepository.findById(cartRequestDto.getProductId());
-        CartItem cartItem = new CartItem(cart, product.get(), cartRequestDto.getQuantity());
-        cartItemRepository.save(cartItem);
+        cartItem = Optional.ofNullable(new CartItem(cart, product.get(), cartRequestDto.getQuantity()));
+        cartItemRepository.save(cartItem.get());
 
-        returnValue = CartResponseDto.from(cartItem);
-
-        return returnValue;
+        return member.get().getId();
     }
 
     /* 멤버 장바구니 목록 조회 */
@@ -92,4 +88,5 @@ public class CartService {
     public Cart createCart(Member member) {
         return cartRepository.save(new Cart(member));
     }
+
 }

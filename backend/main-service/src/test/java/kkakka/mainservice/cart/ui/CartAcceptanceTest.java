@@ -34,7 +34,9 @@ class CartAcceptanceTest extends AcceptanceTest {
     @Order(1)
     void testSaveCartItem() {
 
+        //given
         CartRequestDto cartRequestDto = new CartRequestDto(1L, 1L, 1, null);
+
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
