@@ -57,14 +57,6 @@ public class ProductOrder {
         this.count = count;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
     public void setOrder(Order order) {
         this.order = order;
     }

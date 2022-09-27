@@ -51,8 +51,4 @@ public class Product {
     public Product(Category category, String name, int price, int stock, String imageUrl, String detailImageUrl) {
         this(null, category, name, price, stock, imageUrl, detailImageUrl, null);
     }
-
-    public Integer getPrice() {
-        return price;
-    }
 }
