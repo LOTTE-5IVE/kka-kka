@@ -1,5 +1,7 @@
 package kkakka.mainservice.member.auth.exception;
 
-public class AuthorizationException extends RuntimeException {
+import kkakka.mainservice.common.exception.KkaKkaException;
+
+public class AuthorizationException extends KkaKkaException {
 
 }
