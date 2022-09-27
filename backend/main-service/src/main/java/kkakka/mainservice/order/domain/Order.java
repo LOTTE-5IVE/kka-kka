@@ -1,6 +1,7 @@
 package kkakka.mainservice.order.domain;
 
 import kkakka.mainservice.member.domain.Member;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "`ORDER`")
+@Getter
 public class Order {
 
     @Id @GeneratedValue
@@ -31,7 +33,7 @@ public class Order {
     //==연관관계 메서드==//
     public void setMember(Member member) {
         this.member = member;
-        member.getOrders().add(this);
+        member.getOrders().add(this); //회원에게 주문 추가
     }
 
     public void addProductOrder(ProductOrder productOrder) {
@@ -40,10 +42,10 @@ public class Order {
     }
 
     //==생성 메서드==//
-    public static Order createOrder(Member member, ProductOrder... productOrders) {
+    public static Order createOrder(Member member, int totalPrice, List<ProductOrder> productOrders) {
         Order order = new Order();
         order.setMember(member);
-        order.setOrderedAt(LocalDateTime.now());
+        order.setTotalPrice(totalPrice);
 
         //상품주문 추가
         for(ProductOrder productOrder : productOrders) {
@@ -71,11 +73,7 @@ public class Order {
         this.orderedAt = orderedAt;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public List<ProductOrder> getProductOrders() {
-        return productOrders;
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

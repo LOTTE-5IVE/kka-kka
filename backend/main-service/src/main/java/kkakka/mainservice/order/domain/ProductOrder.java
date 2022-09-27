@@ -1,11 +1,13 @@
 package kkakka.mainservice.order.domain;
 
 import kkakka.mainservice.product.domain.Product;
+import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "product_order")
+@Getter
 public class ProductOrder {
 
     @Id @GeneratedValue

@@ -10,9 +10,12 @@ import kkakka.mainservice.product.domain.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class OrderService {
 
     private final MemberRepository memberRepository;
@@ -25,23 +28,33 @@ public class OrderService {
         this.productRepository = productRepository;
     }
 
-    /** 주문 */
+    /**
+     * 주문
+     */
     @Transactional
-    public Long order(Long memberId, Long productId, int count) {
+    public Long order(Long memberId, List<Long> productIds, int count) {
 
         //엔티티 조회
-        Optional<Member> member = memberRepository.findById(memberId);
-        Optional<Product> product = productRepository.findById(memberId);
+        Member member = memberRepository.findById(memberId).get();
 
-        //주문상품 생성
-        ProductOrder productOrder = ProductOrder.createProductOrder(product.get(),product.get().getPrice(), count);
+        //상품주문 생성
+        List<ProductOrder> productOrders = new ArrayList<>();
+        int totalPrice = 0;
+        for (Long productId : productIds) {
+            Product product = productRepository.findById(productId).get();
+            ProductOrder productOrder = ProductOrder.createProductOrder(product, product.getPrice(), count);
+            productOrders.add(productOrder);
+
+            totalPrice += productOrder.getPrice() * productOrder.getCount();
+        }
 
         //주문 생성
-        Order order = Order.createOrder(member.get(), productOrder);
+        Order order = Order.createOrder(member, totalPrice, productOrders);
 
         //주문 저장
         orderRepository.save(order);
 
         return order.getId();
     }
+
 }
