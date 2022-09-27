@@ -56,7 +56,7 @@ public enum TestMember {
 
     public static boolean findByAccessToken(String accessToken) {
         return FIXTURES.stream()
-                .anyMatch((member) -> accessToken.equals(member.accessToken));
+                .anyMatch((member) -> member.accessToken.equals(accessToken));
     }
 
     public String getCode() {

@@ -28,6 +28,6 @@ public class AuthorizationExtractor {
                 return authHeaderValue;
             }
         }
-        return "";
+        return null;
     }
 }
