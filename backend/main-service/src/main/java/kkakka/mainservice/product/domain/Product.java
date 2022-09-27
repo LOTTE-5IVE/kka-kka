@@ -51,4 +51,24 @@ public class Product {
     public Product(Category category, String name, int price, int stock, String imageUrl, String detailImageUrl) {
         this(null, category, name, price, stock, imageUrl, detailImageUrl, null);
     }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+            "id=" + id +
+            ", category=" + category +
+            ", name='" + name + '\'' +
+            ", price=" + price +
+            ", stock=" + stock +
+            ", imageUrl='" + imageUrl + '\'' +
+            ", detailImageUrl='" + detailImageUrl + '\'' +
+            ", nutritionInfoUrl='" + nutritionInfoUrl + '\'' +
+            ", discount=" + discount +
+            ", registered_at=" + registered_at +
+            '}';
+    }
 }
