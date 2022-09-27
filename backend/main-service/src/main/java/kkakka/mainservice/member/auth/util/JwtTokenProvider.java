@@ -11,7 +11,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource("classpath:bootstrap.yml")
 public class JwtTokenProvider {
 
     @Value("${security.jwt.token.secret-key}")
