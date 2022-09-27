@@ -19,15 +19,15 @@ public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
     private Long id;
 
-    @OneToMany(mappedBy = "cart")
-    private List<CartItem> cartItems = new ArrayList<>();
-
     @OneToOne
+    @MapsId
+    @JoinColumn(name = "member_id")
     private Member member;
 
     public Cart(Member member) {
-        this(null, null, member);
+        this(null, member);
     }
 }
