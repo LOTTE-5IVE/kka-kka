@@ -7,8 +7,8 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import kkakka.mainservice.AcceptanceTest;
-import kkakka.mainservice.auth.domain.ProviderName;
-import kkakka.mainservice.auth.ui.dto.SocialProviderCodeRequest;
+import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
+import kkakka.mainservice.member.member.domain.MemberProviderName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -21,14 +21,14 @@ public class LoginAcceptanceTest extends AcceptanceTest {
     void joinSuccess() {
         // given
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-                MEMBER_01.getCode(), ProviderName.TEST);
+                MEMBER_01.getCode(), MemberProviderName.TEST);
 
         // when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .post("/api/auth/login/token")
+                .post("/api/login/token")
                 .then().log().all().extract();
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -40,7 +40,7 @@ public class LoginAcceptanceTest extends AcceptanceTest {
     void loginSuccess(){
         // given
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-                MEMBER_01.getCode(), ProviderName.TEST);
+                MEMBER_01.getCode(), MemberProviderName.TEST);
         회원가입_요청(request);
 
         // when
@@ -48,7 +48,7 @@ public class LoginAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .post("/api/auth/login/token")
+                .post("/api/login/token")
                 .then().log().all().extract();
 
         // then
@@ -61,7 +61,7 @@ public class LoginAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .post("/auth/login/token")
+                .post("/api/login/token")
                 .then().extract();
     }
 }

@@ -1,6 +1,8 @@
 package kkakka.mainservice.fixture;
 
 import kkakka.mainservice.auth.application.UserProfile;
+import kkakka.mainservice.auth.application.dto.UserProfileDto;
+import kkakka.mainservice.auth.domain.Provider;
 import kkakka.mainservice.auth.domain.ProviderName;
 
 public class TestUserProfile implements UserProfile {
@@ -17,6 +19,17 @@ public class TestUserProfile implements UserProfile {
         this.email = email;
         this.ageGroup = ageGroup;
         this.phone = phone;
+    }
+
+    @Override
+    public UserProfileDto toDto() {
+        return new UserProfileDto(
+                Provider.create(id, providerName()),
+                name,
+                email,
+                ageGroup,
+                phone
+        );
     }
 
     @Override

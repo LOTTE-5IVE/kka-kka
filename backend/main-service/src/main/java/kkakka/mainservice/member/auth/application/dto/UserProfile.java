@@ -8,11 +8,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserProfileDto {
+public class UserProfile {
 
     private Provider provider;
     private String name;
     private String email;
     private String ageGroup;
     private String phone;
+
+    public String getProviderId() {
+        return provider.getProviderId();
+    }
 }

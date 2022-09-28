@@ -1,6 +1,6 @@
 package kkakka.mainservice.member.member.domain;
 
-public enum ProviderName {
+public enum MemberProviderName {
 
     KAKAO,
     NAVER,
