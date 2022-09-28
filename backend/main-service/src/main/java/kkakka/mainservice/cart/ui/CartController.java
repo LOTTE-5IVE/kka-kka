@@ -4,6 +4,7 @@ import kkakka.mainservice.cart.application.CartService;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
 import kkakka.mainservice.member.domain.Member;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +14,11 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/carts")
 public class CartController {
 
     private final CartService cartService;
-
-    public CartController(CartService cartService) {
-        this.cartService = cartService;
-    }
 
     /* 장바구니 추가 */
     @PostMapping("/cart")
@@ -31,7 +29,6 @@ public class CartController {
                 .path("/{memberId}")
                 .buildAndExpand(memberId)
                 .toUri();
-
         return ResponseEntity.created(location).build();
     }
 
@@ -46,11 +43,9 @@ public class CartController {
     }
 
     @DeleteMapping("/{cartItemId}")
-    public ResponseEntity<Void> removeCartItem(@PathVariable("cartItemId") List<Long> cartItemId) {
+    public ResponseEntity<Void> removeCartItem(@PathVariable("cartItemId") List<Long> cartItemList) {
 
-        cartItemId.forEach(c -> {
-            cartService.deleteCartItem(c);
-        });
+        cartService.deleteCartItem(cartItemList);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

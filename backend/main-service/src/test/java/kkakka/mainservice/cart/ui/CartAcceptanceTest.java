@@ -94,7 +94,7 @@ class CartAcceptanceTest extends AcceptanceTest {
     void testRemoveCartItem() {
 
         //given
-        Long cartItemId = 1L;
+        Long cartItemId = 2L;
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()

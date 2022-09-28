@@ -13,9 +13,9 @@ import kkakka.mainservice.product.domain.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -40,22 +40,25 @@ public class CartService {
         Optional<Member> member = memberRepository.findById(cartRequestDto.getMemberId());
 
         Cart cart = findOrCreateCart(member.get());
-        Optional<CartItem> cartItem = Optional.ofNullable(
+        Optional<CartItem> originCartItem = Optional.ofNullable(
                 cartItemRepository.findByMemberIdandProductId(member.get().getId(), cartRequestDto.getProductId())
         );
 
         // 동일 상품 이미 있으면 수량 업데이트
-        if (cartItem.isPresent()) {
-            cartItem.get().setQuantity(cartRequestDto.getQuantity());
-            cartItemRepository.save(cartItem.get());
+        if (originCartItem.isPresent()) {
+            originCartItem.get().setQuantity(cartRequestDto.getQuantity());
+            cartItemRepository.save(originCartItem.get());
             return member.get().getId();
         }
 
         /* 장바구니 아이템 추가 */
+        /*
+        TODO: NPE 처리하기
+         */
         Optional<Product> product = productRepository.findById(cartRequestDto.getProductId());
 
-        cartItem = Optional.ofNullable(new CartItem(cart, product.get(), cartRequestDto.getQuantity()));
-        cartItemRepository.save(cartItem.get());
+        CartItem newCartItem = new CartItem(cart, product.get(), cartRequestDto.getQuantity());
+        cartItemRepository.save(newCartItem);
 
         return member.get().getId();
     }
@@ -65,24 +68,24 @@ public class CartService {
 
         List<CartItem> cartItemList = cartItemRepository.findAllByMemberId(member.getId());
 
-        List<CartResponseDto> result = new ArrayList<>();
-        cartItemList.forEach(c -> {
-            result.add(CartResponseDto.from(c));
-        });
-
-        return result;
+        return cartItemList.stream()
+                .map(CartResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     /* 장바구니 아이템 삭제 */
     @Transactional
-    public boolean deleteCartItem(Long cartItemId) {
+    public boolean deleteCartItem(List<Long> cartItemList) {
 
-        cartItemRepository.deleteCartItemById(cartItemId);
+        cartItemList.stream()
+                .map(cartItemId -> cartItemRepository.deleteCartItemById(cartItemId))
+                .collect(Collectors.toList());
         return true;
     }
 
     public Cart findOrCreateCart(Member member) {
-        return cartRepository.findByMemberId(member.getId()).orElseGet(() -> createCart(member));
+        return cartRepository.findByMemberId(member.getId())
+                .orElseGet(() -> createCart(member));
     }
 
     public Cart createCart(Member member) {
