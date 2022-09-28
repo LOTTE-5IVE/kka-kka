@@ -29,7 +29,7 @@ class CartAcceptanceTest extends AcceptanceTest {
     private CartService cartService;
 
     @Test
-    @DisplayName("장바구니 추가")
+    @DisplayName("장바구니 추가 성공")
     void testSaveCartItem() {
 
         //given
@@ -43,10 +43,30 @@ class CartAcceptanceTest extends AcceptanceTest {
                 .post("/carts/cart")
                 .then()
                 .log().all().extract();
+
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
+//    @Test
+//    @DisplayName("장바구니 추가 실패")
+//    void testFailSaveCartItem() {
+//
+//        //given
+//        CartRequestDto cartRequestDto = new CartRequestDto(1L, 999L, 1, null);
+//
+//        //when
+//        ExtractableResponse<Response> response = RestAssured.given().log().all()
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+//                .body(cartRequestDto)
+//                .when()
+//                .post("/carts/cart")
+//                .then()
+//                .log().all().extract();
+//
+//        //then
+//        assertThat(response.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
     @Test
     @DisplayName("장바구니 조회")

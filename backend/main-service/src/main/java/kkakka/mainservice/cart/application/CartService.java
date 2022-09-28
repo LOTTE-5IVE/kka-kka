@@ -46,14 +46,14 @@ public class CartService {
 
         // 동일 상품 이미 있으면 수량 업데이트
         if (cartItem.isPresent()) {
-            Integer preQuantiry = cartItem.get().getQuantity();
-            cartItem.get().setQuantity(preQuantiry + cartRequestDto.getQuantity());
+            cartItem.get().setQuantity(cartRequestDto.getQuantity());
             cartItemRepository.save(cartItem.get());
             return member.get().getId();
         }
 
         /* 장바구니 아이템 추가 */
         Optional<Product> product = productRepository.findById(cartRequestDto.getProductId());
+
         cartItem = Optional.ofNullable(new CartItem(cart, product.get(), cartRequestDto.getQuantity()));
         cartItemRepository.save(cartItem.get());
 
