@@ -2,11 +2,11 @@ package kkakka.mainservice.order.ui;
 
 import kkakka.mainservice.member.application.MemberService;
 import kkakka.mainservice.order.application.OrderService;
+import kkakka.mainservice.order.ui.dto.OrderRequestDto;
 import kkakka.mainservice.product.application.ProductService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -31,8 +31,12 @@ public class OrderController {
     //주문
     // 주문 상품과 수량을 선택 후 버튼을 누르면 실행
     @PostMapping
-    public Long order(@RequestParam("memberId") Long memberId, @RequestParam("productId") List<Long> productIds, @RequestParam("count") int count) {
-        return orderService.order(memberId, productIds, count);
+    public ResponseEntity order(@RequestBody OrderRequestDto orderRequestDto) {
+
+        orderService.order(orderRequestDto);
+
+        return ResponseEntity.ok().body(orderRequestDto);
+
     }
 
 }

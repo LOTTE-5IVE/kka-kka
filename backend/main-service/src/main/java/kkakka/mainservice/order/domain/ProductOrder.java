@@ -21,29 +21,26 @@ public class ProductOrder {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    //쿠폰 추가
+    //TODO: 2022.09.28 쿠폰 추가해야함 -hyeyeon
 
     private Integer price; //주문가격
     private Integer count; //주문수량
 
     //==생성 메서드==//
     //주문 상품, 가격, 수량 정보를 사용해서 주문상품 엔티티 생성
-    public static ProductOrder createProductOrder(Product product, int price, int count) {
+    public static ProductOrder createProductOrder(Product product, int price, int quantity) throws Exception {
         ProductOrder productOrder = new ProductOrder();
         productOrder.setProduct(product);
         productOrder.setPrice(price);
-        productOrder.setCount(count);
+        productOrder.setCount(quantity);
 
-        //TODO: 2022.09.28 상품 수량 줄이는 로직 추가해야함 -hyeyeon
+        product.reduceStock(quantity);
 
         return productOrder;
     }
 
     //==조회 로직==//
     /** 주문상품 전체 가격 조회 */
-    public int getTotalPrice() {
-        return getPrice() * getCount();
-    }
 
     public void setProduct(Product product) {
         this.product = product;
