@@ -25,7 +25,7 @@ export default function cart() {
               <thead>
                 <tr style={{ height: "3vw" }}>
                   <th scope="col">
-                    <input type="checkbox" onClick="" />
+                    <input type="checkbox" onClick="#" />
                   </th>
                   <th scope="col">이미지</th>
                   <th scope="col">상품정보</th>
@@ -38,7 +38,7 @@ export default function cart() {
               <tbody>
                 <tr style={{ height: "6vw" }}>
                   <td>
-                    <input type="checkbox" onClick="" />
+                    <input type="checkbox" onClick="#" />
                   </td>
                   <td>이미지</td>
                   <td>상품정보</td>
