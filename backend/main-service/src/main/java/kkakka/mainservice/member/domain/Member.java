@@ -52,4 +52,9 @@ public class Member {
         this.id = id;
         this.name = name;
     }
+
+    public Member(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 }

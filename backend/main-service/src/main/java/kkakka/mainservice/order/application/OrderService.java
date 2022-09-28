@@ -33,7 +33,7 @@ public class OrderService {
      * 주문
      */
     @Transactional
-    public Long order(OrderRequestDto orderRequestDto) {
+    public Long order(OrderRequestDto orderRequestDto) throws Exception {
 
         Long memberId = orderRequestDto.getMemberId();
         List<ProductOrderRequest> productOrderRequests = orderRequestDto.getProductOrderRequests();

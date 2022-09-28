@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -31,11 +33,11 @@ public class OrderController {
     //주문
     // 주문 상품과 수량을 선택 후 버튼을 누르면 실행
     @PostMapping
-    public ResponseEntity order(@RequestBody OrderRequestDto orderRequestDto) {
+    public ResponseEntity<Void> order(@RequestBody OrderRequestDto orderRequestDto) throws Exception {
 
-        orderService.order(orderRequestDto);
+        Long memberId = orderService.order(orderRequestDto);
 
-        return ResponseEntity.ok().body(orderRequestDto);
+        return ResponseEntity.created(URI.create(memberId.toString())).build();
 
     }
 

@@ -57,15 +57,6 @@ public class Order {
 
     //==조회로직==//
     /** 전체 주문 가격 조회 */
-    public int getTotalPrice() {
-        totalPrice = 0;
-
-        for(ProductOrder productOrder : productOrders) {
-            totalPrice += productOrder.getTotalPrice();
-        }
-
-        return totalPrice;
-    }
 
     public void setOrderedAt(LocalDateTime orderedAt) {
         this.orderedAt = orderedAt;
