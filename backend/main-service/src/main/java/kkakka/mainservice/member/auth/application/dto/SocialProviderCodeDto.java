@@ -1,6 +1,6 @@
-package kkakka.mainservice.auth.application.dto;
+package kkakka.mainservice.member.auth.application.dto;
 
-import kkakka.mainservice.auth.domain.ProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
