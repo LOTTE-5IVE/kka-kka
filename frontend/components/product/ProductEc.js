@@ -11,8 +11,8 @@ export default function ProductEc({ imgsrc, link, context }) {
                 <img src="/sample.png" />
               </div>
               <div className="back">
-                <p class="bottom_title">test</p>
-                <p class="bottom_detail">test_detail</p>
+                <p className="bottom_title">test</p>
+                <p className="bottom_detail">test_detail</p>
               </div>
             </div>
           </a>
