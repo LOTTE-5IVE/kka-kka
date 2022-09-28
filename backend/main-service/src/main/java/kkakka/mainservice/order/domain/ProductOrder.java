@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 public class ProductOrder {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -23,8 +23,8 @@ public class ProductOrder {
 
     //쿠폰 추가
 
-    private int price; //주문가격
-    private int count; //주문수량
+    private Integer price; //주문가격
+    private Integer count; //주문수량
 
     //==생성 메서드==//
     //주문 상품, 가격, 수량 정보를 사용해서 주문상품 엔티티 생성
@@ -34,7 +34,7 @@ public class ProductOrder {
         productOrder.setPrice(price);
         productOrder.setCount(count);
 
-        //상품수량 줄이기
+        //TODO: 2022.09.28 상품 수량 줄이는 로직 추가해야함 -hyeyeon
 
         return productOrder;
     }

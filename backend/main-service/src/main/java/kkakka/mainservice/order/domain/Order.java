@@ -13,22 +13,20 @@ import java.util.List;
 @Getter
 public class Order {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member; //주문회원
 
-    //배송정보 추가
+    //TODO: 2022.09.28 배송지정보 추가할 것 -hyeyeon
 
     private LocalDateTime orderedAt; //주문시간
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<ProductOrder> productOrders = new ArrayList<>();
-
-    //총 주문금액 추가
-    private int totalPrice;
+    private Integer totalPrice; //총금액
 
     //==연관관계 메서드==//
     public void setMember(Member member) {
