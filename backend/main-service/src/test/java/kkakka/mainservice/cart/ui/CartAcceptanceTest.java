@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.util.List;
 import java.util.Optional;
 
 import static kkakka.mainservice.cart.TestDataLoader.MEMBER;
@@ -76,7 +75,7 @@ class CartAcceptanceTest extends AcceptanceTest {
 
         //given
         Member member = MEMBER;
-        List<CartResponseDto> result = cartService.findAllCartItemByMember(member);
+        CartResponseDto result = cartService.findAllCartItemByMember(member);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
