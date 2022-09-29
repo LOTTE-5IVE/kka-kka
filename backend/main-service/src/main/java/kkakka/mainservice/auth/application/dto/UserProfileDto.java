@@ -15,4 +15,8 @@ public class UserProfileDto {
     private String email;
     private String ageGroup;
     private String phone;
+
+    public String getProviderId() {
+        return provider.getProviderId();
+    }
 }
