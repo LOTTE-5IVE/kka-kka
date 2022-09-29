@@ -23,18 +23,13 @@ public class Order {
     //TODO: 2022.09.28 배송지정보 추가할 것 -hyeyeon
 
     private LocalDateTime orderedAt;
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<ProductOrder> productOrders = new ArrayList<>();
     private Integer totalPrice;
 
     public void setMember(Member member) {
         this.member = member;
-        member.getOrders().add(this);
     }
 
     public void addProductOrder(ProductOrder productOrder) {
-        productOrders.add(productOrder);
         productOrder.setOrder(this);
     }
 

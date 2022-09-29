@@ -30,9 +30,6 @@ public class Member {
     private String address;
     private String ageGroup;
 
-    @OneToMany(mappedBy = "member")
-    private List<Order> orders = new ArrayList<>();
-
 //    @Enumerated(EnumType.STRING)
 //    private Grade grade;
 

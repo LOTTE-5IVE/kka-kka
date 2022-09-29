@@ -37,7 +37,6 @@ public class ProductOrder {
         return productOrder;
     }
 
-
     public void setProduct(Product product) {
         this.product = product;
     }
