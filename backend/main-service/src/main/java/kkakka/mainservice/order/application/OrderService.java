@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Transactional
 public class OrderService {
 
     private final MemberRepository memberRepository;
@@ -29,9 +28,6 @@ public class OrderService {
         this.productRepository = productRepository;
     }
 
-    /**
-     * 주문
-     */
     @Transactional
     public Long order(OrderRequestDto orderRequestDto) throws Exception {
 

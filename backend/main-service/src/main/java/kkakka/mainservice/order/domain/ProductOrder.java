@@ -26,8 +26,6 @@ public class ProductOrder {
     private Integer price; //주문가격
     private Integer count; //주문수량
 
-    //==생성 메서드==//
-    //주문 상품, 가격, 수량 정보를 사용해서 주문상품 엔티티 생성
     public static ProductOrder createProductOrder(Product product, int price, int quantity) throws Exception {
         ProductOrder productOrder = new ProductOrder();
         productOrder.setProduct(product);
@@ -39,8 +37,6 @@ public class ProductOrder {
         return productOrder;
     }
 
-    //==조회 로직==//
-    /** 주문상품 전체 가격 조회 */
 
     public void setProduct(Product product) {
         this.product = product;

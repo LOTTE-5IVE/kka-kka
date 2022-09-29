@@ -18,20 +18,19 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member; //주문회원
+    private Member member;
 
     //TODO: 2022.09.28 배송지정보 추가할 것 -hyeyeon
 
-    private LocalDateTime orderedAt; //주문시간
+    private LocalDateTime orderedAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<ProductOrder> productOrders = new ArrayList<>();
-    private Integer totalPrice; //총금액
+    private Integer totalPrice;
 
-    //==연관관계 메서드==//
     public void setMember(Member member) {
         this.member = member;
-        member.getOrders().add(this); //회원에게 주문 추가
+        member.getOrders().add(this);
     }
 
     public void addProductOrder(ProductOrder productOrder) {
@@ -39,13 +38,11 @@ public class Order {
         productOrder.setOrder(this);
     }
 
-    //==생성 메서드==//
     public static Order createOrder(Member member, int totalPrice, List<ProductOrder> productOrders) {
         Order order = new Order();
         order.setMember(member);
         order.setTotalPrice(totalPrice);
 
-        //상품주문 추가
         for(ProductOrder productOrder : productOrders) {
             order.addProductOrder(productOrder);
         }
@@ -54,9 +51,6 @@ public class Order {
 
         return order;
     }
-
-    //==조회로직==//
-    /** 전체 주문 가격 조회 */
 
     public void setOrderedAt(LocalDateTime orderedAt) {
         this.orderedAt = orderedAt;

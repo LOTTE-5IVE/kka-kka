@@ -1,23 +1,19 @@
 package kkakka.mainservice.order.ui.dto;
 
-import kkakka.mainservice.member.domain.Member;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public class OrderRequestDto {
 
     private Long memberId;
     private List<ProductOrderRequest> productOrderRequests;
 
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public List<ProductOrderRequest> getProductOrderRequests() {
-        return productOrderRequests;
-    }
-
     //==테스트용 생성자==//
+    private OrderRequestDto() {
+    }
+
     public OrderRequestDto(Long memberId, List<ProductOrderRequest> productOrderRequests) {
         this.memberId = memberId;
         this.productOrderRequests = productOrderRequests;
