@@ -5,7 +5,7 @@ import kkakka.mainservice.auth.application.UserProfile;
 import kkakka.mainservice.auth.application.dto.SocialProviderCodeDto;
 import kkakka.mainservice.auth.infrastructure.ClientResponseConverter;
 import kkakka.mainservice.auth.infrastructure.kakao.dto.KakaoTokenRequest;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class KakaoClient implements SocialClient {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";

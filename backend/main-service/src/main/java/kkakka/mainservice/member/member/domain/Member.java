@@ -1,4 +1,4 @@
-package kkakka.mainservice.member.domain;
+package kkakka.mainservice.member.member.domain;
 
 import java.util.Objects;
 import javax.persistence.Embedded;
@@ -8,7 +8,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import kkakka.mainservice.auth.application.UserProfile;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,10 +40,9 @@ public class Member {
         return new Member(id, provider, name, email, phone, address, ageGroup, grade);
     }
 
-    public static Member create(UserProfile userProfile, Provider provider) {
-        return new Member(null, provider, userProfile.getName(),
-                userProfile.getEmail(), userProfile.getPhone(), "",
-                userProfile.getAgeGroup(), Grade.BRONZE);
+    public static Member create(Provider provider, String name, String email, String phone,
+            String ageGroup) {
+        return new Member(null, provider, name, email, phone, "", ageGroup, Grade.BRONZE);
     }
 
     @Override

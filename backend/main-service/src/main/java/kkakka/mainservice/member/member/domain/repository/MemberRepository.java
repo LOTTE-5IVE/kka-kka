@@ -1,7 +1,7 @@
-package kkakka.mainservice.member.domain.repository;
+package kkakka.mainservice.member.member.domain.repository;
 
 import java.util.Optional;
-import kkakka.mainservice.member.domain.Member;
+import kkakka.mainservice.member.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

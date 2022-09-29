@@ -2,8 +2,11 @@ package kkakka.mainservice.member.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import kkakka.mainservice.auth.infrastructure.naver.NaverUserProfile;
-import kkakka.mainservice.member.domain.Member;
+import kkakka.mainservice.member.auth.application.dto.UserProfile;
+import kkakka.mainservice.member.member.application.MemberService;
+import kkakka.mainservice.member.member.domain.Member;
+import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.Provider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +22,8 @@ class MemberServiceTest {
     @Test
     void createMemberSuccess() {
         // given
-        final NaverUserProfile 네이버회원01 = new NaverUserProfile("1234", "네이버회원01", "test@email.com",
+        final UserProfile 네이버회원01 = new UserProfile(
+                Provider.create("1234", MemberProviderName.NAVER), "네이버회원01", "test@email.com",
                 "20~29", "010-0000-0000");
 
         // when
@@ -33,7 +37,8 @@ class MemberServiceTest {
     @Test
     void findOrCreateMemberSuccess() {
         // given
-        final NaverUserProfile 네이버회원01 = new NaverUserProfile("1234", "네이버회원01", "test@email.com",
+        final UserProfile 네이버회원01 = new UserProfile(
+                Provider.create("1234", MemberProviderName.NAVER), "네이버회원01", "test@email.com",
                 "20~29", "010-0000-0000");
 
         // when
