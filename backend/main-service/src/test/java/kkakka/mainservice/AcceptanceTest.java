@@ -10,7 +10,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public abstract class AcceptanceTest {
 

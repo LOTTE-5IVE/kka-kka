@@ -1,6 +1,5 @@
-package kkakka.mainservice.auth.infrastructure;
+package kkakka.mainservice.member.auth.infrastructure;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -12,7 +11,7 @@ import org.springframework.util.MultiValueMap;
 
 @Component
 @RequiredArgsConstructor
-public class ClientResponseConverter {
+public class ResponseConverter {
 
     private final ObjectMapper objectMapper;
 
@@ -22,14 +21,6 @@ public class ClientResponseConverter {
         });
         params.setAll(bodyMap);
         return params;
-    }
-
-    public String extractDataAsString(String json, String dataName) {
-        try {
-            return objectMapper.readTree(json).get(dataName).asText();
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException();
-        }
     }
 
     public <T> T extractDataAsAccount(String json, Class<T> profileType) {

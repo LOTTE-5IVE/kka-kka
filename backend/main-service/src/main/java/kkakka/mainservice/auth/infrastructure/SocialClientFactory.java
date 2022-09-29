@@ -5,7 +5,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import kkakka.mainservice.auth.application.SocialClient;
 import kkakka.mainservice.auth.application.SocialLoginStrategyFactory;
-import kkakka.mainservice.auth.application.UserProfile;
 import kkakka.mainservice.auth.domain.ProviderName;
 import kkakka.mainservice.auth.infrastructure.kakao.KakaoClient;
 import kkakka.mainservice.auth.infrastructure.kakao.KakaoOauthInfo;
