@@ -6,27 +6,29 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import kkakka.mainservice.cart.AcceptanceTest;
 import kkakka.mainservice.cart.application.CartService;
+import kkakka.mainservice.cart.domain.CartItem;
+import kkakka.mainservice.cart.domain.repository.CartItemRepository;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
 import kkakka.mainservice.member.domain.Member;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import java.util.List;
+import java.util.Optional;
 
 import static kkakka.mainservice.cart.TestDataLoader.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 class CartAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     private CartService cartService;
+    @Autowired
+    private CartItemRepository cartItemRepository;
 
     @Test
     @DisplayName("장바구니 추가 성공")
@@ -80,9 +82,8 @@ class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .pathParam("memberId", member.getId())
-//                .queryParam("memberId",member.getId())
                 .when()
-                .get("/carts/cart/{memberId}")
+                .get("/carts/{memberId}")
                 .then()
                 .log().all().extract();
         //then
@@ -94,7 +95,7 @@ class CartAcceptanceTest extends AcceptanceTest {
     void testRemoveCartItem() {
 
         //given
-        Long cartItemId = 2L;
+        Long cartItemId = 1L;
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -104,6 +105,11 @@ class CartAcceptanceTest extends AcceptanceTest {
                 .delete("/carts/{cartItemId}")
                 .then()
                 .log().all().extract();
+
+        Optional<CartItem> cartItem = cartItemRepository.findById(1L);
+        if (!cartItem.isPresent()) {
+            System.out.println("삭제한 아이템 조회결과 : 없음! ");
+        }
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());

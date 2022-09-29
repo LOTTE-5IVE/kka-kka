@@ -32,13 +32,13 @@ public class CartController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/cart/{memberId}")
-    public ResponseEntity<List<CartResponseDto>> showMemberCartItemList(@PathVariable("memberId") Long memberId) {
+    @GetMapping("/{memberId}")
+    public ResponseEntity<CartResponseDto> showMemberCartItemList(@PathVariable("memberId") Long memberId) {
 
         /*
         TODO: 멤버 객체 전달 받기
          */
-        List<CartResponseDto> result = cartService.findAllCartItemByMember(new Member(1L, "신우주"));
+        CartResponseDto result = cartService.findAllCartItemByMember(new Member(1L, "신우주"));
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

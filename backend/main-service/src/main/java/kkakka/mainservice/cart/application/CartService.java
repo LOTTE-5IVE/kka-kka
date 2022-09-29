@@ -4,6 +4,7 @@ import kkakka.mainservice.cart.domain.Cart;
 import kkakka.mainservice.cart.domain.CartItem;
 import kkakka.mainservice.cart.domain.repository.CartItemRepository;
 import kkakka.mainservice.cart.domain.repository.CartRepository;
+import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
 import kkakka.mainservice.member.domain.Member;
@@ -64,13 +65,24 @@ public class CartService {
     }
 
     /* 멤버 장바구니 목록 조회 */
-    public List<CartResponseDto> findAllCartItemByMember(Member member) {
+    public CartResponseDto findAllCartItemByMember(Member member) {
+
+        CartResponseDto responseDto = new CartResponseDto();
+
+        Optional<Cart> cart = cartRepository.findByMemberId(member.getId());
+        if (cart.isPresent()) {
+            Long memberCartId = cart.get().getId();
+            responseDto.setCartNo(memberCartId);
+        }
 
         List<CartItem> cartItemList = cartItemRepository.findAllByMemberId(member.getId());
-
-        return cartItemList.stream()
-                .map(CartResponseDto::from)
+        List<CartItemDto> memberCartItems = cartItemList.stream()
+                .map(CartItemDto::from)
                 .collect(Collectors.toList());
+
+        responseDto.setCartItemList(memberCartItems);
+
+        return responseDto;
     }
 
     /* 장바구니 아이템 삭제 */
