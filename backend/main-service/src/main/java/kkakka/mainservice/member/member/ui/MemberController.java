@@ -1,27 +1,37 @@
 package kkakka.mainservice.member.member.ui;
 
-import kkakka.mainservice.member.domain.Member;
-import kkakka.mainservice.member.domain.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.PostConstruct;
+import kkakka.mainservice.member.member.domain.Member;
+import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.Provider;
+import kkakka.mainservice.member.member.domain.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.PostConstruct;
-
 @RestController
 @RequestMapping("/members")
+@RequiredArgsConstructor
 public class MemberController {
 
-    @Autowired
-    MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+
     @GetMapping("/health_check")
-    public String status(){
+    public String status() {
         return "It's Working in Member Service";
     }
 
     @PostConstruct
-    public void init(){
-        memberRepository.save(new Member(1L,"신우주"));
+    public void init() {
+        memberRepository.save(
+                Member.create(
+                        Provider.create("test", MemberProviderName.TEST),
+                        "신우주",
+                        "test@email.com",
+                        "010-000-0000",
+                        "20~29"
+                )
+        );
     }
 }
