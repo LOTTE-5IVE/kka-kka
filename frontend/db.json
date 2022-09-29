@@ -1,0 +1,112 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "cat_id": 1,
+      "name": "롯데 제로 초콜릿칩 쿠키 168g",
+      "price": 4480,
+      "imageUrl": "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+      "discount": null,
+      "registeredAt": "2022-09-26T06:15:36.074+00:00"
+    },
+    {
+      "id": 2,
+      "cat_id": 1,
+      "name": "롯데 제로 초콜릿칩 쿠키 168g",
+      "price": 4480,
+      "imageUrl": "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+      "discount": null,
+      "registeredAt": "2022-09-26T06:15:36.074+00:00"
+    },
+    {
+      "id": 3,
+      "cat_id": 1,
+      "name": "롯데 제로 초콜릿칩 쿠키 168g",
+      "price": 4480,
+      "imageUrl": "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+      "discount": null,
+      "registeredAt": "2022-09-26T06:15:36.074+00:00"
+    },
+    {
+      "id": 4,
+      "cat_id": 1,
+      "name": "롯데 제로 초콜릿칩 쿠키 168g",
+      "price": 4480,
+      "imageUrl": "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+      "discount": null,
+      "registeredAt": "2022-09-26T06:15:36.074+00:00"
+    },
+    {
+      "id": 5,
+      "cat_id": 1,
+      "name": "롯데 제로 초콜릿칩 쿠키 168g",
+      "price": 4480,
+      "imageUrl": "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+      "discount": null,
+      "registeredAt": "2022-09-26T06:15:36.074+00:00"
+    },
+    {
+      "id": 6,
+      "cat_id": 1,
+      "name": "롯데 제로 초콜릿칩 쿠키 168g",
+      "price": 4480,
+      "imageUrl": "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+      "discount": null,
+      "registeredAt": "2022-09-26T06:15:36.074+00:00"
+    },
+    {
+      "id": 7,
+      "cat_id": 2,
+      "name": "롯데 제로 초콜릿칩 쿠키 168g",
+      "price": 4480,
+      "imageUrl": "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+      "discount": null,
+      "registeredAt": "2022-09-26T06:15:36.074+00:00"
+    },
+    {
+      "id": 8,
+      "cat_id": 2,
+      "name": "롯데 제로 초콜릿칩 쿠키 168g",
+      "price": 4480,
+      "imageUrl": "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+      "discount": null,
+      "registeredAt": "2022-09-26T06:15:36.074+00:00"
+    },
+    {
+      "id": 9,
+      "cat_id": 2,
+      "name": "롯데 제로 초콜릿칩 쿠키 168g",
+      "price": 4480,
+      "imageUrl": "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+      "discount": null,
+      "registeredAt": "2022-09-26T06:15:36.074+00:00"
+    },
+    {
+      "id": 10,
+      "cat_id": 2,
+      "name": "롯데 제로 초콜릿칩 쿠키 168g",
+      "price": 4480,
+      "imageUrl": "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+      "discount": null,
+      "registeredAt": "2022-09-26T06:15:36.074+00:00"
+    },
+    {
+      "id": 11,
+      "cat_id": 2,
+      "name": "롯데 제로 초콜릿칩 쿠키 168g",
+      "price": 4480,
+      "imageUrl": "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+      "discount": null,
+      "registeredAt": "2022-09-26T06:15:36.074+00:00"
+    },
+    {
+      "id": 12,
+      "cat_id": 2,
+      "name": "롯데 제로 초콜릿칩 쿠키 168g",
+      "price": 4480,
+      "imageUrl": "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+      "discount": null,
+      "registeredAt": "2022-09-26T06:15:36.074+00:00"
+    }
+  ]
+}
