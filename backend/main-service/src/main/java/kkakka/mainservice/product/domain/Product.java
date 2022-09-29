@@ -53,13 +53,12 @@ public class Product {
         this(null, category, name, price, stock, imageUrl, detailImageUrl, null);
     }
 
-    //TODO: 2022.09.28 프론트단에서 수량이상 선택못하게 막으면 필요없는 로직이지 않을까? -hyeyeon
-    public void reduceStock(int orderQuantity) throws Exception {
+    public void reduceStock(int orderQuantity) {
         int restStock = this.stock - orderQuantity;
-        if (restStock < 0) {
-            throw new Exception("수량이 부족합니다.");
-        }
-
         this.stock = restStock;
+    }
+
+    public boolean isStock(int quantity){
+        return this.stock-quantity > 0;
     }
 }

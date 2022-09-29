@@ -25,33 +25,29 @@ public class Order {
     private LocalDateTime orderedAt;
     private Integer totalPrice;
 
-    public void setMember(Member member) {
-        this.member = member;
+    public Order() {
+
     }
 
     public void addProductOrder(ProductOrder productOrder) {
         productOrder.setOrder(this);
     }
 
-    public static Order createOrder(Member member, int totalPrice, List<ProductOrder> productOrders) {
-        Order order = new Order();
-        order.setMember(member);
-        order.setTotalPrice(totalPrice);
+    public static Order create(Member member, List<ProductOrder> productOrders, int totalPrice) {
+
+        Order order = new Order(null, member, LocalDateTime.now(),totalPrice);
 
         for(ProductOrder productOrder : productOrders) {
             order.addProductOrder(productOrder);
         }
 
-        order.setOrderedAt(LocalDateTime.now());
-
         return order;
     }
 
-    public void setOrderedAt(LocalDateTime orderedAt) {
+    public Order(Long id, Member member, LocalDateTime orderedAt, Integer totalPrice) {
+        this.id = id;
+        this.member = member;
         this.orderedAt = orderedAt;
-    }
-
-    public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
     }
 }

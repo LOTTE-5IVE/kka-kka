@@ -10,7 +10,8 @@ import javax.persistence.*;
 @Getter
 public class ProductOrder {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,30 +27,34 @@ public class ProductOrder {
     private Integer price; //주문가격
     private Integer count; //주문수량
 
-    public static ProductOrder createProductOrder(Product product, int price, int quantity) throws Exception {
-        ProductOrder productOrder = new ProductOrder();
-        productOrder.setProduct(product);
-        productOrder.setPrice(price);
-        productOrder.setCount(quantity);
+    public ProductOrder() {
 
+    }
+
+    public static ProductOrder create(Product product, int price, int quantity) {
+        ProductOrder productOrder = new ProductOrder(null, product, price, quantity);
+
+        //재고 확인 로직
+        if(!product.isStock(quantity)){
+            throw new IllegalStateException("재고수량이 부족합니다.");
+        }
         product.reduceStock(quantity);
 
         return productOrder;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
+    public int getTotalPrice() {
+        return getPrice() * getCount();
     }
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public ProductOrder(Long id, Product product, Integer price, Integer count) {
+        this.id = id;
+        this.product = product;
+        this.price = price;
+        this.count = count;
     }
 }

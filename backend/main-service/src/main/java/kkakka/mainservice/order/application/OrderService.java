@@ -33,34 +33,28 @@ public class OrderService {
     }
 
     @Transactional
-    public Long order(OrderRequestDto orderRequestDto) throws Exception {
+    public Long order(OrderRequestDto orderRequestDto) {
 
         Long memberId = orderRequestDto.getMemberId();
         List<ProductOrderRequest> productOrderRequests = orderRequestDto.getProductOrderRequests();
-
-        //엔티티 조회
-        Member member = memberRepository.findById(memberId).get();
+        Member member = memberRepository.findById(memberId).orElseThrow();
 
         //상품주문 생성
         List<ProductOrder> productOrders = new ArrayList<>();
-        int totalPrice = 0;
+        int orderTotalPrice = 0;
         for (ProductOrderRequest productOrderRequest : productOrderRequests) {
             Long productId = productOrderRequest.getProductId();
             Integer quantity = productOrderRequest.getQuantity();
 
             Product product = productRepository.findById(productId).get();
-            ProductOrder productOrder = ProductOrder.createProductOrder(product, product.getPrice(), quantity);
+            ProductOrder productOrder = ProductOrder.create(product, product.getPrice(), quantity);
 
             productOrders.add(productOrder);
-//            productOrderRepository.save(productOrder);
-
-            totalPrice += product.getPrice() * quantity;
+            orderTotalPrice += productOrder.getTotalPrice();
         }
 
-        //주문 생성
-        Order order = Order.createOrder(member, totalPrice, productOrders);
+        Order order = Order.create(member, productOrders, orderTotalPrice );
 
-        //주문 저장
         orderRepository.save(order);
         productOrderRepository.saveAll(productOrders);
 

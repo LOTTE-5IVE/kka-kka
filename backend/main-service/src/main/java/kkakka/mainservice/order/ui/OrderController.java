@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -24,14 +24,10 @@ public class OrderController {
         this.productService = productService;
     }
 
-    // 주문 폼 이동
-    // 주문화면에 주문할 고객정보와 상품 정보를 넘기기 위해 model 객체에 담아서 넘겨준다.
     @GetMapping
     public void createForm(Model model) {
     }
 
-    //주문
-    // 주문 상품과 수량을 선택 후 버튼을 누르면 실행
     @PostMapping
     public ResponseEntity<Void> order(@RequestBody OrderRequestDto orderRequestDto) throws Exception {
 
