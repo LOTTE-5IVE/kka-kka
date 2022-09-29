@@ -61,4 +61,5 @@ public class Product {
     public boolean isStock(int quantity){
         return this.stock-quantity > 0;
     }
+
 }

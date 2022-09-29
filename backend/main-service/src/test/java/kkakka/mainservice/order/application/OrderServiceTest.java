@@ -63,7 +63,6 @@ class OrderServiceTest {
 
         assertThat(orderId).isEqualTo(getOrder.getId());
         assertThat(2000*2).isEqualTo(getOrder.getTotalPrice());
-        assertThat(1).isEqualTo(getOrder.getProductOrders().size());
     }
 
     @Test
@@ -88,7 +87,6 @@ class OrderServiceTest {
 
         assertThat(orderId).isEqualTo(getOrder.getId());
         assertThat(2000*2+1000*3).isEqualTo(getOrder.getTotalPrice());
-        assertThat(2).isEqualTo(getOrder.getProductOrders().size());
     }
 
     @Test
