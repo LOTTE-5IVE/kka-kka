@@ -13,7 +13,7 @@ public class CouponRequestDto {
 
     private Long id;
     private Long categoryId;
-    private Long gradeId;
+    private String grade;
     private Long productId;
     private String name;
     private String detail;
@@ -25,4 +25,5 @@ public class CouponRequestDto {
     private Integer maxDiscount;
     private Integer minOrderPrice;
     private Integer isUsed;
+
 }
