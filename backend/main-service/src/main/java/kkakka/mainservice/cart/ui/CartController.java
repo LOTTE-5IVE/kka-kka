@@ -21,7 +21,7 @@ public class CartController {
     private final CartService cartService;
 
     /* 장바구니 추가 */
-    @PostMapping("/cart")
+    @PostMapping("")
     public ResponseEntity<String> saveCartItem(@RequestBody CartRequestDto cartRequestDto) {
 
         Long memberId = cartService.saveOrUpdateCartItem(cartRequestDto);
