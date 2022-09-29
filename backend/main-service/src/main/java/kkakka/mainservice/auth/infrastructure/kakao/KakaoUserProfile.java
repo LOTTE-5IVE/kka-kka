@@ -3,6 +3,8 @@ package kkakka.mainservice.auth.infrastructure.kakao;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import kkakka.mainservice.auth.application.UserProfile;
+import kkakka.mainservice.auth.application.dto.UserProfileDto;
+import kkakka.mainservice.auth.domain.Provider;
 import kkakka.mainservice.auth.domain.ProviderName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,11 +14,23 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KakaoUserProfile implements UserProfile {
 
+    private static final String DEFAULT_PHONE_NUMBER = "010-0000-0000";
     private String id;
     @JsonProperty(value = "properties")
     private KakaoProperty kakaoProperty;
     @JsonProperty(value = "kakao_account")
     private KakaoAccount kakaoAccount;
+
+    @Override
+    public UserProfileDto toDto() {
+        return new UserProfileDto(
+                Provider.create(id, providerName()),
+                kakaoProperty.name,
+                kakaoAccount.email,
+                kakaoAccount.ageGroup,
+                DEFAULT_PHONE_NUMBER
+        );
+    }
 
     @Override
     public ProviderName providerName() {
@@ -45,7 +59,7 @@ public class KakaoUserProfile implements UserProfile {
 
     @Override
     public String getPhone() {
-        return "010-0000-0000";
+        return DEFAULT_PHONE_NUMBER;
     }
 
     @Getter

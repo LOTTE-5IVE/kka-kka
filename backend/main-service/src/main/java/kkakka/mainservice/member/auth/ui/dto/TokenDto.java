@@ -1,4 +1,4 @@
-package kkakka.mainservice.auth.ui.dto;
+package kkakka.mainservice.member.auth.ui.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

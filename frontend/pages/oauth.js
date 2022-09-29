@@ -18,7 +18,7 @@ export default function oauth() {
   // TODO: code 가지고 /login/token으로 요청해서 우리 서비스의 accessToken 받아오기
   const login = async () => {
     await axios.post(
-        `${process.env.NEXT_PUBLIC_LOCAL_URL}/auth/login/token`,
+        `${process.env.NEXT_PUBLIC_LOCAL_URL}/api/login/token`,
         {
           code: {code}.code,
           providerName: getProvider({state}.state),
