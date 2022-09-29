@@ -75,7 +75,7 @@ public class CartService {
 
     /* 장바구니 아이템 삭제 */
     @Transactional
-    public boolean deleteCartItem(List<Long> cartItemList) {
+    public boolean deleteCartItems(List<Long> cartItemList) {
 
         cartItemList.stream()
                 .map(cartItemId -> cartItemRepository.deleteCartItemById(cartItemId))
