@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.7.3'
     id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
     id 'java'
 }
 
@@ -20,11 +21,14 @@ repositories {
 
 ext {
     set('springCloudVersion', "2021.0.4")
+    set('snippetsDir', file("build/generated-snippets"))
 }
 
 dependencies {
     /* Application */
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
     /* Model mapper */
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
@@ -51,6 +55,7 @@ dependencies {
     /* Test */
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
 
     /* Log */
     implementation 'dev.akkinoc.spring.boot:logback-access-spring-boot-starter:3.3.3'
@@ -64,5 +69,31 @@ dependencyManagement {
 }
 
 tasks.named('test') {
+    outputs.dir snippetsDir
     useJUnitPlatform()
+}
+
+// asciidoctor
+asciidoctor {
+    dependsOn test
+    inputs.dir snippetsDir
+}
+
+task createDocument(type: Copy) {
+    dependsOn asciidoctor
+    asciidoctor
+    delete file('src/main/resources/static/index.html')
+    from file("build/docs/asciidoc/index.html")
+    into file("src/main/resources/static")
+}
+
+build {
+    dependsOn createDocument
+}
+
+bootJar {
+    dependsOn createDocument
+    from("${asciidoctor.outputDir}") {
+        into 'static'
+    }
 }

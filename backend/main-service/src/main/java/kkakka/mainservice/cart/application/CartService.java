@@ -9,6 +9,8 @@ import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
 import kkakka.mainservice.member.domain.Member;
 import kkakka.mainservice.member.domain.repository.MemberRepository;
+import kkakka.mainservice.member.member.domain.Member;
+import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import org.springframework.stereotype.Service;
