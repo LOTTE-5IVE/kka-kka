@@ -1,6 +1,6 @@
 package kkakka.mainservice.cart.domain;
 
-import kkakka.mainservice.member.domain.Member;
+import kkakka.mainservice.member.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

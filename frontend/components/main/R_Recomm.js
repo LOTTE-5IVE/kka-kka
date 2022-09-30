@@ -35,7 +35,6 @@ export default function C_Recomm() {
             align-items: center;
 
             .title {
-              width: 15%;
               height: 50%;
 
               h2 {

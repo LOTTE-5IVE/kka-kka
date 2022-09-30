@@ -1,6 +1,17 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function NavBar() {
+  const router = useRouter();
+  const category = (cat_id) => {
+    router.push({
+      pathname: `/product`,
+      query: {
+        cat_id,
+      },
+    });
+  };
+
   return (
     <nav>
       <div className="wrapper">
@@ -11,34 +22,49 @@ export default function NavBar() {
             </Link>
           </li>
           <li>
-            <Link href="/product/productList">
+            <Link href="/product?cat_id=1">
               <a>전체</a>
             </Link>
           </li>
           <li>
-            <Link href="/product/productList">
+            <div onClick={() => category(2)} className="category">
               <a>비스킷/샌드</a>
-            </Link>
+            </div>
           </li>
           <li>
-            <Link href="/product/productList">
+            <div onClick={() => category(3)} className="category">
               <a>스낵/봉지과자</a>
-            </Link>
+            </div>
           </li>
           <li>
-            <Link href="/product/productList">
+            <div onClick={() => category(4)} className="category">
+              <a>박스과자</a>
+            </div>
+          </li>
+          <li>
+            <div onClick={() => category(5)} className="category">
+              <a>시리얼/바</a>
+            </div>
+          </li>
+          <li>
+            <div onClick={() => category(6)} className="category">
               <a>캔디/사탕/젤리</a>
-            </Link>
+            </div>
           </li>
           <li>
-            <Link href="/product/productList">
+            <div onClick={() => category(7)} className="category">
               <a>초콜릿</a>
-            </Link>
+            </div>
           </li>
           <li>
-            <Link href="/product/productList">
+            <div onClick={() => category(8)} className="category">
               <a>껌/자일리톨</a>
-            </Link>
+            </div>
+          </li>
+          <li>
+            <div onClick={() => category(9)} className="category">
+              <a>선물세트</a>
+            </div>
           </li>
         </ul>
       </div>
@@ -47,7 +73,7 @@ export default function NavBar() {
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
           .wrapper {
-            max-width: 1000px;
+            max-width: 1300px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
