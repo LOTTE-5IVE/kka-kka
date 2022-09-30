@@ -1,5 +1,6 @@
 package kkakka.mainservice.member.auth.ui.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import kkakka.mainservice.member.auth.application.dto.SocialProviderCodeDto;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
 import lombok.AccessLevel;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class SocialProviderCodeRequest {
 
     private String code;
+    @JsonProperty("providerName")
     private MemberProviderName memberProviderName;
 
     public SocialProviderCodeDto toDto() {

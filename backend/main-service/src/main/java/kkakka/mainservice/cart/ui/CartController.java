@@ -5,7 +5,6 @@ import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
-import kkakka.mainservice.member.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,31 +21,30 @@ public class CartController {
 
     private final CartService cartService;
 
-    /* 장바구니 추가 */
-    @PostMapping("")
-    public ResponseEntity<String> saveCartItem(@RequestBody CartRequestDto cartRequestDto) {
+    @PostMapping
+    public ResponseEntity<Void> saveCartItem(@RequestBody CartRequestDto cartRequestDto,
+                                               @AuthenticationPrincipal LoginMember loginMember) {
 
-        Long memberId = cartService.saveOrUpdateCartItem(cartRequestDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{memberId}")
-                .buildAndExpand(memberId)
-                .toUri();
-        return ResponseEntity.created(location).build();
+                .buildAndExpand().toUri();
+        if (loginMember.isMember()) {
+            cartService.saveOrUpdateCartItem(cartRequestDto);
+            return ResponseEntity.created(location).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @GetMapping("/{memberId}")
-    public ResponseEntity<CartResponseDto> showMemberCartItemList(@PathVariable("memberId") Long memberId
-            ,@AuthenticationPrincipal LoginMember loginMember) {
+    @GetMapping
+    public ResponseEntity<CartResponseDto> showMemberCartItemList(@AuthenticationPrincipal LoginMember loginMember) {
 
-        if(loginMember.isMember()){
-            System.out.println("로그인 회원" + loginMember.getId());
+        if (loginMember.isMember()) {
+            CartResponseDto result = cartService.findAllCartItemByMemberId(loginMember.getId());
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         }
-        if (loginMember.isAnonymous()){
-            System.out.println("비회원" + loginMember.getId());
+        if (loginMember.isAnonymous()) {
         }
-
-        CartResponseDto result = cartService.findAllCartItemByMember(memberId);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
     @DeleteMapping("/{cartItemId}")

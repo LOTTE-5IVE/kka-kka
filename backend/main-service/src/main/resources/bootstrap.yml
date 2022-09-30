@@ -14,7 +14,3 @@ logging:
   config: classpath:logback-spring.xml
   level:
     root: info
-
-auth:
-  url:
-    local: http://127.0.0.1:9000/api/auth

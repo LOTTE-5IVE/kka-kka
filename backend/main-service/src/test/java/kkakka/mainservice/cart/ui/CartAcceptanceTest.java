@@ -75,7 +75,7 @@ class CartAcceptanceTest extends AcceptanceTest {
 
         //given
         Member member = MEMBER;
-        CartResponseDto result = cartService.findAllCartItemByMember(member.getId());
+        CartResponseDto result = cartService.findAllCartItemByMemberId(member.getId());
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()

@@ -63,7 +63,7 @@ public class CartService {
         return member.getId();
     }
 
-    public CartResponseDto findAllCartItemByMember(Long memberId) {
+    public CartResponseDto findAllCartItemByMemberId(Long memberId) {
 
         Optional<Cart> cart = cartRepository.findByMemberId(memberId);
         if (cart.isEmpty()) {
