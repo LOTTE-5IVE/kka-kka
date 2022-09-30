@@ -88,15 +88,21 @@ public class CouponService {
     return category;
   }
 
-  /* 관리자 쿠폰 삭제 */
+  /* 관리자 쿠폰 사용 */
   @Transactional
-  public String deleteCoupon(Long couponId) {
-    couponRepository.deleteById(couponId);
-    return "";
+  public void useCoupon(Long couponId) {
+    Coupon coupon = couponRepository.findById(couponId).orElseThrow(IllegalArgumentException::new);
+    coupon.useCoupon();
+    couponRepository.save(coupon);
   }
 
   /* 관리자 모든 쿠폰 조회 */
   public List<Coupon> findCoupons() {
     return couponRepository.findAll();
+  }
+
+  /* 쿠폰 다운로드 */
+  public void downloadCoupon(Long couponId, Long memberId) {
+    // TODO : 비회원일 경우
   }
 }

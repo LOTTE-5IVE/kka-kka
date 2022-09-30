@@ -30,10 +30,10 @@ public class CouponController {
 //        return ResponseEntity.ok().build();
 //    }
 
-    /* 쿠폰 삭제 */
+    /* 쿠폰 사용 - 삭제 */
     @DeleteMapping("/{couponId}")
-    public ResponseEntity<Void> deleteCoupon(Long couponId) {
-        couponService.deleteCoupon(couponId);
+    public ResponseEntity<Void> useCoupon(@PathVariable Long couponId) {
+        couponService.useCoupon(couponId);
         return ResponseEntity.ok().build();
     }
 

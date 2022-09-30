@@ -7,6 +7,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,7 +28,7 @@ import lombok.NoArgsConstructor;
 public class Coupon {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Long id;
 
@@ -85,5 +86,13 @@ public class Coupon {
   ) {
     return new Coupon(null, null, grade, null, name, detail, priceRule, LocalDateTime.now(),
         startedAt, expiredAt, percentage, maxDiscount, minOrderPrice, 0);
+  }
+
+  public void useCoupon() {
+    this.isUsed = 1;
+  }
+
+  public boolean isUsed() {
+    return this.isUsed == 1;
   }
 }
