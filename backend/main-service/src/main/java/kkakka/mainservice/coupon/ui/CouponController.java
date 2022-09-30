@@ -25,14 +25,15 @@ public class CouponController {
     }
 
     /* 할인 등록 */
-    @PostMapping("discount")
-    public ResponseEntity<Void> createDiscount() {
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/discount")
+//    public ResponseEntity<Void> createDiscount() {
+//        return ResponseEntity.ok().build();
+//    }
 
     /* 쿠폰 삭제 */
     @DeleteMapping("/{couponId}")
-    public ResponseEntity<Void> deleteCoupon() {
+    public ResponseEntity<Void> deleteCoupon(Long couponId) {
+        couponService.deleteCoupon(couponId);
         return ResponseEntity.ok().build();
     }
 

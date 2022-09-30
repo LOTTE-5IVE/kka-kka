@@ -1,55 +1,89 @@
 package kkakka.mainservice.coupon.domain;
 
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.member.domain.Grade;
 import kkakka.mainservice.product.domain.Product;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Table(name = "Coupon")
 @NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Coupon {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Long id;
+  @Id
+  @GeneratedValue
+  @Column(name = "id")
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id")
+  private Category category;
 
-    //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "grade_id")
-    @Enumerated(EnumType.STRING)
-    private Grade grade;
+  @Enumerated(EnumType.STRING)
+  private Grade grade;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id")
+  private Product product;
 
-    private String name;
-    private String detail;
+  private String name;
+  private String detail;
 
-    @Enumerated(EnumType.STRING)
-    private PriceRule priceRule;
+  @Enumerated(EnumType.STRING)
+  private PriceRule priceRule;
 
-    private LocalDateTime registeredAt;
-    private LocalDateTime startedAt;
-    private LocalDateTime expiredAt;
-    private Integer percentage;
-    private Integer maxDiscount;
-    private Integer minOrderPrice;
-    private Integer isUsed;
+  private LocalDateTime registeredAt;
+  private LocalDateTime startedAt;
+  private LocalDateTime expiredAt;
+  private Integer percentage;
+  private Integer maxDiscount;
+  private Integer minOrderPrice;
+  private Integer isUsed;
 
-    public Coupon() {
+  public static Coupon create(
+      Category category,
+      Product product,
+      String name,
+      String detail,
+      PriceRule priceRule,
+      LocalDateTime startedAt,
+      LocalDateTime expiredAt,
+      int percentage,
+      int maxDiscount,
+      int minOrderPrice
+  ) {
+    return new Coupon(null, category, null, product, name, detail, priceRule, LocalDateTime.now(),
+        startedAt, expiredAt, percentage, maxDiscount, minOrderPrice, 0);
+  }
 
-    }
-
-
+  public static Coupon create(
+      Grade grade,
+      String name,
+      String detail,
+      PriceRule priceRule,
+      LocalDateTime startedAt,
+      LocalDateTime expiredAt,
+      int percentage,
+      int maxDiscount,
+      int minOrderPrice
+  ) {
+    return new Coupon(null, null, grade, null, name, detail, priceRule, LocalDateTime.now(),
+        startedAt, expiredAt, percentage, maxDiscount, minOrderPrice, 0);
+  }
 }
