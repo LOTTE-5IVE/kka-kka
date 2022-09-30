@@ -23,15 +23,14 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<Void> saveCartItem(@RequestBody CartRequestDto cartRequestDto,
-                                               @AuthenticationPrincipal LoginMember loginMember) {
+                                             @AuthenticationPrincipal LoginMember loginMember) {
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .buildAndExpand().toUri();
         if (loginMember.isMember()) {
             cartService.saveOrUpdateCartItem(cartRequestDto);
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .buildAndExpand().toUri();
             return ResponseEntity.created(location).build();
         }
-
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
@@ -48,9 +47,12 @@ public class CartController {
     }
 
     @DeleteMapping("/{cartItemId}")
-    public ResponseEntity<Void> removeCartItem(@PathVariable("cartItemId") List<Long> cartItemList) {
-
-        cartService.deleteCartItems(cartItemList);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<Void> removeCartItem(@PathVariable("cartItemId") List<Long> cartItemList,
+                                               @AuthenticationPrincipal LoginMember loginMember) {
+        if (loginMember.isMember()) {
+            cartService.deleteCartItems(cartItemList,loginMember);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

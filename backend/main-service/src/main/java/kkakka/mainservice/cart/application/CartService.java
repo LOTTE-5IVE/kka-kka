@@ -7,10 +7,12 @@ import kkakka.mainservice.cart.domain.repository.CartRepository;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
+import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -20,20 +22,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class CartService {
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
-
-    public CartService(CartRepository cartRepository, CartItemRepository cartItemRepository, ProductRepository productRepository
-            , MemberRepository memberRepository) {
-        this.cartRepository = cartRepository;
-        this.cartItemRepository = cartItemRepository;
-        this.productRepository = productRepository;
-        this.memberRepository = memberRepository;
-    }
 
     @Transactional
     public Long saveOrUpdateCartItem(CartRequestDto cartRequestDto) {
@@ -82,7 +77,9 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCartItems(List<Long> cartItemIds) {
+    public void deleteCartItems(List<Long> cartItemIds , LoginMember loginMember) {
+
+        Long loginMemberId = loginMember.getId();
         cartItemIds.forEach(cartItemRepository::deleteCartItemById);
     }
 
