@@ -1,13 +1,10 @@
 package kkakka.mainservice.order.ui;
 
-import kkakka.mainservice.member.application.MemberService;
 import kkakka.mainservice.order.application.OrderService;
-import kkakka.mainservice.order.ui.dto.OrderRequestDto;
+import kkakka.mainservice.order.ui.dto.OrderRequest;
 import kkakka.mainservice.order.ui.dto.OrderResponse;
-import kkakka.mainservice.product.application.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -30,8 +27,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> order(@RequestBody OrderRequestDto orderRequestDto) throws Exception {
-        Long memberId = orderService.order(orderRequestDto);
+    public ResponseEntity<Void> order(@RequestBody OrderRequest orderRequest) throws Exception {
+        Long memberId = orderService.order(orderRequest);
 
         return ResponseEntity.created(URI.create(memberId.toString())).build();
     }

@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-  @Query("select distinct o from Order o "
-      + "join fetch o.productOrders po "
-      + "join fetch po.product p "
-      + "where o.member.id = :memberId "
-      + "order by o.orderedAt desc")
-  List<Order> findAllByMemberId(@Param("memberId") Long memberId);
+    @Query("select distinct o from Order o "
+        + "join fetch o.productOrders po "
+        + "join fetch po.product p "
+        + "where o.member.id = :memberId "
+        + "order by o.orderedAt desc")
+    List<Order> findAllByMemberId(@Param("memberId") Long memberId);
 
 }
