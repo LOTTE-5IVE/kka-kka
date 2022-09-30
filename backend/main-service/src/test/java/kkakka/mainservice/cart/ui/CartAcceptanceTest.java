@@ -10,7 +10,7 @@ import kkakka.mainservice.cart.domain.CartItem;
 import kkakka.mainservice.cart.domain.repository.CartItemRepository;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
-import kkakka.mainservice.member.domain.Member;
+import kkakka.mainservice.member.member.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +75,7 @@ class CartAcceptanceTest extends AcceptanceTest {
 
         //given
         Member member = MEMBER;
-        CartResponseDto result = cartService.findAllCartItemByMember(member);
+        CartResponseDto result = cartService.findAllCartItemByMember(member.getId());
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()

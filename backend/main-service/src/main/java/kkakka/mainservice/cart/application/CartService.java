@@ -7,8 +7,6 @@ import kkakka.mainservice.cart.domain.repository.CartRepository;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
-import kkakka.mainservice.member.domain.Member;
-import kkakka.mainservice.member.domain.repository.MemberRepository;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
@@ -65,9 +63,9 @@ public class CartService {
         return member.getId();
     }
 
-    public CartResponseDto findAllCartItemByMember(Member member) {
+    public CartResponseDto findAllCartItemByMember(Long memberId) {
 
-        Optional<Cart> cart = cartRepository.findByMemberId(member.getId());
+        Optional<Cart> cart = cartRepository.findByMemberId(memberId);
         if (cart.isEmpty()) {
             // TODO: 장바구니 없을 때 처리
             return new CartResponseDto(0L, Collections.emptyList());

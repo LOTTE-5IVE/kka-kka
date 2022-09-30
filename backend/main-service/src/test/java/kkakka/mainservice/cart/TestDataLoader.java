@@ -2,8 +2,10 @@ package kkakka.mainservice.cart;
 
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
-import kkakka.mainservice.member.domain.Member;
-import kkakka.mainservice.member.domain.repository.MemberRepository;
+import kkakka.mainservice.member.member.domain.Member;
+import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.Provider;
+import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +34,15 @@ public class TestDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        MEMBER = new Member(1L, "신우주");
-        memberRepository.save(MEMBER);
+        MEMBER =  memberRepository.save(
+                Member.create(
+                        Provider.create("test", MemberProviderName.TEST),
+                        "신우주",
+                        "test@email.com",
+                        "010-000-0000",
+                        "20~29"
+                )
+        );
 
         Category category = new Category("test-category");
         CATEGORY = categoryRepository.save(category);
