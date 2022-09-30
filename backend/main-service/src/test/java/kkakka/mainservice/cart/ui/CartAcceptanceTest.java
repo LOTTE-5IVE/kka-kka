@@ -41,7 +41,7 @@ class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequestDto)
                 .when()
-                .post("/carts/cart")
+                .post("/carts")
                 .then()
                 .log().all().extract();
 

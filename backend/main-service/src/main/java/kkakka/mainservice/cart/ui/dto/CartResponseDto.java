@@ -13,12 +13,4 @@ public class CartResponseDto {
 
     private Long cartNo;
     private List<CartItemDto> cartItemList;
-
-    public void setCartNo(Long cartNo) {
-        this.cartNo = cartNo;
-    }
-
-    public void setCartItemList(List<CartItemDto> cartItemList) {
-        this.cartItemList = cartItemList;
-    }
 }

@@ -49,8 +49,8 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<ResponsePageDto> showCategoryProducts(@RequestParam("category") Long categoryId,
-                                                                Pageable pageable) {
+    public ResponseEntity<ResponsePageDto> showCategoryProducts(
+            @RequestParam("category") Long categoryId, Pageable pageable) {
 
         ResponsePageDto response = categoryService.getProductsByCategoryId(categoryId, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(response);
