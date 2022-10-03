@@ -10,9 +10,9 @@ import kkakka.mainservice.member.auth.ui.Authority;
 
 public enum TestMember {
 
-    MEMBER_00("0000", "test.member.default", "0000", "member00",
+    MEMBER_00("0000", "1", "0000", "member00",
             "default@email.com", "00~00", "000-0000-0000", Authority.MEMBER),
-    MEMBER_01("0001", "test.member.01", "0001", "member01",
+    MEMBER_01("0001", "1", "0001", "member01",
             "test01@email.com", "20~29", "010-0000-0000", Authority.MEMBER);
 
     private String code;
@@ -54,7 +54,8 @@ public enum TestMember {
                 .orElse(MEMBER_00);
     }
 
-    public static boolean findByAccessToken(String accessToken) {
+    public static boolean isValidToken(String accessToken) {
+
         return FIXTURES.stream()
                 .anyMatch((member) -> member.accessToken.equals(accessToken));
     }
