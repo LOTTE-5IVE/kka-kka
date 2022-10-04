@@ -1,15 +1,15 @@
 package kkakka.mainservice.coupon.domain;
 
-import kkakka.mainservice.member.domain.Member;
-import lombok.Getter;
-
-import javax.persistence.Embeddable;
 import java.io.Serializable;
+import javax.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
 
-@Getter @Embeddable
+@Getter @Setter
+@Embeddable
 public class MemberCouponId implements Serializable {
 
-    private Long memberId;
-    private Long couponId;
-    
+  private Long memberId;
+  private Long couponId;
+
 }

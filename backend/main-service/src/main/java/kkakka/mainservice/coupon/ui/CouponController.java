@@ -1,5 +1,6 @@
 package kkakka.mainservice.coupon.ui;
 
+import java.util.List;
 import kkakka.mainservice.coupon.application.CouponService;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +21,11 @@ public class CouponController {
     public ResponseEntity<Void> createCoupon(
             @RequestBody CouponRequestDto couponRequestDto
     ) {
-        Long couponId = couponService.createCoupon(couponRequestDto);
+        List<Long> couponId = couponService.createCoupon(couponRequestDto);
         return ResponseEntity.created(URI.create(couponId.toString())).build();
     }
 
-    /* 할인 등록 */
-//    @PostMapping("/discount")
-//    public ResponseEntity<Void> createDiscount() {
-//        return ResponseEntity.ok().build();
-//    }
+    /* TODO : 할인 등록 */
 
     /* 쿠폰 사용 - 삭제 */
     @DeleteMapping("/{couponId}")

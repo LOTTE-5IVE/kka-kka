@@ -1,14 +1,19 @@
 package kkakka.mainservice.coupon.application;
 
+import java.util.ArrayList;
 import java.util.List;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.coupon.domain.Coupon;
+import kkakka.mainservice.coupon.domain.MemberCoupon;
+import kkakka.mainservice.coupon.domain.MemberCouponId;
 import kkakka.mainservice.coupon.domain.PriceRule;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
 import kkakka.mainservice.member.domain.Grade;
+import kkakka.mainservice.member.domain.Member;
+import kkakka.mainservice.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,22 +30,35 @@ public class CouponService {
   private final MemberCouponRepository memberCouponRepository;
   private final CategoryRepository categoryRepository;
   private final ProductRepository productRepository;
+  private final MemberRepository memberRepository;
 
   /* 쿠폰 등록 */
   @Transactional
-  public Long createCoupon(CouponRequestDto couponRequestDto) {
+  public List<Long> createCoupon(CouponRequestDto couponRequestDto) {
+    List<Long> coupons = new ArrayList<>();
     if (PriceRule.GRADE_COUPON.equals(couponRequestDto.getPriceRule())) {
-      Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
-      // TODO : MemberCoupon에 저장
-
-      return coupon.getId();
+      // TODO : MemberCoupon에 저장 -> 등급쿠폰을 여러개 생성? 해서? 넣어야 하나?
+      // return 값 통일
+      List<Member> members = memberRepository.findByGrade(couponRequestDto.getGrade());
+      for (Member member : members) {
+        Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
+        MemberCouponId memberCouponId = new MemberCouponId();
+        MemberCoupon memberCoupon = new MemberCoupon();
+        memberCouponId.setCouponId(coupon.getId());
+        memberCouponId.setMemberId(member.getId());
+        memberCoupon.setMemberCouponId(memberCouponId);
+        memberCouponRepository.save(memberCoupon);
+        coupons.add(coupon.getId());
+      }
+      return coupons;
     }
 
     if (PriceRule.COUPON.equals(couponRequestDto.getPriceRule())) {
       Category category = getCategory(couponRequestDto);
       Product product = getProduct(couponRequestDto);
       Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto, category, product));
-      return coupon.getId();
+      coupons.add(coupon.getId());
+      return coupons;
     }
 
     throw new IllegalArgumentException();
@@ -104,5 +122,9 @@ public class CouponService {
   /* 쿠폰 다운로드 */
   public void downloadCoupon(Long couponId, Long memberId) {
     // TODO : 비회원일 경우
+    if (memberId == null) {
+      return;
+    }
+
   }
 }
