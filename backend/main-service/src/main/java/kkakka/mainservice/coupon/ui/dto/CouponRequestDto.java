@@ -1,5 +1,6 @@
 package kkakka.mainservice.coupon.ui.dto;
 
+import kkakka.mainservice.member.domain.Grade;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ public class CouponRequestDto {
 
     private Long id;
     private Long categoryId;
-    private String grade;
+    private Grade grade;
     private Long productId;
     private String name;
     private String detail;
@@ -25,5 +26,4 @@ public class CouponRequestDto {
     private Integer maxDiscount;
     private Integer minOrderPrice;
     private Integer isUsed;
-
 }

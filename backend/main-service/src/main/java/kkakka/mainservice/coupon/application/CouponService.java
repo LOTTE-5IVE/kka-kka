@@ -42,11 +42,11 @@ public class CouponService {
       List<Member> members = memberRepository.findByGrade(couponRequestDto.getGrade());
       for (Member member : members) {
         Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
-        MemberCouponId memberCouponId = new MemberCouponId();
-        MemberCoupon memberCoupon = new MemberCoupon();
-        memberCouponId.setCouponId(coupon.getId());
-        memberCouponId.setMemberId(member.getId());
-        memberCoupon.setMemberCouponId(memberCouponId);
+        MemberCouponId memberCouponId = new MemberCouponId(member.getId(), coupon.getId());
+        MemberCoupon memberCoupon = new MemberCoupon(memberCouponId);
+//        memberCouponId.setCouponId(coupon.getId());
+//        memberCouponId.setMemberId(member.getId());
+//        memberCoupon.setMemberCouponId(memberCouponId);
         memberCouponRepository.save(memberCoupon);
         coupons.add(coupon.getId());
       }
@@ -67,7 +67,7 @@ public class CouponService {
   @NotNull
   private Coupon toCouponEntity(CouponRequestDto couponRequestDto) {
     return Coupon.create(
-        Grade.valueOf(couponRequestDto.getGrade()),
+        couponRequestDto.getGrade(),
         couponRequestDto.getName(),
         couponRequestDto.getDetail(),
         PriceRule.GRADE_COUPON,
