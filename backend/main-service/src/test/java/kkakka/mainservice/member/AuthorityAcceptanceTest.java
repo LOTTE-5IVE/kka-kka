@@ -8,13 +8,14 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import kkakka.mainservice.AcceptanceTest;
 import kkakka.mainservice.common.config.WebMvcConfig;
-import kkakka.mainservice.fixture.TestMember;
 import kkakka.mainservice.member.auth.infrastructure.LoginInterceptor;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
+import kkakka.mainservice.member.auth.util.AuthenticationPrincipalArgumentResolver;
 import kkakka.mainservice.member.auth.util.JwtTokenProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -26,29 +27,30 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 public class AuthorityAcceptanceTest extends AcceptanceTest {
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @TestConfiguration
     public static class TestConfig {
 
+        @Autowired
+        private JwtTokenProvider jwtTokenProvider;
+
         @Bean
         public LoginInterceptor testInterceptor() {
-            return new LoginInterceptor(
-                    testTokenProvider()
-            );
+            return new LoginInterceptor(jwtTokenProvider) {
+            };
         }
 
         @Bean
-        public JwtTokenProvider testTokenProvider() {
-            return new JwtTokenProvider() {
-                @Override
-                public boolean validateToken(String token) {
-                    return TestMember.findByAccessToken(token);
-                }
+        public AuthenticationPrincipalArgumentResolver testAuthenticationResolver() {
+            return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider) {
             };
         }
 
         @Bean
         public WebMvcConfigurer interceptorConfigure() {
-            return new WebMvcConfig(testTokenProvider(), testInterceptor()) {
+            return new WebMvcConfig(jwtTokenProvider, testInterceptor()) {
                 @Override
                 public void addInterceptors(InterceptorRegistry registry) {
                     registry.addInterceptor(testInterceptor())
@@ -73,8 +75,9 @@ public class AuthorityAcceptanceTest extends AcceptanceTest {
     void userAuthority_success() {
         // given
         // when
+        final String accessToken = jwtTokenProvider.generateToken(MEMBER_01.getAccessToken());
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .header("Authorization", "Bearer " + MEMBER_01.getAccessToken())
+                .header("Authorization", "Bearer " + accessToken)
                 .when()
                 .post("/api/test/authority")
                 .then().log().all().extract();
