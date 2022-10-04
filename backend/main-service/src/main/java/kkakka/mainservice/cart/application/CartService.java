@@ -80,7 +80,8 @@ public class CartService {
     public void deleteCartItems(List<Long> cartItemIds , LoginMember loginMember) {
 
         Long loginMemberId = loginMember.getId();
-        cartItemIds.forEach(cartItemRepository::deleteCartItemById);
+        cartItemIds.forEach( deleteRequestId ->
+                cartItemRepository.deleteCartItemById(deleteRequestId,loginMemberId));
     }
 
     public Cart findOrCreateCart(Member member) {
