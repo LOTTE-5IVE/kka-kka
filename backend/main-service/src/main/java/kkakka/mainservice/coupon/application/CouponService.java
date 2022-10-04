@@ -11,7 +11,6 @@ import kkakka.mainservice.coupon.domain.PriceRule;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
-import kkakka.mainservice.member.domain.Grade;
 import kkakka.mainservice.member.domain.Member;
 import kkakka.mainservice.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
@@ -44,9 +43,6 @@ public class CouponService {
         Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
         MemberCouponId memberCouponId = new MemberCouponId(member.getId(), coupon.getId());
         MemberCoupon memberCoupon = new MemberCoupon(memberCouponId);
-//        memberCouponId.setCouponId(coupon.getId());
-//        memberCouponId.setMemberId(member.getId());
-//        memberCoupon.setMemberCouponId(memberCouponId);
         memberCouponRepository.save(memberCoupon);
         coupons.add(coupon.getId());
       }
