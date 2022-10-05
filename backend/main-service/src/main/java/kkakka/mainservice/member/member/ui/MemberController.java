@@ -1,16 +1,22 @@
 package kkakka.mainservice.member.member.ui;
 
 import javax.annotation.PostConstruct;
+import kkakka.mainservice.member.auth.exception.AuthorizationException;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
+import kkakka.mainservice.member.member.application.MemberService;
+import kkakka.mainservice.member.member.application.dto.MemberUpdateDto;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
+import kkakka.mainservice.member.member.ui.dto.MemberInfoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberController {
 
+    private final MemberService memberService;
     private final MemberRepository memberRepository;
 
     @GetMapping("/health_check")
@@ -42,5 +49,18 @@ public class MemberController {
     @PostMapping("/me")
     public ResponseEntity<Long> showMemberInfo(@AuthenticationPrincipal LoginMember loginMember) {
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/me")
+    public ResponseEntity<Long> editMemberInfo(
+            @AuthenticationPrincipal LoginMember loginMember,
+            @RequestBody MemberInfoRequest memberInfoRequest
+    ) {
+        if (loginMember.isAnonymous()) {
+            throw new AuthorizationException();
+        }
+
+        memberService.updateMember(MemberUpdateDto.create(loginMember.getId(), memberInfoRequest));
+        return ResponseEntity.ok(1L);
     }
 }
