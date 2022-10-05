@@ -1,10 +1,25 @@
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { useQuery } from "react-query";
+import Title from "../../../components/common/Title";
+import Info from "../../../components/product/Info";
+import Nutri from "../../../components/product/Nutri";
+import Review from "../../../components/product/Review";
 
 export default function productDetail() {
   const router = useRouter();
   const productId = router.query.id;
+
+  const [quantity, setQuantity] = useState(1);
+  const [tab, setTab] = useState("info");
+
+  const handleQuantity = (type) => {
+    if (type !== "minus" || quantity > 1) {
+      type === "plus" ? setQuantity(quantity + 1) : setQuantity(quantity - 1);
+    }
+  };
 
   const { isLoading, data } = useQuery("products", () => {
     return axios.get(`http://localhost:4000/products?id=${productId}`);
@@ -16,6 +31,8 @@ export default function productDetail() {
 
   return (
     <>
+      <Title title="상품상세" />
+
       {data?.data.map((product) => {
         return (
           <div className="wrapper">
@@ -47,18 +64,23 @@ export default function productDetail() {
                       <tr style={{ height: "3vw" }}>
                         <td>
                           <span>
-                            <input type="button" value="-" />
                             <input
-                              id="quantity"
-                              name="quantity_opt[]"
-                              value="1"
-                              type="text"
+                              type="button"
+                              onClick={() => handleQuantity("minus")}
+                              value="-"
+                              style={{ marginRight: "15px" }}
                             />
-                            <input type="button" value="+" />
+                            <span>{quantity}</span>
+                            <input
+                              type="button"
+                              onClick={() => handleQuantity("plus")}
+                              value="+"
+                              style={{ marginLeft: "15px" }}
+                            />
                           </span>
                         </td>
                         <td style={{ textAlign: "right" }}>
-                          {product.price}원
+                          {product.price * quantity}원
                         </td>
                       </tr>
                     </tbody>
@@ -69,11 +91,14 @@ export default function productDetail() {
                     <strong>TOTAL</strong>
                   </p>
                   <p>
-                    <span>{product.price}원</span>(1개)
+                    <span>{product.price * quantity}원</span>({quantity}개)
                   </p>
                 </div>
                 <div className="btn">
-                  <div className="cartBtn">장바구니</div>
+                  <Link href="/member/cart">
+                    <div className="cartBtn">장바구니</div>
+                  </Link>
+
                   <div className="buyBtn">바로 구매</div>
                 </div>
               </div>
@@ -81,16 +106,31 @@ export default function productDetail() {
             <div className="detailBottom">
               <div className="tabMenu">
                 <ul>
-                  <li>
-                    <a>상품정보</a>
+                  <li onClick={() => setTab("info")}>
+                    <a className={`${tab === "info" ? "active" : ""}`}>
+                      상품정보
+                    </a>
                   </li>
-                  <li>
-                    <a>영양정보</a>
+                  <li onClick={() => setTab("nutri")}>
+                    <a className={`${tab === "nutri" ? "active" : ""}`}>
+                      영양정보
+                    </a>
                   </li>
-                  <li>
-                    <a>상품후기</a>
+                  <li onClick={() => setTab("review")}>
+                    <a className={`${tab === "review" ? "active" : ""}`}>
+                      상품후기
+                    </a>
                   </li>
                 </ul>
+              </div>
+              <div className="descriptions">
+                {tab == "info" ? (
+                  <Info />
+                ) : tab == "nutri" ? (
+                  <Nutri />
+                ) : (
+                  <Review />
+                )}
               </div>
             </div>
           </div>
@@ -109,6 +149,7 @@ export default function productDetail() {
               text-align: center;
               border-radius: 30px;
               background-color: #f5f5f5;
+              height: 28vw;
 
               img {
                 max-height: 600px;
@@ -151,17 +192,10 @@ export default function productDetail() {
                 padding: 20px 15px 15px;
                 border-radius: 8px;
 
-                input[type="text"] {
-                  width: 44px;
-                  height: 23px;
-                  padding: 0 5px;
-                  border: 0;
-                  font-weight: 400;
-                  font-size: 16px;
-                  color: #1a1a1a;
-                  line-height: 29px;
-                  text-align: center;
-                  background: 0 0;
+                input[type="button"] {
+                  background-color: #fff;
+                  border: 1px solid #c8c8c8;
+                  border-radius: 50%;
                 }
               }
 
@@ -222,6 +256,18 @@ export default function productDetail() {
                   font-size: 18px;
                   padding: 0;
                 }
+
+                .cartBtn:hover {
+                  background-color: #ffff;
+                  color: #f2889b;
+                  transition: 0.7s;
+                }
+
+                .buyBtn:hover {
+                  background-color: #fff;
+                  color: #05c7f2;
+                  transition: 0.7s;
+                }
               }
             }
           }
@@ -230,7 +276,7 @@ export default function productDetail() {
             padding-top: 40px;
             .tabMenu {
               margin: 0 auto 60px;
-              border-bottom: 1px solid #ddd;
+              border-bottom: 2px solid #ddd;
 
               ul {
                 margin: 0 auto;
@@ -254,6 +300,11 @@ export default function productDetail() {
                     color: #9a9a9a;
                     text-align: center;
                     cursor: pointer;
+                  }
+
+                  .active {
+                    color: #000;
+                    border-bottom: 2px solid red;
                   }
 
                   a:hover {
