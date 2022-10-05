@@ -64,3 +64,11 @@ export default function ProductRec({ id, imgsrc, name, price, rate }) {
     </>
   );
 }
+
+ProductRec.defaultProps = {
+  id: 1,
+  imgsrc: "/sample.png",
+  name: "test",
+  price: 10000,
+  rate: 10,
+};
