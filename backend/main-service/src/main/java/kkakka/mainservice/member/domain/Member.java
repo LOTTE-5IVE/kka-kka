@@ -32,8 +32,8 @@ public class Member {
     private String address;
     private String ageGroup;
 
-//    @Enumerated(EnumType.STRING)
-//    private Grade grade;
+    @Enumerated(EnumType.STRING)
+    private Grade grade;
 
 //    public static Member create(Long id, Provider provider, String name, String email, String phone,
 //                                String address, String ageGroup, Grade grade) {
@@ -50,5 +50,9 @@ public class Member {
     public Member(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Member(Grade grade) {
+        this.grade = grade;
     }
 }
