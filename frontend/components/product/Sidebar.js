@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import NavBar from "../../components/common/NavBar";
 
 export default function Sidebar() {
+  const [tab, setTab] = useState("order");
+
   const router = useRouter();
   const category = (cat_id) => {
     router.push({
@@ -20,49 +23,49 @@ export default function Sidebar() {
           <h2>과자모음</h2>
         </div>
         <ul>
-          <li>
+          <li onClick={() => setTab("0")}>
             <Link href="/product?cat_id=1">
-              <a>전체</a>
+              <a className={`${tab === "0" ? "active" : ""}`}>전체</a>
             </Link>
           </li>
-          <li>
+          <li onClick={() => setTab("2")}>
             <div onClick={() => category(2)} className="category">
-              <a>비스킷/샌드</a>
+              <a className={`${tab === "2" ? "active" : ""}`}>비스킷/샌드</a>
             </div>
           </li>
-          <li>
+          <li onClick={() => setTab("3")}>
             <div onClick={() => category(3)} className="category">
-              <a>스낵/봉지과자</a>
+              <a className={`${tab === "3" ? "active" : ""}`}>스낵/봉지과자</a>
             </div>
           </li>
-          <li>
+          <li onClick={() => setTab("4")}>
             <div onClick={() => category(4)} className="category">
-              <a>박스과자</a>
+              <a className={`${tab === "4" ? "active" : ""}`}>박스과자</a>
             </div>
           </li>
-          <li>
+          <li onClick={() => setTab("5")}>
             <div onClick={() => category(5)} className="category">
-              <a>시리얼/바</a>
+              <a className={`${tab === "5" ? "active" : ""}`}>시리얼/바</a>
             </div>
           </li>
-          <li>
+          <li onClick={() => setTab("6")}>
             <div onClick={() => category(6)} className="category">
-              <a>캔디/사탕/젤리</a>
+              <a className={`${tab === "6" ? "active" : ""}`}>캔디/사탕/젤리</a>
             </div>
           </li>
-          <li>
+          <li onClick={() => setTab("7")}>
             <div onClick={() => category(7)} className="category">
-              <a>초콜릿</a>
+              <a className={`${tab === "7" ? "active" : ""}`}>초콜릿</a>
             </div>
           </li>
-          <li>
+          <li onClick={() => setTab("8")}>
             <div onClick={() => category(8)} className="category">
-              <a>껌/자일리톨</a>
+              <a className={`${tab === "8" ? "active" : ""}`}>껌/자일리톨</a>
             </div>
           </li>
-          <li>
+          <li onClick={() => setTab("9")}>
             <div onClick={() => category(9)} className="category">
-              <a>선물세트</a>
+              <a className={`${tab === "9" ? "active" : ""}`}>선물세트</a>
             </div>
           </li>
         </ul>
@@ -91,7 +94,16 @@ export default function Sidebar() {
             font-weight: 700;
             line-height: 40px;
             padding: 0;
-            color: #3a3a3a;
+
+            color: #dedede;
+
+            a {
+              cursor: pointer;
+            }
+
+            .active {
+              color: #3a3a3a;
+            }
           }
         }
       `}</style>
