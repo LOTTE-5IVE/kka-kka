@@ -19,7 +19,9 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler) {
-        if (request.getMethod().equals(HttpMethod.GET.name())) {
+        if (request.getMethod().equals(HttpMethod.GET.name())
+            && !request.getRequestURI().equals("/api/members/me")
+        ) {
             return true;
         }
 

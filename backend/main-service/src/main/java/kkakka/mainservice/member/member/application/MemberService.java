@@ -59,4 +59,9 @@ public class MemberService {
 
         memberRepository.save(member);
     }
+
+    public Member showInfo(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
+    }
 }

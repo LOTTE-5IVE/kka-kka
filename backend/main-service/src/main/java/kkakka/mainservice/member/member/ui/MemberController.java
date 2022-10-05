@@ -11,6 +11,7 @@ import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.member.member.ui.dto.MemberInfoRequest;
+import kkakka.mainservice.member.member.ui.dto.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,9 +47,14 @@ public class MemberController {
         );
     }
 
-    @PostMapping("/me")
-    public ResponseEntity<Long> showMemberInfo(@AuthenticationPrincipal LoginMember loginMember) {
-        return ResponseEntity.ok().build();
+    @GetMapping("/me")
+    public ResponseEntity<MemberResponse> showMemberInfo(@AuthenticationPrincipal LoginMember loginMember) {
+        if (loginMember.isAnonymous()) {
+            throw new AuthorizationException();
+        }
+
+        Member member = memberService.showInfo(loginMember.getId());
+        return ResponseEntity.ok(member.toDto());
     }
 
     @PatchMapping("/me")
