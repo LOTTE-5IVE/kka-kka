@@ -6,14 +6,38 @@
 :toc: left
 :toclevels: 2
 :sectlinks:
+:actual-snippets: ./build/generated-snippets
 
 == Auth
 === 회원가입 & 로그인
 
 - Request
 
-include::./build/generated-snippets/join-success/http-request.adoc[]
+include::{actual-snippets}/join-success/http-request.adoc[]
 
 - Response
 
-include::./build/generated-snippets/join-success/http-response.adoc[]
+include::{actual-snippets}/join-success/http-response.adoc[]
+
+
+== Member
+=== 회원 정보 수정
+==== 이름 수정
+
+- Request
+
+include::{actual-snippets}/member-info-update-name/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/member-info-update-name/http-response.adoc[]
+
+==== 이메일, 연락처 수정
+
+- Request
+
+include::{actual-snippets}/member-info-update-email-phone/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/member-info-update-email-phone/http-response.adoc[]
