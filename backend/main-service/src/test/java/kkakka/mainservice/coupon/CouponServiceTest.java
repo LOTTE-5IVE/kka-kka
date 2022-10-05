@@ -26,6 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 public class CouponServiceTest {
 
   @Autowired
@@ -42,7 +43,6 @@ public class CouponServiceTest {
   private EntityManager entityManager;
 
   @Test
-  @Transactional
   @DisplayName("쿠폰 사용 여부 확인 - 성공")
   void useCouponTest_success() {
     Coupon coupon = Coupon.create(
@@ -134,5 +134,82 @@ public class CouponServiceTest {
 
     // then
     assertThat(memberCouponRepository.findAll().size()).isEqualTo(1);
+  }
+
+  @DisplayName("사용가능한 쿠폰 조회 - 성공")
+  @Test
+  void findUsableCoupons_success() {
+    Member member = new Member();
+    Coupon coupon1 = Coupon.create(
+        null,
+        null,
+        "testCoupon",
+        "test 입니다",
+        PriceRule.COUPON,
+        LocalDateTime.of(2020, 3, 16, 3, 16),
+        LocalDateTime.of(2025, 3, 16, 3, 16),
+        15,
+        1000,
+        2000
+    );
+    Coupon coupon2 = Coupon.create(
+        null,
+        null,
+        "testCoupon",
+        "test 입니다",
+        PriceRule.COUPON,
+        LocalDateTime.of(2020, 3, 16, 3, 16),
+        LocalDateTime.of(2025, 3, 16, 3, 16),
+        15,
+        1000,
+        2000
+    );
+    memberRepository.save(member);
+    couponRepository.save(coupon1);
+    couponRepository.save(coupon2);
+
+    couponService.downloadCoupon(coupon1.getId(), member.getId());
+    couponService.downloadCoupon(coupon2.getId(), member.getId());
+
+    List<Coupon> coupons = couponService.findUsableCoupons(member.getId());
+
+    assertThat(coupons.size()).isEqualTo(2);
+  }
+
+  @DisplayName("다운가능한 쿠폰 조회 - 성공")
+  @Test
+  void findDownloadCoupons_success() {
+    Member member = new Member();
+    Coupon coupon1 = Coupon.create(
+        null, null, "testCoupon", "test 입니다", PriceRule.COUPON,
+        LocalDateTime.of(2024, 3, 16, 3, 16),
+        LocalDateTime.of(2025, 3, 16, 3, 16),
+        15, 1000, 2000
+    );
+    Coupon coupon2 = Coupon.create(
+        null, null, "testCoupon", "test 입니다", PriceRule.COUPON,
+        LocalDateTime.of(2020, 3, 16, 3, 16),
+        LocalDateTime.of(2025, 3, 16, 3, 16),
+        15, 1000, 2000
+    );
+    Coupon coupon3 = Coupon.create(
+        Grade.VIP,
+        "testCoupon", "test입니다", PriceRule.GRADE_COUPON,
+        LocalDateTime.of(2020, 3, 16, 3, 16),
+        LocalDateTime.of(2025, 3, 16, 3, 16),
+        15, 1000, 2000
+    );
+    memberRepository.save(member);
+    couponRepository.save(coupon1);
+    couponRepository.save(coupon2);
+    couponRepository.save(coupon3);
+
+    couponService.downloadCoupon(coupon1.getId(), member.getId());
+    couponService.downloadCoupon(coupon2.getId(), member.getId());
+    couponService.downloadCoupon(coupon3.getId(), member.getId());
+
+    List<Coupon> coupons = couponService.findDownloadCoupons();
+
+    assertThat(coupons.size()).isEqualTo(1);
   }
 }
