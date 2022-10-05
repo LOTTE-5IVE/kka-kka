@@ -65,7 +65,8 @@ export default function MyInfoCard() {
           }
 
           .myinfo_right {
-            width: 55%;
+            width: 50%;
+
             margin: 20px;
             padding: 20px 50px;
             display: flex;
