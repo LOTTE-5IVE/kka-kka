@@ -40,4 +40,9 @@ public class CouponController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/download")
+    public ResponseEntity<Void> downloadCoupon() {
+        return ResponseEntity.ok().build();
+    }
+
 }

@@ -1,5 +1,6 @@
 package kkakka.mainservice.coupon.application;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import kkakka.mainservice.category.domain.Category;
@@ -31,13 +32,11 @@ public class CouponService {
   private final ProductRepository productRepository;
   private final MemberRepository memberRepository;
 
-  /* 쿠폰 등록 */
+  /* 관리자 쿠폰 등록 */
   @Transactional
   public List<Long> createCoupon(CouponRequestDto couponRequestDto) {
     List<Long> coupons = new ArrayList<>();
     if (PriceRule.GRADE_COUPON.equals(couponRequestDto.getPriceRule())) {
-      // TODO : MemberCoupon에 저장 -> 등급쿠폰을 여러개 생성? 해서? 넣어야 하나?
-      // return 값 통일
       List<Member> members = memberRepository.findByGrade(couponRequestDto.getGrade());
       for (Member member : members) {
         Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
@@ -102,7 +101,7 @@ public class CouponService {
     return category;
   }
 
-  /* 관리자 쿠폰 사용 */
+  /* 관리자 쿠폰 사용 (삭제) */
   @Transactional
   public void useCoupon(Long couponId) {
     Coupon coupon = couponRepository.findById(couponId).orElseThrow(IllegalArgumentException::new);
@@ -111,16 +110,36 @@ public class CouponService {
   }
 
   /* 관리자 모든 쿠폰 조회 */
-  public List<Coupon> findCoupons() {
+  public List<Coupon> findAllCoupons() {
     return couponRepository.findAll();
   }
 
-  /* 쿠폰 다운로드 */
+  /* 사용자 쿠폰 다운로드 */
+  @Transactional
   public void downloadCoupon(Long couponId, Long memberId) {
-    // TODO : 비회원일 경우
+    // 비회원일 경우
     if (memberId == null) {
       return;
     }
-
+    if (checkExpiredDate(couponId)) {
+      MemberCouponId memberCouponId = new MemberCouponId(memberId, couponId);
+      MemberCoupon memberCoupon = new MemberCoupon(memberCouponId);
+      memberCouponRepository.save(memberCoupon);
+    }
   }
+
+  /* 유효기간 체크 */
+  public boolean checkExpiredDate(Long couponId) {
+    Coupon coupon = couponRepository.findById(couponId).orElseThrow(IllegalArgumentException::new);
+    if (coupon.getStartedAt().isBefore(LocalDateTime.now())
+        && coupon.getExpiredAt().isAfter(LocalDateTime.now())) {
+      return true;
+    }
+    return false;
+  }
+
+  /* 사용자 쿠폰 사용 */
+
+  /* 사용자 다운 가능한 쿠폰 목록 조회 */
+
 }

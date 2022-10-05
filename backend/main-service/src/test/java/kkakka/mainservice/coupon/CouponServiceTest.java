@@ -64,7 +64,7 @@ public class CouponServiceTest {
     assertThat(coupon.getIsUsed()).isEqualTo(1);
   }
 
-  @DisplayName("등급쿠폰 생성 테스트")
+  @DisplayName("등급쿠폰 생성 테스트 - 성공")
   @Test
   void createGradeCoupon_success() {
     // given
@@ -107,5 +107,32 @@ public class CouponServiceTest {
         .collect(Collectors.toList());
 
     assertThat(savedCouponMemberIds).hasSameElementsAs(originMemberIds);
+  }
+
+  @DisplayName("쿠폰 다운로드 테스트 - 성공")
+  @Test
+  void downloadCoupon_success() {
+    // given
+    Member member = new Member();
+    Coupon coupon = Coupon.create(
+        null,
+        null,
+        "testCoupon",
+        "test 입니다",
+        PriceRule.COUPON,
+        LocalDateTime.of(2020, 3, 16, 3, 16),
+        LocalDateTime.of(2025, 3, 16, 3, 16),
+        15,
+        1000,
+        2000
+    );
+    memberRepository.save(member);
+    couponRepository.save(coupon);
+
+    // when
+    couponService.downloadCoupon(coupon.getId(), member.getId());
+
+    // then
+    assertThat(memberCouponRepository.findAll().size()).isEqualTo(1);
   }
 }
