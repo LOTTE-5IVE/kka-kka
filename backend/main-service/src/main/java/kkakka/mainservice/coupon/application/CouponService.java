@@ -32,6 +32,8 @@ public class CouponService {
   private final ProductRepository productRepository;
   private final MemberRepository memberRepository;
 
+  // TODO : return 값 관리
+
   /* 관리자 쿠폰 등록 */
   @Transactional
   public List<Long> createCoupon(CouponRequestDto couponRequestDto) {
@@ -139,7 +141,37 @@ public class CouponService {
   }
 
   /* 사용자 쿠폰 사용 */
+  public void useMemberCoupon(Long couponId) {
+    if (checkExpiredDate(couponId)) {
+      useCoupon(couponId);
+    }
+  }
+
+  /* 사용자 사용 가능한 쿠폰 목록 조회 */
+  public List<Coupon> findUsableCoupons(Long memberId) {
+    List<MemberCoupon> memberCoupons = memberCouponRepository
+        .findAllByMemberId(memberId);
+    List<Coupon> coupons = new ArrayList<>();
+    for (MemberCoupon membercoupon : memberCoupons) {
+      Coupon coupon = couponRepository.findById(membercoupon.getMemberCouponId().getCouponId())
+          .orElseThrow(IllegalArgumentException::new);
+      coupons.add(coupon);
+    }
+    return coupons;
+  }
 
   /* 사용자 다운 가능한 쿠폰 목록 조회 */
-
+  // 유효기간 체크 -> 다운 (멤버 쿠폰함에 넣어준다)
+  public List<Coupon> findDownloadCoupons() {
+    List<Coupon> coupons = couponRepository.findAll();
+    List<Coupon> removeCoupons = new ArrayList<>();
+    for (Coupon coupon : coupons) {
+      if (!checkExpiredDate(coupon.getId()) || !coupon.getPriceRule().equals(PriceRule.COUPON)
+          || coupon.getIsUsed() == 1) {
+        removeCoupons.add(coupon);
+      }
+    }
+    coupons.removeAll(removeCoupons);
+    return coupons;
+  }
 }
