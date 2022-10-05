@@ -61,6 +61,6 @@ public class MemberController {
         }
 
         memberService.updateMember(MemberUpdateDto.create(loginMember.getId(), memberInfoRequest));
-        return ResponseEntity.ok(1L);
+        return ResponseEntity.ok().build();
     }
 }
