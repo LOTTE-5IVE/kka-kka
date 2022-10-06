@@ -52,6 +52,8 @@ dependencies {
     /* lombok */
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.flywaydb:flyway-core'
+    compileOnly 'org.flywaydb:flyway-mysql'
 
     /* Test */
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
