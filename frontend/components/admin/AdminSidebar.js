@@ -46,7 +46,7 @@ export default function AdminSidebar({ LmenuHandler, SmenuHandler }) {
           <h2>상품관리</h2>
         </div>
         <ul>
-          <li
+          {/* <li
             onClick={() => {
               setSmenu("상품 등록");
               LmenuHandler("상품관리");
@@ -58,7 +58,7 @@ export default function AdminSidebar({ LmenuHandler, SmenuHandler }) {
                 상품 등록
               </a>
             </div>
-          </li>
+          </li> */}
           <li
             onClick={() => {
               setSmenu("상품 조회/수정");

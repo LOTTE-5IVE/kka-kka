@@ -1,193 +1,67 @@
-import { useState } from "react";
-import AdminSidebar from "../../components/admin/AdminSidebar";
-import ApplyTable from "../../components/admin/ApplyTable";
-import ButtonComp from "../../components/common/buttonComp";
-import ApplyGrade from "./ApplyGrade";
+import { AdminButton } from "./AdminButton";
 
-export default function PromotionSearch() {
-  const [btn, setBtn] = useState("할인");
-  const [valid, setValid] = useState("기간");
-  const [target, setTarget] = useState("상품");
-
+export default function ProductSearch() {
   return (
     <>
       <div className="contents">
         <table>
           <colgroup>
-            <col style={{ width: "20%" }} />
-            <col style={{ width: "80%" }} />
+            <col style={{ width: "5%" }} />
+            <col style={{ width: "8%" }} />
+            <col style={{ width: "22%" }} />
+            <col style={{ width: "15%" }} />
+            <col style={{ width: "10%" }} />
+            <col style={{ width: "16%" }} />
+            <col style={{ width: "16%" }} />
+            <col style={{ width: "8%" }} />
           </colgroup>
-
+          <thead>
+            <th></th>
+            <th>혜택 유형</th>
+            <th>혜택 이름</th>
+            <th>할인 설정</th>
+            <th>최소 주문 금액</th>
+            <th>다운로드 가능 기간</th>
+            <th>유효기간</th>
+            <th>적용 유형</th>
+          </thead>
           <tbody>
-            <tr style={{ height: "6vw" }}>
-              <th scope="row">혜택 유형</th>
+            <tr style={{ height: "5vw" }}>
               <td>
-                <div style={{ display: "flex" }}>
-                  <div
-                    className={`btn ${btn === "할인" ? "active" : ""}`}
-                    onClick={() => setBtn("할인")}
-                  >
-                    할인
-                  </div>
-                  <div
-                    className={`btn ${btn === "쿠폰" ? "active" : ""}`}
-                    onClick={() => setBtn("쿠폰")}
-                  >
-                    쿠폰
-                  </div>
-                </div>
+                <AdminButton context="중지" color="#F2B90C" />
               </td>
+              <td>쿠폰</td>
+              <td>스낵/쿠키 카테고리 쿠폰</td>
+              <td>15% (최대 5,000원)</td>
+              <td>10,000원</td>
+              <td>2022-09-15 ~ 2022-09-15</td>
+              <td>2022-09-15 ~ 2022-09-15</td>
+              <td>회원 등급</td>
             </tr>
-            <tr style={{ height: "4vw" }}>
-              <th scope="row">혜택 이름</th>
-              <td
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  height: "100%",
-                }}
-              >
-                <div>
-                  <input
-                    id="oname"
-                    className="inputTypeText"
-                    size="25"
-                    type="text"
-                  />
-                </div>
-
-                <div style={{ width: "40%" }}>
-                  <span>
-                    수량 x{" "}
-                    <input
-                      id="oname"
-                      className="inputTypeText"
-                      size="1"
-                      type="text"
-                    />
-                  </span>
-                </div>
-              </td>
-            </tr>
-            <tr style={{ height: "4vw" }}>
-              <th scope="row">할인 설정</th>
-              <td
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  height: "100%",
-                }}
-              >
-                <div style={{ width: "15%" }}>
-                  <input
-                    id="oname"
-                    className="inputTypeText"
-                    size="2"
-                    type="text"
-                  />
-                  %
-                </div>
-                <div style={{ width: "25%" }}>
-                  최대{" "}
-                  <input
-                    id="oname"
-                    className="inputTypeText"
-                    size="10"
-                    type="text"
-                  />{" "}
-                  원
-                </div>
-                <span style={{ color: "red" }}>
-                  *최대 금액만 설정시 정액 할인
-                </span>
-              </td>
-            </tr>
-            <tr style={{ height: "3vw" }}>
-              <th scope="row">최소 주문 금액</th>
+            <tr style={{ height: "5vw" }}>
               <td>
-                <input
-                  id="oname"
-                  className="inputTypeText"
-                  placeholder=""
-                  size="10"
-                  defaultValue=""
-                  type="text"
-                />
-                원
+                <AdminButton context="중지" color="#F2B90C" />
               </td>
+              <td>쿠폰</td>
+              <td>스낵/쿠키 카테고리 쿠폰</td>
+              <td>15% (최대 5,000원)</td>
+              <td>10,000원</td>
+              <td>2022-09-15 ~ 2022-09-15</td>
+              <td>2022-09-15 ~ 2022-09-15</td>
+              <td>상품</td>
             </tr>
-            <tr style={{ height: "6vw" }}>
-              <th scope="row">유효 기간</th>
-              <td>
-                <div style={{ display: "flex", marginBottom: "15px" }}>
-                  <div
-                    className={`btn ${valid === "기간" ? "active" : ""}`}
-                    onClick={() => setValid("기간")}
-                  >
-                    기간으로 설정
-                  </div>
-                  <div
-                    className={`btn ${valid === "발급일" ? "active" : ""}`}
-                    onClick={() => setValid("발급일")}
-                  >
-                    발급일로부터 설정
-                  </div>
-                </div>
-                <div className="dateWrapper" style={{ display: "flex" }}>
-                  <div className="date">
-                    <input id="oname" className="inputTypeText" type="date" /> ~{" "}
-                    <input id="oname" className="inputTypeText" type="date" />
-                  </div>
-                  {valid == "발급일" ? (
-                    <div style={{ marginLeft: "30px" }}>
-                      발급일로부터{" "}
-                      <input
-                        id="oname"
-                        className="inputTypeText"
-                        size="1"
-                        type="text"
-                      />{" "}
-                      일 유효
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </td>
-            </tr>
-            <tr style={{ height: "12vw" }}>
-              <th scope="row">적용 대상 지정</th>
-              <td>
-                <div style={{ display: "flex", marginBottom: "15px" }}>
-                  <div
-                    className={`btn ${target === "상품" ? "active" : ""}`}
-                    onClick={() => setTarget("상품")}
-                  >
-                    상품
-                  </div>
-                  <div
-                    className={`btn ${target === "회원 등급" ? "active" : ""}`}
-                    onClick={() => setTarget("회원 등급")}
-                  >
-                    회원 등급
-                  </div>
-                </div>
-                {target == "상품" ? <ApplyTable /> : <ApplyGrade />}
-              </td>
+            <tr style={{ height: "100%" }}>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
           </tbody>
         </table>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            padding: "20px 0",
-          }}
-        >
-          <ButtonComp context="혜택 등록하기" />
-          <ButtonComp context="취소" />
-        </div>
       </div>
 
       <style jsx>{`
@@ -197,27 +71,35 @@ export default function PromotionSearch() {
           color: #7a7a7a;
 
           table {
-            width: 90%;
-            height: 90%;
-            margin: auto;
+            height: 100%;
+            width: 100%;
+            text-align: center;
             border-collapse: collapse;
+
+            td {
+              border: 1px solid #dedede;
+            }
+
             th {
-              text-align: left;
+              border-left: 1px solid #dedede;
             }
 
-            tr {
-              border-bottom: 1px solid #dedede;
+            th:first-child {
+              border-left: 0;
             }
 
-            .btn {
-              border: 1px solid;
-              padding: 7px 25px;
+            td:first-child {
+              border-left: 0;
             }
 
-            .active {
-              background-color: #f2889b;
-              color: #fff;
-              border: 1px solid #f2889b;
+            td:last-child {
+              border-right: 0;
+            }
+
+            tr:last-child {
+              td {
+                border-bottom: 0;
+              }
             }
           }
         }

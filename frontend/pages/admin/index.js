@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AdminButton } from "../../components/admin/AdminButton";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import ApplyTable from "../../components/admin/ApplyTable";
 import ProductEnroll from "../../components/admin/ProductEnroll";
@@ -40,7 +41,7 @@ export default function admin() {
           <div className="contents">
             {Smenu == "혜택 등록" && <PromotionEnroll />}
             {Smenu == "혜택 조회/수정" && <PromotionSearch />}
-            {Smenu == "상품 등록" && <ProductEnroll />}
+            {/* {Smenu == "상품 등록" && <ProductEnroll />} */}
             {Smenu == "상품 조회/수정" && <ProductSearch />}
           </div>
         </div>

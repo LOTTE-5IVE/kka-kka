@@ -2,6 +2,7 @@ import { useState } from "react";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import ApplyTable from "../../components/admin/ApplyTable";
 import ButtonComp from "../../components/common/buttonComp";
+import Button from "../common/Button";
 import ApplyGrade from "./ApplyGrade";
 
 export default function PromotionEnroll() {
@@ -178,27 +179,21 @@ export default function PromotionEnroll() {
             </tr>
           </tbody>
         </table>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            padding: "20px 0",
-          }}
-        >
-          <ButtonComp context="혜택 등록하기" />
-          <ButtonComp context="취소" />
+        <div className="btnWrapper">
+          <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+          <Button context="취소" border="1px solid" />
         </div>
       </div>
 
       <style jsx>{`
         .contents {
-          height: 100%;
+          height: 105%;
           border: 2px solid #dedede;
           color: #7a7a7a;
 
           table {
             width: 90%;
-            height: 90%;
+            height: 85%;
             margin: auto;
             border-collapse: collapse;
             th {
@@ -219,6 +214,15 @@ export default function PromotionEnroll() {
               color: #fff;
               border: 1px solid #f2889b;
             }
+          }
+
+          .btnWrapper {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            width: 33%;
+            margin: 20px auto;
+            justify-content: space-around;
           }
         }
       `}</style>
