@@ -10,7 +10,7 @@ import kkakka.mainservice.cart.domain.CartItem;
 import kkakka.mainservice.cart.domain.repository.CartItemRepository;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
-import kkakka.mainservice.member.domain.Member;
+import kkakka.mainservice.member.member.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequestDto)
                 .when()
-                .post("/carts")
+                .post("/api/carts")
                 .then()
                 .log().all().extract();
 
@@ -75,14 +75,12 @@ class CartAcceptanceTest extends AcceptanceTest {
 
         //given
         Member member = MEMBER;
-        CartResponseDto result = cartService.findAllCartItemByMember(member);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .pathParam("memberId", member.getId())
                 .when()
-                .get("/carts/{memberId}")
+                .get("/api/carts/")
                 .then()
                 .log().all().extract();
         //then
@@ -101,7 +99,7 @@ class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .pathParam("cartItemId", cartItemId)
                 .when()
-                .delete("/carts/{cartItemId}")
+                .delete("/api/carts/{cartItemId}")
                 .then()
                 .log().all().extract();
 
@@ -113,4 +111,5 @@ class CartAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
+
 }

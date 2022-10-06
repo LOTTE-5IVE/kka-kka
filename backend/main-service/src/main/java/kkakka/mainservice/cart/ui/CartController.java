@@ -3,7 +3,8 @@ package kkakka.mainservice.cart.ui;
 import kkakka.mainservice.cart.application.CartService;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
-import kkakka.mainservice.member.domain.Member;
+import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
+import kkakka.mainservice.member.auth.ui.LoginMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,32 +21,38 @@ public class CartController {
 
     private final CartService cartService;
 
-    /* 장바구니 추가 */
-    @PostMapping("")
-    public ResponseEntity<String> saveCartItem(@RequestBody CartRequestDto cartRequestDto) {
+    @PostMapping
+    public ResponseEntity<Void> saveCartItem(@RequestBody CartRequestDto cartRequestDto,
+                                             @AuthenticationPrincipal LoginMember loginMember) {
 
-        Long memberId = cartService.saveOrUpdateCartItem(cartRequestDto);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{memberId}")
-                .buildAndExpand(memberId)
-                .toUri();
-        return ResponseEntity.created(location).build();
+        if (loginMember.isMember()) {
+            cartService.saveOrUpdateCartItem(cartRequestDto);
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .buildAndExpand().toUri();
+            return ResponseEntity.created(location).build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @GetMapping("/{memberId}")
-    public ResponseEntity<CartResponseDto> showMemberCartItemList(@PathVariable("memberId") Long memberId) {
+    @GetMapping
+    public ResponseEntity<CartResponseDto> showMemberCartItemList(@AuthenticationPrincipal LoginMember loginMember) {
 
-        /*
-        TODO: 멤버 객체 전달 받기
-         */
-        CartResponseDto result = cartService.findAllCartItemByMember(new Member(1L, "신우주"));
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        if (loginMember.isMember()) {
+            CartResponseDto result = cartService.findAllCartItemByMemberId(loginMember.getId());
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+        if (loginMember.isAnonymous()) {
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
     @DeleteMapping("/{cartItemId}")
-    public ResponseEntity<Void> removeCartItem(@PathVariable("cartItemId") List<Long> cartItemList) {
-
-        cartService.deleteCartItems(cartItemList);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<Void> removeCartItem(@PathVariable("cartItemId") List<Long> cartItemList,
+                                               @AuthenticationPrincipal LoginMember loginMember) {
+        if (loginMember.isMember()) {
+            cartService.deleteCartItems(cartItemList,loginMember);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
