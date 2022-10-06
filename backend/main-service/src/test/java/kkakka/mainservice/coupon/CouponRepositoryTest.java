@@ -18,26 +18,26 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 public class CouponRepositoryTest {
 
-  @Autowired
-  private CouponRepository couponRepository;
-  @Autowired
-  private ProductRepository productRepository;
-  @PersistenceContext
-  private EntityManager entityManager;
+    @Autowired
+    private CouponRepository couponRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-  @DisplayName("쿠폰 사용 테스트")
-  @Test
-  void useCoupon_success() {
-    Product product = new Product(null, "testProduct", 1000, 10, "testUrl", "testUrl");
-    productRepository.save(product);
+    @DisplayName("쿠폰 사용 테스트")
+    @Test
+    void useCoupon_success() {
+        Product product = new Product(null, "testProduct", 1000, 10, "testUrl", "testUrl");
+        productRepository.save(product);
 
-    Coupon coupon = Coupon.create(null, product, "testCoupon", "1234", PriceRule.COUPON,
-        LocalDateTime.now(), LocalDateTime.now(), 10, 500, 500);
-    couponRepository.save(coupon);
+        Coupon coupon = Coupon.create(null, product, "testCoupon", "1234", PriceRule.COUPON,
+            LocalDateTime.now(), LocalDateTime.now(), 10, 500, 500);
+        couponRepository.save(coupon);
 
-    coupon.useCoupon();
+        coupon.useCoupon();
 
-    couponRepository.flush();
-    assertThat(coupon.isUsed()).isTrue();
-  }
+        couponRepository.flush();
+        assertThat(coupon.isUsed()).isTrue();
+    }
 }

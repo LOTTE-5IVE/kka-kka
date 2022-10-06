@@ -11,18 +11,18 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CouponRequestDto {
 
-  private Long id;
-  private Long categoryId;
-  private Grade grade;
-  private Long productId;
-  private String name;
-  private String detail;
-  private String priceRule;
-  private LocalDateTime registeredAt;
-  private LocalDateTime startedAt;
-  private LocalDateTime expiredAt;
-  private Integer percentage;
-  private Integer maxDiscount;
-  private Integer minOrderPrice;
-  private Integer isUsed;
+    private Long id;
+    private Long categoryId;
+    private Grade grade;
+    private Long productId;
+    private String name;
+    private String detail;
+    private String priceRule;
+    private LocalDateTime registeredAt;
+    private LocalDateTime startedAt;
+    private LocalDateTime expiredAt;
+    private Integer percentage;
+    private Integer maxDiscount;
+    private Integer minOrderPrice;
+    private Integer isUsed;
 }

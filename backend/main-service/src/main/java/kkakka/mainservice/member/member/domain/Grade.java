@@ -5,8 +5,8 @@ package kkakka.mainservice.member.member.domain;
  */
 public enum Grade {
 
-  BRONZE,
-  SILVER,
-  GOLD,
-  VIP
+    BRONZE,
+    SILVER,
+    GOLD,
+    VIP
 }

@@ -13,24 +13,24 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class MemberCouponId implements Serializable {
 
-  private Long memberId;
-  private Long couponId;
+    private Long memberId;
+    private Long couponId;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MemberCouponId that = (MemberCouponId) o;
+        return Objects.equals(memberId, that.memberId) && Objects.equals(couponId,
+            that.couponId);
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    MemberCouponId that = (MemberCouponId) o;
-    return Objects.equals(memberId, that.memberId) && Objects.equals(couponId,
-        that.couponId);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(memberId, couponId);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(memberId, couponId);
+    }
 }

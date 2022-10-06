@@ -19,51 +19,51 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Member {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Embedded
-  private Provider provider;
+    @Embedded
+    private Provider provider;
 
-  private String name;
-  private String email;
-  private String phone;
-  private String address;
-  private String ageGroup;
+    private String name;
+    private String email;
+    private String phone;
+    private String address;
+    private String ageGroup;
 
-  @Enumerated(EnumType.STRING)
-  private Grade grade;
+    @Enumerated(EnumType.STRING)
+    private Grade grade;
 
-  public static Member create(Long id, Provider provider, String name, String email, String phone,
-      String address, String ageGroup, Grade grade) {
-    return new Member(id, provider, name, email, phone, address, ageGroup, grade);
-  }
-
-  public static Member create(Provider provider, String name, String email, String phone,
-      String ageGroup) {
-    return new Member(null, provider, name, email, phone, "", ageGroup, Grade.BRONZE);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    public static Member create(Long id, Provider provider, String name, String email, String phone,
+        String address, String ageGroup, Grade grade) {
+        return new Member(id, provider, name, email, phone, address, ageGroup, grade);
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    public static Member create(Provider provider, String name, String email, String phone,
+        String ageGroup) {
+        return new Member(null, provider, name, email, phone, "", ageGroup, Grade.BRONZE);
     }
-    Member member = (Member) o;
-    return id.equals(member.id);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Member member = (Member) o;
+        return id.equals(member.id);
+    }
 
-  /* 테스트용 생성자 */
-  public Member(Grade grade) {
-    this.grade = grade;
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    /* 테스트용 생성자 */
+    public Member(Grade grade) {
+        this.grade = grade;
+    }
 }

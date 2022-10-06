@@ -19,28 +19,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberController {
 
-  private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-  @GetMapping("/health_check")
-  public String status() {
-    return "It's Working in Member Service";
-  }
+    @GetMapping("/health_check")
+    public String status() {
+        return "It's Working in Member Service";
+    }
 
-  @PostConstruct
-  public void init() {
-    memberRepository.save(
-        Member.create(
-            Provider.create("test", MemberProviderName.TEST),
-            "신우주",
-            "test@email.com",
-            "010-000-0000",
-            "20~29"
-        )
-    );
-  }
+    @PostConstruct
+    public void init() {
+        memberRepository.save(
+            Member.create(
+                Provider.create("test", MemberProviderName.TEST),
+                "신우주",
+                "test@email.com",
+                "010-000-0000",
+                "20~29"
+            )
+        );
+    }
 
-  @PostMapping("/me")
-  public ResponseEntity<Long> showMemberInfo(@AuthenticationPrincipal LoginMember loginMember) {
-    return ResponseEntity.ok().build();
-  }
+    @PostMapping("/me")
+    public ResponseEntity<Long> showMemberInfo(@AuthenticationPrincipal LoginMember loginMember) {
+        return ResponseEntity.ok().build();
+    }
 }

@@ -12,24 +12,24 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class MemberService {
 
-  private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-  @Transactional
-  public Member findOrCreateMember(UserProfile userProfile) {
-    return memberRepository
-        .findByProviderId(userProfile.getProviderId())
-        .orElseGet(() -> createMember(userProfile));
-  }
+    @Transactional
+    public Member findOrCreateMember(UserProfile userProfile) {
+        return memberRepository
+            .findByProviderId(userProfile.getProviderId())
+            .orElseGet(() -> createMember(userProfile));
+    }
 
-  public Member createMember(UserProfile userProfile) {
-    return memberRepository.save(
-        Member.create(
-            userProfile.getProvider(),
-            userProfile.getName(),
-            userProfile.getEmail(),
-            userProfile.getPhone(),
-            userProfile.getAgeGroup()
-        )
-    );
-  }
+    public Member createMember(UserProfile userProfile) {
+        return memberRepository.save(
+            Member.create(
+                userProfile.getProvider(),
+                userProfile.getName(),
+                userProfile.getEmail(),
+                userProfile.getPhone(),
+                userProfile.getAgeGroup()
+            )
+        );
+    }
 }

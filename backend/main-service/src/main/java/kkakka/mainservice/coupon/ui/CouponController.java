@@ -19,35 +19,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CouponController {
 
-  private final CouponService couponService;
+    private final CouponService couponService;
 
-  /* 쿠폰 등록 */
-  @PostMapping
-  public ResponseEntity<Void> createCoupon(
-      @RequestBody CouponRequestDto couponRequestDto
-  ) {
-    List<Long> couponId = couponService.createCoupon(couponRequestDto);
-    return ResponseEntity.created(URI.create(couponId.toString())).build();
-  }
+    /* 쿠폰 등록 */
+    @PostMapping
+    public ResponseEntity<Void> createCoupon(
+        @RequestBody CouponRequestDto couponRequestDto
+    ) {
+        List<Long> couponId = couponService.createCoupon(couponRequestDto);
+        return ResponseEntity.created(URI.create(couponId.toString())).build();
+    }
 
-  /* TODO : 할인 등록 */
+    /* TODO : 할인 등록 */
 
-  /* 쿠폰 사용 - 삭제 */
-  @DeleteMapping("/{couponId}")
-  public ResponseEntity<Void> useCoupon(@PathVariable Long couponId) {
-    couponService.useCoupon(couponId);
-    return ResponseEntity.ok().build();
-  }
+    /* 쿠폰 사용 - 삭제 */
+    @DeleteMapping("/{couponId}")
+    public ResponseEntity<Void> useCoupon(@PathVariable Long couponId) {
+        couponService.useCoupon(couponId);
+        return ResponseEntity.ok().build();
+    }
 
-  /* 쿠폰 조회 */
-  @GetMapping
-  public ResponseEntity<Void> findCoupons() {
-    return ResponseEntity.ok().build();
-  }
+    /* 쿠폰 조회 */
+    @GetMapping
+    public ResponseEntity<Void> findCoupons() {
+        return ResponseEntity.ok().build();
+    }
 
-  @GetMapping("/download")
-  public ResponseEntity<Void> downloadCoupon() {
-    return ResponseEntity.ok().build();
-  }
+    @GetMapping("/download")
+    public ResponseEntity<Void> downloadCoupon() {
+        return ResponseEntity.ok().build();
+    }
 
 }

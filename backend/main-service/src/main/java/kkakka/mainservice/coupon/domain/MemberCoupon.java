@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "MemberCoupon")
 public class MemberCoupon {
 
-  @EmbeddedId
-  private MemberCouponId memberCouponId;
+    @EmbeddedId
+    private MemberCouponId memberCouponId;
 }

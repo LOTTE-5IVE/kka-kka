@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface MemberCouponRepository extends JpaRepository<MemberCoupon, MemberCouponId> {
 
-  @Query("select mc from MemberCoupon mc where mc.memberCouponId.memberId = :memberId")
-  List<MemberCoupon> findAllByMemberId(@Param(value = "memberId") Long memberId);
+    @Query("select mc from MemberCoupon mc where mc.memberCouponId.memberId = :memberId")
+    List<MemberCoupon> findAllByMemberId(@Param(value = "memberId") Long memberId);
 }
