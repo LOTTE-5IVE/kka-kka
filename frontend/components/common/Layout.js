@@ -10,11 +10,19 @@ export default function Layout({ children }) {
         <NavBar />
       </div>
 
-      <div className="content">{children}</div>
+      <div className="content">
+        <div className="empty"></div>
+        {children}
+      </div>
       <Footer />
 
       <style jsx>
         {`
+          .empty {
+            max-height: 120px;
+            height: 15vh;
+          }
+
           .top {
             min-height: 100px;
             position: fixed;

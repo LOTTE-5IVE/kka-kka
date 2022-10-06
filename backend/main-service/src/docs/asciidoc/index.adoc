@@ -1,0 +1,19 @@
+= 프로젝트 까까(Kka-Kka)
+
+:doctype: book
+:icons: font
+:source-highlighter: highlight.js
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== Auth
+=== 회원가입 & 로그인
+
+- Request
+
+include::./build/generated-snippets/join-success/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/join-success/http-response.adoc[]

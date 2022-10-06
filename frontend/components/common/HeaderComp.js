@@ -35,11 +35,11 @@ export default function Header() {
             </Link>
           </div>
           <div className="bottom">
-            <Link href="/">
+            <Link href="/mypage/myOrder">
               <img src="/common/top_mypage.png" />
             </Link>
 
-            <Link href="/">
+            <Link href="/member/cart">
               <img src="/common/top_cart.png" />
             </Link>
           </div>
