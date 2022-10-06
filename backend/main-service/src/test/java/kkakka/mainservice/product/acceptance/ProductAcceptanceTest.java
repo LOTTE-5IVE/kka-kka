@@ -20,7 +20,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when()
-                .get("/products/" + PRODUCT_1.getId())
+                .get("/api/products/" + PRODUCT_1.getId())
                 .then()
                 .log().all().extract();
 
@@ -36,7 +36,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
 //                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/products/products?category=" + CATEGORY.getId())
+                .get("/api/products/products?category=" + CATEGORY.getId())
                 .then()
                 .log().all().extract();
 
