@@ -12,7 +12,7 @@ import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CartService {
 
     private final CartRepository cartRepository;
@@ -62,7 +62,6 @@ public class CartService {
 
         Optional<Cart> cart = cartRepository.findByMemberId(memberId);
         if (cart.isEmpty()) {
-            // TODO: 장바구니 없을 때 처리
             return new CartResponseDto(0L, Collections.emptyList());
         }
 
@@ -77,11 +76,11 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCartItems(List<Long> cartItemIds , LoginMember loginMember) {
+    public void deleteCartItems(List<Long> cartItemIds, LoginMember loginMember) {
 
         Long loginMemberId = loginMember.getId();
-        cartItemIds.forEach( deleteRequestId ->
-                cartItemRepository.deleteCartItemById(deleteRequestId,loginMemberId));
+        cartItemIds.forEach(deleteRequestId ->
+                cartItemRepository.deleteCartItemById(deleteRequestId, loginMemberId));
     }
 
     public Cart findOrCreateCart(Member member) {
