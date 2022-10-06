@@ -3,7 +3,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useQuery } from "react-query";
+import { AdminButton } from "../../../components/admin/AdminButton";
 import Title from "../../../components/common/Title";
+import { CouponDown } from "../../../components/coupon/CouponDown";
+import { CouponModal } from "../../../components/coupon/CouponModal";
 import Info from "../../../components/product/Info";
 import Nutri from "../../../components/product/Nutri";
 import Review from "../../../components/product/Review";
@@ -14,12 +17,17 @@ export default function productDetail() {
 
   const [quantity, setQuantity] = useState(1);
   const [tab, setTab] = useState("info");
+  const [modal, setModal] = useState(false);
 
   const handleQuantity = (type) => {
     if (type !== "minus" || quantity > 1) {
       type === "plus" ? setQuantity(quantity + 1) : setQuantity(quantity - 1);
     }
   };
+
+  function modalHandler() {
+    setModal(false);
+  }
 
   const { isLoading, data } = useQuery("products", () => {
     return axios.get(`http://localhost:4000/products?id=${productId}`);
@@ -35,7 +43,7 @@ export default function productDetail() {
 
       {data?.data.map((product) => {
         return (
-          <div className="wrapper">
+          <div className="wrapper" key={product}>
             <div className="detailTop">
               <div className="detailImg">
                 <img src={`${product.imageUrl}`} />
@@ -49,6 +57,27 @@ export default function productDetail() {
                 </div>
                 <div className="delivery">
                   <p>배송비</p> <p style={{ color: "#9a9a9a" }}>무료</p>
+                </div>
+                <div className="coupon">
+                  <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
+                  <div
+                    onClick={() => {
+                      setModal(true);
+                    }}
+                  >
+                    <AdminButton context="쿠폰받기" color="red" width="70px" />
+                  </div>
+                  {modal && (
+                    <CouponModal>
+                      <div
+                        onClick={() => {
+                          setModal(false);
+                        }}
+                      >
+                        <CouponDown modalHandler={modalHandler} />
+                      </div>
+                    </CouponModal>
+                  )}
                 </div>
                 <div className="totalProducts">
                   <table>
@@ -184,6 +213,19 @@ export default function productDetail() {
 
                 p {
                   width: 120px;
+                }
+              }
+
+              .coupon {
+                margin: 20px 0 10px;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                p {
+                  width: 100%;
+                  font-size: 12px;
+                  color: red;
+                  font-weight: 700;
                 }
               }
               .totalProducts {

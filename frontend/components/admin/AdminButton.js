@@ -1,19 +1,25 @@
-export function AdminButton({ context, color }) {
+export function AdminButton({ context, color, width, height }) {
   return (
     <>
       <div className="btn">{context}</div>
       <style jsx>{`
         .btn {
           margin: 0 auto;
-          width: 40px;
+          width: ${width};
+          height: ${height};
           border-radius: 7px;
           font-size: 13px;
           text-align: center;
           line-height: 21px;
-          background-color: ${color};
           color: #fff;
+          background-color: ${color};
         }
       `}</style>
     </>
   );
 }
+
+AdminButton.defaultProps = {
+  width: "40px",
+  height: "21px",
+};
