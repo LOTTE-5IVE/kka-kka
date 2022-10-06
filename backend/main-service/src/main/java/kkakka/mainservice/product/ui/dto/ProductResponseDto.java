@@ -1,8 +1,14 @@
 package kkakka.mainservice.product.ui.dto;
 
-import lombok.Data;
+import kkakka.mainservice.product.domain.Product;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@Getter
 public class ProductResponseDto {
 
     private Long id;
@@ -17,5 +23,18 @@ public class ProductResponseDto {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public static ProductResponseDto create(Product product) {
+        return new ProductResponseDto(product.getId(),
+            product.getCategory().getName(),
+            product.getName(),
+            product.getPrice(),
+            product.getStock(),
+            product.getImageUrl(),
+            product.getDetailImageUrl(),
+            product.getNutritionInfoUrl(),
+            product.getDiscount()
+        );
     }
 }

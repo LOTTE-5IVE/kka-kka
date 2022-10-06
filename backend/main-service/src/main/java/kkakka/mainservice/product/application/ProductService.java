@@ -1,9 +1,15 @@
 package kkakka.mainservice.product.application;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import kkakka.mainservice.common.config.MapperConfig;
+import kkakka.mainservice.product.SearchDto;
 import kkakka.mainservice.product.domain.Product;
+import kkakka.mainservice.product.domain.SearchWords;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.product.ui.dto.ProductResponseDto;
+import kkakka.mainservice.product.ui.dto.SearchRequest;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +36,33 @@ public class ProductService {
         result.setCategoryName(productDetail.get().getCategory().getName());
 
         return result;
+    }
+
+    public List<ProductResponseDto> showProductsBySearch(SearchDto searchDto) {
+
+        String keyword = searchDto.getKeyword();
+        SearchWords searchWords = SearchWords.create(keyword);
+        List<String> getSearchWords = searchWords.getSearchWords();
+        List<Product> products = new ArrayList<>();
+
+        for(String searchWord : getSearchWords) {
+            products.addAll(productRepository.findByCategory(searchWord));
+        }
+
+        for(String searchWord : getSearchWords) {
+            products.addAll(productRepository.findByName(searchWord));
+        }
+
+        System.out.println("products.get(0).getCategory().getName() = " + products.get(0).getCategory().getName());
+
+        List<ProductResponseDto> productResponseDtos = products.stream()
+            .distinct()
+            .map(product -> ProductResponseDto.create(
+                product
+            ))
+            .collect(Collectors.toList());
+            //.map(ProductResponseDto::create)
+
+        return productResponseDtos;
     }
 }

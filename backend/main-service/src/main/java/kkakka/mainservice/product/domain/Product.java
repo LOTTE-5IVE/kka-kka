@@ -1,6 +1,7 @@
 package kkakka.mainservice.product.domain;
 
 import kkakka.mainservice.category.domain.Category;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Table(name = "product")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Product {
 
     @Id
@@ -37,18 +39,9 @@ public class Product {
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     private Date registered_at;
 
-    public Product(Long id, Category category, String name, int price, int stock, String imageUrl, String detailImageUrl, String nutritionInfoUrl) {
-        this.id = id;
-        this.category = category;
-        this.name = name;
-        this.price = price;
-        this.stock = stock;
-        this.imageUrl = imageUrl;
-        this.detailImageUrl = detailImageUrl;
-        this.nutritionInfoUrl = nutritionInfoUrl;
+    public Product(Category category, String name, int price, int stock, String imageUrl,
+        String detailImageUrl) {
+        this(null, category, name, price, stock, imageUrl, detailImageUrl, "", 0, new Date());
     }
 
-    public Product(Category category, String name, int price, int stock, String imageUrl, String detailImageUrl) {
-        this(null, category, name, price, stock, imageUrl, detailImageUrl, null);
-    }
 }
