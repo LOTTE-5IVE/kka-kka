@@ -35,7 +35,7 @@ export default function Header() {
             </Link>
           </div>
           <div className="bottom">
-            <Link href="/member/mypage">
+            <Link href="/mypage/myOrder">
               <img src="/common/top_mypage.png" />
             </Link>
 

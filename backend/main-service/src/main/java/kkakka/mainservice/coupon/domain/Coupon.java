@@ -13,7 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import kkakka.mainservice.category.domain.Category;
-import kkakka.mainservice.member.domain.Grade;
+import kkakka.mainservice.member.member.domain.Grade;
 import kkakka.mainservice.product.domain.Product;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
