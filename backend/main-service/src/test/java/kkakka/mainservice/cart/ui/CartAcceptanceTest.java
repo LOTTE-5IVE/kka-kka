@@ -41,7 +41,7 @@ class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequestDto)
                 .when()
-                .post("/carts")
+                .post("/api/carts")
                 .then()
                 .log().all().extract();
 
@@ -75,14 +75,12 @@ class CartAcceptanceTest extends AcceptanceTest {
 
         //given
         Member member = MEMBER;
-        CartResponseDto result = cartService.findAllCartItemByMemberId(member.getId());
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .pathParam("memberId", member.getId())
                 .when()
-                .get("/carts/{memberId}")
+                .get("/api/carts/")
                 .then()
                 .log().all().extract();
         //then
@@ -101,7 +99,7 @@ class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .pathParam("cartItemId", cartItemId)
                 .when()
-                .delete("/carts/{cartItemId}")
+                .delete("/api/carts/{cartItemId}")
                 .then()
                 .log().all().extract();
 
@@ -113,4 +111,5 @@ class CartAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
+
 }
