@@ -5,16 +5,16 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class OrderRequestDto {
+public class OrderRequest {
 
     private Long memberId;
     private List<ProductOrderRequest> productOrderRequests;
 
     //==테스트용 생성자==//
-    private OrderRequestDto() {
+    private OrderRequest() {
     }
 
-    public OrderRequestDto(Long memberId, List<ProductOrderRequest> productOrderRequests) {
+    public OrderRequest(Long memberId, List<ProductOrderRequest> productOrderRequests) {
         this.memberId = memberId;
         this.productOrderRequests = productOrderRequests;
     }
