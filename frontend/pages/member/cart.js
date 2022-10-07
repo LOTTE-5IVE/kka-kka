@@ -1,3 +1,4 @@
+import Link from "next/link";
 import ButtonComp from "../../components/common/buttonComp";
 import Title from "../../components/common/Title";
 import SNSButton from "../../components/member/SNSButton";
@@ -25,7 +26,7 @@ export default function cart() {
               <thead>
                 <tr style={{ height: "3vw" }}>
                   <th scope="col">
-                    <input type="checkbox" onClick="" />
+                    <input type="checkbox" onClick="#" />
                   </th>
                   <th scope="col">이미지</th>
                   <th scope="col">상품정보</th>
@@ -38,7 +39,7 @@ export default function cart() {
               <tbody>
                 <tr style={{ height: "6vw" }}>
                   <td>
-                    <input type="checkbox" onClick="" />
+                    <input type="checkbox" onClick="#" />
                   </td>
                   <td>이미지</td>
                   <td>상품정보</td>
@@ -82,7 +83,11 @@ export default function cart() {
           </div>
         </div>
         <div className="order-btn">
-          <ButtonComp context="전체상품 주문" />
+          <Link href="/payment">
+            <a>
+              <ButtonComp context="전체상품 주문" />
+            </a>
+          </Link>
           <ButtonComp context="선택상품 주문" />
         </div>
       </div>
@@ -142,7 +147,7 @@ export default function cart() {
 
           .order-btn {
             margin: 2vw auto 3vw;
-            width: 25%;
+            width: 30%;
             display: flex;
             justify-content: space-around;
           }

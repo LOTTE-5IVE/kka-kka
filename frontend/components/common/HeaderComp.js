@@ -1,6 +1,16 @@
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Header() {
+  const [value, setValue] = useState("");
+
+  function search(event) {
+    if (event.key === "Enter") {
+      window.location.href = `/product?search=${value}`;
+      setValue("");
+    }
+  }
+
   return (
     <div>
       <div className="wrapper">
@@ -10,19 +20,21 @@ export default function Header() {
           </Link>
         </div>
         <div className="search">
-          <form>
-            <input
-              type="text"
-              size="30"
-              placeholder="검색어를 입력해주세요"
-            ></input>
-            <input
-              type="image"
-              src="/common/main_search.png"
-              alt="검색"
-              onClick=""
-            />
-          </form>
+          <input
+            type="text"
+            size="30"
+            placeholder="검색어를 입력해주세요"
+            onChange={(e) => {
+              setValue(e.currentTarget.value);
+            }}
+            onKeyUp={(event) => {
+              search(event, value);
+            }}
+          ></input>
+
+          <Link href={`/product?search=${value}`}>
+            <img src="/common/main_search.png" />
+          </Link>
         </div>
         <div className="icons">
           <div className="top">
@@ -35,7 +47,7 @@ export default function Header() {
             </Link>
           </div>
           <div className="bottom">
-            <Link href="/member/mypage">
+            <Link href="/mypage">
               <img src="/common/top_mypage.png" />
             </Link>
 
@@ -83,7 +95,7 @@ export default function Header() {
                 color: #000;
               }
 
-              input[type="image"] {
+              img {
                 width: 24px;
                 height: 24px;
                 position: relative;

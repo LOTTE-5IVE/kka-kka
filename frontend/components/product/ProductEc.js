@@ -11,8 +11,8 @@ export default function ProductEc({ imgsrc, link, context }) {
                 <img src="/sample.png" />
               </div>
               <div className="back">
-                <p class="bottom_title">test</p>
-                <p class="bottom_detail">test_detail</p>
+                <p className="bottom_title">test</p>
+                <p className="bottom_detail">test_detail</p>
               </div>
             </div>
           </a>
@@ -22,48 +22,54 @@ export default function ProductEc({ imgsrc, link, context }) {
       <style jsx>{`
         .btn {
           position: relative;
-          width: 10vw;
-          max-height: 192px;
-          height: 10vw;
+          width: 13vw;
+          max-height: 400px;
+          height: 13vw;
           text-align: center;
           margin: 0 auto;
-          border: 1px solid;
+          background-color: #f5f5f5;
           border-radius: 100%;
+          overflow: hidden;
 
           a {
             position: absolute;
-            height: 10vw;
+            height: 13vw;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%); /* 자식요소에 translate 값 주기*/
           }
 
           img {
-            max-height: 192px;
-            height: 10vw;
+            max-height: 500px;
+            height: 100%;
           }
 
           .pab {
             position: relative;
-            width: 10vw;
-            height: 100px;
+            width: 13vw;
+            max-height: 400px;
+            height: 13vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
             .front {
               position: absolute;
               width: 100%;
-              height: 10vw;
+              height: 13vw;
             }
             .back {
               position: absolute;
               opacity: 0;
-              width: 100%;
-              height: 10vw;
+              width: 13vw;
+              max-height: 400px;
+              height: 13vw;
               left: 50%;
-              top: 100%;
+              top: 50%;
               border-radius: 100%;
               transform: translate(
                 -50%,
-                -52%
+                -50%
               ); /* 자식요소에 translate 값 주기*/
             }
 

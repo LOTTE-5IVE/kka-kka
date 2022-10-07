@@ -17,14 +17,13 @@ export default function C_Recomm() {
             <ProductRec />
             <ProductRec />
             <ProductRec />
-            <ProductRec />
           </div>
         </div>
       </div>
       <style jsx>{`
         .contents {
           width: 70%;
-          height: 25vw;
+          height: 30vw;
           margin: 3% auto 3%;
 
           .wrapper {
@@ -35,7 +34,6 @@ export default function C_Recomm() {
             align-items: center;
 
             .title {
-              width: 15%;
               height: 50%;
 
               h2 {
