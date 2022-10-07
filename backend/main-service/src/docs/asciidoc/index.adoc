@@ -17,3 +17,14 @@ include::./build/generated-snippets/join-success/http-request.adoc[]
 - Response
 
 include::./build/generated-snippets/join-success/http-response.adoc[]
+
+== Product
+=== 검색
+
+- Request
+
+include::./build/generated-snippets/products-show-search/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/products-show-search/http-response.adoc[]

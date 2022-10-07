@@ -43,5 +43,4 @@ public class Product {
         String detailImageUrl) {
         this(null, category, name, price, stock, imageUrl, detailImageUrl, "", 0, new Date());
     }
-
 }
