@@ -25,10 +25,14 @@ public class CartItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    public CartItem(Cart cart, Product product, Integer quantity) {
+    private CartItem(Cart cart, Product product, Integer quantity) {
         this.cart = cart;
         this.product = product;
         this.quantity = quantity;
+    }
+
+    public static CartItem create(Cart cart, Product product, Integer quantity) {
+        return new CartItem(cart, product, quantity);
     }
 
     public void setQuantity(Integer quantity) {

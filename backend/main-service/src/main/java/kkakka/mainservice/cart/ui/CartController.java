@@ -26,7 +26,7 @@ public class CartController {
                                              @AuthenticationPrincipal LoginMember loginMember) {
 
         if (loginMember.isMember()) {
-            cartService.saveOrUpdateCartItem(cartRequestDto);
+            cartService.saveOrUpdateCartItem(cartRequestDto,loginMember);
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .buildAndExpand().toUri();
 
@@ -39,11 +39,8 @@ public class CartController {
     public ResponseEntity<CartResponseDto> showMemberCartItemList(@AuthenticationPrincipal LoginMember loginMember) {
 
         if (loginMember.isMember()) {
-            CartResponseDto result = cartService.findAllCartItemByMemberId(loginMember.getId());
+            CartResponseDto result = cartService.findAllCartItemByMember(loginMember);
             return ResponseEntity.status(HttpStatus.OK).body(result);
-        }
-        if (loginMember.isAnonymous()) {
-
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }

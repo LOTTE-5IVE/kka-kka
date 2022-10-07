@@ -1,11 +1,12 @@
 package kkakka.mainservice.cart.ui.dto;
 
 import kkakka.mainservice.cart.domain.CartItem;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CartItemDto {
 
     private Long cartItemId;
