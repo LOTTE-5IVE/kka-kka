@@ -18,5 +18,6 @@ public class GoogleTokenRequest {
     private String clientId;
     @JsonProperty(value = "client_secret")
     private String clientSecret;
+    private String scope;
     private String code;
 }

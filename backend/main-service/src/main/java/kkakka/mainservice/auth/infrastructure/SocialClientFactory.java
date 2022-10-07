@@ -1,5 +1,6 @@
 package kkakka.mainservice.auth.infrastructure;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.EnumMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -24,6 +25,7 @@ public class SocialClientFactory implements SocialLoginStrategyFactory {
 
     private final ClientResponseConverter clientResponseConverter;
     private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
     private final NaverOauthInfo naverOauthInfo;
     private final KakaoOauthInfo kakaoOauthInfo;
     private final GoogleOauthInfo googleOauthInfo;
@@ -43,7 +45,8 @@ public class SocialClientFactory implements SocialLoginStrategyFactory {
         );
         socialClients.put(
                 ProviderName.GOOGLE,
-                new GoogleClient(clientResponseConverter, restTemplate, googleOauthInfo)
+                new GoogleClient(clientResponseConverter, restTemplate, googleOauthInfo,
+                        objectMapper)
         );
     }
 
