@@ -1,7 +1,9 @@
 package kkakka.mainservice.order.application;
 
-import kkakka.mainservice.member.domain.Member;
-import kkakka.mainservice.member.domain.repository.MemberRepository;
+import kkakka.mainservice.member.member.domain.Member;
+import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.Provider;
+import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.ui.dto.OrderRequest;
@@ -19,8 +21,8 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static kkakka.mainservice.fixture.TestMember.MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 @SpringBootTest
 @Transactional
@@ -38,11 +40,11 @@ class OrderServiceTest {
     ProductRepository productRepository;
 
     private Member member;
-    private Product product;
 
     @BeforeEach
     void setUp() {
-        member = memberRepository.save(new Member("username1", "user1@email.com"));
+        member = memberRepository.save(Member.create(Provider.create(MEMBER_01.getAccessToken(),
+           MemberProviderName.TEST)));
     }
 
     @Test

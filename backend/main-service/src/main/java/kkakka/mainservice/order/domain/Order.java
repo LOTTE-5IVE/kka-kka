@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import kkakka.mainservice.member.domain.Member;
+import kkakka.mainservice.member.member.domain.Member;
 import lombok.Getter;
 
 @Entity
