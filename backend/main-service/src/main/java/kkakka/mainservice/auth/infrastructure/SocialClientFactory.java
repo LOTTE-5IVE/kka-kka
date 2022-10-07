@@ -6,6 +6,8 @@ import javax.annotation.PostConstruct;
 import kkakka.mainservice.auth.application.SocialClient;
 import kkakka.mainservice.auth.application.SocialLoginStrategyFactory;
 import kkakka.mainservice.auth.domain.ProviderName;
+import kkakka.mainservice.auth.infrastructure.google.GoogleClient;
+import kkakka.mainservice.auth.infrastructure.google.GoogleOauthInfo;
 import kkakka.mainservice.auth.infrastructure.kakao.KakaoClient;
 import kkakka.mainservice.auth.infrastructure.kakao.KakaoOauthInfo;
 import kkakka.mainservice.auth.infrastructure.naver.NaverClient;
@@ -24,6 +26,7 @@ public class SocialClientFactory implements SocialLoginStrategyFactory {
     private final RestTemplate restTemplate;
     private final NaverOauthInfo naverOauthInfo;
     private final KakaoOauthInfo kakaoOauthInfo;
+    private final GoogleOauthInfo googleOauthInfo;
 
     private Map<ProviderName, SocialClient> socialClients;
 
@@ -37,6 +40,10 @@ public class SocialClientFactory implements SocialLoginStrategyFactory {
         socialClients.put(
                 ProviderName.KAKAO,
                 new KakaoClient(clientResponseConverter, restTemplate, kakaoOauthInfo)
+        );
+        socialClients.put(
+                ProviderName.GOOGLE,
+                new GoogleClient(clientResponseConverter, restTemplate, googleOauthInfo)
         );
     }
 
