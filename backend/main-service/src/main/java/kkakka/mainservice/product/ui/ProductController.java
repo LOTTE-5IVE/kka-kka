@@ -55,4 +55,11 @@ public class ProductController {
         ResponsePageDto response = categoryService.getProductsByCategoryId(categoryId, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<ResponsePageDto> showALlOfProducts() {
+
+        ResponsePageDto response = productService.getProductByRand();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
