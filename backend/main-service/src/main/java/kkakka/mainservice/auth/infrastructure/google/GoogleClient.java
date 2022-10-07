@@ -8,6 +8,7 @@ import kkakka.mainservice.auth.application.UserProfile;
 import kkakka.mainservice.auth.application.dto.SocialProviderCodeDto;
 import kkakka.mainservice.auth.infrastructure.ClientResponseConverter;
 import kkakka.mainservice.auth.infrastructure.google.dto.GoogleTokenRequest;
+import kkakka.mainservice.auth.infrastructure.google.util.BirthConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 public class GoogleClient implements SocialClient {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BASIC = "Basic %s";
     private static final String CONTENT_TYPE_HEADER = "Content-type";
     private static final String DEFAULT_CHARSET = "application/x-www-form-urlencoded;charset=utf-8";
 
@@ -91,7 +91,11 @@ public class GoogleClient implements SocialClient {
 
             if (jsonNode.has("birthdays")) {
                 jsonObject.addProperty("ageGroup",
-                        parseValidString(jsonNode.get("birthdays").get(0).get("date").get("year")));
+                        BirthConverter.convertToAgeGroup(
+                                parseValidString(
+                                        jsonNode.get("birthdays").get(0).get("date").get("year"))
+                        )
+                );
             }
 
             if (jsonNode.has("emailAddresses")) {
@@ -115,4 +119,5 @@ public class GoogleClient implements SocialClient {
     private String parseProviderId(String value) {
         return value.split("/")[1];
     }
+
 }
