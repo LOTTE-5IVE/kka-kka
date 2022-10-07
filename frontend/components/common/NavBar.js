@@ -93,6 +93,10 @@ export default function NavBar() {
             font-size: 17px;
             font-weight: 600;
             line-height: 55px;
+
+            a {
+              cursor: pointer;
+            }
           }
         }
 
