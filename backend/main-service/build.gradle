@@ -88,12 +88,12 @@ task createDocument(type: Copy) {
 }
 
 build {
-//    dependsOn createDocument
+    dependsOn createDocument
 }
 
 bootJar {
-//    dependsOn createDocument
-//    from("${asciidoctor.outputDir}") {
-//        into 'static'
-//    }
+    dependsOn createDocument
+    from("${asciidoctor.outputDir}") {
+        into 'static'
+    }
 }

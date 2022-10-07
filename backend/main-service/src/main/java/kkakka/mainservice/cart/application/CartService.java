@@ -7,6 +7,8 @@ import kkakka.mainservice.cart.domain.repository.CartRepository;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
+import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.member.auth.exception.AuthorizationException;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
@@ -35,7 +37,7 @@ public class CartService {
 
         /* 테스트 데이터 */
         Member member = memberRepository.findById(cartRequestDto.getMemberId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(KkaKkaException::new);
 
         Cart cart = findOrCreateCart(member);
         Optional<CartItem> originCartItem = Optional.ofNullable(
@@ -51,7 +53,7 @@ public class CartService {
 
         /* 장바구니 아이템 추가 */
         Product product = productRepository.findById(cartRequestDto.getProductId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(KkaKkaException::new);
         CartItem newCartItem = new CartItem(cart, product, cartRequestDto.getQuantity());
         cartItemRepository.save(newCartItem);
 
