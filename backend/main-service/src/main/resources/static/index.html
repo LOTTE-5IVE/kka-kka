@@ -484,13 +484,13 @@ Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 07 Oct 2022 02:22:43 GMT
+Date: Fri, 07 Oct 2022 02:34:30 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 Content-Length: 151
 
 {
-  "accessToken" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjY1MTA5MzYzLCJleHAiOjE2NjUxMTA1NzJ9.nvgtqdm_2rhW17uPhxJAHrHsXs3SxwYHONdo-zlWEjo"
+  "accessToken" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjY1MTEwMDcwLCJleHAiOjE2NjUxMTEyNzl9.klgtBVOzW4pSRRMZCMxamaznf8FPDBKIJ1_0GgIeXas"
 }</code></pre>
 </div>
 </div>
@@ -530,10 +530,10 @@ Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 07 Oct 2022 02:23:00 GMT
+Date: Fri, 07 Oct 2022 02:34:49 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-Content-Length: 754
+Content-Length: 756
 
 {
   "currentPage" : 0,
@@ -548,16 +548,16 @@ Content-Length: 754
     "id" : 6,
     "name" : "롯데 제로 초콜릿칩 쿠키 168g",
     "price" : 4480,
-    "imageUrl" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
     "discount" : null,
-    "registeredAt" : 1665109380899
+    "registeredAt" : 1665110089601,
+    "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png"
   }, {
     "id" : 7,
     "name" : "롯데 제로 초콜릿칩 쿠키 168g",
     "price" : 4480,
-    "imageUrl" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
     "discount" : null,
-    "registeredAt" : 1665109380900
+    "registeredAt" : 1665110089602,
+    "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png"
   } ]
 }</code></pre>
 </div>
@@ -593,24 +593,24 @@ Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 07 Oct 2022 02:23:00 GMT
+Date: Fri, 07 Oct 2022 02:34:49 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-Content-Length: 380
+Content-Length: 383
 
 {
   "id" : 6,
   "name" : "롯데 제로 초콜릿칩 쿠키 168g",
   "price" : 4480,
   "stock" : 10,
-  "imageUrl" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-  "detailImageUrl" : "상세URL",
-  "nutritionInfoUrl" : null,
   "discount" : 0,
   "category" : {
     "id" : 4,
     "name" : "test-category"
-  }
+  },
+  "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
+  "detailImage_url" : "상세URL",
+  "nutritionInfo_url" : null
 }</code></pre>
 </div>
 </div>
@@ -643,7 +643,7 @@ Host: localhost:9000</code></pre>
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Date: Fri, 07 Oct 2022 02:23:00 GMT
+Date: Fri, 07 Oct 2022 02:34:49 GMT
 Connection: close</code></pre>
 </div>
 </div>
@@ -665,7 +665,7 @@ Connection: close</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/carts/ HTTP/1.1
-Authorization: BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjY1MTA5MzQ4LCJleHAiOjE2NjUxMTA1NTd9.Kbf0E-1BB0Tz7JyecQgUe1ppmuI7dDuIaR9vFHXyGXQ
+Authorization: BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjY1MTEwMDUzLCJleHAiOjE2NjUxMTEyNjN9.52nVu3E_TeBmYPPMH1y2ZIyYSDNxqfFjHg4ofst0Ops
 Content-Type: application/json
 Host: localhost:9000</code></pre>
 </div>
@@ -685,7 +685,7 @@ Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 07 Oct 2022 02:22:27 GMT
+Date: Fri, 07 Oct 2022 02:34:13 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 Content-Length: 45
@@ -709,7 +709,7 @@ Content-Length: 45
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/carts HTTP/1.1
-Authorization: BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjY1MTA5MzQ4LCJleHAiOjE2NjUxMTA1NTd9.Kbf0E-1BB0Tz7JyecQgUe1ppmuI7dDuIaR9vFHXyGXQ
+Authorization: BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjY1MTEwMDUzLCJleHAiOjE2NjUxMTEyNjN9.52nVu3E_TeBmYPPMH1y2ZIyYSDNxqfFjHg4ofst0Ops
 Content-Type: application/json
 Host: localhost:9000
 Content-Length: 85
@@ -736,7 +736,7 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Location: http://localhost:9000/api/carts
-Date: Fri, 07 Oct 2022 02:22:28 GMT
+Date: Fri, 07 Oct 2022 02:34:13 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -754,7 +754,7 @@ Connection: keep-alive</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/carts HTTP/1.1
-Authorization: BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjY1MTA5MzQ2LCJleHAiOjE2NjUxMTA1NTZ9.7-ojy7KGcTS-lxEDseB7w5su8vgzJ1ljOvAUgdKNSRY
+Authorization: BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjY1MTEwMDUyLCJleHAiOjE2NjUxMTEyNjJ9.rDG-1tAFc_mJ9-9T7UYSU0DNQ7uDEbeN215SK8ZV9eg
 Content-Type: application/json
 Host: localhost:9000
 Content-Length: 87
@@ -780,7 +780,7 @@ Content-Length: 87
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Date: Fri, 07 Oct 2022 02:22:27 GMT
+Date: Fri, 07 Oct 2022 02:34:12 GMT
 Connection: close</code></pre>
 </div>
 </div>
@@ -797,7 +797,7 @@ Connection: close</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/carts/1 HTTP/1.1
-Authorization: BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjY1MTA5MzQ4LCJleHAiOjE2NjUxMTA1NTd9.Kbf0E-1BB0Tz7JyecQgUe1ppmuI7dDuIaR9vFHXyGXQ
+Authorization: BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjY1MTEwMDU0LCJleHAiOjE2NjUxMTEyNjN9.SO17XpiNpAx9ehorYDsBZf_G2QMt1XO18pF4dhBzWKM
 Content-Type: application/json
 Host: localhost:9000</code></pre>
 </div>
@@ -815,7 +815,7 @@ Host: localhost:9000</code></pre>
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Date: Fri, 07 Oct 2022 02:22:28 GMT
+Date: Fri, 07 Oct 2022 02:34:13 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
