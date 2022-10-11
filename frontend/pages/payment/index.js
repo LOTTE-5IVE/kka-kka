@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AdminButton } from "../../components/admin/AdminButton";
 import ButtonComp from "../../components/common/buttonComp";
 import DaumPost from "../../components/payment/DaumPost";
 
@@ -8,6 +9,11 @@ export default function payment() {
   const [addr2, setAddr2] = useState("");
   const [popup, setPopup] = useState(false);
   const [Selected, setSelected] = useState("");
+  const [modal, setModal] = useState(false);
+
+  function modalHandler() {
+    setModal(false);
+  }
 
   function popupHandler() {
     setPopup(!popup);
@@ -59,7 +65,26 @@ export default function payment() {
                   <td>몽쉘 생크림 오리지널 192g</td>
                   <td>x2</td>
                   <td>4,500원</td>
-                  <td>쿠폰적용</td>
+                  <td>
+                    <div
+                      onClick={() => {
+                        setModal(true);
+                      }}
+                    >
+                      <AdminButton
+                        context="쿠폰적용"
+                        color="red"
+                        width="70px"
+                      />
+                    </div>
+                    {modal && (
+                      <CouponModal>
+                        <div>
+                          <CouponDown modalHandler={modalHandler} />
+                        </div>
+                      </CouponModal>
+                    )}
+                  </td>
                 </tr>
               </tbody>
             </table>
