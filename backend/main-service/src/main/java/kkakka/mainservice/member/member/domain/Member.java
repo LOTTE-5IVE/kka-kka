@@ -8,6 +8,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import kkakka.mainservice.member.member.ui.dto.MemberResponse;
+import kkakka.mainservice.member.member.util.MemberInfoPatterns;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,6 +47,28 @@ public class Member {
         return new Member(null, provider, name, email, phone, "", ageGroup, Grade.BRONZE);
     }
 
+    public void updateName(String name) {
+        if (MemberInfoPatterns.isValidName(name)) {
+            this.name = name;
+        }
+    }
+
+    public void updateEmail(String email) {
+        if (MemberInfoPatterns.isValidEmail(email)) {
+            this.email = email;
+        }
+    }
+
+    public void updatePhone(String phone) {
+        if (MemberInfoPatterns.isValidPhoneNumber(phone)) {
+            this.phone = phone;
+        }
+    }
+
+    public void updateAddress(String address) {
+        this.address = address;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -60,5 +84,9 @@ public class Member {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public MemberResponse toDto() {
+        return new MemberResponse(name, email, phone, address, ageGroup, grade);
     }
 }

@@ -45,7 +45,7 @@ public class Product {
 
     @Column(nullable = false, updatable = false, insertable = false,
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
-    private Date registered_at;
+    private Date registeredAt;
 
     public Product(Long id, Category category, String name, int price, int stock, String imageUrl,
             String detailImageUrl, String nutritionInfoUrl) {
@@ -55,6 +55,16 @@ public class Product {
 
     public Product(Category category, String name, int price, int stock, String imageUrl,
             String detailImageUrl) {
-        this(null, category, name, price, stock, imageUrl, detailImageUrl, null);
+        this(null, category, name, price, stock, imageUrl, detailImageUrl, "");
     }
+
+    public void reduceStock(int orderQuantity) {
+        int restStock = this.stock - orderQuantity;
+        this.stock = restStock;
+    }
+
+    public boolean isStock(int quantity) {
+        return this.stock - quantity > 0;
+    }
+
 }
