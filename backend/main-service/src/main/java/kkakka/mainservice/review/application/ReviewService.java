@@ -2,6 +2,7 @@ package kkakka.mainservice.review.application;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.review.application.dto.MemberDto;
@@ -31,6 +32,8 @@ public class ReviewService {
 
     @Transactional
     public Long writeReview(Long memberId, Long productId, ReviewRequest reviewRequest) {
+        validateAlreadyWrittenReview(memberId, productId);
+
         final Review review = Review.create(
                 reviewRequest.getContents(),
                 memberRepository.findById(memberId).orElseThrow(),
@@ -38,5 +41,12 @@ public class ReviewService {
         );
         reviewRepository.save(review);
         return review.getId();
+    }
+
+    private void validateAlreadyWrittenReview(Long memberId, Long productId) {
+        reviewRepository.findByMemberIdAndProductId(memberId, productId)
+                .ifPresent(review -> {
+                    throw new KkaKkaException();
+                });
     }
 }

@@ -8,11 +8,18 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
+import org.hibernate.Session;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -20,9 +27,23 @@ import org.springframework.http.MediaType;
 
 public class ReviewAcceptanceTest extends DocumentConfiguration {
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @BeforeEach
+    public void setUp() {
+        entityManager.unwrap(Session.class)
+                .doWork(this::cleanUpTable);
+    }
+
+    private void cleanUpTable(Connection conn) throws SQLException {
+        Statement statement = conn.createStatement();
+        statement.executeUpdate("TRUNCATE TABLE Review");
+    }
+
     @DisplayName("상품후기 작성 - 성공")
     @Test
-    void writeReview_success(){
+    void writeReview_success() {
         // given
         final String accessToken = 액세스_토큰_가져옴();
         final Product product = PRODUCT_1;
@@ -46,7 +67,7 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
 
     @DisplayName("상품후기 작성 - 실패(권한없음)")
     @Test
-    void writeReview_fail(){
+    void writeReview_fail() {
         // given
         final Product product = PRODUCT_1;
         final ReviewRequest reviewRequest = new ReviewRequest("fail review");
@@ -66,9 +87,34 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
+    @DisplayName("상품후기 작성 - 실패(이미 작성함")
+    @Test
+    void writeReview_fail_already_written() {
+        // given
+        final String accessToken = 액세스_토큰_가져옴();
+        후기_작성함(accessToken, "review_01", PRODUCT_1);
+
+        final ReviewRequest reviewRequest = new ReviewRequest("review product_1");
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("review-write-fail-already-written"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken)
+                .body(reviewRequest)
+                .when()
+                .post("/api/reviews?product=" + PRODUCT_1.getId())
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("특정 상품에 대한 후기 조회 - 성공")
     @Test
-    void showReviews_success(){
+    void showReviews_success() {
         // given
         final String accessToken = 액세스_토큰_가져옴();
         후기_작성함(accessToken, "review_01", PRODUCT_1);
