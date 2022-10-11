@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
+import kkakka.mainservice.TestContext;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
@@ -27,7 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Transactional
-class OrderServiceTest {
+class OrderServiceTest extends TestContext {
 
     @Autowired
     OrderService orderService;
