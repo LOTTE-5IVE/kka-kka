@@ -1,19 +1,14 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import NavBar from "../../components/common/NavBar";
 
-export default function Mysidebar() {
-  const router = useRouter();
-  const q_test = (cid) => {
-    router.push({
-      pathname: `/product/${cid}`,
-      query: {
-        cid,
-        title: "test",
-      },
-    });
-  };
-  console.log(router.query);
+export default function Mysidebar({ mypageCallback }) {
+  const [tab, setTab] = useState("order");
+
+  useEffect(() => {
+    mypageCallback(tab);
+  });
 
   return (
     <>
@@ -22,22 +17,11 @@ export default function Mysidebar() {
           <h2>마이페이지</h2>
         </div>
         <ul>
-          {/* <li>
-            <div>
-              <Link href="/mypage/myEdit">
-                <a>내 정보 수정</a>
-              </Link>
-            </div>
-          </li> */}
-          <li>
-            <Link href="/mypage/myOrder">
-              <a>주문내역</a>
-            </Link>
+          <li onClick={() => setTab("order")}>
+            <a className={`${tab === "order" ? "active" : ""}`}>주문내역</a>
           </li>
-          <li>
-            <Link href="/mypage/myCoupon">
-              <a>쿠폰함</a>
-            </Link>
+          <li onClick={() => setTab("coupon")}>
+            <a className={`${tab === "coupon" ? "active" : ""}`}>쿠폰함</a>
           </li>
         </ul>
       </div>
@@ -65,7 +49,13 @@ export default function Mysidebar() {
             font-weight: 700;
             line-height: 40px;
             padding: 0;
-            color: #3a3a3a;
+            color: #dedede;
+            a {
+              cursor: pointer;
+            }
+            .active {
+              color: #3a3a3a;
+            }
           }
         }
       `}</style>

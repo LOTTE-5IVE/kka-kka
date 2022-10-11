@@ -52,3 +52,78 @@ include::{actual-snippets}/member-info-update-email-phone/http-request.adoc[]
 - Response
 
 include::{actual-snippets}/member-info-update-email-phone/http-response.adoc[]
+
+
+== Product
+=== 카테고리조회
+
+- Request
+
+include::{actual-snippets}/showCategoryProducts-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/showCategoryProducts-success/http-response.adoc[]
+
+=== 상품 상세 조회 성공
+
+- Request
+
+include::{actual-snippets}/showDetailProduct-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/showDetailProduct-success/http-response.adoc[]
+
+=== 상품 상세 조회 실패
+
+- Request
+
+include::{actual-snippets}/showDetailProduct-fail/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/showDetailProduct-fail/http-response.adoc[]
+
+== Cart
+=== 카트조회 성공
+
+- Request
+
+include::{actual-snippets}/showMemberCartItems-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/showMemberCartItems-success/http-response.adoc[]
+
+=== 카트저장 성공
+
+- Request
+
+include::{actual-snippets}/saveCartItem-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/saveCartItem-success/http-response.adoc[]
+
+=== 카트조회 실패
+
+- Request
+
+include::{actual-snippets}/saveCartItem-Fail/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/saveCartItem-Fail/http-response.adoc[]
+
+=== 카트삭제 성공
+
+- Request
+
+include::{actual-snippets}/removeCartItem-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/removeCartItem-success/http-response.adoc[]
+
+
