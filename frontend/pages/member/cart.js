@@ -33,7 +33,7 @@ export default function cart() {
                   <th scope="col">수량</th>
                   <th scope="col">배송비</th>
                   <th scope="col">합계</th>
-                  <th scope="col">선택</th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
@@ -41,12 +41,16 @@ export default function cart() {
                   <td>
                     <input type="checkbox" onClick="#" />
                   </td>
-                  <td>이미지</td>
-                  <td>상품정보</td>
+                  <td>
+                    <img src="/sample.png" />
+                  </td>
+                  <td>몽쉘 생크림 오리지널 192g</td>
                   <td>수량</td>
                   <td>배송비</td>
                   <td>합계</td>
-                  <td>선택</td>
+                  <td>
+                    <img width="20px" src="/cancelred.png" />
+                  </td>
                 </tr>
               </tbody>
             </table>
