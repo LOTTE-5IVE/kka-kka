@@ -21,6 +21,17 @@ include::{actual-snippets}/join-success/http-response.adoc[]
 
 
 == Member
+=== 회원 정보 조회
+
+- Request
+
+include::{actual-snippets}/member-info/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/member-info/http-response.adoc[]
+
+
 === 회원 정보 수정
 ==== 이름 수정
 

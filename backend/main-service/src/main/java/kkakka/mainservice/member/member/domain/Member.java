@@ -8,6 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import kkakka.mainservice.member.member.ui.dto.MemberResponse;
 import kkakka.mainservice.member.member.util.MemberInfoPatterns;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -83,5 +84,9 @@ public class Member {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public MemberResponse toDto() {
+        return new MemberResponse(name, email, phone, address, ageGroup, grade);
     }
 }

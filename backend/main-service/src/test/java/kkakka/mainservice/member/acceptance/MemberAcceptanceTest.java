@@ -10,7 +10,6 @@ import io.restassured.response.Response;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -18,33 +17,35 @@ import org.springframework.http.MediaType;
 
 public class MemberAcceptanceTest extends DocumentConfiguration {
 
-    @DisplayName("사용자 검증이 필요한 요청 - 토큰 있음")
+    @DisplayName("회원 정보 조회 - 성공")
     @Test
     void showMemberInfo_success() {
         // given
         final String accessToken = 액세스_토큰_가져옴();
 
         // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+        final ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("member-info"))
                 .header("Authorization", "Bearer " + accessToken)
                 .when()
-                .post("/api/members/me")
+                .get("/api/members/me")
                 .then().log().all()
                 .extract();
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body()).isNotNull();
+        assertThat((String) response.path("name")).isEqualTo(MEMBER_01.getName());
     }
 
-    @DisplayName("사용자 검증이 필요한 요청 - 토큰 없음")
+    @DisplayName("회원 정보 조회 - 실패(토큰 없음)")
     @Test
     void showMemberInfo_fail() {
         // given
         // when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when()
-                .post("/api/members/me")
+                .get("/api/members/me")
                 .then().log().all()
                 .extract();
 
@@ -99,8 +100,6 @@ public class MemberAcceptanceTest extends DocumentConfiguration {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    // TODO: 회원 정보 조회 API 구현한 뒤 이어서 작성
-    @Disabled
     @DisplayName("회원 정보 수정 요청(이메일, 연락처) - 실패")
     @Test
     void editMemberInfo_email_phone_fail() {
@@ -112,7 +111,7 @@ public class MemberAcceptanceTest extends DocumentConfiguration {
         // when
         final ExtractableResponse<Response> response = RestAssured
                 .given(spec).log().all()
-                .filter(document("member-info-update-email-phone"))
+                .filter(document("member-info-update-email-phone-fail"))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(String.format("{\"email\": \"%s\", \"phone\": \"%s\"}", newMail, newPhone))
@@ -123,6 +122,19 @@ public class MemberAcceptanceTest extends DocumentConfiguration {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+
+        final ExtractableResponse<Response> memberInfoResponse = 회원_정보_가져옴(accessToken);
+        assertThat((String) memberInfoResponse.path("email")).isNotEqualTo(newMail);
+    }
+
+    private ExtractableResponse<Response> 회원_정보_가져옴(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/api/members/me")
+                .then().log().all()
+                .extract();
     }
 
     private String 액세스_토큰_가져옴() {
