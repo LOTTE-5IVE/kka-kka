@@ -1,21 +1,38 @@
 package kkakka.mainservice.product.ui.dto;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductResponseDto {
 
     private Long id;
-    private String categoryName;
+    @JsonProperty("category")
+    private CategoryResponse categoryResponse;
     private String name;
     private Integer price;
     private Integer stock;
+    @JsonProperty("image_url")
     private String imageUrl;
+    @JsonProperty("detailImage_url")
     private String detailImageUrl;
+    @JsonProperty("nutritionInfo_url")
     private String nutritionInfoUrl;
     private int discount;
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CategoryResponse {
+
+        private Long id;
+        private String name;
     }
 }

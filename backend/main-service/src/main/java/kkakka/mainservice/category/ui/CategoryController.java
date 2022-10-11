@@ -3,18 +3,11 @@ package kkakka.mainservice.category.ui;
 import kkakka.mainservice.category.application.CategoryService;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
-import kkakka.mainservice.category.ui.dto.ResponseCategoryProducts;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 
 @RestController
 @RequestMapping("/category")
