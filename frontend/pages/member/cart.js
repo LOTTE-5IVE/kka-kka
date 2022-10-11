@@ -1,9 +1,25 @@
 import Link from "next/link";
+import { useState } from "react";
+import { AdminButton } from "../../components/admin/AdminButton";
 import ButtonComp from "../../components/common/buttonComp";
 import Title from "../../components/common/Title";
+import { CouponDown } from "../../components/coupon/CouponDown";
+import { CouponModal } from "../../components/coupon/CouponModal";
 import SNSButton from "../../components/member/SNSButton";
 
 export default function cart() {
+  const [quantity, setQuantity] = useState(1);
+  const [modal, setModal] = useState(false);
+
+  function modalHandler() {
+    setModal(false);
+  }
+  const handleQuantity = (type) => {
+    if (type !== "minus" || quantity > 1) {
+      type === "plus" ? setQuantity(quantity + 1) : setQuantity(quantity - 1);
+    }
+  };
+
   return (
     <>
       <Title title="장바구니" />
@@ -26,7 +42,7 @@ export default function cart() {
               <thead>
                 <tr style={{ height: "3vw" }}>
                   <th scope="col">
-                    <input type="checkbox" onClick="#" />
+                    <input type="checkbox" />
                   </th>
                   <th scope="col">이미지</th>
                   <th scope="col">상품정보</th>
@@ -39,15 +55,59 @@ export default function cart() {
               <tbody>
                 <tr style={{ height: "6vw" }}>
                   <td>
-                    <input type="checkbox" onClick="#" />
+                    <input type="checkbox" />
                   </td>
                   <td>
-                    <img src="/sample.png" />
+                    <img width="50px" src="/sample.png" />
                   </td>
-                  <td>몽쉘 생크림 오리지널 192g</td>
-                  <td>수량</td>
-                  <td>배송비</td>
-                  <td>합계</td>
+                  <td>
+                    <div>몽쉘 생크림 오리지널 192g</div>
+                    <div className="couponWrapper">
+                      <div className="couponContents">
+                        <span>coupon</span>{" "}
+                        <input type="text" size="15" readOnly />
+                      </div>
+                      <div>
+                        <div
+                          onClick={() => {
+                            setModal(true);
+                          }}
+                        >
+                          <AdminButton
+                            context="쿠폰적용"
+                            color="red"
+                            width="60px"
+                          />
+                        </div>
+                        {modal && (
+                          <CouponModal>
+                            <div>
+                              <CouponDown modalHandler={modalHandler} />
+                            </div>
+                          </CouponModal>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span>
+                      <input
+                        type="button"
+                        onClick={() => handleQuantity("minus")}
+                        value="-"
+                        style={{ marginRight: "15px" }}
+                      />
+                      <span>{quantity}</span>
+                      <input
+                        type="button"
+                        onClick={() => handleQuantity("plus")}
+                        value="+"
+                        style={{ marginLeft: "15px" }}
+                      />
+                    </span>
+                  </td>
+                  <td>무료</td>
+                  <td>4,500원</td>
                   <td>
                     <img width="20px" src="/cancelred.png" />
                   </td>
@@ -127,6 +187,29 @@ export default function cart() {
                 border-spacing: 0;
                 border-top: 2px solid #1a1a1a;
                 border-bottom: 1px solid #dfdfdf;
+              }
+
+              td {
+                .couponWrapper {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+
+                  .couponContents {
+                    display: flex;
+                    line-height: 15px;
+
+                    span {
+                      /* background-color:  */
+                    }
+                  }
+                }
+
+                input[type="button"] {
+                  background-color: #fff;
+                  border: 1px solid #c8c8c8;
+                  border-radius: 50%;
+                }
               }
             }
           }

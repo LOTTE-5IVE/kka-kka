@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import Title from "../../components/common/Title";
 import MyCoupon from "../../components/mypage/MyCoupon";
 import MyInfoCard from "../../components/mypage/MyInfoCard";
@@ -7,6 +8,48 @@ import Mysidebar from "../../components/mypage/mysidebar";
 
 export default function mypage() {
   const [tab, setTab] = useState("order");
+  const [value, setValue] = useState("");
+  const [token, setToken] = useState("");
+  const [name, setName] = useState("");
+  const [grade, setGrade] = useState("");
+
+  function search(event) {
+    if (event.key === "Enter") {
+      window.location.href = `/product?search=${value}`;
+      setValue("");
+    }
+  }
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  const getMemberName = async () => {
+    await axios
+      .get(`/api/members/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setName(res.data.name);
+        setGrade(res.data.grade);
+      });
+  };
+
+  useEffect(() => {
+    const objString = localStorage.getItem("accessToken");
+    const obj = JSON.parse(objString);
+
+    if (obj && new Date().getTime() > obj.expire) {
+      localStorage.removeItem("accessToken");
+      setToken("");
+    } else if (obj) {
+      setToken(obj.value);
+    }
+
+    getMemberName();
+  }, [token]);
 
   function handleTab(menu) {
     setTab(menu);
@@ -22,7 +65,7 @@ export default function mypage() {
           </div>
           <div className="wrapper">
             <div>
-              <MyInfoCard />
+              <MyInfoCard name={name} grade={grade} />
             </div>
 
             <div className="mypageMenu">
