@@ -50,7 +50,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
                 .filter(document("saveCartItem-success"))
-                .header("Authorization", "Bearer" + accessToken)
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequestDto)
                 .when()
@@ -73,7 +73,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
                 .filter(document("saveCartItem-Fail"))
-                .header("Authorization", "Bearer" + accessToken)
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequestDto)
                 .when()
@@ -95,7 +95,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
                 .filter(document("showMemberCartItems-success"))
-                .header("Authorization", "Bearer" + accessToken)
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/api/carts/")
@@ -123,7 +123,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
                 .filter(document("removeCartItem-success"))
-                .header("Authorization", "Bearer" + accessToken)
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .delete("/api/carts/" + cartItem.getId())
