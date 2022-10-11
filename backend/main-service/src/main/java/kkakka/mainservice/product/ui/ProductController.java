@@ -79,7 +79,8 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity showProductsBySearch(@RequestBody SearchRequest searchRequest) {
 
-        List<ProductResponseDto> productResponseDtos = productService.showProductsBySearch(searchRequest.toDto());
+        List<ProductResponseDto> productResponseDtos = productService.showProductsBySearch(
+            searchRequest.toDto());
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponseDtos);
     }

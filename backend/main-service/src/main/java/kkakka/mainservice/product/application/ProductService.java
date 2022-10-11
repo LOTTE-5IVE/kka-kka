@@ -30,7 +30,8 @@ public class ProductService {
         Optional<Product> productDetail = productRepository.findById(productId);
 
         ModelMapper mapper = new MapperConfig().modelMapper();
-        ProductResponseDto result = mapper.map(productDetail.get(), ProductResponseDto.class); // NPE 처리 필요
+        ProductResponseDto result = mapper.map(productDetail.get(),
+            ProductResponseDto.class); // NPE 처리 필요
         result.setCategoryName(productDetail.get().getCategory().getName());
 
         return result;
@@ -43,23 +44,17 @@ public class ProductService {
         List<String> getSearchWords = searchWords.getSearchWords();
         List<Product> products = new ArrayList<>();
 
-        for(String searchWord : getSearchWords) {
+        for (String searchWord : getSearchWords) {
             products.addAll(productRepository.findByCategory(searchWord));
         }
-
-        for(String searchWord : getSearchWords) {
+        for (String searchWord : getSearchWords) {
             products.addAll(productRepository.findByName(searchWord));
         }
 
-        System.out.println("products.get(0).getCategory().getName() = " + products.get(0).getCategory().getName());
-
         List<ProductResponseDto> productResponseDtos = products.stream()
             .distinct()
-            .map(product -> ProductResponseDto.create(
-                product
-            ))
+            .map(ProductResponseDto::create)
             .collect(Collectors.toList());
-            //.map(ProductResponseDto::create)
 
         return productResponseDtos;
     }

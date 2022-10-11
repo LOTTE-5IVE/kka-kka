@@ -33,13 +33,14 @@ public class ProductServiceTest {
         //given
         Category category = categoryRepository.save(new Category("초콜릿"));
         Product product = productRepository.save(
-            new Product(null,category,"단백질 초코바 120g",1200,10,"imageUrl","detailImageUrl","nutritionInfoUrl",0,new Date())
+            new Product(null, category, "단백질 초코바 120g", 1200, 10, "imageUrl", "detailImageUrl",
+                "nutritionInfoUrl", 0, new Date())
         );
         SearchRequest searchRequest = new SearchRequest("단백질");
-        System.out.println("searchRequest.toDto() = " + searchRequest.toDto().getKeyword());
 
         //when
-        List<ProductResponseDto> productResponseDtos = productService.showProductsBySearch(searchRequest.toDto());
+        List<ProductResponseDto> productResponseDtos = productService.showProductsBySearch(
+            searchRequest.toDto());
 
         //then
         assertThat(productResponseDtos.get(0).getName()).isEqualTo(product.getName());
