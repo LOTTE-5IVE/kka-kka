@@ -1,6 +1,6 @@
 package kkakka.mainservice.member.member.ui.dto;
 
-import kkakka.mainservice.member.member.domain.Grade;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,12 +8,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberResponse {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class MemberInfoRequest {
 
     private String name;
     private String email;
     private String phone;
     private String address;
-    private String ageGroup;
-    private Grade grade;
 }
