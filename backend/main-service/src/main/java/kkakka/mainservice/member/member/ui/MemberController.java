@@ -6,9 +6,6 @@ import kkakka.mainservice.member.auth.ui.MemberOnly;
 import kkakka.mainservice.member.member.application.MemberService;
 import kkakka.mainservice.member.member.application.dto.MemberUpdateDto;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
-import kkakka.mainservice.member.member.domain.Provider;
-import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.member.member.ui.dto.MemberInfoRequest;
 import kkakka.mainservice.member.member.ui.dto.MemberResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
 
     @GetMapping("/health_check")
     public String status() {
