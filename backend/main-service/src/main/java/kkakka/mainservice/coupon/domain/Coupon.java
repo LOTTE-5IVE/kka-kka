@@ -55,7 +55,6 @@ public class Coupon {
     private Integer percentage;
     private Integer maxDiscount;
     private Integer minOrderPrice;
-    private Integer isUsed;
 
     public static Coupon create(
         Category category,
@@ -71,7 +70,7 @@ public class Coupon {
     ) {
         return new Coupon(null, category, null, product, name, detail, priceRule,
             LocalDateTime.now(),
-            startedAt, expiredAt, percentage, maxDiscount, minOrderPrice, 0);
+            startedAt, expiredAt, percentage, maxDiscount, minOrderPrice);
     }
 
     public static Coupon create(
@@ -86,14 +85,11 @@ public class Coupon {
         int minOrderPrice
     ) {
         return new Coupon(null, null, grade, null, name, detail, priceRule, LocalDateTime.now(),
-            startedAt, expiredAt, percentage, maxDiscount, minOrderPrice, 0);
+            startedAt, expiredAt, percentage, maxDiscount, minOrderPrice);
     }
 
-    public void useCoupon() {
-        this.isUsed = 1;
-    }
-
-    public boolean isUsed() {
-        return this.isUsed == 1;
+    public boolean isNotExpired() {
+        return this.getStartedAt().isBefore(LocalDateTime.now())
+            && this.getExpiredAt().isAfter(LocalDateTime.now());
     }
 }

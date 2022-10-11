@@ -1,13 +1,12 @@
 package kkakka.mainservice.coupon.application;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
-import kkakka.mainservice.coupon.domain.MemberCouponId;
 import kkakka.mainservice.coupon.domain.PriceRule;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
@@ -17,7 +16,6 @@ import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +40,7 @@ public class CouponService {
             List<Member> members = memberRepository.findByGrade(couponRequestDto.getGrade());
             for (Member member : members) {
                 Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
-                MemberCouponId memberCouponId = new MemberCouponId(member.getId(), coupon.getId());
-                MemberCoupon memberCoupon = new MemberCoupon(memberCouponId);
+                MemberCoupon memberCoupon = MemberCoupon.create(member, coupon);
                 memberCouponRepository.save(memberCoupon);
                 coupons.add(coupon.getId());
             }
@@ -62,7 +59,6 @@ public class CouponService {
         throw new IllegalArgumentException();
     }
 
-    @NotNull
     private Coupon toCouponEntity(CouponRequestDto couponRequestDto) {
         return Coupon.create(
             couponRequestDto.getGrade(),
@@ -76,7 +72,6 @@ public class CouponService {
             couponRequestDto.getMinOrderPrice());
     }
 
-    @NotNull
     private Coupon toCouponEntity(CouponRequestDto couponRequestDto, Category category,
         Product product) {
         return Coupon.create(
@@ -99,18 +94,16 @@ public class CouponService {
     }
 
     private Category getCategory(CouponRequestDto couponRequestDto) {
-        Category category = categoryRepository.findById(couponRequestDto.getCategoryId())
+        return categoryRepository.findById(couponRequestDto.getCategoryId())
             .orElseThrow(IllegalArgumentException::new);
-        return category;
     }
 
     /* 관리자 쿠폰 사용 (삭제) */
     @Transactional
     public void useCoupon(Long couponId) {
-        Coupon coupon = couponRepository.findById(couponId)
-            .orElseThrow(IllegalArgumentException::new);
-        coupon.useCoupon();
-        couponRepository.save(coupon);
+        MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponId(couponId);
+        memberCoupon.useCoupon();
+        memberCouponRepository.save(memberCoupon);
     }
 
     /* 관리자 모든 쿠폰 조회 */
@@ -121,32 +114,22 @@ public class CouponService {
     /* 사용자 쿠폰 다운로드 */
     @Transactional
     public void downloadCoupon(Long couponId, Long memberId) {
-        // 비회원일 경우
-        if (memberId == null) {
-            return;
-        }
-        if (checkExpiredDate(couponId)) {
-            MemberCouponId memberCouponId = new MemberCouponId(memberId, couponId);
-            MemberCoupon memberCoupon = new MemberCoupon(memberCouponId);
-            memberCouponRepository.save(memberCoupon);
-        }
-    }
-
-    /* 유효기간 체크 */
-    public boolean checkExpiredDate(Long couponId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(IllegalArgumentException::new);
         Coupon coupon = couponRepository.findById(couponId)
             .orElseThrow(IllegalArgumentException::new);
-        if (coupon.getStartedAt().isBefore(LocalDateTime.now())
-            && coupon.getExpiredAt().isAfter(LocalDateTime.now())) {
-            return true;
-        }
-        return false;
+        MemberCoupon memberCoupon = MemberCoupon.create(member, coupon);
+        memberCouponRepository.save(memberCoupon);
     }
 
     /* 사용자 쿠폰 사용 */
-    public void useMemberCoupon(Long couponId) {
-        if (checkExpiredDate(couponId)) {
-            useCoupon(couponId);
+    public void useCouponByMember(Long couponId) {
+        Coupon coupon = couponRepository.findById(couponId)
+            .orElseThrow(IllegalArgumentException::new);
+        if (coupon.isNotExpired()) {
+            MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponId(couponId);
+            memberCoupon.useCoupon();
+            memberCouponRepository.save(memberCoupon);
         }
     }
 
@@ -154,28 +137,24 @@ public class CouponService {
     public List<Coupon> findUsableCoupons(Long memberId) {
         List<MemberCoupon> memberCoupons = memberCouponRepository
             .findAllByMemberId(memberId);
-        List<Coupon> coupons = new ArrayList<>();
-        for (MemberCoupon membercoupon : memberCoupons) {
-            Coupon coupon = couponRepository.findById(
-                    membercoupon.getMemberCouponId().getCouponId())
-                .orElseThrow(IllegalArgumentException::new);
-            coupons.add(coupon);
-        }
-        return coupons;
+
+        return memberCoupons.stream()
+            .map(memberCoupon -> memberCoupon.getCoupon())
+            .collect(Collectors.toList());
     }
 
     /* 사용자 다운 가능한 쿠폰 목록 조회 */
-    // 유효기간 체크 -> 다운 (멤버 쿠폰함에 넣어준다)
-    public List<Coupon> findDownloadCoupons() {
+    public List<Coupon> findDownloadableCoupons(Long memberId) {
         List<Coupon> coupons = couponRepository.findAll();
-        List<Coupon> removeCoupons = new ArrayList<>();
-        for (Coupon coupon : coupons) {
-            if (!checkExpiredDate(coupon.getId()) || !coupon.getPriceRule().equals(PriceRule.COUPON)
-                || coupon.getIsUsed() == 1) {
-                removeCoupons.add(coupon);
-            }
-        }
-        coupons.removeAll(removeCoupons);
-        return coupons;
+        List<Coupon> downloadedCoupons = memberCouponRepository.findDownloadedCouponsByMemberId(
+            memberId);
+        coupons.removeAll(downloadedCoupons);
+        return coupons.stream()
+            .filter(coupon -> isDownloadable(coupon))
+            .collect(Collectors.toList());
+    }
+
+    private boolean isDownloadable(Coupon coupon) {
+        return coupon.isNotExpired() && !coupon.getPriceRule().equals(PriceRule.COUPON);
     }
 }
