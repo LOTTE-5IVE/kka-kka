@@ -45,7 +45,7 @@ public class Product {
 
     @Column(nullable = false, updatable = false, insertable = false,
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
-    private Date registered_at;
+    private Date registeredAt;
 
     public Product(Long id, Category category, String name, int price, int stock, String imageUrl,
             String detailImageUrl, String nutritionInfoUrl) {
