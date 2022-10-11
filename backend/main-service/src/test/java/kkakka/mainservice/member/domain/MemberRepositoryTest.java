@@ -3,6 +3,7 @@ package kkakka.mainservice.member.domain;
 import static kkakka.mainservice.fixture.TestMember.MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import kkakka.mainservice.TestContext;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
@@ -13,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class MemberRepositoryTest {
+public class MemberRepositoryTest extends TestContext {
 
     @Autowired
     private MemberRepository memberRepository;
