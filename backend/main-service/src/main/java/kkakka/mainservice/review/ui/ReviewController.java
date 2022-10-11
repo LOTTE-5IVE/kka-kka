@@ -1,12 +1,16 @@
 package kkakka.mainservice.review.ui;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.auth.ui.MemberOnly;
 import kkakka.mainservice.review.application.ReviewService;
 import kkakka.mainservice.review.application.dto.ReviewDto;
 import kkakka.mainservice.review.ui.dto.MemberSimpleResponse;
+import kkakka.mainservice.common.dto.PageInfo;
+import kkakka.mainservice.common.dto.PageableResponse;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
 import kkakka.mainservice.review.ui.dto.ReviewResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,18 +34,26 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping
-    public ResponseEntity<Page<ReviewResponse>> showReviews(
-            @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable,
+    public ResponseEntity<PageableResponse<List<ReviewResponse>>> showReviews(
+            @PageableDefault(size = 6, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
             @RequestParam(value = "product") Long productId
     ) {
         final Page<ReviewDto> reviewDtos = reviewService.showReviewsByProductId(productId,
                 pageable);
-        final Page<ReviewResponse> reviews = reviewDtos
+        final List<ReviewResponse> reviews = reviewDtos.stream()
                 .map(reviewDto -> ReviewResponse.create(
                         reviewDto,
                         MemberSimpleResponse.create(reviewDto.getMemberName())
-                ));
-        return ResponseEntity.ok().body(reviews);
+                )).collect(Collectors.toList());
+
+        final PageInfo pageInfo = PageInfo.from(
+                pageable.getPageNumber(),
+                reviewDtos.getTotalPages(),
+                pageable.getPageSize(),
+                reviewDtos.getTotalElements()
+        );
+
+        return ResponseEntity.ok().body(PageableResponse.from(reviews, pageInfo));
     }
 
     @MemberOnly

@@ -1,5 +1,6 @@
 package kkakka.mainservice.review.ui.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.LocalDateTime;
 import kkakka.mainservice.common.LocalDateTimeSerializer;
@@ -18,6 +19,7 @@ public class ReviewResponse {
     private String contents;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createdAt;
+    @JsonProperty(value = "member")
     private MemberSimpleResponse memberResponse;
 
     public static ReviewResponse create(ReviewDto reviewDto,

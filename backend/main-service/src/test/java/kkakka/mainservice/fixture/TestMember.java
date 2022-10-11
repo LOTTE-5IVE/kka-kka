@@ -13,6 +13,14 @@ public enum TestMember {
     MEMBER_00("0000", "1", "0000", "member00",
             "default@email.com", "010-0000-0000", "대한민국 서울특별시 비트교육센터", "00~00", Authority.MEMBER),
     MEMBER_01("0001", "1", "0001", "member01",
+            "test01@email.com", "010-0000-0000", "대한민국 서울특별시 비트교육센터", "20~29", Authority.MEMBER),
+    MEMBER_02("0002", "2", "0002", "member02",
+            "test01@email.com", "010-0000-0000", "대한민국 서울특별시 비트교육센터", "20~29", Authority.MEMBER),
+    MEMBER_03("0003", "3", "0003", "member03",
+            "test01@email.com", "010-0000-0000", "대한민국 서울특별시 비트교육센터", "20~29", Authority.MEMBER),
+    MEMBER_04("0004", "4", "0004", "member04",
+            "test01@email.com", "010-0000-0000", "대한민국 서울특별시 비트교육센터", "20~29", Authority.MEMBER),
+    MEMBER_05("0005", "5", "0005", "member05",
             "test01@email.com", "010-0000-0000", "대한민국 서울특별시 비트교육센터", "20~29", Authority.MEMBER);
 
     private String code;
