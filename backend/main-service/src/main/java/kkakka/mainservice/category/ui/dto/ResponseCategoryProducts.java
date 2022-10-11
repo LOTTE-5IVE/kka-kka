@@ -25,6 +25,6 @@ public class ResponseCategoryProducts {
                 product.getPrice(),
                 product.getImageUrl(),
                 product.getDiscount(),
-                product.getRegistered_at());
+                product.getRegisteredAt());
     }
 }
