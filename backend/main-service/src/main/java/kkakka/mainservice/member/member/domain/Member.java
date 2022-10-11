@@ -61,9 +61,4 @@ public class Member {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    /* 테스트용 생성자 */
-    public Member(Grade grade) {
-        this.grade = grade;
-    }
 }
