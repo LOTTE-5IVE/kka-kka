@@ -11,29 +11,31 @@ import kkakka.mainservice.member.auth.ui.Authority;
 public enum TestMember {
 
     MEMBER_00("0000", "1", "0000", "member00",
-            "default@email.com", "00~00", "000-0000-0000", Authority.MEMBER),
+            "default@email.com", "010-0000-0000", "대한민국 서울특별시 비트교육센터", "00~00", Authority.MEMBER),
     MEMBER_01("0001", "1", "0001", "member01",
-            "test01@email.com", "20~29", "010-0000-0000", Authority.MEMBER);
+            "test01@email.com", "010-0000-0000", "대한민국 서울특별시 비트교육센터", "20~29", Authority.MEMBER);
 
     private String code;
     private String accessToken;
     private String providerId;
     private String name;
     private String email;
-    private String ageGroup;
     private String phone;
+    private String address;
+    private String ageGroup;
     private Authority authority;
     private UserProfile userProfile;
 
     TestMember(String code, String accessToken, String providerId, String name, String email,
-            String ageGroup, String phone, Authority authority) {
+            String phone, String address, String ageGroup, Authority authority) {
         this.code = code;
         this.accessToken = accessToken;
         this.providerId = providerId;
         this.name = name;
         this.email = email;
-        this.ageGroup = ageGroup;
         this.phone = phone;
+        this.address = address;
+        this.ageGroup = ageGroup;
         this.authority = authority;
         this.userProfile = new TestUserProfile(
                 UUID.randomUUID().toString(),
@@ -70,5 +72,25 @@ public enum TestMember {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getAgeGroup() {
+        return ageGroup;
     }
 }

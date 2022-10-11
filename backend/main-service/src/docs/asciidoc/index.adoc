@@ -6,14 +6,145 @@
 :toc: left
 :toclevels: 2
 :sectlinks:
+:actual-snippets: ./build/generated-snippets
 
 == Auth
 === 회원가입 & 로그인
 
 - Request
 
-include::./build/generated-snippets/join-success/http-request.adoc[]
+include::{actual-snippets}/join-success/http-request.adoc[]
 
 - Response
 
-include::./build/generated-snippets/join-success/http-response.adoc[]
+include::{actual-snippets}/join-success/http-response.adoc[]
+
+
+== Member
+=== 회원 정보 조회
+
+- Request
+
+include::{actual-snippets}/member-info/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/member-info/http-response.adoc[]
+
+
+=== 회원 정보 수정
+==== 이름 수정
+
+- Request
+
+include::{actual-snippets}/member-info-update-name/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/member-info-update-name/http-response.adoc[]
+
+==== 이메일, 연락처 수정
+
+- Request
+
+include::{actual-snippets}/member-info-update-email-phone/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/member-info-update-email-phone/http-response.adoc[]
+
+
+== Product
+=== 카테고리 기준 조회
+
+- Request
+
+include::{actual-snippets}/showCategoryProducts-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/showCategoryProducts-success/http-response.adoc[]
+
+=== 상품 상세 조회 성공
+
+- Request
+
+include::{actual-snippets}/showDetailProduct-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/showDetailProduct-success/http-response.adoc[]
+
+=== 상품 상세 조회 실패
+
+- Request
+
+include::{actual-snippets}/showDetailProduct-fail/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/showDetailProduct-fail/http-response.adoc[]
+
+== Cart
+=== 카트조회 성공
+
+- Request
+
+include::{actual-snippets}/showMemberCartItems-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/showMemberCartItems-success/http-response.adoc[]
+
+=== 카트저장 성공
+
+- Request
+
+include::{actual-snippets}/saveCartItem-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/saveCartItem-success/http-response.adoc[]
+
+=== 카트조회 실패
+
+- Request
+
+include::{actual-snippets}/saveCartItem-Fail/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/saveCartItem-Fail/http-response.adoc[]
+
+=== 카트삭제 성공
+
+- Request
+
+include::{actual-snippets}/removeCartItem-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/removeCartItem-success/http-response.adoc[]
+
+== Order
+=== 주문
+
+==== 주문 성공
+
+- Request
+
+include::{actual-snippets}/product-order-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/product-order-success/http-response.adoc[]
+
+==== 회원 주문내역 조회 성공
+
+- Request
+
+include::{actual-snippets}/orders-info-member-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/orders-info-member-success/http-response.adoc[]

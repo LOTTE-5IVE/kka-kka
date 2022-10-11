@@ -55,6 +55,16 @@ public class Product {
 
     public Product(Category category, String name, int price, int stock, String imageUrl,
             String detailImageUrl) {
-        this(null, category, name, price, stock, imageUrl, detailImageUrl, null);
+        this(null, category, name, price, stock, imageUrl, detailImageUrl, "");
     }
+
+    public void reduceStock(int orderQuantity) {
+        int restStock = this.stock - orderQuantity;
+        this.stock = restStock;
+    }
+
+    public boolean isStock(int quantity) {
+        return this.stock - quantity > 0;
+    }
+
 }

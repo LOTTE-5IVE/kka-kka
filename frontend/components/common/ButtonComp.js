@@ -15,6 +15,7 @@ export default function ButtonComp({ context }) {
             background: #ff3d44;
             border-radius: 8px;
             border: 1px solid #ff3d44;
+            text-align: center;
           }
         `}
       </style>
