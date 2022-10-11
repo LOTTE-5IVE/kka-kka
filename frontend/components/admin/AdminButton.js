@@ -13,6 +13,7 @@ export function AdminButton({ context, color, width, height }) {
           line-height: 21px;
           color: #fff;
           background-color: ${color};
+          cursor: pointer;
         }
       `}</style>
     </>

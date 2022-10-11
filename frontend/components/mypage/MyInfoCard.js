@@ -43,7 +43,7 @@ export default function MyInfoCard({ name, grade }) {
           color: #3a3a3a;
           font-weight: 600;
           line-height: 1;
-          height: 7vw;
+          height: 135px;
           margin: 5% 0 10%;
           display: flex;
           border: 2px solid #e6e4e4;
