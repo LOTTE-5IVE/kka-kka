@@ -1,6 +1,10 @@
 package kkakka.mainservice.order.ui;
 
+import kkakka.mainservice.member.auth.exception.AuthorizationException;
+import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
+import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.order.application.OrderService;
+import kkakka.mainservice.order.application.dto.OrderDto;
 import kkakka.mainservice.order.ui.dto.OrderRequest;
 import kkakka.mainservice.order.ui.dto.OrderResponse;
 import org.springframework.http.HttpStatus;
@@ -27,15 +31,23 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> order(@RequestBody OrderRequest orderRequest) throws Exception {
-        Long memberId = orderService.order(orderRequest);
+    public ResponseEntity<Void> order(@AuthenticationPrincipal LoginMember loginMember,
+        @RequestBody OrderRequest orderRequest) {
+        if (loginMember.isAnonymous()) {
+            throw new AuthorizationException();
+        }
+        Long orderId = orderService.order(OrderDto.create(loginMember.getId(),orderRequest));
 
-        return ResponseEntity.created(URI.create(memberId.toString())).build();
+        return ResponseEntity.created(URI.create(orderId.toString())).build();
     }
 
-    @GetMapping("{memberId}")
-    public ResponseEntity<List<OrderResponse>> findOrders(@PathVariable Long memberId) {
-        List<OrderResponse> memberOrders = orderService.findMemberOrders(memberId);
+    @GetMapping("/me")
+    public ResponseEntity<List<OrderResponse>> findOrders(
+        @AuthenticationPrincipal LoginMember loginMember) {
+        if (loginMember.isAnonymous()) {
+            throw new AuthorizationException();
+        }
+        List<OrderResponse> memberOrders = orderService.findMemberOrders(loginMember.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(memberOrders);
     }

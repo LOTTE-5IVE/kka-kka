@@ -7,8 +7,7 @@ import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.ui.dto.OrderRequest;
-import kkakka.mainservice.order.ui.dto.ProductOrderRequest;
-import kkakka.mainservice.product.domain.Product;
+import kkakka.mainservice.order.application.dto.ProductOrderDto;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,11 +51,11 @@ class OrderServiceTest {
     public void productOrderOneTest_success() throws Exception {
 
         //given
-        ProductOrderRequest productOrderRequest1 = new ProductOrderRequest(1L, 2);
-        List<ProductOrderRequest> productOrderRequests = new ArrayList<>();
-        productOrderRequests.add(productOrderRequest1);
+        ProductOrderDto productOrderDto1 = new ProductOrderDto(1L, 2);
+        List<ProductOrderDto> productOrderDtos = new ArrayList<>();
+        productOrderDtos.add(productOrderDto1);
 
-        OrderRequest orderRequest = new OrderRequest(member.getId(), productOrderRequests);
+        OrderRequest orderRequest = new OrderRequest(member.getId(), productOrderDtos);
 
         //when
         Long orderId = orderService.order(orderRequest);
@@ -73,14 +72,14 @@ class OrderServiceTest {
     public void productOrderMoreTest_success() {
 
         //given
-        ProductOrderRequest productOrderRequest1 = new ProductOrderRequest(1L, 2);
-        ProductOrderRequest productOrderRequest2 = new ProductOrderRequest(2L, 3);
+        ProductOrderDto productOrderDto1 = new ProductOrderDto(1L, 2);
+        ProductOrderDto productOrderDto2 = new ProductOrderDto(2L, 3);
 
-        List<ProductOrderRequest> productOrderRequests = new ArrayList<>();
-        productOrderRequests.add(productOrderRequest1);
-        productOrderRequests.add(productOrderRequest2);
+        List<ProductOrderDto> productOrderDtos = new ArrayList<>();
+        productOrderDtos.add(productOrderDto1);
+        productOrderDtos.add(productOrderDto2);
 
-        OrderRequest orderRequest = new OrderRequest(member.getId(), productOrderRequests);
+        OrderRequest orderRequest = new OrderRequest(member.getId(), productOrderDtos);
 
         //when
         Long orderId = orderService.order(orderRequest);
@@ -97,11 +96,11 @@ class OrderServiceTest {
     public void productOrder_fail_inventoryExceeded() {
 
         //given
-        ProductOrderRequest productOrderRequest1 = new ProductOrderRequest(1L, 11);
-        List<ProductOrderRequest> productOrderRequests = new ArrayList<>();
-        productOrderRequests.add(productOrderRequest1);
+        ProductOrderDto productOrderDto1 = new ProductOrderDto(1L, 11);
+        List<ProductOrderDto> productOrderDtos = new ArrayList<>();
+        productOrderDtos.add(productOrderDto1);
 
-        OrderRequest orderRequest = new OrderRequest(member.getId(), productOrderRequests);
+        OrderRequest orderRequest = new OrderRequest(member.getId(), productOrderDtos);
 
         //when
         //then

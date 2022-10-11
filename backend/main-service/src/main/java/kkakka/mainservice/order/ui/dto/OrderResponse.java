@@ -15,18 +15,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderResponse {
 
-    private Long id;
+    private Long orderId;
     private LocalDateTime orderedAt;
     private Integer totalPrice;
     @JsonProperty("productOrders")
     private List<ProductOrderResponse> productOrderResponse;
 
     public static OrderResponse create(
-        Long id,
+        Long orderId,
         LocalDateTime orderedAt,
         Integer totalPrice,
         List<ProductOrderResponse> productOrderResponse
     ) {
-        return new OrderResponse(id, orderedAt, totalPrice, productOrderResponse);
+        return new OrderResponse(orderId, orderedAt, totalPrice, productOrderResponse);
     }
 }

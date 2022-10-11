@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
+import kkakka.mainservice.order.application.dto.OrderDto;
 import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
-import kkakka.mainservice.order.ui.dto.OrderRequest;
 import kkakka.mainservice.order.ui.dto.OrderResponse;
-import kkakka.mainservice.order.ui.dto.ProductOrderRequest;
+import kkakka.mainservice.order.application.dto.ProductOrderDto;
 import kkakka.mainservice.order.ui.dto.ProductOrderResponse;
 import kkakka.mainservice.order.ui.dto.ProductResponse;
 import kkakka.mainservice.product.domain.Product;
@@ -37,18 +37,17 @@ public class OrderService {
     }
 
     @Transactional
-    public Long order(OrderRequest orderRequest) {
+    public Long order(OrderDto orderDto) {
 
-        Long memberId = orderRequest.getMemberId();
-        List<ProductOrderRequest> productOrderRequests = orderRequest.getProductOrderRequests();
+        Long memberId = orderDto.getMemberId();
+        List<ProductOrderDto> productOrderDtos = orderDto.getProductOrders();
         Member member = memberRepository.findById(memberId).orElseThrow();
 
-        //상품주문 생성
         List<ProductOrder> productOrders = new ArrayList<>();
         int orderTotalPrice = 0;
-        for (ProductOrderRequest productOrderRequest : productOrderRequests) {
-            Long productId = productOrderRequest.getProductId();
-            Integer quantity = productOrderRequest.getQuantity();
+        for (ProductOrderDto productOrderDto : productOrderDtos) {
+            Long productId = productOrderDto.getProductId();
+            Integer quantity = productOrderDto.getQuantity();
 
             Product product = productRepository.findById(productId).get();
             ProductOrder productOrder = ProductOrder.create(product, product.getPrice(), quantity);
