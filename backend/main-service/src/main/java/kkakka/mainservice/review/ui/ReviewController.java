@@ -3,9 +3,9 @@ package kkakka.mainservice.review.ui;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
-import kkakka.mainservice.member.auth.exception.AuthorizationException;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
+import kkakka.mainservice.member.auth.ui.MemberOnly;
 import kkakka.mainservice.review.application.ReviewService;
 import kkakka.mainservice.review.application.dto.ReviewDto;
 import kkakka.mainservice.review.ui.dto.MemberSimpleResponse;
@@ -40,15 +40,13 @@ public class ReviewController {
         return ResponseEntity.ok().body(reviews);
     }
 
+    @MemberOnly
     @PostMapping
     public ResponseEntity<Void> writeReview(
             @AuthenticationPrincipal LoginMember loginMember,
             @RequestParam(value = "product") Long productId,
             @RequestBody ReviewRequest reviewRequest
     ) {
-        if (loginMember.isAnonymous()) {
-            throw new AuthorizationException();
-        }
         final Long reviewId = reviewService.writeReview(loginMember.getId(), productId,
                 reviewRequest);
         return ResponseEntity.created(URI.create(reviewId.toString())).build();

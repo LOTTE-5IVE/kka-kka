@@ -44,6 +44,28 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("상품후기 작성 - 실패(권한없음)")
+    @Test
+    void writeReview_fail(){
+        // given
+        final Product product = PRODUCT_1;
+        final ReviewRequest reviewRequest = new ReviewRequest("fail review");
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("review-write-fail"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reviewRequest)
+                .when()
+                .post("/api/reviews?product=" + product.getId())
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
     @DisplayName("특정 상품에 대한 후기 조회 - 성공")
     @Test
     void showReviews_success(){
