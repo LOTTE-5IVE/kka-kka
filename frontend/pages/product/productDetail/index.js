@@ -18,6 +18,7 @@ export default function productDetail() {
   const [quantity, setQuantity] = useState(1);
   const [tab, setTab] = useState("info");
   const [modal, setModal] = useState(false);
+  const [product, setProduct] = useState({});
 
   const handleQuantity = (type) => {
     if (type !== "minus" || quantity > 1) {
@@ -29,142 +30,141 @@ export default function productDetail() {
     setModal(false);
   }
 
-  const { isLoading, data } = useQuery("products", () => {
-    return axios.get(`http://localhost:4000/products?id=${productId}`);
-  });
+  const getItem = async () => {
+    await axios
+      .get(`http://localhost:9000/api/products/${productId}`)
+      .then((res) => {
+        setProduct(res.data);
+      });
+  };
 
-  if (isLoading) {
-    return <h2>Loading...</h2>;
-  }
+  useState(() => {
+    console.log(`http://localhost:9000/api/products/${productId}`);
+    getItem();
+  }, [productId]);
 
   return (
     <>
       <Title title="상품상세" />
 
-      {data?.data.map((product) => {
-        return (
-          <div className="wrapper" key={product}>
-            <div className="detailTop">
-              <div className="detailImg">
-                <img src={`${product.imageUrl}`} />
-              </div>
-
-              <div className="detailEtc" key={product.id}>
-                <div className="headingArea">
-                  <div className="headingAreaName">{product.name}</div>
-
-                  <div className="headingDescription">{product.price}</div>
-                </div>
-                <div className="delivery">
-                  <p>배송비</p> <p style={{ color: "#9a9a9a" }}>무료</p>
-                </div>
-                <div className="coupon">
-                  <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
-                  <div
-                    onClick={() => {
-                      setModal(true);
-                    }}
-                  >
-                    <AdminButton context="쿠폰받기" color="red" width="70px" />
-                  </div>
-                  {modal && (
-                    <CouponModal>
-                      <div
-                        onClick={() => {
-                          setModal(false);
-                        }}
-                      >
-                        <CouponDown modalHandler={modalHandler} />
-                      </div>
-                    </CouponModal>
-                  )}
-                </div>
-                <div className="totalProducts">
-                  <table>
-                    <colgroup>
-                      <col style={{ width: "20vw" }} />
-                      <col style={{ width: "7vw" }} />
-                    </colgroup>
-
-                    <tbody>
-                      <tr>
-                        <td colSpan="2">{product.name}</td>
-                      </tr>
-                      <tr style={{ height: "3vw" }}>
-                        <td>
-                          <span>
-                            <input
-                              type="button"
-                              onClick={() => handleQuantity("minus")}
-                              value="-"
-                              style={{ marginRight: "15px" }}
-                            />
-                            <span>{quantity}</span>
-                            <input
-                              type="button"
-                              onClick={() => handleQuantity("plus")}
-                              value="+"
-                              style={{ marginLeft: "15px" }}
-                            />
-                          </span>
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                          {product.price * quantity}원
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div className="totalPrice">
-                  <p>
-                    <strong>TOTAL</strong>
-                  </p>
-                  <p>
-                    <span>{product.price * quantity}원</span>({quantity}개)
-                  </p>
-                </div>
-                <div className="btn">
-                  <Link href="/member/cart">
-                    <div className="cartBtn">장바구니</div>
-                  </Link>
-
-                  <div className="buyBtn">바로 구매</div>
-                </div>
-              </div>
+      {product && (
+        <div className="wrapper" key={product.id}>
+          <div className="detailTop">
+            <div className="detailImg">
+              <img src={`${product.imageUrl}`} />
             </div>
-            <div className="detailBottom">
-              <div className="tabMenu">
-                <ul>
-                  <li onClick={() => setTab("info")}>
-                    <a className={`${tab === "info" ? "active" : ""}`}>
-                      상품정보
-                    </a>
-                  </li>
-                  <li onClick={() => setTab("nutri")}>
-                    <a className={`${tab === "nutri" ? "active" : ""}`}>
-                      영양정보
-                    </a>
-                  </li>
-                  <li onClick={() => setTab("review")}>
-                    <a className={`${tab === "review" ? "active" : ""}`}>
-                      상품후기
-                    </a>
-                  </li>
-                </ul>
+
+            <div className="detailEtc" key={product.id}>
+              <div className="headingArea">
+                <div className="headingAreaName">{product.name}</div>
+
+                <div className="headingDescription">{product.price}</div>
               </div>
-              <div className="descriptions">
-                {tab == "info" ? (
-                  <Info />
-                ) : tab == "nutri" ? (
-                  <Nutri />
-                ) : (
-                  <Review />
+              <div className="delivery">
+                <p>배송비</p> <p style={{ color: "#9a9a9a" }}>무료</p>
+              </div>
+              <div className="coupon">
+                <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
+                <div
+                  onClick={() => {
+                    setModal(true);
+                  }}
+                >
+                  <AdminButton context="쿠폰받기" color="red" width="70px" />
+                </div>
+                {modal && (
+                  <CouponModal>
+                    <div>
+                      <CouponDown modalHandler={modalHandler} />
+                    </div>
+                  </CouponModal>
                 )}
+              </div>
+              <div className="totalProducts">
+                <table>
+                  <colgroup>
+                    <col style={{ width: "20vw" }} />
+                    <col style={{ width: "7vw" }} />
+                  </colgroup>
+
+                  <tbody>
+                    <tr>
+                      <td colSpan="2">{product.name}</td>
+                    </tr>
+                    <tr style={{ height: "3vw" }}>
+                      <td>
+                        <span>
+                          <input
+                            type="button"
+                            onClick={() => handleQuantity("minus")}
+                            value="-"
+                            style={{ marginRight: "15px" }}
+                          />
+                          <span>{quantity}</span>
+                          <input
+                            type="button"
+                            onClick={() => handleQuantity("plus")}
+                            value="+"
+                            style={{ marginLeft: "15px" }}
+                          />
+                        </span>
+                      </td>
+                      <td style={{ textAlign: "right" }}>
+                        {product.price * quantity}원
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="totalPrice">
+                <p>
+                  <strong>TOTAL</strong>
+                </p>
+                <p>
+                  <span>{product.price * quantity}원</span>({quantity}개)
+                </p>
+              </div>
+              <div className="btn">
+                <Link href="/member/cart">
+                  <div className="cartBtn">장바구니</div>
+                </Link>
+
+                <div className="buyBtn">바로 구매</div>
               </div>
             </div>
           </div>
-        );
-      })}
+          <div className="detailBottom">
+            <div className="tabMenu">
+              <ul>
+                <li onClick={() => setTab("info")}>
+                  <a className={`${tab === "info" ? "active" : ""}`}>
+                    상품정보
+                  </a>
+                </li>
+                <li onClick={() => setTab("nutri")}>
+                  <a className={`${tab === "nutri" ? "active" : ""}`}>
+                    영양정보
+                  </a>
+                </li>
+                <li onClick={() => setTab("review")}>
+                  <a className={`${tab === "review" ? "active" : ""}`}>
+                    상품후기
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div className="descriptions">
+              {tab == "info" ? (
+                <Info />
+              ) : tab == "nutri" ? (
+                <Nutri />
+              ) : (
+                <Review />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       <style jsx>{`
         .wrapper {
           margin: 3% auto 0;
@@ -360,4 +360,10 @@ export default function productDetail() {
       `}</style>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  return {
+    props: {},
+  };
 }

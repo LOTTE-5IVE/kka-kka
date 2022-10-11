@@ -6,15 +6,10 @@ import Sidebar from "../../components/product/Sidebar";
 import { useQuery } from "react-query";
 import axios from "axios";
 import Title from "../../components/common/Title";
+import { useEffect, useState } from "react";
 
 export default function productCidList() {
-  const { isLoading, data } = useQuery("products", () => {
-    return axios.get(`http://localhost:4000/products`);
-  });
-
-  if (isLoading) {
-    return <h2>Loading...</h2>;
-  }
+  const [state, setState] = useState([]);
   // 카테고리 아이디별 호출
   // https://nomadcoders.co/nextjs-fundamentals/lectures/3451 7분 참고
   const router = useRouter();
@@ -32,12 +27,34 @@ export default function productCidList() {
     9: "선물세트",
   };
 
+  // const getCatItems = async () => {
+  //   await axios
+  //     .get(`http://localhost:9000/api/products/products?category=${cat_id}`)
+  //     .then((res) => {
+  //       setState(res.data);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   getCatItems();
+  // }, [cat_id]);
+
+  const { isLoading, data } = useQuery(["products", cat_id], () => {
+    return axios.get(
+      `http://localhost:9000/api/products/products?category=${cat_id}`,
+    );
+  });
+
+  if (isLoading) {
+    return <h2>Loading...</h2>;
+  }
+
   return (
     <>
       <Title title="상품목록" />
       <div className="contents">
         <div className="sidebar">
-          <Sidebar />
+          <Sidebar menu={cat_id} />
         </div>
         <div className="productWrapper">
           <div style={{ paddingLeft: "60px" }}>
@@ -53,27 +70,40 @@ export default function productCidList() {
             )}
           </div>
           <ul className="productList">
-            {data?.data
-              .filter(
-                (product) =>
-                  product.cat_id == cat_id || product.name.includes(search),
-              )
+            {/* {state &&
+              state
+                // .filter((product) => search?.product.name.includes(search))
 
-              .map((product) => {
-                return (
-                  <li className="productInner">
-                    <div className="productBox" key={product.id}>
-                      <ProductRec
-                        id={product.id}
-                        imgsrc={product.imageUrl}
-                        name={product.name}
-                        price={product.price}
-                        rate="10"
-                      />
-                    </div>
-                  </li>
-                );
-              })}
+                .map((product) => {
+                  return (
+                    <li className="productInner" key={product.id}>
+                      <div className="productBox">
+                        <ProductRec
+                          id={product.id}
+                          imgsrc={product.imageUrl}
+                          name={product.name}
+                          price={product.price}
+                          rate="10"
+                        />
+                      </div>
+                    </li>
+                  );
+                })} */}
+            {data?.data.map((product) => {
+              return (
+                <li className="productInner" key={product.id}>
+                  <div className="productBox">
+                    <ProductRec
+                      id={product.id}
+                      imgsrc={product.imageUrl}
+                      name={product.name}
+                      price={product.price}
+                      rate="10"
+                    />
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
