@@ -55,7 +55,7 @@ include::{actual-snippets}/member-info-update-email-phone/http-response.adoc[]
 
 
 == Product
-=== 카테고리조회
+=== 카테고리 기준 조회
 
 - Request
 
@@ -126,4 +126,25 @@ include::{actual-snippets}/removeCartItem-success/http-request.adoc[]
 
 include::{actual-snippets}/removeCartItem-success/http-response.adoc[]
 
+== Order
+=== 주문
 
+==== 주문 성공
+
+- Request
+
+include::{actual-snippets}/product-order-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/product-order-success/http-response.adoc[]
+
+==== 회원 주문내역 조회 성공
+
+- Request
+
+include::{actual-snippets}/orders-info-member-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/orders-info-member-success/http-response.adoc[]
