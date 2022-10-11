@@ -1,8 +1,12 @@
+import axios from "axios";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Header() {
   const [value, setValue] = useState("");
+  const [token, setToken] = useState("");
+  const [name, setName] = useState("");
+  const [grade, setGrade] = useState("");
 
   function search(event) {
     if (event.key === "Enter") {
@@ -11,13 +15,58 @@ export default function Header() {
     }
   }
 
+  const getMemberName = async () => {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: token,
+    };
+
+    const body = {};
+
+    try {
+      const res = await axios.post(
+        `/product?search=${value}`,
+        {
+          body: body, // price라는 이름의 객체에 price 변수에 담은 값 전달
+        },
+        {
+          headers: headers, // headers에 headers 객체 전달
+        },
+      );
+      console.log(res);
+      setName(res);
+      setGrade(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    console.log(`token ${token}`);
+
+    const obj = localStorage.getItem("accessToken");
+
+    if (obj && Date.now() > obj.expire) {
+      localStorage.removeItem("accessToken");
+      setToken("");
+    } else {
+      setToken(obj);
+    }
+
+    // getMemberName();
+  }, [token]);
+
   return (
     <div>
       <div className="wrapper">
         <div className="logo">
-          <Link href="/">
+          <div
+            onClick={() => {
+              document.location.href = "/";
+            }}
+          >
             <img height="52" src="/vercel.svg" />
-          </Link>
+          </div>
         </div>
         <div className="search">
           <input
@@ -38,13 +87,35 @@ export default function Header() {
         </div>
         <div className="icons">
           <div className="top">
-            <Link href="/member/join">
-              <a>회원가입</a>
-            </Link>
+            {token ? (
+              <>
+                <Link href="/member/join">
+                  <a>등급:{grade}</a>
+                </Link>
 
-            <Link href="/member/login">
-              <a>로그인</a>
-            </Link>
+                <Link href="/member/login">
+                  <a>이름:{name}</a>
+                </Link>
+                <div
+                  onClick={() => {
+                    localStorage.removeItem("accessToken");
+                    document.location.href = "/";
+                  }}
+                >
+                  <a>로그아웃</a>
+                </div>
+              </>
+            ) : (
+              <>
+                <Link href="/member/join">
+                  <a>회원가입</a>
+                </Link>
+
+                <Link href="/member/login">
+                  <a>로그인</a>
+                </Link>
+              </>
+            )}
           </div>
           <div className="bottom">
             <Link href="/mypage">

@@ -4,7 +4,15 @@ export default function ProductRec({ id, imgsrc, name, price, rate }) {
   return (
     <>
       <div className="wrapper">
-        <Link href={`/product/productDetail/${id}`}>
+        {/* <Link
+          href={{
+            pathname: "/product/productDetail/",
+            query: {
+              pid: { id },
+            },
+          }}
+        > */}
+        <Link href={`/product/productDetail?id=${id}`}>
           <a>
             <div className="imageSection">
               <img src={imgsrc} />
@@ -17,6 +25,7 @@ export default function ProductRec({ id, imgsrc, name, price, rate }) {
                   color: "#3a3a3a",
                 }}
               >
+                {id}
                 {name}
               </p>
               <p

@@ -8,7 +8,7 @@ export function CouponDown({ modalHandler }) {
             modalHandler();
           }}
         >
-          <img width="32px" src="/sample.png" />
+          <img width="24px" src="/cancel.png" />
         </div>
         <div className="container">
           <h3>다운로드 가능한 쿠폰</h3>
@@ -43,7 +43,7 @@ export function CouponDown({ modalHandler }) {
         .wrapper {
           width: 500px;
           height: 500px;
-
+          margin-top: 5px;
           .container {
             h3 {
               width: 90%;
