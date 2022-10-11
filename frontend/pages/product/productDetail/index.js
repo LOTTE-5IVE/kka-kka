@@ -58,7 +58,13 @@ export default function productDetail() {
               <div className="headingArea">
                 <div className="headingAreaName">{product.name}</div>
 
-                <div className="headingDescription">{product.price}</div>
+                <div className="headingDescription">
+                  <p style={{ color: "#ed1b23" }}>{product.discount}%</p>
+                  <p>
+                    {product.price * (1 - 0.01 * product.discount)}원{" "}
+                    <span>{product.price}원</span>
+                  </p>
+                </div>
               </div>
               <div className="delivery">
                 <p>배송비</p> <p style={{ color: "#9a9a9a" }}>무료</p>
@@ -195,15 +201,25 @@ export default function productDetail() {
                 color: #3a3a3a;
                 font-weight: 700;
                 .headingAreaName {
-                  margin: 23px 0 50px;
+                  margin-top: 23px;
                 }
 
                 .headingDescription {
                   font-size: 32px;
                   margin: 28px 0 0;
-                  height: 70px;
+                  height: 140px;
                   padding-bottom: 30px;
                   border-bottom: 1px solid #e5e5e5;
+
+                  p {
+                    margin: 0;
+
+                    span {
+                      font-size: 24px;
+                      color: #c2c2c2;
+                      text-decoration: line-through;
+                    }
+                  }
                 }
               }
               .delivery {

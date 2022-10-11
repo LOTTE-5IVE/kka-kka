@@ -15,7 +15,7 @@ export default function login() {
             <br />
             까까 사러 가볼까요?
           </div>
-          <div className="login-button">
+
           <div className="login-button">
             <SNSButton
               imgsrc="/member/kakao.png"

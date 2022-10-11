@@ -10,6 +10,32 @@ import SNSButton from "../../components/member/SNSButton";
 export default function cart() {
   const [quantity, setQuantity] = useState(1);
   const [modal, setModal] = useState(false);
+  const data = [
+    { id: 0, title: "선택 1" },
+    { id: 1, title: "선택 2" },
+    { id: 2, title: "선택 3" },
+    { id: 3, title: "선택 4" },
+  ];
+
+  const [checkItems, setCheckItems] = useState([]);
+
+  const handleSingleCheck = (checked, id) => {
+    if (checked) {
+      setCheckItems((prev) => [...prev, id]);
+    } else {
+      setCheckItems(checkItems.filter((el) => el !== id));
+    }
+  };
+
+  const handleAllCheck = (checked) => {
+    if (checked) {
+      const idArray = [];
+      data.forEach((el) => idArray.push(el.id));
+      setCheckItems(idArray);
+    } else {
+      setCheckItems([]);
+    }
+  };
 
   function modalHandler() {
     setModal(false);
@@ -42,7 +68,12 @@ export default function cart() {
               <thead>
                 <tr style={{ height: "3vw" }}>
                   <th scope="col">
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      name="select-all"
+                      onChange={(e) => handleAllCheck(e.target.checked)}
+                      checked={checkItems.length === data.length ? true : false}
+                    />
                   </th>
                   <th scope="col">이미지</th>
                   <th scope="col">상품정보</th>
@@ -55,7 +86,14 @@ export default function cart() {
               <tbody>
                 <tr style={{ height: "6vw" }}>
                   <td>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      name={`select-${data.id}`}
+                      onChange={(e) =>
+                        handleSingleCheck(e.target.checked, data.id)
+                      }
+                      checked={checkItems.includes(data.id) ? true : false}
+                    />
                   </td>
                   <td>
                     <img width="50px" src="/sample.png" />
@@ -65,7 +103,12 @@ export default function cart() {
                     <div className="couponWrapper">
                       <div className="couponContents">
                         <span>coupon</span>{" "}
-                        <input type="text" size="15" readOnly />
+                        <input
+                          type="text"
+                          size="15"
+                          defaultValue="뭐시기 쿠폰"
+                          readOnly
+                        />
                       </div>
                       <div>
                         <div
@@ -75,7 +118,7 @@ export default function cart() {
                         >
                           <AdminButton
                             context="쿠폰적용"
-                            color="red"
+                            color="#05c7f2"
                             width="60px"
                           />
                         </div>
@@ -194,13 +237,16 @@ export default function cart() {
                   display: flex;
                   justify-content: center;
                   align-items: center;
+                  margin-top: 10px;
 
                   .couponContents {
                     display: flex;
                     line-height: 15px;
+                    margin-right: 10px;
 
                     span {
-                      /* background-color:  */
+                      background-color: #05c7f2;
+                      color: #fff;
                     }
                   }
                 }
