@@ -89,7 +89,7 @@ export default function productCidList() {
                     </li>
                   );
                 })} */}
-            {data?.data.map((product) => {
+            {data?.data.itemList.map((product) => {
               return (
                 <li className="productInner" key={product.id}>
                   <div className="productBox">

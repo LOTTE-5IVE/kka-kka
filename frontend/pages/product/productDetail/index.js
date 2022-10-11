@@ -51,7 +51,7 @@ export default function productDetail() {
         <div className="wrapper" key={product.id}>
           <div className="detailTop">
             <div className="detailImg">
-              <img src={`${product.imageUrl}`} />
+              <img src={`${product.image_url}`} />
             </div>
 
             <div className="detailEtc" key={product.id}>
