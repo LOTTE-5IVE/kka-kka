@@ -55,7 +55,7 @@ public class MemberController {
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<Long> editMemberInfo(
+    public ResponseEntity<Void> editMemberInfo(
             @AuthenticationPrincipal LoginMember loginMember,
             @RequestBody MemberInfoRequest memberInfoRequest
     ) {
