@@ -26,7 +26,10 @@ export default function oauth() {
       .then((res) => {
         console.log(res.data);
 
-        const obj = { value: res.data.accessToken, expire: Date.now() + 10 };
+        const obj = {
+          value: res.data.accessToken,
+          expire: new Date().getTime() + 1000 * 60 * 15,
+        };
         localStorage.setItem("accessToken", JSON.stringify(obj));
       });
   };

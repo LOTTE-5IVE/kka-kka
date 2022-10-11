@@ -15,45 +15,35 @@ export default function Header() {
     }
   }
 
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
   const getMemberName = async () => {
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: token,
-    };
-
-    const body = {};
-
-    try {
-      const res = await axios.post(
-        `/product?search=${value}`,
-        {
-          body: body, // price라는 이름의 객체에 price 변수에 담은 값 전달
+    await axios
+      .get(`/api/members/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: headers, // headers에 headers 객체 전달
-        },
-      );
-      console.log(res);
-      setName(res);
-      setGrade(res);
-    } catch (error) {
-      console.log(error);
-    }
+      })
+      .then((res) => {
+        setName(res.data.name);
+        setGrade(res.data.grade);
+      });
   };
 
   useEffect(() => {
-    console.log(`token ${token}`);
+    const objString = localStorage.getItem("accessToken");
+    const obj = JSON.parse(objString);
 
-    const obj = localStorage.getItem("accessToken");
-
-    if (obj && Date.now() > obj.expire) {
+    if (obj && new Date().getTime() > obj.expire) {
       localStorage.removeItem("accessToken");
       setToken("");
-    } else {
-      setToken(obj);
+    } else if (obj) {
+      setToken(obj.value);
     }
 
-    // getMemberName();
+    getMemberName();
   }, [token]);
 
   return (
@@ -89,13 +79,7 @@ export default function Header() {
           <div className="top">
             {token ? (
               <>
-                <Link href="/member/join">
-                  <a>등급:{grade}</a>
-                </Link>
-
-                <Link href="/member/login">
-                  <a>이름:{name}</a>
-                </Link>
+                <div>{name}님</div>
                 <div
                   onClick={() => {
                     localStorage.removeItem("accessToken");
@@ -118,13 +102,27 @@ export default function Header() {
             )}
           </div>
           <div className="bottom">
-            <Link href="/mypage">
-              <img src="/common/top_mypage.png" />
-            </Link>
+            {token ? (
+              <>
+                <Link href="/mypage">
+                  <img src="/common/top_mypage.png" />
+                </Link>
 
-            <Link href="/member/cart">
-              <img src="/common/top_cart.png" />
-            </Link>
+                <Link href="/member/cart">
+                  <img src="/common/top_cart.png" />
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/member/login">
+                  <img src="/common/top_mypage.png" />
+                </Link>
+
+                <Link href="/member/cart">
+                  <img src="/common/top_cart.png" />
+                </Link>
+              </>
+            )}
           </div>
         </div>
         <style jsx>{`
