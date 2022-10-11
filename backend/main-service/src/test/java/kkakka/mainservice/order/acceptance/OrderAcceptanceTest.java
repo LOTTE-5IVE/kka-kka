@@ -57,7 +57,7 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
 
     @DisplayName("주문내역 조회 - 성공")
     @Test
-    void findMemberOreders_success() {
+    void findMemberOrders_success() {
         //given
         String accessToken = 액세스_토큰_가져옴();
 
