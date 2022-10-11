@@ -18,7 +18,6 @@ public class CouponRequestDto {
     private String name;
     private String detail;
     private String priceRule;
-    private LocalDateTime registeredAt;
     private LocalDateTime startedAt;
     private LocalDateTime expiredAt;
     private Integer percentage;

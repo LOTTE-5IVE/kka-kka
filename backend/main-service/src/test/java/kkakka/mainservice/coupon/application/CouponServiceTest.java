@@ -1,4 +1,4 @@
-package kkakka.mainservice.coupon;
+package kkakka.mainservice.coupon.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import kkakka.mainservice.coupon.application.CouponService;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.PriceRule;
@@ -45,32 +44,38 @@ public class CouponServiceTest {
     @Test
     @DisplayName("쿠폰 사용 여부 확인 - 성공")
     void useCouponTest_success() {
+        // given
+        Member member = new Member();
         Coupon coupon = Coupon.create(
-            null,
-            null,
-            "과자쿠폰",
-            "15% 할인",
+            null, null, "testCoupon", "test 입니다",
             PriceRule.COUPON,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            15,
-            1000,
-            2000
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            15, 1000, 2000
         );
-
         couponRepository.save(coupon);
-        couponService.useCoupon(coupon.getId());
+        memberRepository.save(member);
 
-        assertThat(coupon.getIsUsed()).isEqualTo(1);
+        // when
+        couponService.downloadCoupon(coupon.getId(), member.getId());
+        couponService.useCouponByMember(coupon.getId());
+        MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponId(
+            coupon.getId());
+
+        // then
+        assertThat(memberCoupon.getIsUsed()).isEqualTo(true);
     }
 
     @DisplayName("등급쿠폰 생성 테스트 - 성공")
     @Test
     void createGradeCoupon_success() {
         // given
-        Member member1 = new Member(Grade.GOLD);
-        Member member2 = new Member(Grade.GOLD);
-        Member member3 = new Member(Grade.BRONZE);
+        Member member1 = Member.create(null, null, "이름", "abc@abc.com", "1234", "서울시", "10대",
+            Grade.GOLD);
+        Member member2 = Member.create(null, null, "이름", "abc@abc.com", "1234", "서울시", "10대",
+            Grade.GOLD);
+        Member member3 = Member.create(null, null, "이름", "abc@abc.com", "1234", "서울시", "10대",
+            Grade.VIP);
         memberRepository.save(member1);
         memberRepository.save(member2);
         memberRepository.save(member3);
@@ -79,24 +84,16 @@ public class CouponServiceTest {
 
         // when
         couponService.createCoupon(new CouponRequestDto(
-            null,
-            null,
-            Grade.GOLD,
-            null,
-            "test",
-            "testCoupon",
-            "GRADE_COUPON",
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            10,
-            2000, 10000, 0
+            null, null, Grade.GOLD, null,
+            "test", "testCoupon", "GRADE_COUPON",
+            LocalDateTime.now(), LocalDateTime.now(),
+            10, 2000, 10000, 0
         ));
 
         // then
         List<MemberCoupon> memberCoupons = memberCouponRepository.findAll();
         List<Long> savedCouponMemberIds = memberCoupons.stream()
-            .mapToLong(memberCoupon -> memberCoupon.getMemberCouponId().getMemberId())
+            .mapToLong(memberCoupon -> memberCoupon.getMember().getId())
             .boxed()
             .collect(Collectors.toList());
 
@@ -139,46 +136,42 @@ public class CouponServiceTest {
     @DisplayName("사용가능한 쿠폰 조회 - 성공")
     @Test
     void findUsableCoupons_success() {
+        // given
         Member member = new Member();
         Coupon coupon1 = Coupon.create(
-            null,
-            null,
-            "testCoupon",
-            "test 입니다",
+            null, null,
+            "testCoupon", "test 입니다",
             PriceRule.COUPON,
             LocalDateTime.of(2020, 3, 16, 3, 16),
             LocalDateTime.of(2025, 3, 16, 3, 16),
-            15,
-            1000,
-            2000
+            15, 1000, 2000
         );
         Coupon coupon2 = Coupon.create(
-            null,
-            null,
-            "testCoupon",
-            "test 입니다",
+            null, null,
+            "testCoupon", "test 입니다",
             PriceRule.COUPON,
             LocalDateTime.of(2020, 3, 16, 3, 16),
             LocalDateTime.of(2025, 3, 16, 3, 16),
-            15,
-            1000,
-            2000
+            15, 1000, 2000
         );
         memberRepository.save(member);
         couponRepository.save(coupon1);
         couponRepository.save(coupon2);
 
+        // when
         couponService.downloadCoupon(coupon1.getId(), member.getId());
         couponService.downloadCoupon(coupon2.getId(), member.getId());
 
         List<Coupon> coupons = couponService.findUsableCoupons(member.getId());
 
+        // then
         assertThat(coupons.size()).isEqualTo(2);
     }
 
     @DisplayName("다운가능한 쿠폰 조회 - 성공")
     @Test
     void findDownloadCoupons_success() {
+        // given
         Member member = new Member();
         Coupon coupon1 = Coupon.create(
             null, null, "testCoupon", "test 입니다", PriceRule.COUPON,
@@ -204,12 +197,10 @@ public class CouponServiceTest {
         couponRepository.save(coupon2);
         couponRepository.save(coupon3);
 
-        couponService.downloadCoupon(coupon1.getId(), member.getId());
-        couponService.downloadCoupon(coupon2.getId(), member.getId());
-        couponService.downloadCoupon(coupon3.getId(), member.getId());
+        // when
+        List<Coupon> coupons = couponService.findDownloadableCoupons(member.getId());
 
-        List<Coupon> coupons = couponService.findDownloadCoupons();
-
+        // then
         assertThat(coupons.size()).isEqualTo(1);
     }
 }
