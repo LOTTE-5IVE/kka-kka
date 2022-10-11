@@ -19,7 +19,7 @@ import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
 import org.hibernate.Session;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -30,8 +30,8 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @BeforeEach
-    public void setUp() {
+    @AfterEach
+    public void tearDown() {
         entityManager.unwrap(Session.class)
                 .doWork(this::cleanUpTable);
     }

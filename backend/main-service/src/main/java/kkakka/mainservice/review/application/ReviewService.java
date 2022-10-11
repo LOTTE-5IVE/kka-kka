@@ -1,7 +1,5 @@
 package kkakka.mainservice.review.application;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
@@ -11,6 +9,8 @@ import kkakka.mainservice.review.domain.Review;
 import kkakka.mainservice.review.domain.repository.ReviewRepository;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +23,13 @@ public class ReviewService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
-    public List<ReviewDto> showReviewsByProductId(Long productId) {
-        final List<Review> reviews = reviewRepository.findAllByProductId(productId);
-        return reviews.stream()
-                .map(review -> ReviewDto.create(review, MemberDto.create(review.getMemberName())))
-                .collect(Collectors.toList());
+    public Page<ReviewDto> showReviewsByProductId(Long productId, Pageable pageable) {
+        return reviewRepository.findAllByProductId(productId, pageable)
+                .map(review -> ReviewDto.create(
+                                review,
+                                MemberDto.create(review.getMemberName())
+                        )
+                );
     }
 
     @Transactional

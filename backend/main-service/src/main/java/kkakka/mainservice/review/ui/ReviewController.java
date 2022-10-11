@@ -1,8 +1,6 @@
 package kkakka.mainservice.review.ui;
 
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.auth.ui.MemberOnly;
@@ -12,6 +10,10 @@ import kkakka.mainservice.review.ui.dto.MemberSimpleResponse;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
 import kkakka.mainservice.review.ui.dto.ReviewResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,15 +30,17 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping
-    public ResponseEntity<List<ReviewResponse>> showReviews(
-            @RequestParam(value = "product") Long productId) {
-        final List<ReviewDto> reviewDtos = reviewService.showReviewsByProductId(productId);
-        final List<ReviewResponse> reviews = reviewDtos.stream()
+    public ResponseEntity<Page<ReviewResponse>> showReviews(
+            @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable,
+            @RequestParam(value = "product") Long productId
+    ) {
+        final Page<ReviewDto> reviewDtos = reviewService.showReviewsByProductId(productId,
+                pageable);
+        final Page<ReviewResponse> reviews = reviewDtos
                 .map(reviewDto -> ReviewResponse.create(
                         reviewDto,
                         MemberSimpleResponse.create(reviewDto.getMemberName())
-                ))
-                .collect(Collectors.toList());
+                ));
         return ResponseEntity.ok().body(reviews);
     }
 
