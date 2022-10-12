@@ -1,6 +1,7 @@
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 
 export default function Header() {
   const [value, setValue] = useState("");
@@ -20,6 +21,7 @@ export default function Header() {
   };
 
   const getMemberName = async () => {
+    console.log("test");
     await axios
       .get(`/api/members/me`, {
         headers: {
@@ -41,9 +43,9 @@ export default function Header() {
       setToken("");
     } else if (obj) {
       setToken(obj.value);
-    }
 
-    getMemberName();
+      getMemberName(obj.value);
+    }
   }, [token]);
 
   return (
