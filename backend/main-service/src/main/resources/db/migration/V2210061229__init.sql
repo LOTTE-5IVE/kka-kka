@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS `member`
     `provider_id`          varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 2
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
@@ -32,7 +31,6 @@ CREATE TABLE IF NOT EXISTS `category`
     `name` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 9
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
@@ -52,7 +50,6 @@ CREATE TABLE IF NOT EXISTS `product`
     KEY `FK1mtsbur82frn64de7balymq9s` (`category_id`),
     CONSTRAINT `FK1mtsbur82frn64de7balymq9s` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 118
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 

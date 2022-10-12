@@ -1,5 +1,7 @@
 package kkakka.mainservice;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +11,14 @@ import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
+import kkakka.mainservice.order.domain.Order;
+import kkakka.mainservice.order.domain.ProductOrder;
+import kkakka.mainservice.order.domain.repository.OrderRepository;
+import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
+import kkakka.mainservice.review.domain.Review;
+import kkakka.mainservice.review.domain.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,25 +30,90 @@ public class DataLoader {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
+    private final ProductOrderRepository productOrderRepository;
+    private final OrderRepository orderRepository;
+    private final ReviewRepository reviewRepository;
 
     private static final Map<String, Category> categories = new HashMap<>();
+    private static Product testProduct;
+    private static Member testMember;
 
     @Transactional
     public void saveData(List<String[]> data) {
         saveCategory();
 
+        List<Product> products = new ArrayList<>();
         for (String[] datum : data) {
-            saveProduct(datum);
+            products.add(saveProduct(datum));
         }
+        testProduct = products.get(0);
 
         saveUser();
+        saveOrderAndReview();
+    }
+
+    private void saveOrderAndReview() {
+        final List<ProductOrder> productOrders = productOrderRepository.saveAll(
+                Arrays.asList(
+                        ProductOrder.create(testProduct, testProduct.getPrice(), 1),
+                        ProductOrder.create(testProduct, testProduct.getPrice(), 1),
+                        ProductOrder.create(testProduct, testProduct.getPrice(), 1),
+                        ProductOrder.create(testProduct, testProduct.getPrice(), 1),
+                        ProductOrder.create(testProduct, testProduct.getPrice(), 1),
+                        ProductOrder.create(testProduct, testProduct.getPrice(), 1),
+                        ProductOrder.create(testProduct, testProduct.getPrice(), 1)
+                ));
+        orderRepository.save(Order.create(testMember, productOrders, testProduct.getPrice()));
+        reviewRepository.save(Review.create("test-review1", testMember, productOrders.get(0)));
+        reviewRepository.save(Review.create("test-review2", testMember, productOrders.get(1)));
+        reviewRepository.save(Review.create("test-review3", testMember, productOrders.get(2)));
+        reviewRepository.save(Review.create("test-review4", testMember, productOrders.get(3)));
+        reviewRepository.save(Review.create("test-review5", testMember, productOrders.get(4)));
+        reviewRepository.save(Review.create("test-review6", testMember, productOrders.get(5)));
+        reviewRepository.save(Review.create("test-review7", testMember, productOrders.get(6)));
     }
 
     private void saveUser() {
+        testMember = memberRepository.save(
+                Member.create(
+                        Provider.create("0001", MemberProviderName.TEST),
+                        "신우주",
+                        "test@email.com",
+                        "010-000-0000",
+                        "20~29"
+                )
+        );
         memberRepository.save(
                 Member.create(
-                        Provider.create("test", MemberProviderName.TEST),
-                        "신우주",
+                        Provider.create("0002", MemberProviderName.TEST),
+                        "서지훈",
+                        "test@email.com",
+                        "010-000-0000",
+                        "20~29"
+                )
+        );
+        memberRepository.save(
+                Member.create(
+                        Provider.create("0003", MemberProviderName.TEST),
+                        "김혜연",
+                        "test@email.com",
+                        "010-000-0000",
+                        "20~29"
+                )
+        );
+        memberRepository.save(
+                Member.create(
+                        Provider.create("0004", MemberProviderName.TEST),
+                        "오명주",
+                        "test@email.com",
+                        "010-000-0000",
+                        "20~29"
+                )
+        );
+        memberRepository.save(
+                Member.create(
+                        Provider.create("0005", MemberProviderName.TEST),
+                        "최솔지",
                         "test@email.com",
                         "010-000-0000",
                         "20~29"
@@ -48,13 +121,13 @@ public class DataLoader {
         );
     }
 
-    public void saveProduct(String[] productRow) {
+    public Product saveProduct(String[] productRow) {
         final String category = productRow[0];
         final String name = productRow[1];
         final String price = productRow[2];
         final String defaultImageUrl = productRow[3];
         final String detailImageUrl = productRow[4];
-        productRepository.save(
+        return productRepository.save(
                 new Product(
                         categories.get(category),
                         name,
