@@ -2,6 +2,7 @@ package kkakka.mainservice.member.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import kkakka.mainservice.TestContext;
 import kkakka.mainservice.member.auth.application.dto.UserProfile;
 import kkakka.mainservice.member.member.application.MemberService;
 import kkakka.mainservice.member.member.application.dto.MemberUpdateDto;
@@ -16,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MemberServiceTest {
+class MemberServiceTest extends TestContext {
 
     @Autowired
     MemberService memberService;

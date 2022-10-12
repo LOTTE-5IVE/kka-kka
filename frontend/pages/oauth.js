@@ -12,10 +12,13 @@ export default function oauth() {
     if (state.includes("kakao")) {
       return "KAKAO";
     }
+
+    if (state.includes("google")) {
+      return "GOOGLE";
+    }
   };
 
   const { code, state } = router.query;
-
   // TODO: code 가지고 /login/token으로 요청해서 우리 서비스의 accessToken 받아오기
   const login = async () => {
     await axios

@@ -4,6 +4,6 @@ public enum ProviderName {
 
     KAKAO,
     NAVER,
-    APPLE,
+    GOOGLE,
     TEST
 }
