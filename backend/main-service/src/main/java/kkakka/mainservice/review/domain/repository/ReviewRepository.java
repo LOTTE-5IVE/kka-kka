@@ -10,11 +10,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    @Query(value = "select r from Review r where r.product.id = :productId",
-            countQuery = "select count(r) from Review r where r.product.id = :productId")
+    @Query(value = "select r from Review r join fetch r.productOrder po join fetch po.product p where p.id = :productId",
+            countQuery = "select count(r) from Review r where r.productOrder.product.id = :productId")
     Page<Review> findAllByProductId(@Param(value = "productId") Long productId, Pageable pageable);
 
-    @Query("select r from Review r where r.member.id = :memberId and r.product.id = :productId")
-    Optional<Review> findByMemberIdAndProductId(@Param(value = "memberId") Long memberId,
+    @Query("select r from Review r where r.member.id = :memberId and r.productOrder.id = :productId")
+    Optional<Review> findByMemberIdAndProductOrderId(@Param(value = "memberId") Long memberId,
             @Param("productId") Long productId);
 }

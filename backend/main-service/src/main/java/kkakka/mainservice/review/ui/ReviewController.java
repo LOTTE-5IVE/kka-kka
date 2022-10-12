@@ -3,14 +3,14 @@ package kkakka.mainservice.review.ui;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+import kkakka.mainservice.common.dto.PageInfo;
+import kkakka.mainservice.common.dto.PageableResponse;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.auth.ui.MemberOnly;
 import kkakka.mainservice.review.application.ReviewService;
 import kkakka.mainservice.review.application.dto.ReviewDto;
 import kkakka.mainservice.review.ui.dto.MemberSimpleResponse;
-import kkakka.mainservice.common.dto.PageInfo;
-import kkakka.mainservice.common.dto.PageableResponse;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
 import kkakka.mainservice.review.ui.dto.ReviewResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class ReviewController {
 
     @GetMapping
     public ResponseEntity<PageableResponse<List<ReviewResponse>>> showReviews(
-            @PageableDefault(size = 6, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
+            @PageableDefault(page = 1, size = 6, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
             @RequestParam(value = "product") Long productId
     ) {
         final Page<ReviewDto> reviewDtos = reviewService.showReviewsByProductId(productId,
@@ -60,10 +60,10 @@ public class ReviewController {
     @PostMapping
     public ResponseEntity<Void> writeReview(
             @AuthenticationPrincipal LoginMember loginMember,
-            @RequestParam(value = "product") Long productId,
+            @RequestParam(value = "productOrder") Long productOrderId,
             @RequestBody ReviewRequest reviewRequest
     ) {
-        final Long reviewId = reviewService.writeReview(loginMember.getId(), productId,
+        final Long reviewId = reviewService.writeReview(loginMember.getId(), productOrderId,
                 reviewRequest);
         return ResponseEntity.created(URI.create(reviewId.toString())).build();
     }

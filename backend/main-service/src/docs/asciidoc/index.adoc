@@ -148,3 +148,37 @@ include::{actual-snippets}/orders-info-member-success/http-request.adoc[]
 - Response
 
 include::{actual-snippets}/orders-info-member-success/http-response.adoc[]
+
+== Review
+
+=== 상품 후기 조회
+
+- Request
+
+include::{actual-snippets}/review-show/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/review-show/http-response.adoc[]
+
+
+=== 상품 후기 작성
+
+- Request
+
+include::{actual-snippets}/review-write/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/review-write/http-response.adoc[]
+
+
+=== 상품 후기 작성 실패 (이미 작성 되어 있을 때)
+
+- Request
+
+include::{actual-snippets}/review-write-fail-already-written/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/review-write-fail-already-written/http-response.adoc[]

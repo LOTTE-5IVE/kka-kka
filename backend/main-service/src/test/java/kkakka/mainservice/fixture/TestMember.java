@@ -101,4 +101,8 @@ public enum TestMember {
     public String getAgeGroup() {
         return ageGroup;
     }
+
+    public String getProviderId() {
+        return providerId;
+    }
 }

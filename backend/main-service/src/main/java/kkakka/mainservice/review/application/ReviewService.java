@@ -2,7 +2,7 @@ package kkakka.mainservice.review.application;
 
 import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
-import kkakka.mainservice.product.domain.repository.ProductRepository;
+import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
 import kkakka.mainservice.review.application.dto.MemberDto;
 import kkakka.mainservice.review.application.dto.ReviewDto;
 import kkakka.mainservice.review.domain.Review;
@@ -21,7 +21,7 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
-    private final ProductRepository productRepository;
+    private final ProductOrderRepository productOrderRepository;
 
     public Page<ReviewDto> showReviewsByProductId(Long productId, Pageable pageable) {
         return reviewRepository.findAllByProductId(productId, pageable)
@@ -33,20 +33,20 @@ public class ReviewService {
     }
 
     @Transactional
-    public Long writeReview(Long memberId, Long productId, ReviewRequest reviewRequest) {
-        validateAlreadyWrittenReview(memberId, productId);
+    public Long writeReview(Long memberId, Long productOrderId, ReviewRequest reviewRequest) {
+        validateAlreadyWritten(memberId, productOrderId);
 
         final Review review = Review.create(
                 reviewRequest.getContents(),
                 memberRepository.findById(memberId).orElseThrow(),
-                productRepository.findById(productId).orElseThrow()
+                productOrderRepository.findById(productOrderId).orElseThrow()
         );
         reviewRepository.save(review);
         return review.getId();
     }
 
-    private void validateAlreadyWrittenReview(Long memberId, Long productId) {
-        reviewRepository.findByMemberIdAndProductId(memberId, productId)
+    private void validateAlreadyWritten(Long memberId, Long productId) {
+        reviewRepository.findByMemberIdAndProductOrderId(memberId, productId)
                 .ifPresent(review -> {
                     throw new KkaKkaException();
                 });
