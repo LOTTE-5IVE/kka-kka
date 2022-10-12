@@ -40,9 +40,7 @@ export default function productCidList() {
   // }, [cat_id]);
 
   const { isLoading, data } = useQuery(["products", cat_id], () => {
-    return axios.get(
-      `http://localhost:9000/api/products/products?category=${cat_id}`,
-    );
+    return axios.get(`/api/products?category=${cat_id}`);
   });
 
   if (isLoading) {
@@ -89,16 +87,16 @@ export default function productCidList() {
                     </li>
                   );
                 })} */}
-            {data?.data.itemList.map((product) => {
+            {data?.data.data.map((product) => {
               return (
                 <li className="productInner" key={product.id}>
                   <div className="productBox">
                     <ProductRec
                       id={product.id}
-                      imgsrc={product.imageUrl}
+                      imgsrc={product.image_url}
                       name={product.name}
                       price={product.price}
-                      rate="10"
+                      discount={product.discount}
                     />
                   </div>
                 </li>

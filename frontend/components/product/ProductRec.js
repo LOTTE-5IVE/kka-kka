@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function ProductRec({ id, imgsrc, name, price, rate }) {
+export default function ProductRec({ id, imgsrc, name, price, discount }) {
   return (
     <>
       <div className="wrapper">
@@ -23,9 +23,9 @@ export default function ProductRec({ id, imgsrc, name, price, rate }) {
                   fontSize: "16px",
                   fontWeight: "700",
                   color: "#3a3a3a",
+                  height: "50px",
                 }}
               >
-                {id}
                 {name}
               </p>
               <p
@@ -42,8 +42,8 @@ export default function ProductRec({ id, imgsrc, name, price, rate }) {
                 className="priceRate"
                 style={{ display: "flex", justifyContent: "space-between" }}
               >
-                <span>{price * (1 - rate * 0.01)}원</span>
-                <span style={{ color: "#f11c2b" }}>{rate}%</span>
+                <span>{price * (1 - discount * 0.01)}원</span>
+                <span style={{ color: "#f11c2b" }}>{discount}%</span>
               </div>
             </div>
           </a>

@@ -27,7 +27,11 @@ export default function login() {
               link={SNSUri.NAVER.requestUri}
               context="네이버"
             />
-            <SNSButton imgsrc="/member/apple.png" link="/" context="애플" />
+            <SNSButton
+              imgsrc="/member/google.png"
+              link={SNSUri.GOOGLE.requestUri}
+              context="구글"
+            />
           </div>
         </div>
       </div>
@@ -90,6 +94,12 @@ const SNSLogin = {
     REDIRECT_URL: encoding(process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL),
     STATE: encoding(process.env.NEXT_PUBLIC_KAKAO_STATE),
   },
+  GOOGLE: {
+    CID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+    REDIRECT_URL: encoding(process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URL),
+    STATE: encoding(process.env.NEXT_PUBLIC_GOOGLE_STATE),
+    SCOPE: encoding(process.env.NEXT_PUBLIC_GOOGLE_SCOPE),
+  },
 };
 
 const SNSUri = {
@@ -98,5 +108,8 @@ const SNSUri = {
   },
   KAKAO: {
     requestUri: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${SNSLogin.KAKAO.CID}&redirect_uri=${SNSLogin.KAKAO.REDIRECT_URL}&state=${SNSLogin.KAKAO.STATE}`,
+  },
+  GOOGLE: {
+    requestUri: `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${SNSLogin.GOOGLE.CID}&redirect_uri=${SNSLogin.GOOGLE.REDIRECT_URL}&state=${SNSLogin.GOOGLE.STATE}&scope=${SNSLogin.GOOGLE.SCOPE}`,
   },
 };
