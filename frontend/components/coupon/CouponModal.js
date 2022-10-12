@@ -27,7 +27,7 @@ export function CouponModal({ children }) {
               margin: 40px auto 0;
               background-color: white;
               width: 400;
-              border-radius: 18px;
+
               border: 1px solid #dedede;
               box-shadow: 4px 5px 3px #595959;
             }

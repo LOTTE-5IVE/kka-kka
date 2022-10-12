@@ -11,7 +11,7 @@ export function CouponDown({ modalHandler }) {
           <img width="24px" src="/cancel.png" />
         </div>
         <div className="container">
-          <h3>다운로드 가능한 쿠폰</h3>
+          <h3>전체 쿠폰</h3>
           <table>
             <colgroup>
               <col style={{ width: "25%" }} />
@@ -19,17 +19,17 @@ export function CouponDown({ modalHandler }) {
               <col style={{ width: "35%" }} />
               <col style={{ width: "20%" }} />
             </colgroup>
-            <thead>
+            <thead style={{ height: "5vw" }}>
               <th>쿠폰명</th>
               <th>할인</th>
               <th>사용기한</th>
               <th>쿠폰 적용가</th>
             </thead>
             <tbody>
-              <tr style={{ height: "5vw", borderBottom: "1px solid #dedede" }}>
+              <tr style={{ height: "3vw", borderBottom: "1px solid #dedede" }}>
                 <td>스페셜 쿠폰 </td>
                 <td>15%</td>
-                <td>2022-09-15까지</td>
+                <td>2022.09.15까지</td>
                 <td>
                   40,000원 <img />{" "}
                 </td>
@@ -47,7 +47,8 @@ export function CouponDown({ modalHandler }) {
           .container {
             h3 {
               width: 90%;
-              margin: 0 auto;
+              margin: 0 auto 15px;
+              font-weight: bold;
             }
 
             table {
