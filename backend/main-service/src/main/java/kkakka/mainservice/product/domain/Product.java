@@ -67,4 +67,11 @@ public class Product {
         return this.stock - quantity > 0;
     }
 
+    public Long getCategoryId() {
+        return this.category.getId();
+    }
+
+    public String getCategoryName() {
+        return this.category.getName();
+    }
 }

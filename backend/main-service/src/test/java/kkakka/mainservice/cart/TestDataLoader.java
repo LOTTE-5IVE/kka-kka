@@ -59,21 +59,23 @@ public class TestDataLoader implements CommandLineRunner {
                 )
         );
 
-        Category category = new Category("test-category");
-        CATEGORY = categoryRepository.save(category);
-        PRODUCT_1 = productRepository.save(new Product(category, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10,
+        Category category1 = new Category("test-category-01");
+        Category category2 = new Category("test-category-02");
+        CATEGORY = categoryRepository.save(category1);
+        categoryRepository.save(category2);
+        PRODUCT_1 = productRepository.save(new Product(category1, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
                 "상세URL"));
-        PRODUCT_2 = productRepository.save(new Product(category, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10,
+        PRODUCT_2 = productRepository.save(new Product(category1, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
                 "상세URL"));
-        PRODUCT_3 = productRepository.save(new Product(category, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10,
+        PRODUCT_3 = productRepository.save(new Product(category1, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
                 "상세URL"));
-        PRODUCT_4 = productRepository.save(new Product(category, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10,
+        PRODUCT_4 = productRepository.save(new Product(category2, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
                 "상세URL"));
-        PRODUCT_5 = productRepository.save(new Product(category, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10,
+        PRODUCT_5 = productRepository.save(new Product(category2, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
                 "상세URL"));
 

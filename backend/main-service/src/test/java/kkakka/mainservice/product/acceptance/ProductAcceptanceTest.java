@@ -1,5 +1,10 @@
 package kkakka.mainservice.product.acceptance;
 
+import static kkakka.mainservice.cart.TestDataLoader.CATEGORY;
+import static kkakka.mainservice.cart.TestDataLoader.PRODUCT_1;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -7,11 +12,6 @@ import kkakka.mainservice.DocumentConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-
-import static kkakka.mainservice.cart.TestDataLoader.CATEGORY;
-import static kkakka.mainservice.cart.TestDataLoader.PRODUCT_1;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 public class ProductAcceptanceTest extends DocumentConfiguration {
 
@@ -48,12 +48,28 @@ public class ProductAcceptanceTest extends DocumentConfiguration {
     @Test
     @DisplayName("카테고리 상품 조회 성공")
     void testShowCategoryProducts() {
-
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
                 .filter(document("showCategoryProducts-success"))
                 .when()
-                .get("/api/products/products?category=" + CATEGORY.getId())
+                .get("/api/products?category=" + CATEGORY.getId())
+                .then()
+                .log().all().extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("전체 상품 조회 - 성공")
+    void showAllProducts_success() {
+        //given
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("products-show-all-success"))
+                .when()
+                .get("/api/products")
                 .then()
                 .log().all().extract();
 
