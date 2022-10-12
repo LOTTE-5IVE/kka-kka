@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @MemberOnly
@@ -43,8 +44,12 @@ public class OrderController {
 
     @GetMapping("/me")
     public ResponseEntity<List<OrderResponse>> findOrders(
-            @AuthenticationPrincipal LoginMember loginMember) {
-        List<OrderResponse> memberOrders = orderService.findMemberOrders(loginMember.getId());
+            @AuthenticationPrincipal LoginMember loginMember,
+            @RequestParam(required = false) Long orderId,
+            @RequestParam(defaultValue = "6") int pageSize
+    ) {
+        List<OrderResponse> memberOrders = orderService.showMemberOrders(loginMember.getId(),
+                orderId, pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(memberOrders);
     }
 }
