@@ -27,8 +27,10 @@ ext {
 dependencies {
     /* Application */
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'com.google.code.gson:gson:2.9.0'
 
     /* Model mapper */
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
@@ -46,7 +48,10 @@ dependencies {
 
     /* DB */
     runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'mysql:mysql-connector-java'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.flywaydb:flyway-core'
+    compileOnly 'org.flywaydb:flyway-mysql'
 
     /* lombok */
     compileOnly 'org.projectlombok:lombok'

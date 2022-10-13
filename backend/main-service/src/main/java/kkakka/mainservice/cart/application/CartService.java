@@ -4,16 +4,25 @@ import kkakka.mainservice.cart.domain.Cart;
 import kkakka.mainservice.cart.domain.CartItem;
 import kkakka.mainservice.cart.domain.repository.CartItemRepository;
 import kkakka.mainservice.cart.domain.repository.CartRepository;
+import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
+import kkakka.mainservice.cart.ui.dto.CartResponseDto;
+import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CartService {
 
     private final CartRepository cartRepository;
@@ -21,40 +30,64 @@ public class CartService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
 
-    public CartService(CartRepository cartRepository, CartItemRepository cartItemRepository, ProductRepository productRepository
-            , MemberRepository memberRepository) {
-        this.cartRepository = cartRepository;
-        this.cartItemRepository = cartItemRepository;
-        this.productRepository = productRepository;
-        this.memberRepository = memberRepository;
-    }
+    @Transactional
+    public Long saveOrUpdateCartItem(CartRequestDto cartRequestDto,LoginMember loginMember) {
 
-    public String saveCartItem(CartRequestDto cartRequestDto) {
+        Member member = memberRepository.findById(loginMember.getId())
+                .orElseThrow(KkaKkaException::new);
 
-        /* 테스트 데이터 */
-        Optional<Member> member = memberRepository.findById(cartRequestDto.getMemberId());
+        Cart cart = findOrCreateCart(member);
+        Optional<CartItem> originCartItem = Optional.ofNullable(
+                cartItemRepository.findByMemberIdandProductId(member.getId(), cartRequestDto.getProductId())
+        );
 
-        /* 로그인 상태 체크 */
-
-        /* 장바구니 존재 유무 체크 ex) 장바구니에 담아둔 아이템 있는지 */
-        Cart cart = new Cart();
-        cart = cartRepository.findByMemberId(cartRequestDto.getMemberId());
-        if (cart == null) {
-            cartRepository.save(new Cart(member.get()));
-            cart = cartRepository.findByMemberId(cartRequestDto.getMemberId());
+        // 동일 상품 이미 있으면 수량 업데이트
+        if (originCartItem.isPresent()) {
+            originCartItem.get().setQuantity(cartRequestDto.getQuantity());
+            cartItemRepository.save(originCartItem.get());
+            return member.getId();
         }
 
-        /* 현재 장바구니에 동일한 상품 있는지 체크 */
-        CartItem item = cartItemRepository.findByMemberIdandProductId(member.get().getId(), cartRequestDto.getProductId()); // Test용 Member
-//        System.out.println(item.toString());
-
         /* 장바구니 아이템 추가 */
-        Optional<Product> product = productRepository.findById(cartRequestDto.getProductId());
-        cartItemRepository.save(new CartItem(cart, product.get(), cartRequestDto.getQuantity()));
+        Product product = productRepository.findById(cartRequestDto.getProductId())
+                .orElseThrow(KkaKkaException::new);
+        CartItem newCartItem = CartItem.create(cart, product, cartRequestDto.getQuantity());
+        cartItemRepository.save(newCartItem);
 
-        return "";
+        return member.getId();
     }
 
+    public CartResponseDto findAllCartItemByMember(LoginMember member) {
 
+        Member member1 = memberRepository.findById(member.getId())
+                .orElseThrow(KkaKkaException::new);
+
+        Cart cart = findOrCreateCart(member1);
+        Long cartId = cart.getId();
+
+        List<CartItem> cartItemList = cartItemRepository.findAllByMemberId(cartId);
+        List<CartItemDto> memberCartItems = cartItemList.stream()
+                .map(CartItemDto::from)
+                .collect(Collectors.toList());
+
+        return new CartResponseDto(cartId, memberCartItems);
+    }
+
+    @Transactional
+    public void deleteCartItems(List<Long> cartItemIds, LoginMember loginMember) {
+
+        Long loginMemberId = loginMember.getId();
+        cartItemIds.forEach(deleteRequestId ->
+                cartItemRepository.deleteCartItemById(deleteRequestId, loginMemberId));
+    }
+
+    public Cart findOrCreateCart(Member member) {
+        return cartRepository.findByMemberId(member.getId())
+                .orElseGet(() -> createCart(member));
+    }
+
+    public Cart createCart(Member member) {
+        return cartRepository.save(new Cart(member));
+    }
 
 }

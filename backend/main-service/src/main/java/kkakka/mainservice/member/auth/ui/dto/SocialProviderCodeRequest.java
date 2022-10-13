@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class SocialProviderCodeRequest {
 
     private String code;
+
     @JsonProperty("providerName")
     private MemberProviderName memberProviderName;
 
