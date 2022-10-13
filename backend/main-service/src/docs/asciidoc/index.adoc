@@ -7,13 +7,53 @@
 :toclevels: 2
 :sectlinks:
 
-== Auth
-=== 회원가입 & 로그인
+== Coupons
+=== 쿠폰 생성 성공
 
 - Request
 
-include::./build/generated-snippets/join-success/http-request.adoc[]
+include::./build/generated-snippets/create-coupon/http-request.adoc[]
 
 - Response
 
-include::./build/generated-snippets/join-success/http-response.adoc[]
+include::./build/generated-snippets/create-coupon/http-response.adoc[]
+
+=== 등급 쿠폰 생성 성공
+
+- Request
+
+include::./build/generated-snippets/create-grade-coupon/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/create-grade-coupon/http-response.adoc[]
+
+=== 모든 쿠폰 조회 성공
+
+- Request
+
+include::./build/generated-snippets/find-all-coupons/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/find-all-coupons/http-response.adoc[]
+
+=== 다운 가능한 쿠폰 조회 성공
+
+- Request
+
+include::./build/generated-snippets/find-downloadable-coupons/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/find-downloadable-coupons/http-response.adoc[]
+
+=== 사용 가능한 쿠폰 조회 성공
+
+- Request
+
+include::./build/generated-snippets/find-usable-coupons/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/find-usable-coupons/http-response.adoc[]
