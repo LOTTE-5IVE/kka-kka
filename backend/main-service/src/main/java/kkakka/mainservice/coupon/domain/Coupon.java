@@ -92,4 +92,18 @@ public class Coupon {
         return this.getStartedAt().isBefore(LocalDateTime.now())
             && this.getExpiredAt().isAfter(LocalDateTime.now());
     }
+
+    public Long getCategoryId() {
+        if (category != null) {
+            return category.getId();
+        }
+        return null;
+    }
+
+    public Long getProductId() {
+        if (product != null) {
+            return product.getId();
+        }
+        return null;
+    }
 }

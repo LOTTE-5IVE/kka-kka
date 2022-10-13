@@ -1,6 +1,5 @@
 package kkakka.mainservice.coupon.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import kkakka.mainservice.category.domain.Category;
@@ -11,6 +10,7 @@ import kkakka.mainservice.coupon.domain.PriceRule;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
+import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
@@ -34,28 +34,26 @@ public class CouponService {
 
     /* 관리자 쿠폰 등록 */
     @Transactional
-    public List<Long> createCoupon(CouponRequestDto couponRequestDto) {
-        List<Long> coupons = new ArrayList<>();
+    public Long createCoupon(CouponRequestDto couponRequestDto) {
         if (PriceRule.GRADE_COUPON.equals(couponRequestDto.getPriceRule())) {
+            Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
             List<Member> members = memberRepository.findByGrade(couponRequestDto.getGrade());
             for (Member member : members) {
-                Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
                 MemberCoupon memberCoupon = MemberCoupon.create(member, coupon);
                 memberCouponRepository.save(memberCoupon);
-                coupons.add(coupon.getId());
             }
-            return coupons;
+            return coupon.getId();
         }
 
         if (PriceRule.COUPON.equals(couponRequestDto.getPriceRule())) {
-            Category category = getCategory(couponRequestDto);
-            Product product = getProduct(couponRequestDto);
+            Category category =
+                couponRequestDto.getCategoryId() == null ? null : getCategory(couponRequestDto);
+            Product product =
+                couponRequestDto.getProductId() == null ? null : getProduct(couponRequestDto);
             Coupon coupon = couponRepository.save(
                 toCouponEntity(couponRequestDto, category, product));
-            coupons.add(coupon.getId());
-            return coupons;
+            return coupon.getId();
         }
-
         throw new IllegalArgumentException();
     }
 
@@ -107,8 +105,11 @@ public class CouponService {
     }
 
     /* 관리자 모든 쿠폰 조회 */
-    public List<Coupon> findAllCoupons() {
-        return couponRepository.findAll();
+    public List<CouponResponseDto> findAllCoupons() {
+        List<Coupon> coupons = couponRepository.findAll();
+        List<CouponResponseDto> couponResponseDto = coupons.stream()
+            .map(coupon -> CouponResponseDto.create(coupon)).collect(Collectors.toList());
+        return couponResponseDto;
     }
 
     /* 사용자 쿠폰 다운로드 */
@@ -144,13 +145,14 @@ public class CouponService {
     }
 
     /* 사용자 다운 가능한 쿠폰 목록 조회 */
-    public List<Coupon> findDownloadableCoupons(Long memberId) {
+    public List<CouponResponseDto> findDownloadableCoupons(Long memberId) {
         List<Coupon> coupons = couponRepository.findAll();
         List<Coupon> downloadedCoupons = memberCouponRepository.findDownloadedCouponsByMemberId(
             memberId);
         coupons.removeAll(downloadedCoupons);
         return coupons.stream()
             .filter(coupon -> isDownloadable(coupon))
+            .map(coupon -> CouponResponseDto.create(coupon))
             .collect(Collectors.toList());
     }
 

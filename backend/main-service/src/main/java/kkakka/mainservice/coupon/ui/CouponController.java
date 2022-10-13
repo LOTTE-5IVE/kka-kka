@@ -2,18 +2,22 @@ package kkakka.mainservice.coupon.ui;
 
 import java.net.URI;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import kkakka.mainservice.coupon.application.CouponService;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
+import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,15 +34,13 @@ public class CouponController {
 
     /* 쿠폰 등록 */
     @PostMapping
-    public ResponseEntity<Void> createCoupon(
-        @RequestBody CouponRequestDto couponRequestDto
-    ) {
-        List<Long> couponId = couponService.createCoupon(couponRequestDto);
+    public ResponseEntity<Void> createCoupon(@RequestBody CouponRequestDto couponRequestDto) {
+        Long couponId = couponService.createCoupon(couponRequestDto);
         return ResponseEntity.created(URI.create(couponId.toString())).build();
     }
 
     /* 쿠폰 사용 - 삭제 */
-    @DeleteMapping("/{couponId}")
+    @PutMapping("/{couponId}")
     public ResponseEntity<Void> useCouponByAdmin(@PathVariable Long couponId) {
         couponService.useCoupon(couponId);
         return ResponseEntity.ok().build();
@@ -46,16 +48,16 @@ public class CouponController {
 
     /* 쿠폰 조회 */
     @GetMapping
-    public ResponseEntity<List<Coupon>> findAllCoupons() {
-        List<Coupon> coupons = couponService.findAllCoupons();
-        return ResponseEntity.status(HttpStatus.OK).body(coupons);
+    public ResponseEntity<List<CouponResponseDto>> findAllCoupons() {
+        List<CouponResponseDto> couponResponseDto = couponService.findAllCoupons();
+        return ResponseEntity.status(HttpStatus.OK).body(couponResponseDto);
     }
 
     /* 다운로드 가능한 쿠폰 조회 */
     @GetMapping("/download")
-    public ResponseEntity<List<Coupon>> findDownloadableCoupons(
+    public ResponseEntity<List<CouponResponseDto>> findDownloadableCoupons(
         @AuthenticationPrincipal LoginMember loginMember) {
-        List<Coupon> coupons = couponService.findDownloadableCoupons(loginMember.getId());
+        List<CouponResponseDto> coupons = couponService.findDownloadableCoupons(loginMember.getId());
         return ResponseEntity.status(HttpStatus.OK).body(coupons);
     }
 
