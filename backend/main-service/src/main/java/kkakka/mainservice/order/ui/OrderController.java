@@ -1,21 +1,17 @@
 package kkakka.mainservice.order.ui;
 
 import java.net.URI;
-import java.util.List;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.auth.ui.MemberOnly;
 import kkakka.mainservice.order.application.OrderService;
 import kkakka.mainservice.order.application.dto.OrderDto;
 import kkakka.mainservice.order.ui.dto.OrderRequest;
-import kkakka.mainservice.order.ui.dto.OrderResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @MemberOnly
@@ -40,16 +36,5 @@ public class OrderController {
             @RequestBody OrderRequest orderRequest) {
         Long orderId = orderService.order(OrderDto.create(loginMember.getId(), orderRequest));
         return ResponseEntity.created(URI.create(orderId.toString())).build();
-    }
-
-    @GetMapping("/me")
-    public ResponseEntity<List<OrderResponse>> findOrders(
-            @AuthenticationPrincipal LoginMember loginMember,
-            @RequestParam(required = false) Long orderId,
-            @RequestParam(defaultValue = "6") int pageSize
-    ) {
-        List<OrderResponse> memberOrders = orderService.showMemberOrders(loginMember.getId(),
-                orderId, pageSize);
-        return ResponseEntity.status(HttpStatus.OK).body(memberOrders);
     }
 }

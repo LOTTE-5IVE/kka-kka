@@ -70,7 +70,7 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(orderRequest)
                 .when()
-                .post("api/orders")
+                .post("/api/orders")
                 .then().log().all()
                 .extract();
 
@@ -93,7 +93,7 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("api/orders/me")
+                .get("/api/members/me/orders")
                 .then().log().all()
                 .extract();
 

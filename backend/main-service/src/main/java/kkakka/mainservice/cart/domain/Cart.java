@@ -1,6 +1,6 @@
 package kkakka.mainservice.cart.domain;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
@@ -35,7 +35,7 @@ public class Cart {
     private List<CartItem> cartItems;
 
     public Cart(Member member) {
-        this(null, member, new LinkedList<>());
+        this(null, member, new ArrayList<>());
     }
 
     public void add(CartItem cartItem) {
