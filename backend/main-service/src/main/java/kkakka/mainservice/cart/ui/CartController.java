@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @MemberOnly
 @RestController
@@ -29,21 +28,17 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping
-    public ResponseEntity<Void> saveCartItem(@RequestBody CartRequestDto cartRequestDto,
+    public ResponseEntity<Void> addOrChangeCartItem(@RequestBody CartRequestDto cartRequestDto,
             @AuthenticationPrincipal LoginMember loginMember) {
-
-        cartService.saveOrUpdateCartItem(cartRequestDto, loginMember);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .buildAndExpand().toUri();
-
-        return ResponseEntity.created(location).build();
+        Long cartId = cartService.addOrChangeCartItem(cartRequestDto, loginMember);
+        return ResponseEntity.created(URI.create(cartId.toString())).build();
     }
 
     @GetMapping
-    public ResponseEntity<CartResponseDto> showMemberCartItemList(
+    public ResponseEntity<CartResponseDto> showCart(
             @AuthenticationPrincipal LoginMember loginMember) {
-        CartResponseDto result = cartService.findAllCartItemByMember(loginMember);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        CartResponseDto cartResponseDto = cartService.showCartByMember(loginMember);
+        return ResponseEntity.status(HttpStatus.OK).body(cartResponseDto);
     }
 
     @DeleteMapping("/{cartItemId}")

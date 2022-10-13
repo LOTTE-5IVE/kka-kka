@@ -1,50 +1,31 @@
 package kkakka.mainservice.cart.ui;
 
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import kkakka.mainservice.DocumentConfiguration;
-import kkakka.mainservice.cart.domain.Cart;
-import kkakka.mainservice.cart.domain.CartItem;
-import kkakka.mainservice.cart.domain.repository.CartItemRepository;
-import kkakka.mainservice.cart.domain.repository.CartRepository;
-import kkakka.mainservice.cart.ui.dto.CartRequestDto;
-import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
-import kkakka.mainservice.member.auth.util.JwtTokenProvider;
-import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
-import kkakka.mainservice.member.member.domain.repository.MemberRepository;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-
-import java.util.Optional;
-
-import static kkakka.mainservice.fixture.TestDataLoader.MEMBER;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
 import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-class CartAcceptanceTest extends DocumentConfiguration {
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import kkakka.mainservice.DocumentConfiguration;
+import kkakka.mainservice.cart.ui.dto.CartRequestDto;
+import kkakka.mainservice.cart.ui.dto.CartResponseDto;
+import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
+import kkakka.mainservice.member.member.domain.MemberProviderName;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
-    @Autowired
-    private CartItemRepository cartItemRepository;
-    @Autowired
-    private CartRepository cartRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+class CartAcceptanceTest extends DocumentConfiguration {
 
     @Test
     @DisplayName("장바구니 추가 성공")
     void testSaveCartItem() {
-
         //given
-        CartRequestDto cartRequestDto = new CartRequestDto(MEMBER.getId(), PRODUCT_1.getId(), 1, null);
+        CartRequestDto cartRequestDto = new CartRequestDto(PRODUCT_1.getId(), 1);
         final String accessToken = 액세스_토큰_가져옴();
 
         //when
@@ -67,7 +48,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
     @DisplayName("장바구니 추가 실패")
     void testFailSaveCartItem() {
         //given
-        CartRequestDto cartRequestDto = new CartRequestDto(MEMBER.getId(), 999L, 1, null);
+        CartRequestDto cartRequestDto = new CartRequestDto(999L, 1);
         final String accessToken = 액세스_토큰_가져옴();
 
         //when
@@ -109,33 +90,44 @@ class CartAcceptanceTest extends DocumentConfiguration {
     void testRemoveCartItem() {
         //given
         final String accessToken = 액세스_토큰_가져옴();
-        long memberId = Long.parseLong(jwtTokenProvider.getPayload(accessToken));
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow();
-
-        Cart cart = cartRepository.findByMemberId(memberId)
-                .orElseGet(() -> cartRepository.save(new Cart(member)));
-        CartItem cartItem = cartItemRepository.save(CartItem.create(cart, PRODUCT_1, 10));
-
+        장바구니_추가함(accessToken, PRODUCT_1.getId());
+        장바구니_추가함(accessToken, PRODUCT_2.getId());
+        final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
 
         //when
-        ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
+        ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
                 .filter(document("removeCartItem-success"))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/api/carts/" + cartItem.getId())
+                .delete("/api/carts/" + cart.getCartItemDtos().get(0).getId())
                 .then()
                 .log().all().extract();
 
-        Optional<CartItem> deleteCartItem = cartItemRepository.findById(cartItem.getId());
-        if (deleteCartItem.isEmpty()) {
-            System.out.println("삭제한 아이템 조회결과 : 없음! ");
-        }
-
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(deleteCartItem).isEmpty();
+    }
+
+    private CartResponseDto 장바구니에서_찾아옴(String accessToken) {
+        final ExtractableResponse<Response> response = RestAssured.given()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/carts")
+                .then().log().all().extract();
+
+        return response.body().as(CartResponseDto.class);
+    }
+
+    private void 장바구니_추가함(String accessToken, long productId) {
+        RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CartRequestDto(productId, 1))
+                .when()
+                .post("/api/carts")
+                .then().log().all();
     }
 
     private String 액세스_토큰_가져옴() {
