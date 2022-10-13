@@ -69,6 +69,10 @@ public class Member {
         this.address = address;
     }
 
+    public MemberResponse toDto() {
+        return new MemberResponse(name, email, phone, address, ageGroup, grade);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -84,9 +88,5 @@ public class Member {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public MemberResponse toDto() {
-        return new MemberResponse(name, email, phone, address, ageGroup, grade);
     }
 }

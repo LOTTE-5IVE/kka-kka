@@ -16,7 +16,6 @@ import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,14 +45,12 @@ public class CartService {
         return cart.getId();
     }
 
-    @NotNull
     private CartItem findOrCreateCartItem(Product product, Cart cart) {
-        CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(),
+        return cartItemRepository.findByCartIdAndProductId(cart.getId(),
                         product.getId())
                 .orElseGet(() -> cartItemRepository.save(
                         CartItem.create(cart, product)
                 ));
-        return cartItem;
     }
 
     public CartResponseDto showCartByMember(LoginMember loginMember) {

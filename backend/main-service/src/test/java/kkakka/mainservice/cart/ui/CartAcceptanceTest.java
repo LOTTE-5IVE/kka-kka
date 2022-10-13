@@ -10,6 +10,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import kkakka.mainservice.DocumentConfiguration;
+import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
@@ -22,8 +23,8 @@ import org.springframework.http.MediaType;
 class CartAcceptanceTest extends DocumentConfiguration {
 
     @Test
-    @DisplayName("장바구니 추가 성공")
-    void testSaveCartItem() {
+    @DisplayName("장바구니 추가 - 성공")
+    void addCartItem_success() {
         //given
         CartRequestDto cartRequestDto = new CartRequestDto(PRODUCT_1.getId(), 1);
         final String accessToken = 액세스_토큰_가져옴();
@@ -45,8 +46,8 @@ class CartAcceptanceTest extends DocumentConfiguration {
     }
 
     @Test
-    @DisplayName("장바구니 추가 실패")
-    void testFailSaveCartItem() {
+    @DisplayName("장바구니 추가 - 실패")
+    void addCartItem_fail() {
         //given
         CartRequestDto cartRequestDto = new CartRequestDto(999L, 1);
         final String accessToken = 액세스_토큰_가져옴();
@@ -67,10 +68,12 @@ class CartAcceptanceTest extends DocumentConfiguration {
     }
 
     @Test
-    @DisplayName("장바구니 조회")
-    void testShowMemberCartItemList() {
+    @DisplayName("장바구니 조회 - 성공")
+    void showCart_success() {
         //given
         final String accessToken = 액세스_토큰_가져옴();
+        장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
+        장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
@@ -81,17 +84,52 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .get("/api/carts")
                 .then()
                 .log().all().extract();
+
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().jsonPath().getList("cartItems", CartItemDto.class)).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("장바구니의 아이템 수량 변경 - 성공")
+    void changeCartItem_success() {
+        // given
+        final String accessToken = 액세스_토큰_가져옴();
+        장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
+        장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
+
+        final CartRequestDto cartRequestDto = new CartRequestDto(PRODUCT_1.getId(), 3);
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
+                .filter(document("cart-item-change-success"))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(cartRequestDto)
+                .when()
+                .post("/api/carts")
+                .then()
+                .log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+
+        final CartResponseDto cartResponseDto = 장바구니에서_찾아옴(accessToken);
+        assertThat(
+                cartResponseDto.getCartItemDtos().stream()
+                        .filter(cartItemDto -> cartItemDto.getProductId().equals(PRODUCT_1.getId()))
+                        .findAny().orElseThrow()
+                        .getQuantity()
+        ).isEqualTo(3);
     }
 
     @Test
     @DisplayName("장바구니 아이템 삭제")
-    void testRemoveCartItem() {
+    void removeCartItem_success() {
         //given
         final String accessToken = 액세스_토큰_가져옴();
-        장바구니_추가함(accessToken, PRODUCT_1.getId());
-        장바구니_추가함(accessToken, PRODUCT_2.getId());
+        장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
+        장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
         final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
 
         //when
@@ -120,11 +158,11 @@ class CartAcceptanceTest extends DocumentConfiguration {
         return response.body().as(CartResponseDto.class);
     }
 
-    private void 장바구니_추가함(String accessToken, long productId) {
+    private void 장바구니_추가함(String accessToken, long productId, int quantity) {
         RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CartRequestDto(productId, 1))
+                .body(new CartRequestDto(productId, quantity))
                 .when()
                 .post("/api/carts")
                 .then().log().all();
@@ -144,5 +182,4 @@ class CartAcceptanceTest extends DocumentConfiguration {
 
         return response.body().jsonPath().get("accessToken");
     }
-
 }
