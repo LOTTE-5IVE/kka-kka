@@ -25,7 +25,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Autowired
     CouponRepository couponRepository;
 
-    @DisplayName("등급쿠폰 생성 - 멤버 없을 시 실패")
+    @DisplayName("등급쿠폰 생성 - 성공")
     @Test
     void createGradeCoupon() {
         CouponRequestDto couponRequestDto = new CouponRequestDto(
@@ -56,7 +56,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
             .post("/api/coupons")
             .then().log().all().extract();
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @DisplayName("일반 쿠폰 생성 - 성공")
