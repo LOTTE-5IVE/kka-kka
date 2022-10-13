@@ -1,19 +1,8 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { useState } from "react";
 
-export default function AdminSidebar() {
-  const [tab, setTab] = useState("order");
-
-  const router = useRouter();
-  const category = (cat_id) => {
-    router.push({
-      pathname: `/product`,
-      query: {
-        cat_id,
-      },
-    });
-  };
+export default function AdminSidebar({ LmenuHandler, SmenuHandler }) {
+  const [tab, setTab] = useState("혜택 등록");
+  const [Smenu, setSmenu] = useState("혜택 등록");
 
   return (
     <>
@@ -25,14 +14,30 @@ export default function AdminSidebar() {
           <h2>프로모션</h2>
         </div>
         <ul>
-          <li onClick={() => setTab("0")}>
-            <Link href="/product?cat_id=1">
-              <a className={`${tab === "0" ? "active" : ""}`}>혜택 등록</a>
-            </Link>
+          <li
+            onClick={() => {
+              setSmenu("혜택 등록");
+              LmenuHandler("프로모션");
+              SmenuHandler("혜택 등록");
+            }}
+          >
+            <div className="category">
+              <a className={`${Smenu === "혜택 등록" ? "active" : ""}`}>
+                혜택 등록
+              </a>
+            </div>
           </li>
-          <li onClick={() => setTab("2")}>
-            <div onClick={() => category(2)} className="category">
-              <a className={`${tab === "2" ? "active" : ""}`}>혜택 조회/수정</a>
+          <li
+            onClick={() => {
+              setSmenu("혜택 조회/수정");
+              LmenuHandler("프로모션");
+              SmenuHandler("혜택 조회/수정");
+            }}
+          >
+            <div className="category">
+              <a className={`${Smenu === "혜택 조회/수정" ? "active" : ""}`}>
+                혜택 조회/수정
+              </a>
             </div>
           </li>
         </ul>
@@ -41,14 +46,30 @@ export default function AdminSidebar() {
           <h2>상품관리</h2>
         </div>
         <ul>
-          <li onClick={() => setTab("0")}>
-            <Link href="/product?cat_id=1">
-              <a className={`${tab === "0" ? "active" : ""}`}>상품 등록</a>
-            </Link>
-          </li>
-          <li onClick={() => setTab("2")}>
-            <div onClick={() => category(2)} className="category">
-              <a className={`${tab === "2" ? "active" : ""}`}>상품 조회/수정</a>
+          {/* <li
+            onClick={() => {
+              setSmenu("상품 등록");
+              LmenuHandler("상품관리");
+              SmenuHandler("상품 등록");
+            }}
+          >
+            <div className="category">
+              <a className={`${Smenu === "상품 등록" ? "active" : ""}`}>
+                상품 등록
+              </a>
+            </div>
+          </li> */}
+          <li
+            onClick={() => {
+              setSmenu("상품 조회/수정");
+              LmenuHandler("상품관리");
+              SmenuHandler("상품 조회/수정");
+            }}
+          >
+            <div className="category">
+              <a className={`${Smenu === "상품 조회/수정" ? "active" : ""}`}>
+                상품 조회/수정
+              </a>
             </div>
           </li>
         </ul>
@@ -56,7 +77,8 @@ export default function AdminSidebar() {
 
       <style jsx>{`
         .contents {
-          width: 100%;
+          margin: 0 auto;
+          width: 70%;
 
           .title {
             line-height: 1vw;
@@ -77,14 +99,14 @@ export default function AdminSidebar() {
             line-height: 40px;
             padding: 0;
 
-            color: #dedede;
+            color: #3a3a3a;
 
             a {
               cursor: pointer;
             }
 
             .active {
-              color: #3a3a3a;
+              color: #f2889b;
             }
           }
         }

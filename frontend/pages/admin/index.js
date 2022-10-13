@@ -1,145 +1,48 @@
+import { useState } from "react";
+import { AdminButton } from "../../components/admin/AdminButton";
 import AdminSidebar from "../../components/admin/AdminSidebar";
+import ApplyTable from "../../components/admin/ApplyTable";
+import ProductEnroll from "../../components/admin/ProductEnroll";
+import ProductSearch from "../../components/admin/ProductSearch";
+import PromotionEnroll from "../../components/admin/PromotionEnroll";
+import PromotionSearch from "../../components/admin/PromotionSearch";
 import ButtonComp from "../../components/common/buttonComp";
 import Title from "../../components/common/Title";
 
 export default function admin() {
+  const [Lmenu, setLmenu] = useState("프로모션");
+  const [Smenu, setSmenu] = useState("혜택 등록");
+  const [btn, setBtn] = useState("할인");
+
+  function LmenuHandler(text) {
+    setLmenu(text);
+  }
+
+  function SmenuHandler(text) {
+    setSmenu(text);
+  }
+
   return (
     <>
       <Title title="관리자" />
       <div className="wrapper">
         <div className="sidebar">
-          <AdminSidebar />
+          <AdminSidebar
+            LmenuHandler={LmenuHandler}
+            SmenuHandler={SmenuHandler}
+          />
         </div>
         <div className="promotions">
           <div className="title">
-            <span>프로모션 > 혜택 등록</span>
+            <span>
+              {Lmenu} > {Smenu}
+            </span>
           </div>
           <div className="contents">
-            <table>
-              <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "80%" }} />
-              </colgroup>
-
-              <tbody>
-                <tr>
-                  <th scope="row">혜택 유형</th>
-                  <td>
-                    <div style={{ display: "flex" }}>
-                      <div>할인</div>
-                      <div>쿠폰</div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">혜택 이름</th>
-                  <td style={{ display: "flex" }}>
-                    <div>
-                      <input
-                        id="oname"
-                        className="inputTypeText"
-                        size="15"
-                        type="text"
-                      />
-                    </div>
-
-                    <div>
-                      <span>수량</span>
-                      <span>
-                        x{" "}
-                        <input
-                          id="oname"
-                          className="inputTypeText"
-                          size="1"
-                          type="text"
-                        />
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">할인 설정</th>
-                  <td>
-                    <input
-                      id="oname"
-                      className="inputTypeText"
-                      size="2"
-                      type="text"
-                    />
-                    % 최대{" "}
-                    <input
-                      id="oname"
-                      className="inputTypeText"
-                      size="10"
-                      type="text"
-                    />{" "}
-                    원 *최대 금액만 설정시 정액 할인
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">최소 주문 금액</th>
-                  <td>
-                    <input
-                      id="oname"
-                      className="inputTypeText"
-                      placeholder=""
-                      size="10"
-                      defaultValue=""
-                      type="text"
-                    />
-                    원
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">다운로드 가능 기간</th>
-                  <td>
-                    <input id="oname" className="inputTypeText" type="date" /> ~{" "}
-                    <input id="oname" className="inputTypeText" type="date" />
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">유효 기간</th>
-                  <td>
-                    <input id="oname" className="inputTypeText" type="date" /> ~{" "}
-                    <input id="oname" className="inputTypeText" type="date" />
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">적용 대상 지정</th>
-                  <td>
-                    {/* <table>
-                      <colgroup>
-                        <col style={{ width: "20%" }} />
-                        <col style={{ width: "40%" }} />
-                        <col style={{ width: "40%" }} />
-                      </colgroup>
-                      <thead>
-                        <th>카테고리</th>
-                        <th>상품명</th>
-                        <th>
-                          <input type="checkbox" />
-                        </th>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>혜택 이름</td>
-                          <td>혜택 이름</td>
-                          <td>혜택 이름</td>
-                        </tr>
-                      </tbody>
-                    </table> */}
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <ButtonComp context="혜택 등록하기" />
-                  </td>
-                  <td>
-                    <ButtonComp context="취소" />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            {Smenu == "혜택 등록" && <PromotionEnroll />}
+            {Smenu == "혜택 조회/수정" && <PromotionSearch />}
+            {/* {Smenu == "상품 등록" && <ProductEnroll />} */}
+            {Smenu == "상품 조회/수정" && <ProductSearch />}
           </div>
         </div>
       </div>
@@ -151,30 +54,22 @@ export default function admin() {
           .sidebar {
             display: inline-block;
             width: 15%;
-            height: 100%;
+            height: 110%;
             border-right: 1px solid;
           }
 
           .promotions {
             width: 100%;
             .title {
+              height: 8%;
               width: 100%;
+              padding: 15px 20px;
               border-bottom: 1px solid;
             }
 
             .contents {
-              height: 100%;
-
-              table {
-                width: 90%;
-                height: 90%;
-
-                margin: auto;
-
-                th {
-                  text-align: left;
-                }
-              }
+              height: 95%;
+              padding: 40px 30px;
             }
           }
         }
