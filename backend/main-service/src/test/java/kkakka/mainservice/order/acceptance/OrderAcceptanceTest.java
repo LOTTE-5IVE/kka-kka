@@ -21,6 +21,7 @@ import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.order.application.dto.ProductOrderDto;
 import kkakka.mainservice.order.ui.dto.OrderRequest;
+import kkakka.mainservice.review.ui.dto.ReviewRequest;
 import org.hibernate.Session;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -84,6 +85,8 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         //given
         String accessToken = 액세스_토큰_가져옴();
         주문_요청함(accessToken, PRODUCT_1.getId());
+        후기_작성함(accessToken, "test-review", PRODUCT_1.getId());
+
         주문_요청함(accessToken, PRODUCT_2.getId());
 
         //when
@@ -100,6 +103,28 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.body().as(List.class)).hasSize(2);
+    }
+
+    private void 후기_작성함(String accessToken, String contents, Long productId) {
+        final ReviewRequest reviewRequest = new ReviewRequest(contents);
+        final ExtractableResponse<Response> orderResponse = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/members/me/orders")
+                .then().log().all()
+                .extract();
+        final String productOrderId = orderResponse.body().path("[0].productOrders[0].id")
+                .toString();
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken)
+                .body(reviewRequest)
+                .when()
+                .post("/api/reviews?productOrder=" + productOrderId)
+                .then().log().all();
     }
 
     private void 주문_요청함(String accessToken, Long productId) {
