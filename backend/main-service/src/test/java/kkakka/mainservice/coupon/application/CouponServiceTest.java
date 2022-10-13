@@ -14,6 +14,7 @@ import kkakka.mainservice.coupon.domain.PriceRule;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
+import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.member.member.domain.Grade;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
@@ -84,10 +85,10 @@ public class CouponServiceTest {
 
         // when
         couponService.createCoupon(new CouponRequestDto(
-            null, null, Grade.GOLD, null,
+            null, Grade.GOLD, null,
             "test", "testCoupon", "GRADE_COUPON",
             LocalDateTime.now(), LocalDateTime.now(),
-            10, 2000, 10000, 0
+            10, 2000, 10000
         ));
 
         // then
@@ -198,7 +199,7 @@ public class CouponServiceTest {
         couponRepository.save(coupon3);
 
         // when
-        List<Coupon> coupons = couponService.findDownloadableCoupons(member.getId());
+        List<CouponResponseDto> coupons = couponService.findDownloadableCoupons(member.getId());
 
         // then
         assertThat(coupons.size()).isEqualTo(1);
