@@ -30,7 +30,7 @@ public class CartService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long addOrChangeCartItem(CartRequestDto cartRequestDto, LoginMember loginMember) {
+    public Long addCartItem(CartRequestDto cartRequestDto, LoginMember loginMember) {
         Member member = memberRepository.findById(loginMember.getId())
                 .orElseThrow(KkaKkaException::new);
         Product product = productRepository.findById(cartRequestDto.getProductId())

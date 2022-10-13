@@ -46,8 +46,16 @@ public class CartItem {
     }
 
     public void changeQuantity(int quantity) {
-        this.quantity = quantity;
-        this.price = product.getPrice() * quantity;
+        if (quantity < 0) {
+            return;
+        }
+        if (quantity == 0) {
+            this.quantity = quantity;
+            this.price = product.getPrice() * this.quantity;
+            return;
+        }
+        this.quantity += quantity;
+        this.price = product.getPrice() * this.quantity;
     }
 
     @Override

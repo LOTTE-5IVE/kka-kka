@@ -9,18 +9,44 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
+import org.hibernate.Session;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 class CartAcceptanceTest extends DocumentConfiguration {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @AfterEach
+    public void tearDown() {
+        entityManager.unwrap(Session.class)
+                .doWork(this::cleanUpTable);
+    }
+
+    private void cleanUpTable(Connection conn) throws SQLException {
+        Statement statement = conn.createStatement();
+        statement.executeUpdate("SET REFERENTIAL_INTEGRITY FALSE");
+
+        statement.executeUpdate("TRUNCATE TABLE cart_item");
+        statement.executeUpdate("TRUNCATE TABLE cart");
+
+        statement.executeUpdate("SET REFERENTIAL_INTEGRITY TRUE");
+    }
 
     @Test
     @DisplayName("장바구니 추가 - 성공")
@@ -120,7 +146,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
                         .filter(cartItemDto -> cartItemDto.getProductId().equals(PRODUCT_1.getId()))
                         .findAny().orElseThrow()
                         .getQuantity()
-        ).isEqualTo(3);
+        ).isEqualTo(4);
     }
 
     @Test

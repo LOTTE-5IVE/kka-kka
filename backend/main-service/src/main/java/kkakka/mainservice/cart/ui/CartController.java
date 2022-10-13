@@ -28,9 +28,9 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping
-    public ResponseEntity<Void> addOrChangeCartItem(@RequestBody CartRequestDto cartRequestDto,
+    public ResponseEntity<Void> addCartItem(@RequestBody CartRequestDto cartRequestDto,
             @AuthenticationPrincipal LoginMember loginMember) {
-        Long cartId = cartService.addOrChangeCartItem(cartRequestDto, loginMember);
+        Long cartId = cartService.addCartItem(cartRequestDto, loginMember);
         return ResponseEntity.created(URI.create(cartId.toString())).build();
     }
 
