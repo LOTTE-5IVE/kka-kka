@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import kkakka.mainservice.TestContext;
+import kkakka.mainservice.common.exception.OutOfStockException;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
@@ -112,9 +113,8 @@ class OrderServiceTest extends TestContext {
 
         //when
         //then
-        Assertions.assertThrows(IllegalStateException.class, () -> {
+        Assertions.assertThrows(OutOfStockException.class, () -> {
             orderService.order(OrderDto.create(member.getId(), orderRequest));
         });
     }
-
 }

@@ -3,6 +3,7 @@ package kkakka.mainservice.order.application;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.application.dto.OrderDto;
@@ -34,7 +35,6 @@ public class OrderService {
 
     @Transactional
     public Long order(OrderDto orderDto) {
-
         Long memberId = orderDto.getMemberId();
         List<ProductOrderDto> productOrderDtos = orderDto.getProductOrders();
         Member member = memberRepository.findById(memberId).orElseThrow();
@@ -45,14 +45,15 @@ public class OrderService {
             Long productId = productOrderDto.getProductId();
             Integer quantity = productOrderDto.getQuantity();
 
-            Product product = productRepository.findById(productId).get();
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(KkaKkaException::new);
             ProductOrder productOrder = ProductOrder.create(product, product.getPrice(), quantity);
 
             productOrders.add(productOrder);
             orderTotalPrice += productOrder.getTotalPrice();
         }
 
-        Order order = Order.create(member, productOrders, orderTotalPrice);
+        Order order = Order.create(member, orderTotalPrice, productOrders);
 
         orderRepository.save(order);
         productOrderRepository.saveAll(productOrders);
@@ -70,7 +71,7 @@ public class OrderService {
                                 .stream().map(productOrder -> ProductOrderResponse.create(
                                         productOrder.getId(),
                                         productOrder.getPrice(),
-                                        productOrder.getCount(),
+                                        productOrder.getQuantity(),
                                         ProductResponse.create(
                                                 productOrder.getProduct().getId(),
                                                 productOrder.getProduct().getName(),

@@ -39,6 +39,7 @@ public class Cart {
     }
 
     public void add(CartItem cartItem) {
+        cartItem.toCart(this);
         cartItems.add(cartItem);
     }
 

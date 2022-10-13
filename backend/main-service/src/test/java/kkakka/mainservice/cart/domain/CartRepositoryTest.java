@@ -102,6 +102,6 @@ public class CartRepositoryTest extends TestContext {
                 .orElseThrow();
         savedItem.changeQuantity(3);
 
-        assertThat(cart.getCartItems().get(0).getQuantity()).isEqualTo(3);
+        assertThat(cart.getCartItems().get(0).getQuantity()).isEqualTo(4);
     }
 }

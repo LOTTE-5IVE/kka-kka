@@ -63,7 +63,7 @@ public class DataLoader {
                         ProductOrder.create(testProduct, testProduct.getPrice(), 1),
                         ProductOrder.create(testProduct, testProduct.getPrice(), 1)
                 ));
-        orderRepository.save(Order.create(testMember, productOrders, testProduct.getPrice()));
+        orderRepository.save(Order.create(testMember, testProduct.getPrice(), productOrders));
         reviewRepository.save(Review.create("test-review1", testMember, productOrders.get(0)));
         reviewRepository.save(Review.create("test-review2", testMember, productOrders.get(1)));
         reviewRepository.save(Review.create("test-review3", testMember, productOrders.get(2)));

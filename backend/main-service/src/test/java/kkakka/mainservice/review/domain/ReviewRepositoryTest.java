@@ -68,7 +68,7 @@ public class ReviewRepositoryTest extends TestContext {
                 )
         );
         orderRepository.save(
-                Order.create(member, List.of(productOrder), product.getPrice()));
+                Order.create(member, product.getPrice(), List.of(productOrder)));
 
         final Review review = reviewRepository.save(
                 Review.create("test-review", member, productOrder)

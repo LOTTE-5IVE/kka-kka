@@ -60,11 +60,10 @@ public class Product {
     }
 
     public void reduceStock(int orderQuantity) {
-        int restStock = this.stock - orderQuantity;
-        this.stock = restStock;
+        this.stock -= orderQuantity;
     }
 
-    public boolean isStock(int quantity) {
+    public boolean inStock(int quantity) {
         return this.stock - quantity > 0;
     }
 

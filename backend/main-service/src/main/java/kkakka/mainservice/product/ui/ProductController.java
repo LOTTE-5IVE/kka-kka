@@ -27,10 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProductController {
 
-    private final ProductRepository productRepository;
     private final ProductService productService;
-    private final CategoryService categoryService;
-
 
     @GetMapping("/health_check")
     public String status() {

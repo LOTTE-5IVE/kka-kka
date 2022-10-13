@@ -100,8 +100,8 @@ public class TestDataLoader implements CommandLineRunner {
         final List<ProductOrder> productOrders = List.of(PRODUCT_ORDER_1, PRODUCT_ORDER_2,
                 PRODUCT_ORDER_3, PRODUCT_ORDER_4, PRODUCT_ORDER_5);
         ORDER = orderRepository.save(
-                Order.create(MEMBER, productOrders,
-                        productOrders.stream().mapToInt(ProductOrder::getPrice).sum())
+                Order.create(MEMBER, productOrders.stream().mapToInt(ProductOrder::getPrice).sum(),
+                        productOrders)
         );
     }
 }

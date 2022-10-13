@@ -58,6 +58,10 @@ public class CartItem {
         this.price = product.getPrice() * this.quantity;
     }
 
+    public void toCart(Cart cart) {
+        this.cart = cart;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
