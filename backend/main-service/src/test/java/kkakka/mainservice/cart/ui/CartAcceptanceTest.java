@@ -146,7 +146,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
                         .filter(cartItemDto -> cartItemDto.getProductId().equals(PRODUCT_1.getId()))
                         .findAny().orElseThrow()
                         .getQuantity()
-        ).isEqualTo(4);
+        ).isEqualTo(3);
     }
 
     @Test
