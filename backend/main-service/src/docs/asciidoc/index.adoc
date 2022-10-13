@@ -97,7 +97,7 @@ include::{actual-snippets}/showDetailProduct-fail/http-request.adoc[]
 include::{actual-snippets}/showDetailProduct-fail/http-response.adoc[]
 
 == Cart
-=== 카트조회 성공
+=== 장바구니 조회 성공
 
 - Request
 
@@ -107,7 +107,7 @@ include::{actual-snippets}/showMemberCartItems-success/http-request.adoc[]
 
 include::{actual-snippets}/showMemberCartItems-success/http-response.adoc[]
 
-=== 카트저장 성공
+=== 장바구니 저장 성공
 
 - Request
 
@@ -117,7 +117,17 @@ include::{actual-snippets}/saveCartItem-success/http-request.adoc[]
 
 include::{actual-snippets}/saveCartItem-success/http-response.adoc[]
 
-=== 카트조회 실패
+=== 장바구니 수량 변경 성공
+
+- Request
+
+include::{actual-snippets}/cart-item-change-success/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/cart-item-change-success/http-response.adoc[]
+
+=== 장바구니 조회 실패
 
 - Request
 
@@ -127,7 +137,7 @@ include::{actual-snippets}/saveCartItem-Fail/http-request.adoc[]
 
 include::{actual-snippets}/saveCartItem-Fail/http-response.adoc[]
 
-=== 카트삭제 성공
+=== 장바구니 삭제 성공
 
 - Request
 
