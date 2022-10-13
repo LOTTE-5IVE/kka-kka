@@ -1,6 +1,6 @@
 package kkakka.mainservice.member.acceptance;
 
-import static kkakka.mainservice.fixture.TestMember.MEMBER_01;
+import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
@@ -22,7 +22,7 @@ public class LoginAcceptanceTest extends DocumentConfiguration {
     void joinSuccess() {
         // given
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-                MEMBER_01.getCode(), MemberProviderName.TEST);
+                TEST_MEMBER_01.getCode(), MemberProviderName.TEST);
 
         // when
         final ExtractableResponse<Response> response = RestAssured
@@ -43,7 +43,7 @@ public class LoginAcceptanceTest extends DocumentConfiguration {
     void loginSuccess() {
         // given
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-                MEMBER_01.getCode(), MemberProviderName.TEST);
+                TEST_MEMBER_01.getCode(), MemberProviderName.TEST);
         회원가입_요청(request);
 
         // when

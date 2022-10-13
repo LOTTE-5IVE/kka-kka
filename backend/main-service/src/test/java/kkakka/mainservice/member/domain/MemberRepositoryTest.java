@@ -1,6 +1,6 @@
 package kkakka.mainservice.member.domain;
 
-import static kkakka.mainservice.fixture.TestMember.MEMBER_01;
+import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import kkakka.mainservice.TestContext;
@@ -25,12 +25,12 @@ public class MemberRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(MEMBER_01.getUserProfile().getId(),
+                        Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
                                 MemberProviderName.TEST),
-                        MEMBER_01.getName(),
-                        MEMBER_01.getEmail(),
-                        MEMBER_01.getPhone(),
-                        MEMBER_01.getAgeGroup()
+                        TEST_MEMBER_01.getName(),
+                        TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAgeGroup()
                 )
         );
 
@@ -49,12 +49,12 @@ public class MemberRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(MEMBER_01.getUserProfile().getId(),
+                        Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
                                 MemberProviderName.TEST),
-                        MEMBER_01.getName(),
-                        MEMBER_01.getEmail(),
-                        MEMBER_01.getPhone(),
-                        MEMBER_01.getAgeGroup()
+                        TEST_MEMBER_01.getName(),
+                        TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAgeGroup()
                 )
         );
 
@@ -64,7 +64,7 @@ public class MemberRepositoryTest extends TestContext {
 
         // then
         final Member updatedMember = memberRepository.findById(member.getId()).get();
-        assertThat(updatedMember.getName()).isEqualTo(MEMBER_01.getName());
+        assertThat(updatedMember.getName()).isEqualTo(TEST_MEMBER_01.getName());
     }
 
     @DisplayName("회원 이메일 수정 - 성공")
@@ -73,12 +73,12 @@ public class MemberRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(MEMBER_01.getUserProfile().getId(),
+                        Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
                                 MemberProviderName.TEST),
-                        MEMBER_01.getName(),
-                        MEMBER_01.getEmail(),
-                        MEMBER_01.getPhone(),
-                        MEMBER_01.getAgeGroup()
+                        TEST_MEMBER_01.getName(),
+                        TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAgeGroup()
                 )
         );
 
@@ -88,7 +88,7 @@ public class MemberRepositoryTest extends TestContext {
 
         // then
         final Member updatedMember = memberRepository.findById(member.getId()).get();
-        assertThat(updatedMember.getEmail()).isNotEqualTo(MEMBER_01.getEmail());
+        assertThat(updatedMember.getEmail()).isNotEqualTo(TEST_MEMBER_01.getEmail());
         assertThat(updatedMember.getEmail()).isEqualTo(member.getEmail());
     }
 
@@ -98,12 +98,12 @@ public class MemberRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(MEMBER_01.getUserProfile().getId(),
+                        Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
                                 MemberProviderName.TEST),
-                        MEMBER_01.getName(),
-                        MEMBER_01.getEmail(),
-                        MEMBER_01.getPhone(),
-                        MEMBER_01.getAgeGroup()
+                        TEST_MEMBER_01.getName(),
+                        TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAgeGroup()
                 )
         );
 
@@ -113,7 +113,7 @@ public class MemberRepositoryTest extends TestContext {
 
         // then
         final Member updatedMember = memberRepository.findById(member.getId()).get();
-        assertThat(updatedMember.getEmail()).isEqualTo(MEMBER_01.getEmail());
+        assertThat(updatedMember.getEmail()).isEqualTo(TEST_MEMBER_01.getEmail());
     }
 
     @DisplayName("회원 연락처 수정 - 성공")
@@ -122,12 +122,12 @@ public class MemberRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(MEMBER_01.getUserProfile().getId(),
+                        Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
                                 MemberProviderName.TEST),
-                        MEMBER_01.getName(),
-                        MEMBER_01.getEmail(),
-                        MEMBER_01.getPhone(),
-                        MEMBER_01.getAgeGroup()
+                        TEST_MEMBER_01.getName(),
+                        TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAgeGroup()
                 )
         );
 
@@ -137,7 +137,7 @@ public class MemberRepositoryTest extends TestContext {
 
         // then
         final Member updatedMember = memberRepository.findById(member.getId()).get();
-        assertThat(updatedMember.getPhone()).isNotEqualTo(MEMBER_01.getPhone());
+        assertThat(updatedMember.getPhone()).isNotEqualTo(TEST_MEMBER_01.getPhone());
         assertThat(updatedMember.getPhone()).isEqualTo(member.getPhone());
     }
 
@@ -147,12 +147,12 @@ public class MemberRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(MEMBER_01.getUserProfile().getId(),
+                        Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
                                 MemberProviderName.TEST),
-                        MEMBER_01.getName(),
-                        MEMBER_01.getEmail(),
-                        MEMBER_01.getPhone(),
-                        MEMBER_01.getAgeGroup()
+                        TEST_MEMBER_01.getName(),
+                        TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAgeGroup()
                 )
         );
 
@@ -162,6 +162,6 @@ public class MemberRepositoryTest extends TestContext {
 
         // then
         final Member updatedMember = memberRepository.findById(member.getId()).get();
-        assertThat(updatedMember.getPhone()).isEqualTo(MEMBER_01.getPhone());
+        assertThat(updatedMember.getPhone()).isEqualTo(TEST_MEMBER_01.getPhone());
     }
 }

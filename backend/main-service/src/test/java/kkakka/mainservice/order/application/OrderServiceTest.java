@@ -1,8 +1,8 @@
 package kkakka.mainservice.order.application;
 
-import static kkakka.mainservice.cart.TestDataLoader.PRODUCT_1;
-import static kkakka.mainservice.cart.TestDataLoader.PRODUCT_2;
-import static kkakka.mainservice.fixture.TestMember.MEMBER_01;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
+import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -47,11 +47,11 @@ class OrderServiceTest extends TestContext {
     void setUp() {
         member = memberRepository.save(
                 Member.create(
-                        Provider.create(MEMBER_01.getCode(), MemberProviderName.TEST),
-                        MEMBER_01.getUserProfile().getName(),
-                        MEMBER_01.getUserProfile().getEmail(),
-                        MEMBER_01.getUserProfile().getPhone(),
-                        MEMBER_01.getUserProfile().getAgeGroup()
+                        Provider.create(TEST_MEMBER_01.getCode(), MemberProviderName.TEST),
+                        TEST_MEMBER_01.getName(),
+                        TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAgeGroup()
                 )
         );
     }

@@ -22,9 +22,9 @@ import org.springframework.http.MediaType;
 
 import java.util.Optional;
 
-import static kkakka.mainservice.cart.TestDataLoader.MEMBER;
-import static kkakka.mainservice.cart.TestDataLoader.PRODUCT_1;
-import static kkakka.mainservice.fixture.TestMember.MEMBER_01;
+import static kkakka.mainservice.fixture.TestDataLoader.MEMBER;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
+import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
@@ -35,7 +35,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
     @Autowired
     private CartRepository cartRepository;
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
@@ -44,7 +44,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
     void testSaveCartItem() {
 
         //given
-        CartRequestDto cartRequestDto = new CartRequestDto(1L, 1L, 1, null);
+        CartRequestDto cartRequestDto = new CartRequestDto(MEMBER.getId(), PRODUCT_1.getId(), 1, null);
         final String accessToken = 액세스_토큰_가져옴();
 
         //when
@@ -60,12 +60,12 @@ class CartAcceptanceTest extends DocumentConfiguration {
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isNotNull();
     }
 
     @Test
     @DisplayName("장바구니 추가 실패")
     void testFailSaveCartItem() {
-
         //given
         CartRequestDto cartRequestDto = new CartRequestDto(MEMBER.getId(), 999L, 1, null);
         final String accessToken = 액세스_토큰_가져옴();
@@ -88,7 +88,6 @@ class CartAcceptanceTest extends DocumentConfiguration {
     @Test
     @DisplayName("장바구니 조회")
     void testShowMemberCartItemList() {
-
         //given
         final String accessToken = 액세스_토큰_가져옴();
 
@@ -98,7 +97,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/api/carts/")
+                .get("/api/carts")
                 .then()
                 .log().all().extract();
         //then
@@ -108,7 +107,6 @@ class CartAcceptanceTest extends DocumentConfiguration {
     @Test
     @DisplayName("장바구니 아이템 삭제")
     void testRemoveCartItem() {
-
         //given
         final String accessToken = 액세스_토큰_가져옴();
         long memberId = Long.parseLong(jwtTokenProvider.getPayload(accessToken));
@@ -142,7 +140,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
 
     private String 액세스_토큰_가져옴() {
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-                MEMBER_01.getCode(), MemberProviderName.TEST);
+                TEST_MEMBER_01.getCode(), MemberProviderName.TEST);
 
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()

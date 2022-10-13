@@ -1,7 +1,7 @@
 package kkakka.mainservice.product.acceptance;
 
-import static kkakka.mainservice.cart.TestDataLoader.CATEGORY;
-import static kkakka.mainservice.cart.TestDataLoader.PRODUCT_1;
+import static kkakka.mainservice.fixture.TestDataLoader.CATEGORY_1;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
@@ -52,7 +52,7 @@ public class ProductAcceptanceTest extends DocumentConfiguration {
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
                 .filter(document("showCategoryProducts-success"))
                 .when()
-                .get("/api/products?category=" + CATEGORY.getId())
+                .get("/api/products?category=" + CATEGORY_1.getId())
                 .then()
                 .log().all().extract();
 

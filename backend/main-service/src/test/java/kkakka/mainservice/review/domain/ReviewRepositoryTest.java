@@ -1,6 +1,6 @@
 package kkakka.mainservice.review.domain;
 
-import static kkakka.mainservice.fixture.TestMember.MEMBER_01;
+import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -47,11 +47,11 @@ public class ReviewRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(MEMBER_01.getProviderId(), MemberProviderName.TEST),
-                        MEMBER_01.getName(),
-                        MEMBER_01.getEmail(),
-                        MEMBER_01.getPhone(),
-                        MEMBER_01.getAgeGroup()
+                        Provider.create(TEST_MEMBER_01.getProviderId(), MemberProviderName.TEST),
+                        TEST_MEMBER_01.getName(),
+                        TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAgeGroup()
                 )
         );
         final Product product = productRepository.save(
@@ -67,8 +67,9 @@ public class ReviewRepositoryTest extends TestContext {
                         1
                 )
         );
-        final Order order = orderRepository.save(
+        orderRepository.save(
                 Order.create(member, List.of(productOrder), product.getPrice()));
+
         final Review review = reviewRepository.save(
                 Review.create("test-review", member, productOrder)
         );
@@ -76,8 +77,10 @@ public class ReviewRepositoryTest extends TestContext {
         // when
         final Page<Review> reviews = reviewRepository.findAllByProductId(product.getId(),
                 Pageable.unpaged());
+
         // then
         assertThat(reviews).hasSize(1);
+        assertThat(reviews).contains(review);
     }
 
 }
