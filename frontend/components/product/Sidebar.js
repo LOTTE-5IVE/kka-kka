@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../../components/common/NavBar";
 
-export default function Sidebar() {
-  const [tab, setTab] = useState("order");
-
+export default function Sidebar({ menu }) {
+  const [tab, setTab] = useState(menu);
   const router = useRouter();
   const category = (cat_id) => {
     router.push({
@@ -16,6 +15,10 @@ export default function Sidebar() {
     });
   };
 
+  useEffect(() => {
+    setTab(menu);
+  }, [menu]);
+
   return (
     <>
       <div className="contents">
@@ -23,9 +26,16 @@ export default function Sidebar() {
           <h2>과자모음</h2>
         </div>
         <ul>
-          <li onClick={() => setTab("0")}>
-            <Link href="/product?cat_id=1">
-              <a className={`${tab === "0" ? "active" : ""}`}>전체</a>
+          <li onClick={() => setTab("1")}>
+            <Link
+              href={{
+                pathname: "/product",
+                query: {
+                  cat_id: 1,
+                },
+              }}
+            >
+              <a className={`${tab === "1" ? "active" : ""}`}>전체</a>
             </Link>
           </li>
           <li onClick={() => setTab("2")}>

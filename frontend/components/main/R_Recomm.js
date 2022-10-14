@@ -23,7 +23,7 @@ export default function C_Recomm() {
       <style jsx>{`
         .contents {
           width: 70%;
-          height: 30vw;
+          /* height: 30vw; */
           margin: 3% auto 3%;
 
           .wrapper {

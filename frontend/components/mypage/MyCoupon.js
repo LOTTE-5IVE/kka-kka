@@ -43,6 +43,16 @@ export default function MyCoupon() {
                 ) : (
                   <MyCouponCard test="사용한" />
                 )}
+                <tr className="loadMore">
+                  <td
+                    colSpan="4"
+                    onClick={() => {
+                      console.log("loadMore clicked");
+                    }}
+                  >
+                    ▼ 더보기
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -74,23 +84,33 @@ export default function MyCoupon() {
                   border: 2px solid #e6e4e4;
                   border-right: 2px solid;
                   border-bottom: 2px solid;
+                  cursor: pointer;
                 }
 
                 .normalRight {
                   border: 2px solid #e6e4e4;
                   border-bottom: 2px solid;
+                  cursor: pointer;
                 }
 
                 .left {
                   color: #000;
                   border: 2px solid;
                   border-bottom: none;
+                  cursor: pointer;
                 }
 
                 .right {
                   color: #000;
                   border: 2px solid;
                   border-bottom: none;
+                  cursor: pointer;
+                }
+
+                .loadMore {
+                  text-align: center;
+                  border: 1px solid;
+                  cursor: pointer;
                 }
               }
             }
