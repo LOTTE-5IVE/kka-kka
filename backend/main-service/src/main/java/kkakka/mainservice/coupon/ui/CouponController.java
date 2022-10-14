@@ -2,8 +2,8 @@ package kkakka.mainservice.coupon.ui;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 import kkakka.mainservice.coupon.application.CouponService;
-import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
 import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
@@ -39,14 +39,14 @@ public class CouponController {
     /* 쿠폰 사용 - 삭제 */
     @PutMapping("/{couponId}")
     public ResponseEntity<Void> useCouponByAdmin(@PathVariable Long couponId) {
-        couponService.useCoupon(couponId);
+        couponService.useMemberCouponByCouponId(couponId);
         return ResponseEntity.ok().build();
     }
 
     /* 쿠폰 조회 */
     @GetMapping
     public ResponseEntity<List<CouponResponseDto>> findAllCoupons() {
-        List<CouponResponseDto> couponResponseDto = couponService.findAllCoupons();
+        List<CouponResponseDto> couponResponseDto = couponService.showAllCoupons();
         return ResponseEntity.status(HttpStatus.OK).body(couponResponseDto);
     }
 
@@ -69,9 +69,12 @@ public class CouponController {
 
     /* 사용 가능한 쿠폰 조회 */
     @GetMapping("/me")
-    public ResponseEntity<List<Coupon>> findUsableCoupons(
+    public ResponseEntity<List<CouponResponseDto>> findUsableCoupons(
         @AuthenticationPrincipal LoginMember loginMember) {
-        List<Coupon> coupons = couponService.findUsableCoupons(loginMember.getId());
+        List<CouponResponseDto> coupons = couponService.findUsableCoupons(loginMember.getId())
+            .stream()
+            .map(coupon -> CouponResponseDto.create(coupon))
+            .collect(Collectors.toList());
         return ResponseEntity.status(HttpStatus.OK).body(coupons);
     }
 }
