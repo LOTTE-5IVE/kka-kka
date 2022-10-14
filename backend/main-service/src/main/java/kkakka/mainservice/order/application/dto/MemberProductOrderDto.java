@@ -57,7 +57,7 @@ public class MemberProductOrderDto {
                         product.getDiscount()
                 ),
                 new MemberReviewDto(
-                        review.getId(), review.getContents(), review.getCreatedAt()
+                        review.getId(), review.getContents(), review.getRating(), review.getCreatedAt()
                 )
         );
     }
@@ -93,6 +93,7 @@ public class MemberProductOrderDto {
                 ReviewSimpleRespnse.create(
                         this.reviewDto.getId(),
                         this.reviewDto.getContents(),
+                        this.reviewDto.getRating(),
                         this.reviewDto.createdAt
                 )
         );
@@ -115,6 +116,7 @@ public class MemberProductOrderDto {
 
         private Long id;
         private String contents;
+        private Double rating;
         private LocalDateTime createdAt;
     }
 }

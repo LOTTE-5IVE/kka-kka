@@ -27,6 +27,7 @@ public class Review {
     private Long id;
 
     private String contents;
+    private Double rating;
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,8 +38,9 @@ public class Review {
     @JoinColumn(name = "product_order_id")
     private ProductOrder productOrder;
 
-    public static Review create(String contents, Member member, ProductOrder productOrder) {
-        return new Review(null, contents, LocalDateTime.now(), member, productOrder);
+    public static Review create(String contents, Double rating, Member member,
+            ProductOrder productOrder) {
+        return new Review(null, contents, rating, LocalDateTime.now(), member, productOrder);
     }
 
     public String getMemberName() {

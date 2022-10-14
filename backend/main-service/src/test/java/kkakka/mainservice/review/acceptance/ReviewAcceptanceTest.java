@@ -52,7 +52,7 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
         // given
         final String accessToken = 액세스_토큰_가져옴();
         final ProductOrder productOrder = PRODUCT_ORDER_1;
-        final ReviewRequest reviewRequest = new ReviewRequest("review test");
+        final ReviewRequest reviewRequest = new ReviewRequest("review test", 5.0);
 
         // when
         final ExtractableResponse<Response> response = RestAssured
@@ -75,7 +75,7 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
     void writeReview_fail() {
         // given
         final ProductOrder productOrder = PRODUCT_ORDER_1;
-        final ReviewRequest reviewRequest = new ReviewRequest("fail review");
+        final ReviewRequest reviewRequest = new ReviewRequest("fail review", 3.5);
 
         // when
         final ExtractableResponse<Response> response = RestAssured
@@ -99,7 +99,7 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
         final String accessToken = 액세스_토큰_가져옴();
         후기_작성함(accessToken, "review_01", PRODUCT_ORDER_1);
 
-        final ReviewRequest reviewRequest = new ReviewRequest("review product_1");
+        final ReviewRequest reviewRequest = new ReviewRequest("review product_1", 5.0);
 
         // when
         final ExtractableResponse<Response> response = RestAssured
@@ -146,7 +146,7 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
     }
 
     private void 후기_작성함(String accessToken, String contents, ProductOrder productOrder) {
-        final ReviewRequest reviewRequest = new ReviewRequest(contents);
+        final ReviewRequest reviewRequest = new ReviewRequest(contents, 5.0);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

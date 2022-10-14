@@ -15,10 +15,12 @@ public class ReviewSimpleRespnse {
 
     private Long id;
     private String contents;
+    private Double rating;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createdAt;
 
-    public static ReviewSimpleRespnse create(Long id, String contents, LocalDateTime createdAt) {
-        return new ReviewSimpleRespnse(id, contents, createdAt);
+    public static ReviewSimpleRespnse create(Long id, String contents, Double rating,
+            LocalDateTime createdAt) {
+        return new ReviewSimpleRespnse(id, contents, rating, createdAt);
     }
 }

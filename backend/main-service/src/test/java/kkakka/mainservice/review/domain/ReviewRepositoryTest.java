@@ -71,7 +71,7 @@ public class ReviewRepositoryTest extends TestContext {
                 Order.create(member, product.getPrice(), List.of(productOrder)));
 
         final Review review = reviewRepository.save(
-                Review.create("test-review", member, productOrder)
+                Review.create("test-review", 5.0, member, productOrder)
         );
 
         // when

@@ -64,13 +64,13 @@ public class DataLoader {
                         ProductOrder.create(testProduct, testProduct.getPrice(), 1)
                 ));
         orderRepository.save(Order.create(testMember, testProduct.getPrice(), productOrders));
-        reviewRepository.save(Review.create("test-review1", testMember, productOrders.get(0)));
-        reviewRepository.save(Review.create("test-review2", testMember, productOrders.get(1)));
-        reviewRepository.save(Review.create("test-review3", testMember, productOrders.get(2)));
-        reviewRepository.save(Review.create("test-review4", testMember, productOrders.get(3)));
-        reviewRepository.save(Review.create("test-review5", testMember, productOrders.get(4)));
-        reviewRepository.save(Review.create("test-review6", testMember, productOrders.get(5)));
-        reviewRepository.save(Review.create("test-review7", testMember, productOrders.get(6)));
+        reviewRepository.save(Review.create("test-review1", 5.0,  testMember, productOrders.get(0)));
+        reviewRepository.save(Review.create("test-review2", 3.5, testMember, productOrders.get(1)));
+        reviewRepository.save(Review.create("test-review3", 4.5, testMember, productOrders.get(2)));
+        reviewRepository.save(Review.create("test-review4", 4.0, testMember, productOrders.get(3)));
+        reviewRepository.save(Review.create("test-review5", 5.0, testMember, productOrders.get(4)));
+        reviewRepository.save(Review.create("test-review6", 2.5, testMember, productOrders.get(5)));
+        reviewRepository.save(Review.create("test-review7", 3.5, testMember, productOrders.get(6)));
     }
 
     private void saveUser() {

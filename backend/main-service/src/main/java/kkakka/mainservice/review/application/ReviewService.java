@@ -38,6 +38,7 @@ public class ReviewService {
 
         final Review review = Review.create(
                 reviewRequest.getContents(),
+                reviewRequest.getRating(),
                 memberRepository.findById(memberId).orElseThrow(),
                 productOrderRepository.findById(productOrderId).orElseThrow()
         );

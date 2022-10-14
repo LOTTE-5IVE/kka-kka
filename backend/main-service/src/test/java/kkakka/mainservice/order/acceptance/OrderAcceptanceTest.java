@@ -85,7 +85,7 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         //given
         String accessToken = 액세스_토큰_가져옴();
         주문_요청함(accessToken, PRODUCT_1.getId());
-        후기_작성함(accessToken, "test-review", PRODUCT_1.getId());
+        후기_작성함(accessToken, "test-review", 5.0, PRODUCT_1.getId());
 
         주문_요청함(accessToken, PRODUCT_2.getId());
 
@@ -105,8 +105,8 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         assertThat(response.body().as(List.class)).hasSize(2);
     }
 
-    private void 후기_작성함(String accessToken, String contents, Long productId) {
-        final ReviewRequest reviewRequest = new ReviewRequest(contents);
+    private void 후기_작성함(String accessToken, String contents, Double rating, Long productId) {
+        final ReviewRequest reviewRequest = new ReviewRequest(contents, rating);
         final ExtractableResponse<Response> orderResponse = RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
