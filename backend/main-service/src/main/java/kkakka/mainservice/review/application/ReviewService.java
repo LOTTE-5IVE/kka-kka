@@ -1,6 +1,8 @@
 package kkakka.mainservice.review.application;
 
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.exception.NotFoundMemberException;
+import kkakka.mainservice.common.exception.NotFoundProductException;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
 import kkakka.mainservice.review.application.dto.MemberDto;
@@ -39,8 +41,9 @@ public class ReviewService {
         final Review review = Review.create(
                 reviewRequest.getContents(),
                 reviewRequest.getRating(),
-                memberRepository.findById(memberId).orElseThrow(),
-                productOrderRepository.findById(productOrderId).orElseThrow()
+                memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new),
+                productOrderRepository.findById(productOrderId).orElseThrow(
+                        NotFoundProductException::new)
         );
         reviewRepository.save(review);
         return review.getId();
