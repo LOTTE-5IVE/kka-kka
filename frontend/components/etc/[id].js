@@ -4,12 +4,12 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { AdminButton } from "../components/admin/AdminButton";
-import Title from "../components/common/Title";
-import { CouponDown } from "../components/coupon/CouponDown";
-import { CouponModal } from "../components/coupon/CouponModal";
-import Info from "../components/product/Info";
-import Nutri from "../components/product/Nutri";
-import Review from "../components/product/Review";
+import Title from "../common/Title";
+import { CouponDown } from "../coupon/CouponDown";
+import { CouponModal } from "../coupon/CouponModal";
+import Info from "../product/Info";
+import Nutri from "../product/Nutri";
+import Review from "../product/Review";
 
 export default function productDetail() {
   const router = useRouter();

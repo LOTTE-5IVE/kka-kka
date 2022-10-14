@@ -1,11 +1,9 @@
-import Title from "../components/common/Title";
-import MyInfoCard from "../components/mypage/MyInfoCard";
-import Mysidebar from "../components/mypage/mysidebar";
+import MyInfoCard from "../../components/mypage/MyInfoCard";
+import Mysidebar from "../../components/mypage/mysidebar";
 
 export default function myOrder() {
   return (
     <>
-      <Title title="주문내역" />
       <div>
         <div className="contents">
           <div className="sidebar">

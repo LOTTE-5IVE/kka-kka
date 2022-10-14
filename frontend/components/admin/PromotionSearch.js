@@ -1,4 +1,4 @@
-import { AdminButton } from "./AdminButton";
+import { AdminButton } from "../common/Button/AdminButton";
 
 export default function ProductSearch() {
   return (

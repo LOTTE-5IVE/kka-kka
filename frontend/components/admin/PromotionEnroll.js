@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../common/Button";
+import Button from "../common/Button/Button";
 import ApplyGrade from "./ApplyGrade";
 import ApplyCategory from "./ApplyCategory";
 import ApplyProduct from "./ApplyProduct";
