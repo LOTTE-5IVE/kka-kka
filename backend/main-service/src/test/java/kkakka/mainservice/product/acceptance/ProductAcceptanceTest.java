@@ -82,5 +82,6 @@ public class ProductAcceptanceTest extends DocumentConfiguration {
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().path("[0].name").toString()).contains("제로");
     }
 }

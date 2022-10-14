@@ -26,7 +26,8 @@ public class ProductService {
 
     public ProductResponseDto getProductDetail(Long productId) {
 
-        Product productDetail = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
+        Product productDetail = productRepository.findById(productId)
+            .orElseThrow(KkaKkaException::new);
         return modelMapper.map(productDetail, ProductResponseDto.class);
     }
 
@@ -37,10 +38,10 @@ public class ProductService {
         Page<Product> randomProducts = productRepository.findAll(PageRequest.of(idx, 10));
 
         return ResponsePageDto.from(
-                randomProducts,
-                randomProducts.getContent().stream()
-                        .map(ResponseCategoryProducts::from)
-                        .collect(Collectors.toList())
+            randomProducts,
+            randomProducts.getContent().stream()
+                .map(ResponseCategoryProducts::from)
+                .collect(Collectors.toList())
         );
     }
 
@@ -58,11 +59,9 @@ public class ProductService {
             products.addAll(productRepository.findByName(searchWord));
         }
 
-        List<ProductResponseDto> productResponseDtos = products.stream()
+        return products.stream()
             .distinct()
             .map(ProductResponseDto::create)
             .collect(Collectors.toList());
-
-        return productResponseDtos;
     }
 }
