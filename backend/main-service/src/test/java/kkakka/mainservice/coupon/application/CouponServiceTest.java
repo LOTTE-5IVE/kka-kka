@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import kkakka.mainservice.TestContext;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.PriceRule;
@@ -27,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-public class CouponServiceTest {
+public class CouponServiceTest extends TestContext {
 
     @Autowired
     CouponService couponService;
@@ -59,7 +60,7 @@ public class CouponServiceTest {
 
         // when
         couponService.downloadCoupon(coupon.getId(), member.getId());
-        couponService.useCouponByMember(coupon.getId());
+        couponService.useCouponByMember(coupon.getId(), member.getId());
         MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponId(
             coupon.getId());
 
