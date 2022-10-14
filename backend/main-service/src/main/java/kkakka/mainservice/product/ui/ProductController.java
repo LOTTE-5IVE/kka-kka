@@ -7,6 +7,7 @@ import kkakka.mainservice.product.application.ProductService;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.product.ui.dto.ProductResponseDto;
 import kkakka.mainservice.product.ui.dto.SearchRequest;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,16 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/products")
+@AllArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
-
-    public ProductController(ProductService productService
-        , CategoryService categoryService) {
-        this.productService = productService;
-        this.categoryService = categoryService;
-    }
 
     @GetMapping("/health_check")
     public String status() {

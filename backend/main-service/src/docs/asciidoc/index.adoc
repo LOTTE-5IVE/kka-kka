@@ -6,6 +6,7 @@
 :toc: left
 :toclevels: 2
 :sectlinks:
+:actual-snippets: ./build/generated-snippets
 
 == Auth
 === 회원가입 & 로그인
@@ -88,11 +89,11 @@ include::{actual-snippets}/showDetailProduct-fail/http-response.adoc[]
 
 - Request
 
-include::./build/generated-snippets/products-show-search/http-request.adoc[]
+include::{actual-snippets}/products-show-search/http-request.adoc[]
 
 - Response
 
-include::./build/generated-snippets/products-show-search/http-response.adoc[]
+include::{actual-snippets}/products-show-search/http-response.adoc[]
 
 == Cart
 === 카트조회 성공
