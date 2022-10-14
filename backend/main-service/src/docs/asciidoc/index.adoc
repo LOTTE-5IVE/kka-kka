@@ -85,6 +85,16 @@ include::{actual-snippets}/showDetailProduct-fail/http-request.adoc[]
 
 include::{actual-snippets}/showDetailProduct-fail/http-response.adoc[]
 
+=== 검색
+
+- Request
+
+include::{actual-snippets}/products-show-search/http-request.adoc[]
+
+- Response
+
+include::{actual-snippets}/products-show-search/http-response.adoc[]
+
 == Cart
 === 카트조회 성공
 
