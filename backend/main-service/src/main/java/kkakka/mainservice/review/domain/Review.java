@@ -57,7 +57,7 @@ public class Review {
     }
 
     private static void validateRating(Double rating) {
-        if (rating < 0 || rating > 5.0 || (rating % 0.5 != 0.5 && rating % 0.5 != 0.0)) {
+        if (rating < 0.5 || rating > 5.0 || (rating % 0.5 != 0.5 && rating % 0.5 != 0.0)) {
             throw new InvalidArgumentException();
         }
     }

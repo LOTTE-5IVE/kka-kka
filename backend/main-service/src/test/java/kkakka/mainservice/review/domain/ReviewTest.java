@@ -44,7 +44,7 @@ public class ReviewTest extends TestContext {
 
     @DisplayName("상품후기 제약조건 테스트 - 성공")
     @ParameterizedTest
-    @ValueSource(doubles = {0.0, 0.5, 1.0, 2.5, 4.5, 5.0})
+    @ValueSource(doubles = {0.5, 1.0, 2.5, 4.5, 5.0})
     void createReview_success(Double input) {
         // given
         // when
@@ -56,7 +56,7 @@ public class ReviewTest extends TestContext {
 
     @DisplayName("상품후기 제약조건 테스트 - 실패")
     @ParameterizedTest
-    @ValueSource(doubles = {-0.1, -0.5, 0.1, 2.3, 5.1, 5.5, Double.MAX_VALUE})
+    @ValueSource(doubles = {-0.1, -0.5, 0.0, 0.1, 2.3, 5.1, 5.5, Double.MAX_VALUE})
     void createReview_fail(Double input) {
         // given
         // when
