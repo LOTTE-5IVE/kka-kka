@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/products")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
@@ -56,8 +56,9 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity showProductsBySearch(@RequestBody SearchRequest searchRequest) {
-
+    public ResponseEntity<List<ProductResponseDto>> showProductsBySearch(
+        @RequestBody SearchRequest searchRequest
+    ) {
         List<ProductResponseDto> productResponseDtos = productService.showProductsBySearch(
             searchRequest.toDto());
 
