@@ -45,17 +45,17 @@ public class Product {
     private Integer discount;
 
     @Column(nullable = false, updatable = false, insertable = false,
-            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+        columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private Date registeredAt;
 
     public Product(Long id, Category category, String name, int price, int stock, String imageUrl,
-            String detailImageUrl, String nutritionInfoUrl) {
+        String detailImageUrl, String nutritionInfoUrl) {
         this(id, category, name, price, stock, imageUrl, detailImageUrl, nutritionInfoUrl, 0,
-                new Date());
+            new Date());
     }
 
     public Product(Category category, String name, int price, int stock, String imageUrl,
-            String detailImageUrl) {
+        String detailImageUrl) {
         this(null, category, name, price, stock, imageUrl, detailImageUrl, "");
     }
 

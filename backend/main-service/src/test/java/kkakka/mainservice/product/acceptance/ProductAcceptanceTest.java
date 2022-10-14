@@ -9,9 +9,11 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import kkakka.mainservice.DocumentConfiguration;
+import kkakka.mainservice.product.ui.dto.SearchRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 public class ProductAcceptanceTest extends DocumentConfiguration {
 
@@ -75,5 +77,27 @@ public class ProductAcceptanceTest extends DocumentConfiguration {
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("검색 조회 - 성공")
+    @Test
+    void showProductsBySearchTest_success() {
+        //given
+        SearchRequest searchRequest = new SearchRequest("제로 쿠키");
+
+        //when
+        final ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .filter(document("products-show-search"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(searchRequest)
+            .when()
+            .get("/api/products/search")
+            .then().log().all()
+            .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().path("[0].name").toString()).contains("제로");
     }
 }
