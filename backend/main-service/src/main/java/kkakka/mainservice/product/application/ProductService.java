@@ -3,38 +3,45 @@ package kkakka.mainservice.product.application;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import kkakka.mainservice.common.config.MapperConfig;
 import kkakka.mainservice.product.SearchDto;
+import kkakka.mainservice.category.ui.dto.ResponseCategoryProducts;
+import kkakka.mainservice.common.dto.ResponsePageDto;
+import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.SearchWords;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.product.ui.dto.ProductResponseDto;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
+@AllArgsConstructor
 public class ProductService {
 
-    ProductRepository productRepository;
-
-    @Autowired
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    private final ProductRepository productRepository;
+    private final ModelMapper modelMapper;
 
     public ProductResponseDto getProductDetail(Long productId) {
 
-        Optional<Product> productDetail = productRepository.findById(productId);
+        Product productDetail = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
+        return modelMapper.map(productDetail, ProductResponseDto.class);
+    }
 
-        ModelMapper mapper = new MapperConfig().modelMapper();
-        ProductResponseDto result = mapper.map(productDetail.get(),
-            ProductResponseDto.class); // NPE 처리 필요
-        result.setCategoryName(productDetail.get().getCategory().getName());
+    public ResponsePageDto getProductByRand() {
 
-        return result;
+        Long qty = productRepository.countBy();
+        int idx = (int) ((Math.random() * qty) / 10);
+        Page<Product> randomProducts = productRepository.findAll(PageRequest.of(idx, 10));
+
+        return ResponsePageDto.from(
+                randomProducts,
+                randomProducts.getContent().stream()
+                        .map(ResponseCategoryProducts::from)
+                        .collect(Collectors.toList())
+        );
     }
 
     public List<ProductResponseDto> showProductsBySearch(SearchDto searchDto) {

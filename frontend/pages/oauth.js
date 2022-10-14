@@ -12,6 +12,9 @@ export default function oauth() {
     if (state.includes('kakao')) {
       return 'KAKAO'
     }
+    if (state.includes('google')) {
+      return 'GOOGLE'
+    }
   }
 
   const {code, state} = router.query;

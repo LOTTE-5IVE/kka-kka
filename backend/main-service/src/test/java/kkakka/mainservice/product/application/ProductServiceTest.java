@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.Date;
 import java.util.List;
+import kkakka.mainservice.TestContext;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.product.domain.Product;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-public class ProductServiceTest {
+public class ProductServiceTest extends TestContext {
 
     @Autowired
     ProductService productService;
