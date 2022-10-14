@@ -1,7 +1,9 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { AdminButton } from "../../components/admin/AdminButton";
-import ButtonComp from "../../components/common/buttonComp";
+import { AdminButton } from "../../components/common/Button/AdminButton";
+import ButtonComp from "../../components/common/Button/buttonComp";
 import DaumPost from "../../components/payment/DaumPost";
+import { useMoney } from "../../hooks/useMoney";
 
 export default function payment() {
   const [zipcode, setZipcode] = useState("");
@@ -10,6 +12,23 @@ export default function payment() {
   const [popup, setPopup] = useState(false);
   const [Selected, setSelected] = useState("");
   const [modal, setModal] = useState(false);
+  const [orderItems, setOrderItems] = useState([]);
+  const [buyItem, setBuyItem] = useState();
+  const [buyQuantity, setBuyQuantity] = useState();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+    if (router.query.orderItems)
+      setOrderItems(JSON.parse(router.query.orderItems));
+
+    if (router.query.buyItem) {
+      setBuyItem(JSON.parse(router.query.buyItem));
+      setBuyQuantity(router.query.quantity);
+    }
+  }, [router.isReady]);
 
   function modalHandler() {
     setModal(false);
@@ -49,43 +68,69 @@ export default function payment() {
                 <col style={{ width: "5%" }} />
               </colgroup>
               <tbody>
-                <tr>
-                  <td>
-                    <img width="96px" src="/sample.png" />
-                  </td>
-                  <td>몽쉘 생크림 오리지널 192g</td>
-                  <td>x2</td>
-                  <td>4,500원</td>
-                  <td>쿠폰적용</td>
-                </tr>
-                <tr>
-                  <td>
-                    <img width="96px" src="/sample.png" />
-                  </td>
-                  <td>몽쉘 생크림 오리지널 192g</td>
-                  <td>x2</td>
-                  <td>4,500원</td>
-                  <td>
-                    <div
-                      onClick={() => {
-                        setModal(true);
-                      }}
-                    >
-                      <AdminButton
-                        context="쿠폰적용"
-                        color="red"
-                        width="70px"
-                      />
-                    </div>
-                    {modal && (
-                      <CouponModal>
-                        <div>
-                          <CouponDown modalHandler={modalHandler} />
+                {buyItem && (
+                  <tr>
+                    <td>
+                      <img width="96px" src={buyItem.image_url} />
+                    </td>
+                    <td>{buyItem.name}</td>
+                    <td>x{buyQuantity}</td>
+                    <td>{useMoney(buyItem.price * buyQuantity)}원</td>
+                    <td>
+                      <div
+                        onClick={() => {
+                          setModal(true);
+                        }}
+                      >
+                        <AdminButton
+                          context="쿠폰적용"
+                          color="red"
+                          width="70px"
+                        />
+                      </div>
+                      {modal && (
+                        <CouponModal>
+                          <div>
+                            <CouponDown modalHandler={modalHandler} />
+                          </div>
+                        </CouponModal>
+                      )}
+                    </td>
+                  </tr>
+                )}
+
+                {orderItems?.map((product, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>
+                        <img width="96px" src={product.imageUrl} />
+                      </td>
+                      <td>{product.productName}</td>
+                      <td>x{product.quantity}</td>
+                      <td>{useMoney(product.price * product.quantity)}원</td>
+                      <td>
+                        <div
+                          onClick={() => {
+                            setModal(true);
+                          }}
+                        >
+                          <AdminButton
+                            context="쿠폰적용"
+                            color="red"
+                            width="70px"
+                          />
                         </div>
-                      </CouponModal>
-                    )}
-                  </td>
-                </tr>
+                        {modal && (
+                          <CouponModal>
+                            <div>
+                              <CouponDown modalHandler={modalHandler} />
+                            </div>
+                          </CouponModal>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

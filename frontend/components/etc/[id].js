@@ -3,13 +3,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { AdminButton } from "../components/admin/AdminButton";
-import Title from "../components/common/Title";
-import { CouponDown } from "../components/coupon/CouponDown";
-import { CouponModal } from "../components/coupon/CouponModal";
-import Info from "../components/product/Info";
-import Nutri from "../components/product/Nutri";
-import Review from "../components/product/Review";
+import { AdminButton } from "../../../components/admin/AdminButton";
+import Title from "../../../components/common/Title";
+import { CouponDown } from "../../../components/coupon/CouponDown";
+import { CouponModal } from "../../../components/coupon/CouponModal";
+import Info from "../../../components/product/Info";
+import Nutri from "../../../components/product/Nutri";
+import Review from "../../../components/product/Review";
 
 export default function productDetail() {
   const router = useRouter();
@@ -32,18 +32,17 @@ export default function productDetail() {
   }
 
   const getItem = async () => {
-    await axios.get(`http://localhost:9000/api/products/${pId}`).then((res) => {
-      setProduct(res.data);
-    });
+    await axios
+      .get(`http://localhost:9000/api/products/${productId}`)
+      .then((res) => {
+        setProduct(res.data);
+      });
   };
 
   useState(() => {
-    console.log("pid:" + { pId });
-    console.log("productId:" + { productId });
-    console.log(`http://localhost:9000/api/products/${pId}`);
-    setPId(productId);
+    console.log(`http://localhost:9000/api/products/${productId}`);
     getItem();
-  }, [product]);
+  }, [productId]);
 
   return (
     <>
@@ -59,8 +58,13 @@ export default function productDetail() {
             <div className="detailEtc" key={product.id}>
               <div className="headingArea">
                 <div className="headingAreaName">{product.name}</div>
-
-                <div className="headingDescription">{product.price}</div>
+                <div className="headingDescription">
+                  <p style={{ color: "#ed1b23" }}>{product.discount}%</p>
+                  <p>
+                    {product.price * (1 - 0.01 * product.discount)}원{" "}
+                    <span>{product.price}원</span>
+                  </p>
+                </div>
               </div>
               <div className="delivery">
                 <p>배송비</p> <p style={{ color: "#9a9a9a" }}>무료</p>
@@ -201,15 +205,25 @@ export default function productDetail() {
                 color: #3a3a3a;
                 font-weight: 700;
                 .headingAreaName {
-                  margin: 23px 0 50px;
+                  margin-top: 23px;
                 }
 
                 .headingDescription {
                   font-size: 32px;
                   margin: 28px 0 0;
-                  height: 70px;
+                  height: 140px;
                   padding-bottom: 30px;
                   border-bottom: 1px solid #e5e5e5;
+
+                  p {
+                    margin: 0;
+
+                    span {
+                      font-size: 24px;
+                      color: #c2c2c2;
+                      text-decoration: line-through;
+                    }
+                  }
                 }
               }
               .delivery {
@@ -366,4 +380,10 @@ export default function productDetail() {
       `}</style>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  return {
+    props: {},
+  };
 }

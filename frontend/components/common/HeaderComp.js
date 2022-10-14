@@ -1,7 +1,8 @@
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useGetToken } from "../../hooks/useGetToken";
+import { useMemberInfo } from "../../hooks/useMemberInfo";
 
 export default function Header() {
   const [value, setValue] = useState("");
@@ -16,35 +17,16 @@ export default function Header() {
     }
   }
 
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
-
-  const getMemberName = async () => {
-    console.log("test");
-    await axios
-      .get(`/api/members/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        setName(res.data.name);
-        setGrade(res.data.grade);
-      });
-  };
-
   useEffect(() => {
-    const objString = localStorage.getItem("accessToken");
-    const obj = JSON.parse(objString);
+    setToken(useGetToken());
 
-    if (obj && new Date().getTime() > obj.expire) {
-      localStorage.removeItem("accessToken");
-      setToken("");
-    } else if (obj) {
-      setToken(obj.value);
-
-      getMemberName(obj.value);
+    if (token !== "") {
+      useMemberInfo(token).then((res) => {
+        if (res) {
+          setName(res.name);
+          setGrade(res.grade);
+        }
+      });
     }
   }, [token]);
 

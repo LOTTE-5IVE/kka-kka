@@ -1,14 +1,14 @@
-export function CouponDown({ modalHandler }) {
+export function CouponDown({ handleModal }) {
   return (
     <>
       <div className="wrapper">
         <div
           style={{ display: "flex", justifyContent: "end" }}
           onClick={() => {
-            modalHandler();
+            handleModal();
           }}
         >
-          <img width="24px" src="/cancel.png" />
+          <img width="24px" src="/common/cancel.png" />
         </div>
         <div className="container">
           <h3>전체 쿠폰</h3>

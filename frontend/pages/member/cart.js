@@ -1,50 +1,94 @@
 import Link from "next/link";
-import { useState } from "react";
-import { AdminButton } from "../../components/admin/AdminButton";
-import ButtonComp from "../../components/common/buttonComp";
+import { useEffect, useState } from "react";
+import { DeleteHApi, GetHApi } from "../../apis/Apis";
+import { AdminButton } from "../../components/common/Button/AdminButton";
+import ButtonComp from "../../components/common/Button/buttonComp";
 import Title from "../../components/common/Title";
 import { CouponDown } from "../../components/coupon/CouponDown";
 import { CouponModal } from "../../components/coupon/CouponModal";
-import SNSButton from "../../components/member/SNSButton";
+import { useGetToken } from "../../hooks/useGetToken";
+import { useMoney } from "../../hooks/useMoney";
 
 export default function cart() {
-  const [quantity, setQuantity] = useState(1);
+  const [token, setToken] = useState("");
   const [modal, setModal] = useState(false);
-  const data = [
-    { id: 0, title: "선택 1" },
-    { id: 1, title: "선택 2" },
-    { id: 2, title: "선택 3" },
-    { id: 3, title: "선택 4" },
-  ];
-
+  const [cartItems, setCartItems] = useState([]);
+  const [checkItemsIdx, setCheckItemsIdx] = useState([]);
   const [checkItems, setCheckItems] = useState([]);
 
-  const handleSingleCheck = (checked, id) => {
+  const handleSingleCheck = (checked, product) => {
     if (checked) {
-      setCheckItems((prev) => [...prev, id]);
+      setCheckItems((prev) => [...prev, product]);
+      setCheckItemsIdx((prev) => [...prev, product.id]);
     } else {
-      setCheckItems(checkItems.filter((el) => el !== id));
+      setCheckItems(checkItems.filter((el) => el !== product));
+      setCheckItemsIdx(checkItemsIdx.filter((el) => el !== product.id));
     }
   };
 
   const handleAllCheck = (checked) => {
     if (checked) {
       const idArray = [];
-      data.forEach((el) => idArray.push(el.id));
-      setCheckItems(idArray);
+      const itemArry = [];
+      cartItems.forEach((el) => {
+        idArray.push(el.id);
+        itemArry.push(el);
+      });
+
+      setCheckItems(itemArry);
+      setCheckItemsIdx(idArray);
     } else {
       setCheckItems([]);
+      setCheckItemsIdx([]);
     }
   };
 
   function modalHandler() {
     setModal(false);
   }
-  const handleQuantity = (type) => {
-    if (type !== "minus" || quantity > 1) {
-      type === "plus" ? setQuantity(quantity + 1) : setQuantity(quantity - 1);
-    }
+
+  const handlePlus = (id) => {
+    setCartItems(
+      cartItems.map((product) =>
+        product.productId === id
+          ? { ...product, quantity: product.quantity + 1 }
+          : product,
+      ),
+    );
   };
+
+  const handleMinus = (id) => {
+    setCartItems(
+      cartItems.map((product) =>
+        product.productId === id && product.quantity > 1
+          ? { ...product, quantity: product.quantity - 1 }
+          : product,
+      ),
+    );
+  };
+
+  const getCartItem = async () => {
+    GetHApi("/api/carts", token).then((res) => {
+      if (res) {
+        setCartItems(res.cartItems);
+        console.log(res.cartItems);
+      }
+    });
+  };
+
+  const removeCartItem = async (id) => {
+    DeleteHApi(`/api/carts/${id}`, token).then((res) => {
+      getCartItem();
+    });
+  };
+
+  useEffect(() => {
+    setToken(useGetToken());
+
+    if (token !== "") {
+      getCartItem();
+    }
+  }, [token]);
 
   return (
     <>
@@ -68,12 +112,20 @@ export default function cart() {
               <thead>
                 <tr style={{ height: "3vw" }}>
                   <th scope="col">
-                    <input
-                      type="checkbox"
-                      name="select-all"
-                      onChange={(e) => handleAllCheck(e.target.checked)}
-                      checked={checkItems.length === data.length ? true : false}
-                    />
+                    {cartItems ? (
+                      <input
+                        type="checkbox"
+                        name="select-all"
+                        onChange={(e) => handleAllCheck(e.target.checked)}
+                        checked={
+                          checkItemsIdx.length === cartItems.length
+                            ? true
+                            : false
+                        }
+                      />
+                    ) : (
+                      <input type="checkbox" checked={false} />
+                    )}
                   </th>
                   <th scope="col">이미지</th>
                   <th scope="col">상품정보</th>
@@ -84,77 +136,91 @@ export default function cart() {
                 </tr>
               </thead>
               <tbody>
-                <tr style={{ height: "6vw" }}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      name={`select-${data.id}`}
-                      onChange={(e) =>
-                        handleSingleCheck(e.target.checked, data.id)
-                      }
-                      checked={checkItems.includes(data.id) ? true : false}
-                    />
-                  </td>
-                  <td>
-                    <img width="50px" src="/sample.png" />
-                  </td>
-                  <td>
-                    <div>몽쉘 생크림 오리지널 192g</div>
-                    <div className="couponWrapper">
-                      <div className="couponContents">
-                        <span>coupon</span>{" "}
+                {cartItems?.map((product, index) => {
+                  return (
+                    <tr key={product.productId} style={{ height: "6vw" }}>
+                      <td>
                         <input
-                          type="text"
-                          size="15"
-                          defaultValue="뭐시기 쿠폰"
-                          readOnly
+                          type="checkbox"
+                          name={`select-${product.id}`}
+                          onChange={(e) =>
+                            handleSingleCheck(e.target.checked, product)
+                          }
+                          checked={
+                            checkItemsIdx.includes(product.id) ? true : false
+                          }
                         />
-                      </div>
-                      <div>
-                        <div
-                          onClick={() => {
-                            setModal(true);
-                          }}
-                        >
-                          <AdminButton
-                            context="쿠폰적용"
-                            color="#05c7f2"
-                            width="60px"
-                          />
-                        </div>
-                        {modal && (
-                          <CouponModal>
-                            <div>
-                              <CouponDown modalHandler={modalHandler} />
+                      </td>
+                      <td>
+                        <img width="50px" src={product.imageUrl} />
+                      </td>
+                      <td>
+                        <div>{product.productName}</div>
+                        <div className="couponWrapper">
+                          <div className="couponContents">
+                            <span>coupon</span>{" "}
+                            <input
+                              type="text"
+                              size="15"
+                              defaultValue="뭐시기 쿠폰"
+                              readOnly
+                            />
+                          </div>
+                          <div>
+                            <div
+                              onClick={() => {
+                                setModal(true);
+                              }}
+                            >
+                              <AdminButton
+                                context="쿠폰적용"
+                                color="#05c7f2"
+                                width="60px"
+                              />
                             </div>
-                          </CouponModal>
-                        )}
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span>
-                      <input
-                        type="button"
-                        onClick={() => handleQuantity("minus")}
-                        value="-"
-                        style={{ marginRight: "15px" }}
-                      />
-                      <span>{quantity}</span>
-                      <input
-                        type="button"
-                        onClick={() => handleQuantity("plus")}
-                        value="+"
-                        style={{ marginLeft: "15px" }}
-                      />
-                    </span>
-                  </td>
-                  <td>무료</td>
-                  <td>4,500원</td>
-                  <td>
-                    <img width="20px" src="/cancelred.png" />
-                  </td>
-                </tr>
+                            {modal && (
+                              <CouponModal>
+                                <div>
+                                  <CouponDown modalHandler={modalHandler} />
+                                </div>
+                              </CouponModal>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span>
+                          <input
+                            type="button"
+                            onClick={() => {
+                              handleMinus(product.productId);
+                            }}
+                            value="-"
+                            style={{ marginRight: "15px" }}
+                          />
+                          <span>{product.quantity}</span>
+                          <input
+                            type="button"
+                            onClick={() => {
+                              handlePlus(product.productId);
+                            }}
+                            value="+"
+                            style={{ marginLeft: "15px" }}
+                          />
+                        </span>
+                      </td>
+                      <td>무료</td>
+                      <td>{useMoney(product.price * product.quantity)}원</td>
+                      <td
+                        onClick={() => {
+                          removeCartItem(product.id);
+                        }}
+                      >
+                        <img width="20px" src="/common/cancelred.png" />
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -179,7 +245,11 @@ export default function cart() {
               </thead>
               <tbody>
                 <tr style={{ height: "7vw" }}>
-                  <td>상품금액</td>
+                  <td>
+                    {checkItems.map((product, index) => {
+                      return <span key={index}> {product.id}</span>;
+                    })}
+                  </td>
                   <td>-</td>
                   <td>할인금액</td>
                   <td>=</td>
@@ -190,12 +260,28 @@ export default function cart() {
           </div>
         </div>
         <div className="order-btn">
-          <Link href="/payment">
+          <Link
+            href={{
+              pathname: `/payment`,
+              query: { orderItems: JSON.stringify(cartItems) },
+            }}
+            as={`/payment`}
+          >
             <a>
               <ButtonComp context="전체상품 주문" />
             </a>
           </Link>
-          <ButtonComp context="선택상품 주문" />
+          <Link
+            href={{
+              pathname: `/payment`,
+              query: { orderItems: JSON.stringify(checkItems) },
+            }}
+            as={`/payment`}
+          >
+            <a>
+              <ButtonComp context="선택상품 주문" />
+            </a>
+          </Link>
         </div>
       </div>
       <style jsx>{`
