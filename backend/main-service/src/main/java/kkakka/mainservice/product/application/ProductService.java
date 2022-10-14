@@ -1,34 +1,44 @@
 package kkakka.mainservice.product.application;
 
+import java.util.Optional;
+import java.util.stream.Collectors;
+import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.category.ui.dto.ResponseCategoryProducts;
 import kkakka.mainservice.common.dto.ResponsePageDto;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.product.application.dto.ProductDto;
+import kkakka.mainservice.product.application.dto.ProductDto.CategoryDto;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
-import kkakka.mainservice.product.ui.dto.ProductResponseDto;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final ModelMapper modelMapper;
+    private final CategoryRepository categoryRepository;
 
-    public ProductResponseDto getProductDetail(Long productId) {
-
-        Product productDetail = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
-        return modelMapper.map(productDetail, ProductResponseDto.class);
+    public ProductDto showProductDetail(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(KkaKkaException::new);
+        return new ProductDto(
+                product.getId(),
+                new CategoryDto(product.getCategoryId(), product.getCategoryName()),
+                product.getName(),
+                product.getPrice(),
+                product.getStock(),
+                product.getImageUrl(),
+                product.getDetailImageUrl(),
+                product.getNutritionInfoUrl(),
+                product.getDiscount());
     }
 
     public ResponsePageDto getProductByRand() {
-
         Long qty = productRepository.countBy();
         int idx = (int) ((Math.random() * qty) / 10);
         Page<Product> randomProducts = productRepository.findAll(PageRequest.of(idx, 10));
@@ -39,5 +49,48 @@ public class ProductService {
                         .map(ResponseCategoryProducts::from)
                         .collect(Collectors.toList())
         );
+    }
+
+    public Page<ProductDto> showAllProductsWithCategory(Optional<Long> categoryId,
+            Pageable pageable) {
+        if (categoryIsEmpty(categoryId)) {
+            return productRepository.findAll(pageable)
+                    .map(product -> new ProductDto(
+                            product.getId(),
+                            new CategoryDto(product.getCategoryId(), product.getCategoryName()),
+                            product.getName(),
+                            product.getPrice(),
+                            product.getStock(),
+                            product.getImageUrl(),
+                            product.getDetailImageUrl(),
+                            product.getNutritionInfoUrl(),
+                            product.getDiscount()
+                    ));
+        }
+        return showAllProductsByCategory(categoryId.get(), pageable);
+    }
+
+    private Page<ProductDto> showAllProductsByCategory(Long categoryId,
+            Pageable pageable) {
+        return productRepository.findByCategoryId(categoryId, pageable)
+                .map(product -> new ProductDto(
+                        product.getId(),
+                        new CategoryDto(product.getCategoryId(), product.getCategoryName()),
+                        product.getName(),
+                        product.getPrice(),
+                        product.getStock(),
+                        product.getImageUrl(),
+                        product.getDetailImageUrl(),
+                        product.getNutritionInfoUrl(),
+                        product.getDiscount()
+                ));
+    }
+
+    private boolean categoryIsEmpty(Optional<Long> categoryId) {
+        if (categoryId.isEmpty()) {
+            return true;
+        }
+        return categoryRepository.findById(categoryId.get())
+                .isEmpty();
     }
 }

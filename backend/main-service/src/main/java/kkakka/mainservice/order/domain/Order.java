@@ -12,11 +12,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import kkakka.mainservice.member.member.domain.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "`ORDER`")
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Order {
 
     @Id
@@ -35,29 +39,15 @@ public class Order {
     @OneToMany(mappedBy = "order")
     private List<ProductOrder> productOrders;
 
-    public Order() {
-
-    }
-
     public void addProductOrder(ProductOrder productOrder) {
         productOrder.setOrder(this);
     }
 
-    public static Order create(Member member, List<ProductOrder> productOrders, int totalPrice) {
-
-        Order order = new Order(null, member, LocalDateTime.now(), totalPrice);
-
+    public static Order create(Member member, int totalPrice, List<ProductOrder> productOrders) {
+        Order order = new Order(null, member, LocalDateTime.now(), totalPrice, productOrders);
         for (ProductOrder productOrder : productOrders) {
             order.addProductOrder(productOrder);
         }
-
         return order;
-    }
-
-    public Order(Long id, Member member, LocalDateTime orderedAt, Integer totalPrice) {
-        this.id = id;
-        this.member = member;
-        this.orderedAt = orderedAt;
-        this.totalPrice = totalPrice;
     }
 }

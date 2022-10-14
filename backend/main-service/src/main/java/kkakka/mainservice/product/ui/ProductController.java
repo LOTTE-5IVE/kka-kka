@@ -1,11 +1,18 @@
 package kkakka.mainservice.product.ui;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import kkakka.mainservice.category.application.CategoryService;
-import kkakka.mainservice.common.dto.ResponsePageDto;
+import kkakka.mainservice.common.dto.PageInfo;
+import kkakka.mainservice.common.dto.PageableResponse;
 import kkakka.mainservice.product.application.ProductService;
+import kkakka.mainservice.product.application.dto.ProductDto;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.product.ui.dto.ProductResponseDto;
+import kkakka.mainservice.product.ui.dto.ProductResponseDto.CategoryResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProductController {
 
-    private final ProductRepository productRepository;
     private final ProductService productService;
-    private final CategoryService categoryService;
-
 
     @GetMapping("/health_check")
     public String status() {
@@ -33,23 +37,51 @@ public class ProductController {
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponseDto> showProductDetail(
             @PathVariable("productId") Long productId) {
-
-        ProductResponseDto responseDto = productService.getProductDetail(productId);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+        ProductDto productDto = productService.showProductDetail(productId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ProductResponseDto(
+                        productDto.getId(),
+                        new CategoryResponse(productDto.getCategoryId(),
+                                productDto.getCategoryName()),
+                        productDto.getName(),
+                        productDto.getPrice(),
+                        productDto.getStock(),
+                        productDto.getImageUrl(),
+                        productDto.getDetailImageUrl(),
+                        productDto.getNutritionInfoUrl(),
+                        productDto.getDiscount()
+                )
+        );
     }
 
-    @GetMapping("/products")
-    public ResponseEntity<ResponsePageDto> showCategoryProducts(
-            @RequestParam("category") Long categoryId, Pageable pageable) {
+    @GetMapping
+    public ResponseEntity<PageableResponse<List<ProductResponseDto>>> showAllProducts(
+            @RequestParam(value = "category", required = false) Long categoryId,
+            Pageable pageable) {
+        final Page<ProductDto> productDtos = productService.showAllProductsWithCategory(
+                Optional.ofNullable(categoryId), pageable);
 
-        ResponsePageDto response = categoryService.getProductsByCategoryId(categoryId, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
+        final List<ProductResponseDto> response = productDtos
+                .map(productDto -> new ProductResponseDto(
+                        productDto.getId(),
+                        new CategoryResponse(productDto.getCategoryId(),
+                                productDto.getCategoryName()),
+                        productDto.getName(),
+                        productDto.getPrice(),
+                        productDto.getStock(),
+                        productDto.getImageUrl(),
+                        productDto.getDetailImageUrl(),
+                        productDto.getNutritionInfoUrl(),
+                        productDto.getDiscount()
+                )).stream().collect(Collectors.toList());
 
-    @GetMapping("/all")
-    public ResponseEntity<ResponsePageDto> showALlOfProducts() {
+        final PageInfo pageInfo = PageInfo.from(
+                pageable.getPageNumber(),
+                productDtos.getTotalPages(),
+                pageable.getPageSize(),
+                productDtos.getTotalElements()
+        );
 
-        ResponsePageDto response = productService.getProductByRand();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(PageableResponse.from(response, pageInfo));
     }
 }
