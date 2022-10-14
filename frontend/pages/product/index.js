@@ -25,18 +25,6 @@ export default function productCidList() {
     return <h2>Loading...</h2>;
   }
 
-  // const getCatItems = async () => {
-  //   await axios
-  //     .get(`http://localhost:9000/api/products/products?category=${cat_id}`)
-  //     .then((res) => {
-  //       setState(res.data);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getCatItems();
-  // }, [cat_id]);
-
   return (
     <>
       <Title title="상품목록" />

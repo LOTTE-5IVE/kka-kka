@@ -1,13 +1,4 @@
 import axios from "axios";
-
-import { AdminButton } from "../../../components/admin/AdminButton";
-import Title from "../../../components/common/Title";
-import { CouponDown } from "../../../components/coupon/CouponDown";
-import { CouponModal } from "../../../components/coupon/CouponModal";
-import Info from "../../../components/product/Info";
-import Nutri from "../../../components/product/Nutri";
-import Review from "../../../components/product/Review";
-
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { PostHApi } from "../../../apis/Apis";
