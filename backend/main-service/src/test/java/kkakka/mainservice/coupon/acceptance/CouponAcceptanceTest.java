@@ -125,10 +125,25 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         assertThat(response.body()).isNotNull();
     }
 
-    @DisplayName("쿠폰 사용(삭제) - 성공")
+    @DisplayName("일반쿠폰 삭제 - 성공")
     @Test
-    void useCouponByAdmin() {
+    void deleteCouponByAdmin() {
         String coupon = 일반_쿠폰_생성함();
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .when()
+            .put("/api/coupons/" + coupon)
+            .then().log().all().extract();
+
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("다운받은 쿠폰 삭제 - 성공")
+    @Test
+    void deleteMemberCouponByAdmin() {
+        String accessToken = 액세스_토큰_가져옴();
+        String coupon = 쿠폰_다운로드(accessToken);
 
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
@@ -229,7 +244,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         return response.body().jsonPath().get("accessToken");
     }
 
-    private void 쿠폰_다운로드(String accessToken) {
+    private String 쿠폰_다운로드(String accessToken) {
         String couponId = 일반_쿠폰_생성함();
 
         final ExtractableResponse<Response> response = RestAssured
@@ -238,5 +253,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
             .when()
             .post("/api/coupons/download/" + couponId)
             .then().log().all().extract();
+
+        return couponId;
     }
 }

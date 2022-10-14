@@ -61,11 +61,10 @@ public class CouponServiceTest extends TestContext {
         // when
         couponService.downloadCoupon(coupon.getId(), member.getId());
         couponService.useCouponByMember(coupon.getId(), member.getId());
-        MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponId(
-            coupon.getId());
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllMemberCouponByCouponId(coupon.getId());
 
         // then
-        assertThat(memberCoupon.getIsUsed()).isEqualTo(true);
+        assertThat(memberCoupons.get(0).getIsUsed()).isEqualTo(true);
     }
 
     @DisplayName("등급쿠폰 생성 테스트 - 성공")

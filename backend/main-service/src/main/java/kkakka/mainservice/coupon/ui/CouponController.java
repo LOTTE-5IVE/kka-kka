@@ -36,10 +36,10 @@ public class CouponController {
         return ResponseEntity.created(URI.create(couponId.toString())).build();
     }
 
-    /* 쿠폰 사용 - 삭제 */
+    /* 쿠폰 삭제 */
     @PutMapping("/{couponId}")
-    public ResponseEntity<Void> useCouponByAdmin(@PathVariable Long couponId) {
-        couponService.useMemberCouponByCouponId(couponId);
+    public ResponseEntity<Void> deleteCouponByAdmin(@PathVariable Long couponId) {
+        couponService.deleteCouponByCouponId(couponId);
         return ResponseEntity.ok().build();
     }
 

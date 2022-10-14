@@ -21,3 +21,5 @@ ALTER TABLE coupon
 
 ALTER TABLE coupon
     ADD CONSTRAINT FK_COUPON_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES product (id);
+
+ALTER TABLE coupon ADD is_deleted BIT(1);

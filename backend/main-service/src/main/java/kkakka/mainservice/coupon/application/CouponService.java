@@ -99,10 +99,17 @@ public class CouponService {
     }
 
     @Transactional
-    public void useMemberCouponByCouponId(Long couponId) {
-        MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponId(couponId);
-        memberCoupon.useCoupon();
-        memberCouponRepository.save(memberCoupon);
+    public void deleteCouponByCouponId(Long couponId) {
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
+        coupon.deleteCoupon();
+        couponRepository.save(coupon);
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllMemberCouponByCouponId(
+            couponId);
+        if (!memberCoupons.isEmpty()) {
+            for (MemberCoupon memberCoupon : memberCoupons) {
+                memberCouponRepository.delete(memberCoupon);
+            }
+        }
     }
 
     public List<CouponResponseDto> showAllCoupons() {
@@ -129,7 +136,8 @@ public class CouponService {
         Coupon coupon = couponRepository.findById(couponId)
             .orElseThrow(KkaKkaException::new);
         if (coupon.isNotExpired()) {
-            MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponIdAndMemberId(memberId, couponId);
+            MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponIdAndMemberId(
+                couponId, memberId);
             memberCoupon.useCoupon();
             memberCouponRepository.save(memberCoupon);
         }
@@ -157,6 +165,7 @@ public class CouponService {
     }
 
     private boolean isDownloadable(Coupon coupon) {
-        return coupon.isNotExpired() && coupon.getPriceRule().equals(PriceRule.COUPON);
+        return coupon.isNotExpired() && coupon.getPriceRule().equals(PriceRule.COUPON)
+            && !coupon.isDeleted();
     }
 }
