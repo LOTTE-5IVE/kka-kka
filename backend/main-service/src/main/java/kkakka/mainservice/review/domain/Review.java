@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import kkakka.mainservice.common.exception.InvalidArgumentException;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.order.domain.ProductOrder;
 import lombok.AccessLevel;
@@ -40,11 +41,26 @@ public class Review {
 
     public static Review create(String contents, Double rating, Member member,
             ProductOrder productOrder) {
+        validateContents(contents);
+        validateRating(rating);
+
         return new Review(null, contents, rating, LocalDateTime.now(), member, productOrder);
     }
 
     public String getMemberName() {
         return this.member.getName();
+    }
+
+    private static void validateContents(String contents) {
+        if (contents.length() > 200) {
+            throw new InvalidArgumentException();
+        }
+    }
+
+    private static void validateRating(Double rating) {
+        if (rating < 0 || rating > 5.0) {
+            throw new InvalidArgumentException();
+        }
     }
 
     @Override
