@@ -160,7 +160,7 @@ include::{actual-snippets}/orders-info-member-success/http-request.adoc[]
 include::{actual-snippets}/orders-info-member-success/http-response.adoc[]
 
 == Coupons
-=== 쿠폰 생성 성공
+=== 일반 쿠폰 생성 성공
 
 - Request
 
@@ -209,3 +209,33 @@ include::./build/generated-snippets/find-usable-coupons/http-request.adoc[]
 - Response
 
 include::./build/generated-snippets/find-usable-coupons/http-response.adoc[]
+
+=== 일반 쿠폰 삭제 성공
+
+- Request
+
+include::./build/generated-snippets/delete-coupon/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/delete-coupon/http-response.adoc[]
+
+=== 다운로드 된 쿠폰 삭제 성공
+
+- Request
+
+include::./build/generated-snippets/delete-downloaded-coupon/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/delete-downloaded-coupon/http-response.adoc[]
+
+=== 쿠폰 다운로드 성공
+
+- Request
+
+include::./build/generated-snippets/download-coupon/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/download-coupon/http-response.adoc[]

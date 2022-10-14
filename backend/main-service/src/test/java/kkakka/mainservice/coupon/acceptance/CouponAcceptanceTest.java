@@ -131,7 +131,8 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         String coupon = 일반_쿠폰_생성함();
 
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
+            .given(spec).log().all()
+            .filter(document("delete-coupon"))
             .when()
             .put("/api/coupons/" + coupon)
             .then().log().all().extract();
@@ -146,7 +147,8 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         String coupon = 쿠폰_다운로드(accessToken);
 
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
+            .given(spec).log().all()
+            .filter(document("delete-downloaded-coupon"))
             .when()
             .put("/api/coupons/" + coupon)
             .then().log().all().extract();
@@ -219,7 +221,8 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         String couponId = 일반_쿠폰_생성함();
 
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
+            .given(spec).log().all()
+            .filter(document("download-coupon"))
             .header("Authorization", "Bearer " + accessToken)
             .when()
             .post("/api/coupons/download/" + couponId)
