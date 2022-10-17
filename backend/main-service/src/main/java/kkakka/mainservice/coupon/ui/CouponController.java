@@ -89,8 +89,8 @@ public class CouponController {
     }
 
     /* 할인 삭제 */
-    @PutMapping("/discount")
-    public ResponseEntity<Void> deleteDiscount(Long discountId) {
+    @PutMapping("/discount/{discountId}")
+    public ResponseEntity<Void> deleteDiscount(@PathVariable Long discountId) {
         discountService.deleteDiscount(discountId);
         return ResponseEntity.ok().build();
     }
