@@ -87,7 +87,8 @@ public class CouponServiceTest extends TestContext {
         couponService.createCoupon(new CouponRequestDto(
             null, Grade.GOLD, null,
             "test", "testCoupon", "GRADE_COUPON",
-            LocalDateTime.now(), LocalDateTime.now(),
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
             10, 2000, 10000
         ));
 

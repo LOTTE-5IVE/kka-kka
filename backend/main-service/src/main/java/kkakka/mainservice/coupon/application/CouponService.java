@@ -37,24 +37,26 @@ public class CouponService {
     /* 관리자 쿠폰 등록 */
     @Transactional
     public Long createCoupon(CouponRequestDto couponRequestDto) {
-        if (PriceRule.GRADE_COUPON.equals(couponRequestDto.getPriceRule())) {
-            Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
-            List<Member> members = memberRepository.findByGrade(couponRequestDto.getGrade());
-            for (Member member : members) {
-                MemberCoupon memberCoupon = MemberCoupon.create(member, coupon);
-                memberCouponRepository.save(memberCoupon);
+        if (couponRequestDto.isValidPercentage() && couponRequestDto.isValidDate()) {
+            if (PriceRule.GRADE_COUPON.equals(couponRequestDto.getPriceRule())) {
+                Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
+                List<Member> members = memberRepository.findByGrade(couponRequestDto.getGrade());
+                for (Member member : members) {
+                    MemberCoupon memberCoupon = MemberCoupon.create(member, coupon);
+                    memberCouponRepository.save(memberCoupon);
+                }
+                return coupon.getId();
             }
-            return coupon.getId();
-        }
 
-        if (PriceRule.COUPON.equals(couponRequestDto.getPriceRule())) {
-            Category category =
-                couponRequestDto.getCategoryId() == null ? null : getCategory(couponRequestDto);
-            Product product =
-                couponRequestDto.getProductId() == null ? null : getProduct(couponRequestDto);
-            Coupon coupon = couponRepository.save(
-                toCouponEntity(couponRequestDto, category, product));
-            return coupon.getId();
+            if (PriceRule.COUPON.equals(couponRequestDto.getPriceRule())) {
+                Category category =
+                    couponRequestDto.getCategoryId() == null ? null : getCategory(couponRequestDto);
+                Product product =
+                    couponRequestDto.getProductId() == null ? null : getProduct(couponRequestDto);
+                Coupon coupon = couponRepository.save(
+                    toCouponEntity(couponRequestDto, category, product));
+                return coupon.getId();
+            }
         }
         throw new KkaKkaException();
     }
