@@ -9,7 +9,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import kkakka.mainservice.DocumentConfiguration;
-import kkakka.mainservice.product.ui.dto.SearchRequest;
+import kkakka.mainservice.product.ui.dto.ProductResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -83,21 +83,30 @@ public class ProductAcceptanceTest extends DocumentConfiguration {
     @Test
     void showProductsBySearchTest_success() {
         //given
-        SearchRequest searchRequest = new SearchRequest("제로 쿠키");
-
         //when
         final ExtractableResponse<Response> response = RestAssured
-            .given(spec).log().all()
-            .filter(document("products-show-search"))
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(searchRequest)
-            .when()
-            .get("/api/products/search")
-            .then().log().all()
-            .extract();
+                .given(spec).log().all()
+                .filter(document("products-show-search"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/products/search?keyword=제로 쿠키")
+                .then().log().all()
+                .extract();
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body().path("[0].name").toString()).contains("제로");
+        assertThat(response.body().jsonPath().getList("data", ProductResponseDto.class)).hasSize(1);
+        assertThat(
+                response.body().jsonPath().getList("data", ProductResponseDto.class)
+                        .stream()
+                        .map(productResponseDto -> productResponseDto.getName().contains("제로"))
+                        .findAny())
+                .isNotEmpty();
+        assertThat(
+                response.body().jsonPath().getList("data", ProductResponseDto.class)
+                        .stream()
+                        .map(productResponseDto -> productResponseDto.getName().contains("쿠키"))
+                        .findAny())
+                .isNotEmpty();
     }
 }
