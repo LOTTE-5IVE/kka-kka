@@ -16,10 +16,19 @@ public class DiscountRequestDto {
     private Long productId;
     private String name;
     private Integer discount;
+    private String discountType;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime startedAt;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime expiredAt;
 
+    public boolean isValidateDate() {
+        return this.getStartedAt().isBefore(LocalDateTime.now())
+            && this.getExpiredAt().isAfter(LocalDateTime.now());
+    }
+
+    public boolean isValidateDiscount() {
+        return this.discount < 100 && this.discount > 0;
+    }
 }

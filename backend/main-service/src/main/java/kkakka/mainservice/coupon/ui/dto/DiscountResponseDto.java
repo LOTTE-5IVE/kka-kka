@@ -24,8 +24,8 @@ public class DiscountResponseDto {
     private LocalDateTime expiredAt;
 
     public static DiscountResponseDto create(Discount discount) {
-        return new DiscountResponseDto(discount.getCategory().getId(),
-            discount.getProduct().getId(),
+        return new DiscountResponseDto(discount.getCategoryId(),
+            discount.getProductId(),
             discount.getName(),
             discount.getDiscount(),
             discount.getStartedAt(),

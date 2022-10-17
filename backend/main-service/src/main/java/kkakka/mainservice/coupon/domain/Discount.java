@@ -3,6 +3,8 @@ package kkakka.mainservice.coupon.domain;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -41,19 +43,38 @@ public class Discount {
     private LocalDateTime expiredAt;
     private boolean isDeleted;
 
+    @Enumerated(EnumType.STRING)
+    private DiscountType discountType;
+
     public static Discount create(Category category, String name, Integer discount,
         LocalDateTime startedAt, LocalDateTime expiredAt) {
         return new Discount(null,
-            category, null, name, discount, startedAt, expiredAt, false);
+            category, null, name, discount, startedAt, expiredAt, false,
+            DiscountType.CATEGORY_DISCOUNT);
     }
 
     public static Discount create(Product product, String name, Integer discount,
         LocalDateTime startedAt, LocalDateTime expiredAt) {
         return new Discount(null,
-            null, product, name, discount, startedAt, expiredAt, false);
+            null, product, name, discount, startedAt, expiredAt, false,
+            DiscountType.PRODUCT_DISCOUNT);
     }
 
     public void deleteDiscount() {
         this.isDeleted = true;
+    }
+
+    public Long getCategoryId() {
+        if (category != null) {
+            return category.getId();
+        }
+        return null;
+    }
+
+    public Long getProductId() {
+        if (product != null) {
+            return product.getId();
+        }
+        return null;
     }
 }

@@ -71,4 +71,8 @@ public class Product {
         this.discount = discount;
     }
 
+    public void deleteDiscount() {
+        this.discount = 0;
+    }
+
 }
