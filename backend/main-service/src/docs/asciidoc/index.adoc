@@ -239,3 +239,44 @@ include::./build/generated-snippets/download-coupon/http-request.adoc[]
 - Response
 
 include::./build/generated-snippets/download-coupon/http-response.adoc[]
+
+== Discount
+=== 상품 할인 생성
+
+- Request
+
+include::./build/generated-snippets/create-product-discount-success/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/create-product-discount-success/http-response.adoc[]
+
+=== 할인 생성 실패 - 유효하지않은 날짜
+
+- Request
+
+include::./build/generated-snippets/create-discount-fail-invalid-date/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/create-discount-fail-invalid-date/http-response.adoc[]
+
+=== 상품 할인 삭제
+
+- Request
+
+include::./build/generated-snippets/delete-product-discount-success/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/delete-product-discount-success/http-response.adoc[]
+
+=== 할인 조회
+
+- Request
+
+include::./build/generated-snippets/show-discounts-success/http-request.adoc[]
+
+- Response
+
+include::./build/generated-snippets/show-discounts-success/http-response.adoc[]

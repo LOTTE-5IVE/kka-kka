@@ -3,6 +3,7 @@ package kkakka.mainservice.coupon.acceptance;
 import static kkakka.mainservice.cart.TestDataLoader.CATEGORY;
 import static kkakka.mainservice.cart.TestDataLoader.PRODUCT_1;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -28,7 +29,8 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
 
         // when
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
+            .given(spec).log().all()
+            .filter(document("create-product-discount-success"))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("{\n"
                 + "  \"categoryId\": null,\n"
@@ -56,7 +58,8 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
 
         // when
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
+            .given(spec).log().all()
+            .filter(document("create-category-discount-success"))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("{\n"
                 + "  \"categoryId\": " + category.getId() + ",\n"
@@ -84,7 +87,8 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
 
         // when
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
+            .given(spec).log().all()
+            .filter(document("create-discount-fail-invalid-date"))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("{\n"
                 + "  \"categoryId\": null,\n"
@@ -111,7 +115,8 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
 
         // when
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
+            .given(spec).log().all()
+            .filter(document("create-discount-fail-invalid-discount"))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("{\n"
                 + "  \"categoryId\": null,\n"
@@ -120,7 +125,7 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
                 + "  \"discount\": 200,\n"
                 + "  \"discountType\": \"PRODUCT_DISCOUNT\",\n"
                 + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
-                + "  \"expiredAt\": \"2020-01-02 00:00:00\"\n"
+                + "  \"expiredAt\": \"2025-01-01 00:00:00\"\n"
                 + "}")
             .when()
             .post("/api/coupons/discount")
@@ -178,7 +183,8 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
 
         // when
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
+            .given(spec).log().all()
+            .filter(document("delete-product-discount-success"))
             .when()
             .put("/api/coupons/discount/" + discountId)
             .then().log().all().extract();
@@ -195,7 +201,8 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
 
         // when
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
+            .given(spec).log().all()
+            .filter(document("delete-category-discount-success"))
             .when()
             .put("/api/coupons/discount/" + discountId)
             .then().log().all().extract();
@@ -212,7 +219,8 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
 
         // when
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
+            .given(spec).log().all()
+            .filter(document("show-discounts-success"))
             .when()
             .get("/api/coupons/discount")
             .then().log().all().extract();
