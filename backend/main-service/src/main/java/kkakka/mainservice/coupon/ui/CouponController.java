@@ -26,7 +26,6 @@ public class CouponController {
 
     private final CouponService couponService;
 
-    /* TODO : 할인 등록 */
     /* TODO : return 값 */
 
     /* 쿠폰 등록 */
