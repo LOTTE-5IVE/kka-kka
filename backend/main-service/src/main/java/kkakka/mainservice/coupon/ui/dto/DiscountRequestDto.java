@@ -23,12 +23,12 @@ public class DiscountRequestDto {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime expiredAt;
 
-    public boolean isValidateDate() {
+    public boolean isValidDate() {
         return this.getStartedAt().isBefore(LocalDateTime.now())
             && this.getExpiredAt().isAfter(LocalDateTime.now());
     }
 
-    public boolean isValidateDiscount() {
+    public boolean isValidDiscount() {
         return this.discount < 100 && this.discount > 0;
     }
 }

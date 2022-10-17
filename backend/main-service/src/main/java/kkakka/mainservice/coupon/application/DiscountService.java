@@ -28,7 +28,7 @@ public class DiscountService {
     /* 할인 등록 */
     @Transactional
     public Long createDiscount(DiscountRequestDto discountRequestDto) {
-        if (discountRequestDto.isValidateDate() && discountRequestDto.isValidateDiscount()) {
+        if (discountRequestDto.isValidDate() && discountRequestDto.isValidDiscount()) {
             if (DiscountType.PRODUCT_DISCOUNT.equals(discountRequestDto.getDiscountType())) {
                 Product product = getProduct(discountRequestDto);
                 Discount discount = Discount.create(
