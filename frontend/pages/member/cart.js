@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { DeleteHApi, GetHApi, PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
-import ButtonComp from "../../components/common/Button/buttonComp";
+import ButtonComp from "../../components/common/Button/ButtonComp";
 import Title from "../../components/common/Title";
 import { CouponDown } from "../../components/coupon/CouponDown";
 import { CouponModal } from "../../components/coupon/CouponModal";

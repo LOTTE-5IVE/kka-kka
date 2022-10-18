@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
-import ButtonComp from "../../components/common/Button/buttonComp";
+import ButtonComp from "../../components/common/Button/ButtonComp";
 import DaumPost from "../../components/payment/DaumPost";
 import { useGetToken } from "../../hooks/useGetToken";
 import { useMoney } from "../../hooks/useMoney";

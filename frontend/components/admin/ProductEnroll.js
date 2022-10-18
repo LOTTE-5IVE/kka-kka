@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ButtonComp from "../../components/common/buttonComp";
+import ButtonComp from "../../components/common/ButtonComp";
 import ApplyGrade from "./ApplyGrade";
 import ApplyProduct from "./ApplyProduct";
 
