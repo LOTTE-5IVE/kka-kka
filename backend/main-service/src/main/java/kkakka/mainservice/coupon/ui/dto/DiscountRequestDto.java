@@ -31,4 +31,8 @@ public class DiscountRequestDto {
     public boolean isValidDiscount() {
         return this.discount < 100 && this.discount > 0;
     }
+
+    public boolean isNullCheckProductIdAndCategoryId() {
+        return this.productId != null || this.categoryId != null;
+    }
 }

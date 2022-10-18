@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
+import kkakka.mainservice.common.exception.InvalidCouponRequestException;
 import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.coupon.domain.Discount;
 import kkakka.mainservice.coupon.domain.DiscountType;
@@ -25,44 +26,45 @@ public class DiscountService {
     final private ProductRepository productRepository;
     final private CategoryRepository categoryRepository;
 
-    // TODO : NPE 처리
     /* 할인 등록 */
     @Transactional
     public Long createDiscount(DiscountRequestDto discountRequestDto) {
         if (discountRequestDto.isValidDate() && discountRequestDto.isValidDiscount()) {
-            if (DiscountType.PRODUCT_DISCOUNT.equals(discountRequestDto.getDiscountType())) {
-                Product product = getProduct(discountRequestDto);
-                Discount discount = Discount.create(
-                    product,
-                    discountRequestDto.getName(),
-                    discountRequestDto.getDiscount(),
-                    discountRequestDto.getStartedAt(),
-                    discountRequestDto.getExpiredAt());
-                product.changeDiscount(discountRequestDto.getDiscount());
-                productRepository.save(product);
-                discountRepository.save(discount);
-                return discount.getId();
-            }
-
-            if (DiscountType.CATEGORY_DISCOUNT.equals(discountRequestDto.getDiscountType())) {
-                Category category = getCategory(discountRequestDto);
-                Discount discount = Discount.create(
-                    category,
-                    discountRequestDto.getName(),
-                    discountRequestDto.getDiscount(),
-                    discountRequestDto.getStartedAt(),
-                    discountRequestDto.getExpiredAt());
-                List<Product> products = categoryRepository.findProductsByCategoryId(
-                    category.getId());
-                for (Product product : products) {
+            if (discountRequestDto.isNullCheckProductIdAndCategoryId()) {
+                if (DiscountType.PRODUCT_DISCOUNT.equals(discountRequestDto.getDiscountType())) {
+                    Product product = getProduct(discountRequestDto);
+                    Discount discount = Discount.create(
+                        product,
+                        discountRequestDto.getName(),
+                        discountRequestDto.getDiscount(),
+                        discountRequestDto.getStartedAt(),
+                        discountRequestDto.getExpiredAt());
                     product.changeDiscount(discountRequestDto.getDiscount());
                     productRepository.save(product);
+                    discountRepository.save(discount);
+                    return discount.getId();
                 }
-                discountRepository.save(discount);
-                return discount.getId();
+
+                if (DiscountType.CATEGORY_DISCOUNT.equals(discountRequestDto.getDiscountType())) {
+                    Category category = getCategory(discountRequestDto);
+                    Discount discount = Discount.create(
+                        category,
+                        discountRequestDto.getName(),
+                        discountRequestDto.getDiscount(),
+                        discountRequestDto.getStartedAt(),
+                        discountRequestDto.getExpiredAt());
+                    List<Product> products = categoryRepository.findProductsByCategoryId(
+                        category.getId());
+                    for (Product product : products) {
+                        product.changeDiscount(discountRequestDto.getDiscount());
+                        productRepository.save(product);
+                    }
+                    discountRepository.save(discount);
+                    return discount.getId();
+                }
             }
         }
-        throw new KkaKkaException();
+        throw new InvalidCouponRequestException();
     }
 
     private Product getProduct(DiscountRequestDto discountRequestDto) {
@@ -98,6 +100,7 @@ public class DiscountService {
             }
             discount.deleteDiscount();
             discountRepository.save(discount);
+            return;
         }
         throw new KkaKkaException();
     }
