@@ -18,15 +18,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             countQuery = "select count(p) from Product p where p.category.id = :categoryId")
     Page<Product> findByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
 
-    @Query(value = "select p from Product p "
-        + "join fetch p.category "
-        + "where p.category.name like %:searchWord%")
-    List<Product> findByCategory(@Param("searchWord") String searchWord);
-
-    @Query(value = "select p from Product p "
-        + "where p.name like %:searchWord%")
-    List<Product> findByName(@Param("searchWord") String searchWord);
-
-    @Query(value = "select p from Product p join fetch p.category where p.category.id = :categoryId")
-    List<Product> findProductsByCategoryId(@Param("categoryId") Long categoryId);
+    @Query(value = "select p from Product p where p.category.id = :categoryId")
+    List<Product> findByCategoryId(@Param("categoryId") Long categoryId);
 }

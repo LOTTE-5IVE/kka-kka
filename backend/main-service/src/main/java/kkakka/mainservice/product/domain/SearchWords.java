@@ -16,6 +16,10 @@ public class SearchWords {
             return new SearchWords(new ArrayList<>());
         }
 
-        return new SearchWords(List.of(keyword.split("\\s")));
+        return new SearchWords(List.of(keyword.trim().split("\\s")));
+    }
+
+    public boolean hasSearchWords() {
+        return !this.searchWords.isEmpty();
     }
 }

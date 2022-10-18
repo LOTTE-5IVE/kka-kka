@@ -1,7 +1,7 @@
 package kkakka.mainservice.coupon.acceptance;
 
-import static kkakka.mainservice.cart.TestDataLoader.CATEGORY;
-import static kkakka.mainservice.cart.TestDataLoader.PRODUCT_1;
+import static kkakka.mainservice.fixture.TestDataLoader.CATEGORY_1;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
@@ -54,7 +54,7 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
     @Test
     void createCategoryDiscount() {
         // given
-        Category category = CATEGORY;
+        Category category = CATEGORY_1;
 
         // when
         final ExtractableResponse<Response> response = RestAssured
@@ -136,7 +136,7 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
     }
 
     private String 카테고리_할인_생성() {
-        Category category = CATEGORY;
+        Category category = CATEGORY_1;
 
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
