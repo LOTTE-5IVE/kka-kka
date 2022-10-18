@@ -34,11 +34,11 @@ public class DiscountService {
                 if (DiscountType.PRODUCT_DISCOUNT.equals(discountRequestDto.getDiscountType())) {
                     Product product = getProduct(discountRequestDto);
                     Discount discount = Discount.create(
-                        product,
-                        discountRequestDto.getName(),
-                        discountRequestDto.getDiscount(),
-                        discountRequestDto.getStartedAt(),
-                        discountRequestDto.getExpiredAt());
+                            product,
+                            discountRequestDto.getName(),
+                            discountRequestDto.getDiscount(),
+                            discountRequestDto.getStartedAt(),
+                            discountRequestDto.getExpiredAt());
                     product.changeDiscount(discountRequestDto.getDiscount());
                     productRepository.save(product);
                     discountRepository.save(discount);
@@ -48,13 +48,13 @@ public class DiscountService {
                 if (DiscountType.CATEGORY_DISCOUNT.equals(discountRequestDto.getDiscountType())) {
                     Category category = getCategory(discountRequestDto);
                     Discount discount = Discount.create(
-                        category,
-                        discountRequestDto.getName(),
-                        discountRequestDto.getDiscount(),
-                        discountRequestDto.getStartedAt(),
-                        discountRequestDto.getExpiredAt());
-                    List<Product> products = productRepository.findProductsByCategoryId(
-                        category.getId());
+                            category,
+                            discountRequestDto.getName(),
+                            discountRequestDto.getDiscount(),
+                            discountRequestDto.getStartedAt(),
+                            discountRequestDto.getExpiredAt());
+                    List<Product> products = productRepository.findByCategoryId(
+                            category.getId());
                     for (Product product : products) {
                         product.changeDiscount(discountRequestDto.getDiscount());
                         productRepository.save(product);
@@ -69,22 +69,22 @@ public class DiscountService {
 
     private Product getProduct(DiscountRequestDto discountRequestDto) {
         return productRepository.findById(discountRequestDto.getProductId())
-            .orElseThrow(KkaKkaException::new);
+                .orElseThrow(KkaKkaException::new);
     }
 
     private Category getCategory(DiscountRequestDto discountRequestDto) {
         return categoryRepository.findById(discountRequestDto.getCategoryId())
-            .orElseThrow(KkaKkaException::new);
+                .orElseThrow(KkaKkaException::new);
     }
 
     /* 할인 삭제 */
     @Transactional
     public void deleteDiscount(Long discountId) {
         Discount discount = discountRepository.findById(discountId)
-            .orElseThrow(KkaKkaException::new);
+                .orElseThrow(KkaKkaException::new);
         if (DiscountType.PRODUCT_DISCOUNT.equals(discount.getDiscountType())) {
             Product product = productRepository.findById(discount.getProductId())
-                .orElseThrow(KkaKkaException::new);
+                    .orElseThrow(KkaKkaException::new);
             discount.deleteDiscount();
             product.deleteDiscount();
             discountRepository.save(discount);
@@ -92,8 +92,8 @@ public class DiscountService {
             return;
         }
         if (DiscountType.CATEGORY_DISCOUNT.equals(discount.getDiscountType())) {
-            List<Product> products = productRepository.findProductsByCategoryId(
-                discount.getCategoryId());
+            List<Product> products = productRepository.findByCategoryId(
+                    discount.getCategoryId());
             for (Product product : products) {
                 product.deleteDiscount();
                 productRepository.save(product);
@@ -109,8 +109,8 @@ public class DiscountService {
     public List<DiscountResponseDto> showAllDiscounts() {
         List<Discount> discounts = discountRepository.findAll();
         return discounts.stream()
-            .map(discount -> DiscountResponseDto.create(discount))
-            .collect(Collectors.toList());
+                .map(discount -> DiscountResponseDto.create(discount))
+                .collect(Collectors.toList());
     }
 
 }
