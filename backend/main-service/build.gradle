@@ -65,6 +65,10 @@ dependencies {
     /* Log */
     implementation 'dev.akkinoc.spring.boot:logback-access-spring-boot-starter:3.3.3'
     implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.12.0'
+
+    /* micrometer */
+    implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.9.3'
+
 }
 
 dependencyManagement {
