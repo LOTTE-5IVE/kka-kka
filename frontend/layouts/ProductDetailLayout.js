@@ -20,6 +20,7 @@ export default function ProductDetailLayout({
   tab,
   modal,
   product,
+  reviews,
   quantity,
   handleModal,
   handleTab,
@@ -175,7 +176,7 @@ export default function ProductDetailLayout({
               ) : tab == "nutri" ? (
                 <Nutri />
               ) : (
-                <Review />
+                <Review reviews={reviews} />
               )}
             </div>
           </div>

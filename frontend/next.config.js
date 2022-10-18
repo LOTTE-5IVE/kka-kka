@@ -11,7 +11,7 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: `https://1bda-14-32-196-148.jp.ngrok.io/api/:path*`,
+        destination: `https://84ea-14-32-196-148.jp.ngrok.io/api/:path*`,
       },
     ];
   },

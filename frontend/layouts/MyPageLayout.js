@@ -3,7 +3,13 @@ import MyInfoCard from "../components/mypage/MyInfoCard";
 import MyOrder from "../components/mypage/MyOrder";
 import Mysidebar from "../components/mypage/mysidebar";
 
-export default function MyPageLayout({ name, grade, tab, handleTab }) {
+export default function MyPageLayout({
+  name,
+  grade,
+  tab,
+  handleTab,
+  orderList,
+}) {
   return (
     <>
       <div>
@@ -17,7 +23,11 @@ export default function MyPageLayout({ name, grade, tab, handleTab }) {
             </div>
 
             <div className="mypageMenu">
-              {tab == "order" ? <MyOrder /> : <MyCoupon />}
+              {tab == "order" ? (
+                <MyOrder orderList={orderList} />
+              ) : (
+                <MyCoupon />
+              )}
             </div>
           </div>
         </div>
