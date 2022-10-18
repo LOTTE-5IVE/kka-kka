@@ -1,4 +1,9 @@
 package kkakka.mainservice.coupon.domain.repository;
 
-public interface CouponRepository {
+import kkakka.mainservice.coupon.domain.Coupon;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CouponRepository extends JpaRepository<Coupon, Long> {
+
+
 }

@@ -1,12 +1,9 @@
 import { useState } from "react";
-import { AdminButton } from "../../components/admin/AdminButton";
 import AdminSidebar from "../../components/admin/AdminSidebar";
-import ApplyTable from "../../components/admin/ApplyTable";
-import ProductEnroll from "../../components/admin/ProductEnroll";
 import ProductSearch from "../../components/admin/ProductSearch";
 import PromotionEnroll from "../../components/admin/PromotionEnroll";
 import PromotionSearch from "../../components/admin/PromotionSearch";
-import ButtonComp from "../../components/common/buttonComp";
+
 import Title from "../../components/common/Title";
 
 export default function admin() {

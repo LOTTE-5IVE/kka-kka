@@ -75,6 +75,14 @@ public class Product {
         return this.category.getName();
     }
 
+    public void changeDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public void deleteDiscount() {
+        this.discount = 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -86,7 +94,6 @@ public class Product {
         Product product = (Product) o;
         return Objects.equals(id, product.id);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(id);

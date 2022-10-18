@@ -20,19 +20,19 @@ public class MemberService {
     @Transactional
     public Member findOrCreateMember(UserProfile userProfile) {
         return memberRepository
-                .findByProviderId(userProfile.getProviderId())
-                .orElseGet(() -> createMember(userProfile));
+            .findByProviderId(userProfile.getProviderId())
+            .orElseGet(() -> createMember(userProfile));
     }
 
     public Member createMember(UserProfile userProfile) {
         return memberRepository.save(
-                Member.create(
-                        userProfile.getProvider(),
-                        userProfile.getName(),
-                        userProfile.getEmail(),
-                        userProfile.getPhone(),
-                        userProfile.getAgeGroup()
-                )
+            Member.create(
+                userProfile.getProvider(),
+                userProfile.getName(),
+                userProfile.getEmail(),
+                userProfile.getPhone(),
+                userProfile.getAgeGroup()
+            )
         );
     }
 
