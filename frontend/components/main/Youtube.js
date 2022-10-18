@@ -6,6 +6,8 @@ export default function Youtube() {
     height: "700px",
     playerVars: {
       autoplay: 1,
+      loop: 1,
+      playlist: "ARZsFfz-Saw",
     },
   };
 
@@ -14,7 +16,13 @@ export default function Youtube() {
       <section className="youtube">
         <div className="youtube__area">
           <div>
-            <YouTube videoId="ARZsFfz-Saw" opts={opts} />
+            <YouTube
+              videoId="ARZsFfz-Saw"
+              opts={opts}
+              onEnd={(e) => {
+                e.target.stopVideo(0);
+              }}
+            />
           </div>
         </div>
         <div className="youtube__cover"></div>

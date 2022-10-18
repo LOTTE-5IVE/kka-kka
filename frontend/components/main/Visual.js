@@ -1,34 +1,38 @@
-import { useEffect } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 
 export default function Visual() {
-  useEffect(() => {
-    const fadeEls = document.querySelectorAll(".visual .fade-in");
-    fadeEls.forEach(function (fadeEl, index) {
+  const fadeEls = useRef([]);
+
+  useLayoutEffect(() => {
+    fadeEls.current.map((fadeEl, index) => {
       gsap.to(fadeEl, 1, {
         delay: (index + 1) * 0.7,
         opacity: 1,
       });
     });
-  }, []);
+  });
 
   return (
     <>
       <section className="visual">
         <div className="inner">
-          <div className="title fade-in">
+          <div
+            className="title fade-in"
+            ref={(el) => (fadeEls.current[0] = el)}
+          >
             <img width="350px" src="/main/logo.png" />
           </div>
-          <div className="fade-in">
+          <div className="fade-in" ref={(el) => (fadeEls.current[1] = el)}>
             <img src="/main1.png" className="cup1 image" />
           </div>
-          <div className="fade-in">
+          <div className="fade-in" ref={(el) => (fadeEls.current[2] = el)}>
             <img width="500px" src="/main2.png" className="cup2 image" />
           </div>
-          <div className="fade-in">
+          <div className="fade-in" ref={(el) => (fadeEls.current[3] = el)}>
             <img width="420px" src="/main3.png" alt="Spoon" className="spoon" />
           </div>
-          <div className="fade-in">
+          <div className="fade-in" ref={(el) => (fadeEls.current[4] = el)}>
             <img src="/images/visual_cup2_text.png" className="cup2 text" />
           </div>
         </div>

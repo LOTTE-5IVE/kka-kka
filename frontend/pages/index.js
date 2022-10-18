@@ -4,7 +4,7 @@ import Title from "../components/common/Title";
 import Visual from "../components/main/Visual";
 import Youtube from "../components/main/Youtube";
 import Introduction from "../components/main/Introduction";
-import Recomm from "../components/main/Recomm";
+import RecommSlider from "../components/main/RecommSlider";
 
 export default function Home() {
   const [tab, setTab] = useState("리뷰");
@@ -22,9 +22,8 @@ export default function Home() {
       </Head>
       <Title title="과자 사러 과자" />
       <Visual />
-      <Recomm tab={tab} handleTab={handleTab} />
+      <RecommSlider tab={tab} handleTab={handleTab} />
       <Youtube />
-
       <Introduction />
     </>
   );
