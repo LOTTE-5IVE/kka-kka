@@ -35,7 +35,7 @@ public class ReviewController {
 
     @GetMapping
     public ResponseEntity<PageableResponse<List<ReviewResponse>>> showReviews(
-            @PageableDefault(page = 1, size = 6, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
+            @PageableDefault(size = 6, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
             @RequestParam(value = "product") Long productId
     ) {
         final Page<ReviewDto> reviewDtos = reviewService.showReviewsByProductId(productId,
