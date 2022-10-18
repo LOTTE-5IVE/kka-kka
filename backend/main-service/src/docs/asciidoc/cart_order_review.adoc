@@ -1,0 +1,115 @@
+= 장바구니/주문 API
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlight.js
+:toc: left
+:toclevels: 2
+:sectlinks:
+:nofooter:
+
+*link:index.html[메인 화면]*
+
+== Cart
+=== 장바구니 조회 성공
+
+- Request
+
+include::{snippets}/showMemberCartItems-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/showMemberCartItems-success/http-response.adoc[]
+
+=== 장바구니 저장 성공
+
+- Request
+
+include::{snippets}/saveCartItem-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/saveCartItem-success/http-response.adoc[]
+
+=== 장바구니 수량 변경 성공
+
+- Request
+
+include::{snippets}/cart-item-change-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/cart-item-change-success/http-response.adoc[]
+
+=== 장바구니 조회 실패
+
+- Request
+
+include::{snippets}/saveCartItem-Fail/http-request.adoc[]
+
+- Response
+
+include::{snippets}/saveCartItem-Fail/http-response.adoc[]
+
+=== 장바구니 삭제 성공
+
+- Request
+
+include::{snippets}/removeCartItem-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/removeCartItem-success/http-response.adoc[]
+
+
+== Order
+=== 주문
+
+==== 주문 성공
+
+- Request
+
+include::{snippets}/product-order-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/product-order-success/http-response.adoc[]
+
+
+
+== Review
+
+=== 상품 후기 조회
+
+- Request
+
+include::{snippets}/review-show/http-request.adoc[]
+
+- Response
+
+include::{snippets}/review-show/http-response.adoc[]
+
+
+=== 상품 후기 작성
+
+- Request
+
+include::{snippets}/review-write/http-request.adoc[]
+
+- Response
+
+include::{snippets}/review-write/http-response.adoc[]
+
+
+=== 상품 후기 작성 실패 (이미 작성 되어 있을 때)
+
+- Request
+
+include::{snippets}/review-write-fail-already-written/http-request.adoc[]
+
+- Response
+
+include::{snippets}/review-write-fail-already-written/http-response.adoc[]
+
