@@ -43,7 +43,7 @@ export default function cart() {
     }
   };
 
-  function modalHandler() {
+  function handleModal() {
     setModal(false);
   }
 
@@ -168,7 +168,7 @@ export default function cart() {
                             <input
                               type="text"
                               size="15"
-                              defaultValue="뭐시기 쿠폰"
+                              defaultValue=""
                               readOnly
                             />
                           </div>
@@ -187,7 +187,7 @@ export default function cart() {
                             {modal && (
                               <CouponModal>
                                 <div>
-                                  <CouponDown modalHandler={modalHandler} />
+                                  <CouponDown handleModal={handleModal} />
                                 </div>
                               </CouponModal>
                             )}

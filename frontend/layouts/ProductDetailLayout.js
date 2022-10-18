@@ -1,12 +1,10 @@
 import Link from "next/link";
-import { useState } from "react";
 import { AdminButton } from "../components/common/Button/AdminButton";
 import { CouponDown } from "../components/coupon/CouponDown";
 import { CouponModal } from "../components/coupon/CouponModal";
-import Info from "../components/product/Info";
-import Nutri from "../components/product/Nutri";
-import ProductRec from "../components/product/ProductRec";
-import Review from "../components/product/Review";
+import Info from "../components/product/productDetail/Info";
+import Nutri from "../components/product/productDetail/Nutri";
+import Review from "../components/product/productDetail/Review";
 import { useMoney } from "../hooks/useMoney";
 import { NBlack, NGray, NLightGray } from "../typings/NormalColor";
 import {
@@ -33,6 +31,7 @@ export default function ProductDetailLayout({
         <div className="wrapper" key={product.id}>
           <div className="detailTop">
             <div className="detailImg">
+              {/* <ProductRec id={product.id} imgsrc={product.image_url} /> */}
               <img src={`${product.image_url}`} />
             </div>
 
@@ -129,7 +128,7 @@ export default function ProductDetailLayout({
                 <div
                   className="cartBtn"
                   onClick={() => {
-                    addCartItem(product.id, quantity);
+                    addCartItem(product, quantity);
                   }}
                 >
                   장바구니
@@ -172,9 +171,9 @@ export default function ProductDetailLayout({
             </div>
             <div className="descriptions">
               {tab == "info" ? (
-                <Info />
+                <Info detailImage_url={product.detailImage_url} />
               ) : tab == "nutri" ? (
-                <Nutri />
+                <Nutri nutritionInfo_url={product.nutritionInfo_url} />
               ) : (
                 <Review reviews={reviews} />
               )}
@@ -195,7 +194,7 @@ export default function ProductDetailLayout({
               text-align: center;
               border-radius: 30px;
               background-color: ${ThemeGray};
-              height: 28vw;
+              height: 32vw;
 
               img {
                 max-height: 600px;
@@ -313,6 +312,7 @@ export default function ProductDetailLayout({
                   font-size: 18px;
                   vertical-align: middle;
                   padding: 0;
+                  cursor: pointer;
                 }
 
                 .buyBtn {
@@ -326,6 +326,7 @@ export default function ProductDetailLayout({
                   line-height: 60px;
                   font-size: 18px;
                   padding: 0;
+                  cursor: pointer;
                 }
 
                 .cartBtn:hover {

@@ -23,6 +23,8 @@ export default function Header() {
     if (token !== "") {
       useMemberInfo(token).then((res) => {
         if (res) {
+          console.log("headercomp");
+          console.log(res);
           setName(res.name);
           setGrade(res.grade);
         }

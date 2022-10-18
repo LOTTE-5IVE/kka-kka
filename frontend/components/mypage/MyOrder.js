@@ -78,8 +78,8 @@ export default function MyOrder({ orderList }) {
             <table>
               <colgroup>
                 <col style={{ width: "15%" }} />
-                <col style={{ width: "70%" }} />
-                <col style={{ width: "15%" }} />
+                <col style={{ width: "65%" }} />
+                <col style={{ width: "20%" }} />
               </colgroup>
               <tbody>
                 {olist.slice(0, marker)}

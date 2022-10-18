@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import NavBar from "../../components/common/NavBar";
 
 export default function Sidebar({ menu }) {
   const [tab, setTab] = useState(menu);
@@ -35,7 +34,7 @@ export default function Sidebar({ menu }) {
                 },
               }}
             >
-              <a className={`${tab === "1" ? "active" : ""}`}>전체</a>
+              <a className={`${tab === "0" ? "active" : ""}`}>전체</a>
             </Link>
           </li>
           <li onClick={() => setTab("2")}>
