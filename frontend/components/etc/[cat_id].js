@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import NavBar from "../../components/common/NavBar";
-import ProductRec from "../../components/product/ProductRec";
-import Sidebar from "../../components/product/Sidebar";
+import NavBar from "../components/common/NavBar";
+import ProductRec from "../components/product/ProductRec";
+import Sidebar from "../components/product/Sidebar";
 import { useQuery } from "react-query";
 import axios from "axios";
 

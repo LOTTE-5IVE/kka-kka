@@ -1,8 +1,7 @@
 import { useState } from "react";
-import AdminSidebar from "../../components/admin/AdminSidebar";
-import ApplyTable from "../../components/admin/ApplyTable";
 import ButtonComp from "../../components/common/buttonComp";
 import ApplyGrade from "./ApplyGrade";
+import ApplyProduct from "./ApplyProduct";
 
 export default function ProductEnroll() {
   const [btn, setBtn] = useState("할인");
@@ -173,7 +172,7 @@ export default function ProductEnroll() {
                     회원 등급
                   </div>
                 </div>
-                {target == "상품" ? <ApplyTable /> : <ApplyGrade />}
+                {target == "상품" ? <ApplyProduct /> : <ApplyGrade />}
               </td>
             </tr>
           </tbody>

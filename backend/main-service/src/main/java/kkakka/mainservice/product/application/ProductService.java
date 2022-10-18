@@ -47,10 +47,10 @@ public class ProductService {
         Page<Product> randomProducts = productRepository.findAll(PageRequest.of(idx, 10));
 
         return ResponsePageDto.from(
-                randomProducts,
-                randomProducts.getContent().stream()
-                        .map(ResponseCategoryProducts::from)
-                        .collect(Collectors.toList())
+            randomProducts,
+            randomProducts.getContent().stream()
+                .map(ResponseCategoryProducts::from)
+                .collect(Collectors.toList())
         );
     }
 

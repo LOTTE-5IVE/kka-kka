@@ -3,7 +3,6 @@ package kkakka.mainservice.product.ui;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import kkakka.mainservice.category.application.CategoryService;
 import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.common.dto.PageableResponse;
 import kkakka.mainservice.product.application.ProductService;
@@ -27,8 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
 
     private final ProductService productService;
-    private final CategoryService categoryService;
-
 
     @GetMapping("/health_check")
     public String status() {

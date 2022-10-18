@@ -1,14 +1,13 @@
 import { useState } from "react";
-import AdminSidebar from "../../components/admin/AdminSidebar";
-import ApplyTable from "../../components/admin/ApplyTable";
-import ButtonComp from "../../components/common/buttonComp";
-import Button from "../common/Button";
+import Button from "../common/Button/Button";
 import ApplyGrade from "./ApplyGrade";
+import ApplyCategory from "./ApplyCategory";
+import ApplyProduct from "./ApplyProduct";
 
 export default function PromotionEnroll() {
   const [btn, setBtn] = useState("할인");
   const [valid, setValid] = useState("기간");
-  const [target, setTarget] = useState("상품");
+  const [target, setTarget] = useState("카테고리");
 
   return (
     <>
@@ -162,6 +161,12 @@ export default function PromotionEnroll() {
               <td>
                 <div style={{ display: "flex", marginBottom: "15px" }}>
                   <div
+                    className={`btn ${target === "카테고리" ? "active" : ""}`}
+                    onClick={() => setTarget("카테고리")}
+                  >
+                    카테고리
+                  </div>
+                  <div
                     className={`btn ${target === "상품" ? "active" : ""}`}
                     onClick={() => setTarget("상품")}
                   >
@@ -174,7 +179,13 @@ export default function PromotionEnroll() {
                     회원 등급
                   </div>
                 </div>
-                {target == "상품" ? <ApplyTable /> : <ApplyGrade />}
+                {target == "카테고리" ? (
+                  <ApplyCategory />
+                ) : target == "상품" ? (
+                  <ApplyProduct />
+                ) : (
+                  <ApplyGrade />
+                )}
               </td>
             </tr>
           </tbody>

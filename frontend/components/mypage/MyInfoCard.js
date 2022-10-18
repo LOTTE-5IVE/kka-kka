@@ -1,10 +1,16 @@
-export default function MyInfoCard() {
+const gradeColor = {
+  GOLD: "#ffd700",
+  SILVER: "#C0C0C0",
+  BRONZE: "#b08d57",
+};
+
+export default function MyInfoCard({ name, grade }) {
   return (
     <>
       <div className="myinfo">
         <div className="myinfo_left">
           <div style={{ padding: "15px 0" }}>
-            <span className="myname">익명의 회원</span>님
+            <span className="myname">{name}</span>님
           </div>
           <div style={{ paddingTop: "10px" }}>
             <span>
@@ -14,10 +20,10 @@ export default function MyInfoCard() {
                   width: "15px",
                   height: "15px",
                   borderRadius: "50%",
-                  backgroundColor: "red",
+                  backgroundColor: gradeColor[grade],
                 }}
               ></span>
-              Bronze
+              {grade}
             </span>
             <span className="gradeBtn">등급 혜택</span>
           </div>
@@ -37,7 +43,7 @@ export default function MyInfoCard() {
           color: #3a3a3a;
           font-weight: 600;
           line-height: 1;
-          height: 7vw;
+          height: 135px;
           margin: 5% 0 10%;
           display: flex;
           border: 2px solid #e6e4e4;

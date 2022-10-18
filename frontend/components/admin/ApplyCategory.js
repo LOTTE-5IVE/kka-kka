@@ -1,4 +1,4 @@
-export default function ApplyTable() {
+export default function ApplyCategory() {
   return (
     <>
       <div className="outter">
@@ -16,30 +16,6 @@ export default function ApplyTable() {
             <li>
               <input type="checkbox" />
               카테고리3
-            </li>
-          </ul>
-        </div>
-        <div>
-          <p>상품명</p>
-          <ul>
-            <li>상품명1</li>
-            <li>상품명2</li>
-            <li>상품명3</li>
-          </ul>
-        </div>
-        <div className="check">
-          <p>
-            <input type="checkbox" />
-          </p>
-          <ul>
-            <li>
-              <input type="checkbox" />
-            </li>
-            <li>
-              <input type="checkbox" />
-            </li>
-            <li>
-              <input type="checkbox" />
             </li>
           </ul>
         </div>

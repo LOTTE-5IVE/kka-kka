@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 public class LocalDateTimeSerializer extends StdSerializer<LocalDateTime> {
 
+
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public LocalDateTimeSerializer() {
