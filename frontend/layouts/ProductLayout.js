@@ -4,6 +4,7 @@ import { useMoney } from "../hooks/useMoney";
 
 export default function ProductLayout({ cat_id, search, data }) {
   const cat_name = {
+    0: "전체 상품",
     1: "전체 상품",
     2: "비스킷/샌드",
     3: "스낵/봉지과자",

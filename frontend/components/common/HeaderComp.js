@@ -23,6 +23,8 @@ export default function Header() {
     if (token !== "") {
       useMemberInfo(token).then((res) => {
         if (res) {
+          console.log("headercomp");
+          console.log(res);
           setName(res.name);
           setGrade(res.grade);
         }
@@ -39,7 +41,7 @@ export default function Header() {
               document.location.href = "/";
             }}
           >
-            <img height="52" src="/vercel.svg" />
+            <img height="60px" src="/main/logo.png" />
           </div>
         </div>
         <div className="search">
@@ -122,6 +124,10 @@ export default function Header() {
               display: flex;
               justify-content: space-between;
               align-items: center;
+
+              .logo {
+                margin-left: 160px;
+              }
             }
 
             .search {

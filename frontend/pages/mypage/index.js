@@ -10,6 +10,28 @@ export default function mypage() {
   const [token, setToken] = useState("");
   const [name, setName] = useState("");
   const [grade, setGrade] = useState("");
+  const [orderList, setOrderList] = useState([]);
+  const [offset, setOffset] = useState();
+
+  const getOrders = async () => {
+    GetHApi(`/api/members/me/orders?pageSize=3`, token).then((res) => {
+      if (res) {
+        console.log(res);
+        setOrderList(res);
+      }
+    });
+  };
+
+  const getOrders2 = async () => {
+    GetHApi(`/api/members/me/orders?orderId=${offset}&pageSize=3`, token).then(
+      (res) => {
+        if (res) {
+          console.log(res);
+          setOrderList(res);
+        }
+      },
+    );
+  };
 
   useEffect(() => {
     setToken(useGetToken());
@@ -19,6 +41,7 @@ export default function mypage() {
         if (res) {
           setName(res.name);
           setGrade(res.grade);
+          getOrders();
         }
       });
     }
@@ -28,10 +51,20 @@ export default function mypage() {
     setTab(menu);
   }
 
+  function handleOffset(num) {
+    setOffset(num);
+  }
+
   return (
     <>
       <Title title="마이페이지" />
-      <MyPageLayout name={name} grade={grade} tab={tab} handleTab={handleTab} />
+      <MyPageLayout
+        name={name}
+        grade={grade}
+        tab={tab}
+        handleTab={handleTab}
+        orderList={orderList}
+      />
     </>
   );
 }

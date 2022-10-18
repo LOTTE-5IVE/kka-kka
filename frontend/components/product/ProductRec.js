@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function ProductRec({ id, imgsrc, name, price, discount }) {
+export default function ProductRec({ id, imgsrc }) {
   return (
     <>
       <div className="wrapper">

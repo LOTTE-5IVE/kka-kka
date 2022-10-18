@@ -5,6 +5,7 @@ import { PostHApi } from "../../../apis/Apis";
 import Title from "../../../components/common/Title";
 import { useGetToken } from "../../../hooks/useGetToken";
 import ProductDetailLayout from "../../../layouts/ProductDetailLayout";
+import Swal from "sweetalert2";
 
 export default function productDetail() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function productDetail() {
   const [tab, setTab] = useState("info");
   const [modal, setModal] = useState(false);
   const [product, setProduct] = useState({});
+  const [reviews, setReviews] = useState();
 
   const handleQuantity = (type) => {
     if (type !== "minus" || quantity > 1) {
@@ -29,11 +31,29 @@ export default function productDetail() {
     setTab(text);
   }
 
-  const addCartItem = async (id, quantity) => {
+  const addCartItem = async (product, quantity) => {
+    setToken(useGetToken());
+
+    Swal.fire({
+      title: "장바구니에 담으시겠습니까?",
+      html: `${product.name}` + "<br/>" + `수량 : ${quantity}개`,
+      imageUrl: `${product.image_url}`,
+      imageHeight: 300,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "장바구니 담기",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("", "장바구니에 성공적으로 담겼습니다.", "success");
+      }
+    });
+
     PostHApi(
       "/api/carts",
       {
-        productId: id,
+        productId: product.id,
         quantity: quantity,
       },
       token,
@@ -48,9 +68,21 @@ export default function productDetail() {
     }
   };
 
+  const getReview = async () => {
+    if (productId) {
+      await axios.get(`/api/reviews?product=4330`).then((res) => {
+        setReviews(res.data);
+      });
+    }
+  };
+
   useEffect(() => {
-    setToken(useGetToken());
-  }, [token, quantity]);
+    if (!router.isReady) {
+      return;
+    }
+
+    getReview();
+  }, [router.isReady, token, quantity]);
 
   useState(() => {
     getItem();
@@ -64,6 +96,7 @@ export default function productDetail() {
         modal={modal}
         product={product}
         quantity={quantity}
+        reviews={reviews}
         handleModal={handleModal}
         handleTab={handleTab}
         handleQuantity={handleQuantity}

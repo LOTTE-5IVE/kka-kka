@@ -1,11 +1,14 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/buttonComp";
 import DaumPost from "../../components/payment/DaumPost";
+import { useGetToken } from "../../hooks/useGetToken";
 import { useMoney } from "../../hooks/useMoney";
 
 export default function payment() {
+  const [token, setToken] = useState("");
   const [zipcode, setZipcode] = useState("");
   const [addr1, setAddr1] = useState("");
   const [addr2, setAddr2] = useState("");
@@ -15,20 +18,46 @@ export default function payment() {
   const [orderItems, setOrderItems] = useState([]);
   const [buyItem, setBuyItem] = useState();
   const [buyQuantity, setBuyQuantity] = useState();
+
   const router = useRouter();
 
   useEffect(() => {
     if (!router.isReady) {
       return;
     }
-    if (router.query.orderItems)
+    setToken(useGetToken());
+
+    if (router.query.orderItems) {
+      console.log("orderItems");
       setOrderItems(JSON.parse(router.query.orderItems));
+    }
 
     if (router.query.buyItem) {
       setBuyItem(JSON.parse(router.query.buyItem));
       setBuyQuantity(router.query.quantity);
     }
   }, [router.isReady]);
+
+  const orderItem = async () => {
+    const arr = [];
+
+    orderItems?.map((x) => {
+      return arr.push({
+        productId: x.productId,
+        quantity: x.quantity,
+      });
+    });
+
+    if (buyItem) {
+      arr.push({ productId: buyItem.id, quantity: Number(buyQuantity) });
+    }
+
+    PostHApi("/api/orders", { productOrders: arr }, token).then((res) => {
+      if (res) {
+        console.log(res);
+      }
+    });
+  };
 
   function modalHandler() {
     setModal(false);
@@ -366,7 +395,12 @@ export default function payment() {
           </div>
         </div>
 
-        <div className="payBtn">
+        <div
+          className="payBtn"
+          onClick={() => {
+            orderItem();
+          }}
+        >
           <ButtonComp context="결제하기" />
         </div>
       </div>
