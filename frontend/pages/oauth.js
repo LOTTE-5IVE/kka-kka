@@ -24,7 +24,6 @@ export default function oauth() {
   const login = async () => {
     await axios
       .post(`/api/login/token`, {
-        //code: "1231234214",
         code: { code }.code,
         providerName: getProvider({ state }.state),
       })
@@ -34,7 +33,7 @@ export default function oauth() {
         setLoginFlag(true);
         const obj = {
           value: res.data.accessToken,
-          expire: new Date().getTime() + 1000 * 60 * 60,
+          expire: new Date().getTime() + 1000 * 60 * 1,
         };
         localStorage.setItem("accessToken", JSON.stringify(obj));
       })

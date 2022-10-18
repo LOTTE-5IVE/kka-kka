@@ -14,6 +14,7 @@ export default function productDetail() {
   const [tab, setTab] = useState("info");
   const [modal, setModal] = useState(false);
   const [product, setProduct] = useState({});
+  const [reviews, setReviews] = useState();
 
   const handleQuantity = (type) => {
     if (type !== "minus" || quantity > 1) {
@@ -48,9 +49,22 @@ export default function productDetail() {
     }
   };
 
+  const getReview = async () => {
+    if (productId) {
+      await axios.get(`/api/reviews?product=4330`).then((res) => {
+        setReviews(res.data);
+      });
+    }
+  };
+
   useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+
     setToken(useGetToken());
-  }, [token, quantity]);
+    getReview();
+  }, [router.isReady, token, quantity]);
 
   useState(() => {
     getItem();
@@ -64,6 +78,7 @@ export default function productDetail() {
         modal={modal}
         product={product}
         quantity={quantity}
+        reviews={reviews}
         handleModal={handleModal}
         handleTab={handleTab}
         handleQuantity={handleQuantity}

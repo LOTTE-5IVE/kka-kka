@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { DeleteHApi, GetHApi } from "../../apis/Apis";
+import { DeleteHApi, GetHApi, PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/buttonComp";
 import Title from "../../components/common/Title";
@@ -71,11 +71,17 @@ export default function cart() {
     GetHApi("/api/carts", token).then((res) => {
       if (res) {
         setCartItems(res.cartItems);
-        console.log(res.cartItems);
       }
     });
   };
 
+  const editCartItem = async (id, quantity) => {
+    if (quantity > 1) {
+      PostHApi("/api/carts", { productId: id, quantity: quantity }, token).then(
+        (res) => {},
+      );
+    }
+  };
   const removeCartItem = async (id) => {
     DeleteHApi(`/api/carts/${id}`, token).then((res) => {
       getCartItem();
@@ -193,6 +199,10 @@ export default function cart() {
                           <input
                             type="button"
                             onClick={() => {
+                              editCartItem(
+                                product.productId,
+                                product.quantity - 1,
+                              );
                               handleMinus(product.productId);
                             }}
                             value="-"
@@ -202,6 +212,10 @@ export default function cart() {
                           <input
                             type="button"
                             onClick={() => {
+                              editCartItem(
+                                product.productId,
+                                product.quantity + 1,
+                              );
                               handlePlus(product.productId);
                             }}
                             value="+"
@@ -246,9 +260,10 @@ export default function cart() {
               <tbody>
                 <tr style={{ height: "7vw" }}>
                   <td>
-                    {checkItems.map((product, index) => {
+                    {/* {checkItems.map((product, index) => {
                       return <span key={index}> {product.id}</span>;
-                    })}
+                    })} */}
+                    상품금액
                   </td>
                   <td>-</td>
                   <td>할인금액</td>

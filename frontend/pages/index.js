@@ -1,12 +1,18 @@
 import Head from "next/head";
-import Image from "next/image";
+import { useState } from "react";
 import Title from "../components/common/Title";
-import C_Recomm from "../components/main/C_Recomm";
-import R_Recomm from "../components/main/R_Recomm";
-import Slider from "../components/main/Slider";
-import styles from "../styles/Home.module.scss";
+import Visual from "../components/main/Visual";
+import Youtube from "../components/main/Youtube";
+import Introduction from "../components/main/Introduction";
+import Recomm from "../components/main/Recomm";
 
 export default function Home() {
+  const [tab, setTab] = useState("리뷰");
+
+  function handleTab(text) {
+    setTab(text);
+  }
+
   return (
     <>
       <Head>
@@ -15,14 +21,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Title title="과자 사러 과자" />
-      <Slider />
-      <C_Recomm />
-      <R_Recomm />
-      <style jsx>{`
-        .contents {
-          margin-top: 35px;
-        }
-      `}</style>
+      <Visual />
+      <Recomm tab={tab} handleTab={handleTab} />
+      <Youtube />
+
+      <Introduction />
     </>
   );
 }
