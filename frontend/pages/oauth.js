@@ -24,7 +24,6 @@ export default function oauth() {
   const login = async () => {
     await axios
       .post(`/api/login/token`, {
-        //code: "1231234214",
         code: { code }.code,
         providerName: getProvider({ state }.state),
       })

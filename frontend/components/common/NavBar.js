@@ -21,7 +21,7 @@ export default function NavBar() {
               href={{
                 pathname: "/product",
                 query: {
-                  cat_id: 1,
+                  cat_id: 0,
                 },
               }}
             >
