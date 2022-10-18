@@ -1,4 +1,4 @@
-package kkakka.mainservice.order.ui.dto;
+package kkakka.mainservice.member.member.ui.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

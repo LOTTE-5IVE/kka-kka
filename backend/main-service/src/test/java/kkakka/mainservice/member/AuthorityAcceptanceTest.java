@@ -1,6 +1,6 @@
 package kkakka.mainservice.member;
 
-import static kkakka.mainservice.fixture.TestMember.MEMBER_01;
+import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
@@ -75,7 +75,7 @@ public class AuthorityAcceptanceTest extends AcceptanceTest {
     void userAuthority_success() {
         // given
         // when
-        final String accessToken = jwtTokenProvider.generateToken(MEMBER_01.getAccessToken());
+        final String accessToken = jwtTokenProvider.generateToken(TEST_MEMBER_01.getAccessToken());
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
                 .when()
