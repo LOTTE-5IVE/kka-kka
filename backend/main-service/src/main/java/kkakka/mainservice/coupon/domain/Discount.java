@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.product.domain.Product;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Table(name = "Discount")
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class Discount {
 
@@ -41,7 +42,7 @@ public class Discount {
     private Integer discount;
     private LocalDateTime startedAt;
     private LocalDateTime expiredAt;
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @Enumerated(EnumType.STRING)
     private DiscountType discountType;

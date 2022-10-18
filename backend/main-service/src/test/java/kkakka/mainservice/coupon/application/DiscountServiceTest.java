@@ -65,16 +65,17 @@ public class DiscountServiceTest extends TestContext {
         productRepository.save(product);
 
         // when
-        discountService.createDiscount(new DiscountRequestDto(
+        DiscountRequestDto discountRequestDto = new DiscountRequestDto(
             category.getId(), null, "test", 10, DiscountType.CATEGORY_DISCOUNT.name(),
             LocalDateTime.of(2020, 1, 1, 0, 0),
-            LocalDateTime.of(2025, 1, 1, 0, 0)));
+            LocalDateTime.of(2025, 1, 1, 0, 0));
+        discountService.createDiscount(discountRequestDto);
 
         // then
         Product savedProduct = productRepository.findById(product.getId())
             .orElseThrow(KkaKkaException::new);
         assertThat(discountRepository.findAll().size()).isEqualTo(1);
-        assertThat(savedProduct.getDiscount()).isEqualTo(10);
+        assertThat(savedProduct.getDiscount()).isEqualTo(discountRequestDto.getDiscount());
     }
 
     @DisplayName("할인 삭제")

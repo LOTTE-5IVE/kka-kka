@@ -25,6 +25,7 @@ public class DiscountService {
     final private ProductRepository productRepository;
     final private CategoryRepository categoryRepository;
 
+    // TODO : NPE 처리
     /* 할인 등록 */
     @Transactional
     public Long createDiscount(DiscountRequestDto discountRequestDto) {
@@ -51,7 +52,8 @@ public class DiscountService {
                     discountRequestDto.getDiscount(),
                     discountRequestDto.getStartedAt(),
                     discountRequestDto.getExpiredAt());
-                List<Product> products = categoryRepository.findProductsByCategoryId(category.getId());
+                List<Product> products = categoryRepository.findProductsByCategoryId(
+                    category.getId());
                 for (Product product : products) {
                     product.changeDiscount(discountRequestDto.getDiscount());
                     productRepository.save(product);
@@ -65,12 +67,12 @@ public class DiscountService {
 
     private Product getProduct(DiscountRequestDto discountRequestDto) {
         return productRepository.findById(discountRequestDto.getProductId())
-            .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(KkaKkaException::new);
     }
 
     private Category getCategory(DiscountRequestDto discountRequestDto) {
         return categoryRepository.findById(discountRequestDto.getCategoryId())
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(KkaKkaException::new);
     }
 
     /* 할인 삭제 */
@@ -85,6 +87,7 @@ public class DiscountService {
             product.deleteDiscount();
             discountRepository.save(discount);
             productRepository.save(product);
+            return;
         }
         if (DiscountType.CATEGORY_DISCOUNT.equals(discount.getDiscountType())) {
             List<Product> products = categoryRepository.findProductsByCategoryId(
@@ -96,13 +99,15 @@ public class DiscountService {
             discount.deleteDiscount();
             discountRepository.save(discount);
         }
+        throw new KkaKkaException();
     }
 
     /* 할인 조회 */
     public List<DiscountResponseDto> showAllDiscounts() {
         List<Discount> discounts = discountRepository.findAll();
-        return discounts.stream().map(discount -> DiscountResponseDto.create(discount)).collect(
-            Collectors.toList());
+        return discounts.stream()
+            .map(discount -> DiscountResponseDto.create(discount))
+            .collect(Collectors.toList());
     }
 
 }
