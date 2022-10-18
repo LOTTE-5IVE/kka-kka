@@ -67,4 +67,12 @@ public class Product {
         return this.stock - quantity > 0;
     }
 
+    public void changeDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public void deleteDiscount() {
+        this.discount = 0;
+    }
+
 }
