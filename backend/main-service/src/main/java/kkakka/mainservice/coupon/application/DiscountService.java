@@ -53,7 +53,7 @@ public class DiscountService {
                         discountRequestDto.getDiscount(),
                         discountRequestDto.getStartedAt(),
                         discountRequestDto.getExpiredAt());
-                    List<Product> products = categoryRepository.findProductsByCategoryId(
+                    List<Product> products = productRepository.findProductsByCategoryId(
                         category.getId());
                     for (Product product : products) {
                         product.changeDiscount(discountRequestDto.getDiscount());
@@ -69,7 +69,7 @@ public class DiscountService {
 
     private Product getProduct(DiscountRequestDto discountRequestDto) {
         return productRepository.findById(discountRequestDto.getProductId())
-                .orElseThrow(KkaKkaException::new);
+            .orElseThrow(KkaKkaException::new);
     }
 
     private Category getCategory(DiscountRequestDto discountRequestDto) {
@@ -92,7 +92,7 @@ public class DiscountService {
             return;
         }
         if (DiscountType.CATEGORY_DISCOUNT.equals(discount.getDiscountType())) {
-            List<Product> products = categoryRepository.findProductsByCategoryId(
+            List<Product> products = productRepository.findProductsByCategoryId(
                 discount.getCategoryId());
             for (Product product : products) {
                 product.deleteDiscount();

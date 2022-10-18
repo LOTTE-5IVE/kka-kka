@@ -15,7 +15,4 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
         , countQuery = "SELECT count(p) FROM Product p where p.category.id = :categoryId")
     Page<Product> findByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
 
-    @Query(value = "select p from Product p join fetch p.category where p.category.id = :categoryId")
-    List<Product> findProductsByCategoryId(@Param("categoryId") Long categoryId);
-
 }
