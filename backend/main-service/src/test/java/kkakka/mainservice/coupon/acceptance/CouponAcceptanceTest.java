@@ -159,10 +159,12 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("다운 가능한 쿠폰 조회 - 성공")
     @Test
     void downloadableCoupons() {
+        String accessToken = 액세스_토큰_가져옴();
         일반_쿠폰_생성함();
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
+            .header("Authorization", "Bearer " + accessToken)
             .filter(document("find-downloadable-coupons"))
             .when()
             .get("/api/coupons/download")

@@ -28,4 +28,13 @@ public class CouponRequestDto {
     private Integer percentage;
     private Integer maxDiscount;
     private Integer minOrderPrice;
+
+    public boolean isValidDate() {
+        return this.getStartedAt().isBefore(LocalDateTime.now())
+            && this.getExpiredAt().isAfter(LocalDateTime.now());
+    }
+
+    public boolean isValidPercentage() {
+        return this.percentage < 100 && this.percentage > 0;
+    }
 }
