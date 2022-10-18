@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CartItemDto {
 
-    private Long cartItemId;
+    private Long id;
     private Long productId;
     private String productName;
     private String imageUrl;
@@ -27,7 +27,7 @@ public class CartItemDto {
                 null,
                 c.getQuantity(),
                 c.getProduct().getPrice(),
-                c.getQuantity() * c.getProduct().getPrice());
+                c.getPrice());
     }
 
 }

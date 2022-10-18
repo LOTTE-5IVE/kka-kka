@@ -5,13 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.PageableHandlerMethodArgumentResolverCustomizer;
 
 @Configuration
-public class WebConfig {
+public class PageConfig {
 
     @Bean
-    public PageableHandlerMethodArgumentResolverCustomizer customizer(){
+    public PageableHandlerMethodArgumentResolverCustomizer customizer() {
         return pageSizeConfig -> {
             pageSizeConfig.setOneIndexedParameters(true);
-            pageSizeConfig.setMaxPageSize(2);
+            pageSizeConfig.setMaxPageSize(9);
         };
     }
 }

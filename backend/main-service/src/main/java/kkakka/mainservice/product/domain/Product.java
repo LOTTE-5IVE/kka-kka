@@ -1,6 +1,7 @@
 package kkakka.mainservice.product.domain;
 
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -59,12 +60,19 @@ public class Product {
     }
 
     public void reduceStock(int orderQuantity) {
-        int restStock = this.stock - orderQuantity;
-        this.stock = restStock;
+        this.stock -= orderQuantity;
     }
 
-    public boolean isStock(int quantity) {
+    public boolean inStock(int quantity) {
         return this.stock - quantity > 0;
+    }
+
+    public Long getCategoryId() {
+        return this.category.getId();
+    }
+
+    public String getCategoryName() {
+        return this.category.getName();
     }
 
     public void changeDiscount(int discount) {
@@ -75,4 +83,19 @@ public class Product {
         this.discount = 0;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
