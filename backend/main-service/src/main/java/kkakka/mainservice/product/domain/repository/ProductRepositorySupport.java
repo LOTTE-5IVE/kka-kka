@@ -42,7 +42,7 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
         final BooleanBuilder builder = new BooleanBuilder();
         if (searchWords.hasSearchWords()) {
             for (String searchWord : searchWords.getSearchWords()) {
-                builder.or(QProduct.product.category.name.eq(searchWord));
+                builder.or(QProduct.product.category.name.likeIgnoreCase("%" + searchWord + "%"));
             }
         }
         return builder;
