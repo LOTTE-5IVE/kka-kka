@@ -9,7 +9,6 @@ import Title from "../../components/common/Title";
 export default function admin() {
   const [Lmenu, setLmenu] = useState("프로모션");
   const [Smenu, setSmenu] = useState("혜택 등록");
-  const [btn, setBtn] = useState("할인");
 
   function LmenuHandler(text) {
     setLmenu(text);

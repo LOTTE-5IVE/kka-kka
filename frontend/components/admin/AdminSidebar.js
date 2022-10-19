@@ -8,7 +8,7 @@ export default function AdminSidebar({ LmenuHandler, SmenuHandler }) {
     <>
       <div className="contents">
         <div className="logo">
-          <img width="96px" src="/sample.png" />
+          <img width="96px" src="/main/logo.png" />
         </div>
         <div className="title">
           <h2>프로모션</h2>

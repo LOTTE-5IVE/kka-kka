@@ -1,109 +1,66 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { AdminButton } from "../common/Button/AdminButton";
+import CouponSearchTable from "./CouponSearchTable";
+import DiscountSearchTable from "./DiscountSearchTable";
 
 export default function ProductSearch() {
+  const [tab, setTab] = useState("할인");
+
+  // const getPromotion = async () => {
+  //   await axios.get("/api/coupons/discount").then((res) => {
+  //     console.log(res.data);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   getPromotion();
+  // }, []);
+
   return (
-    <>
+    <div className="wrapper">
+      <div style={{ display: "flex", marginBottom: "30px" }}>
+        <div
+          className={`tab ${tab === "할인" ? "active" : ""}`}
+          onClick={() => setTab("할인")}
+        >
+          할인
+        </div>
+        <div
+          className={`tab ${tab === "쿠폰" ? "active" : ""}`}
+          onClick={() => setTab("쿠폰")}
+        >
+          쿠폰
+        </div>
+      </div>
       <div className="contents">
-        <table>
-          <colgroup>
-            <col style={{ width: "5%" }} />
-            <col style={{ width: "8%" }} />
-            <col style={{ width: "22%" }} />
-            <col style={{ width: "15%" }} />
-            <col style={{ width: "10%" }} />
-            <col style={{ width: "16%" }} />
-            <col style={{ width: "16%" }} />
-            <col style={{ width: "8%" }} />
-          </colgroup>
-          <thead>
-            <th></th>
-            <th>혜택 유형</th>
-            <th>혜택 이름</th>
-            <th>할인 설정</th>
-            <th>최소 주문 금액</th>
-            <th>다운로드 가능 기간</th>
-            <th>유효기간</th>
-            <th>적용 유형</th>
-          </thead>
-          <tbody>
-            <tr style={{ height: "5vw" }}>
-              <td>
-                <AdminButton context="중지" color="#F2B90C" />
-              </td>
-              <td>쿠폰</td>
-              <td>스낵/쿠키 카테고리 쿠폰</td>
-              <td>15% (최대 5,000원)</td>
-              <td>10,000원</td>
-              <td>2022-09-15 ~ 2022-09-15</td>
-              <td>2022-09-15 ~ 2022-09-15</td>
-              <td>회원 등급</td>
-            </tr>
-            <tr style={{ height: "5vw" }}>
-              <td>
-                <AdminButton context="중지" color="#F2B90C" />
-              </td>
-              <td>쿠폰</td>
-              <td>스낵/쿠키 카테고리 쿠폰</td>
-              <td>15% (최대 5,000원)</td>
-              <td>10,000원</td>
-              <td>2022-09-15 ~ 2022-09-15</td>
-              <td>2022-09-15 ~ 2022-09-15</td>
-              <td>상품</td>
-            </tr>
-            <tr style={{ height: "100%" }}>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+        {tab === "할인" ? <DiscountSearchTable /> : <CouponSearchTable />}
       </div>
 
       <style jsx>{`
-        .contents {
+        .wrapper {
+          width: 90%;
           height: 100%;
-          border: 2px solid #dedede;
-          color: #7a7a7a;
+          margin: 0 auto;
 
-          table {
+          .tab {
+            border: 1px solid;
+            padding: 7px 25px;
+          }
+
+          .active {
+            background-color: #f2889b;
+            color: #fff;
+            border: 1px solid #f2889b;
+          }
+
+          .contents {
             height: 100%;
-            width: 100%;
-            text-align: center;
-            border-collapse: collapse;
-
-            td {
-              border: 1px solid #dedede;
-            }
-
-            th {
-              border-left: 1px solid #dedede;
-            }
-
-            th:first-child {
-              border-left: 0;
-            }
-
-            td:first-child {
-              border-left: 0;
-            }
-
-            td:last-child {
-              border-right: 0;
-            }
-
-            tr:last-child {
-              td {
-                border-bottom: 0;
-              }
-            }
+            border: 2px solid #dedede;
+            color: #7a7a7a;
           }
         }
       `}</style>
-    </>
+    </div>
   );
 }
