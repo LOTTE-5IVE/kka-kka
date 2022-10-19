@@ -4,12 +4,7 @@ import { useRouter } from "next/router";
 export default function NavBar() {
   const router = useRouter();
   const category = (cat_id) => {
-    router.push({
-      pathname: `/product`,
-      query: {
-        cat_id,
-      },
-    });
+    router.push(`/product?cat_id=${cat_id}`);
   };
 
   return (
@@ -22,14 +17,28 @@ export default function NavBar() {
             </Link>
           </li>
           <li>
-            <Link href="/product?cat_id=1">
+            <Link
+              href={{
+                pathname: "/product",
+                query: {
+                  cat_id: 0,
+                },
+              }}
+            >
               <a>전체</a>
             </Link>
           </li>
           <li>
-            <div onClick={() => category(2)} className="category">
+            <Link
+              href={{
+                pathname: "/product",
+                query: {
+                  cat_id: 2,
+                },
+              }}
+            >
               <a>비스킷/샌드</a>
-            </div>
+            </Link>
           </li>
           <li>
             <div onClick={() => category(3)} className="category">

@@ -36,7 +36,7 @@ public class Provider {
         }
         Provider provider = (Provider) o;
         return Objects.equals(providerId, provider.providerId)
-                && memberProviderName == provider.memberProviderName;
+            && memberProviderName == provider.memberProviderName;
     }
 
     @Override

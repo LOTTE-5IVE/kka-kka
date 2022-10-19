@@ -1,8 +1,14 @@
+import axios from "axios";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useGetToken } from "../../hooks/useGetToken";
+import { useMemberInfo } from "../../hooks/useMemberInfo";
 
 export default function Header() {
   const [value, setValue] = useState("");
+  const [token, setToken] = useState("");
+  const [name, setName] = useState("");
+  const [grade, setGrade] = useState("");
 
   function search(event) {
     if (event.key === "Enter") {
@@ -11,13 +17,32 @@ export default function Header() {
     }
   }
 
+  useEffect(() => {
+    setToken(useGetToken());
+
+    if (token !== "") {
+      useMemberInfo(token).then((res) => {
+        if (res) {
+          console.log("headercomp");
+          console.log(res);
+          setName(res.name);
+          setGrade(res.grade);
+        }
+      });
+    }
+  }, [token]);
+
   return (
     <div>
       <div className="wrapper">
         <div className="logo">
-          <Link href="/">
-            <img height="52" src="/vercel.svg" />
-          </Link>
+          <div
+            onClick={() => {
+              document.location.href = "/";
+            }}
+          >
+            <img height="60px" src="/main/logo.png" />
+          </div>
         </div>
         <div className="search">
           <input
@@ -38,22 +63,52 @@ export default function Header() {
         </div>
         <div className="icons">
           <div className="top">
-            <Link href="/member/join">
-              <a>회원가입</a>
-            </Link>
+            {token ? (
+              <>
+                <div>{name}님</div>
+                <div
+                  onClick={() => {
+                    localStorage.removeItem("accessToken");
+                    document.location.href = "/";
+                  }}
+                >
+                  <a>로그아웃</a>
+                </div>
+              </>
+            ) : (
+              <>
+                <Link href="/member/join">
+                  <a>회원가입</a>
+                </Link>
 
-            <Link href="/member/login">
-              <a>로그인</a>
-            </Link>
+                <Link href="/member/login">
+                  <a>로그인</a>
+                </Link>
+              </>
+            )}
           </div>
           <div className="bottom">
-            <Link href="/mypage">
-              <img src="/common/top_mypage.png" />
-            </Link>
+            {token ? (
+              <>
+                <Link href="/mypage">
+                  <img src="/common/top_mypage.png" />
+                </Link>
 
-            <Link href="/member/cart">
-              <img src="/common/top_cart.png" />
-            </Link>
+                <Link href="/member/cart">
+                  <img src="/common/top_cart.png" />
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/member/login">
+                  <img src="/common/top_mypage.png" />
+                </Link>
+
+                <Link href="/member/cart">
+                  <img src="/common/top_cart.png" />
+                </Link>
+              </>
+            )}
           </div>
         </div>
         <style jsx>{`
@@ -69,6 +124,10 @@ export default function Header() {
               display: flex;
               justify-content: space-between;
               align-items: center;
+
+              .logo {
+                margin-left: 160px;
+              }
             }
 
             .search {

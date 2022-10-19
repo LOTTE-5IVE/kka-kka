@@ -1,0 +1,1 @@
+ALTER TABLE review ADD COLUMN rating DECIMAL(2, 1);

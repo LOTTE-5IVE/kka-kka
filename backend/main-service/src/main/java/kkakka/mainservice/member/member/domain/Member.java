@@ -38,12 +38,12 @@ public class Member {
     private Grade grade;
 
     public static Member create(Long id, Provider provider, String name, String email, String phone,
-            String address, String ageGroup, Grade grade) {
+        String address, String ageGroup, Grade grade) {
         return new Member(id, provider, name, email, phone, address, ageGroup, grade);
     }
 
     public static Member create(Provider provider, String name, String email, String phone,
-            String ageGroup) {
+        String ageGroup) {
         return new Member(null, provider, name, email, phone, "", ageGroup, Grade.BRONZE);
     }
 
@@ -69,6 +69,10 @@ public class Member {
         this.address = address;
     }
 
+    public MemberResponse toDto() {
+        return new MemberResponse(name, email, phone, address, ageGroup, grade);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -84,9 +88,5 @@ public class Member {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public MemberResponse toDto() {
-        return new MemberResponse(name, email, phone, address, ageGroup, grade);
     }
 }

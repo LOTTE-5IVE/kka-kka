@@ -34,14 +34,7 @@ export default function App() {
         className="mySwiper"
         style={{ height: "19vw" }}
       >
-        <SwiperSlide
-          style={{
-            textAlign: "center",
-            position: "relative",
-            display: "block",
-            margin: "0 auto",
-          }}
-        >
+        <SwiperSlide>
           <img src="/main/1.png" />
         </SwiperSlide>
         <SwiperSlide className="swiper-slide">
