@@ -7,8 +7,8 @@ import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.common.dto.PageableResponse;
 import kkakka.mainservice.product.application.ProductService;
 import kkakka.mainservice.product.application.dto.ProductDto;
-import kkakka.mainservice.product.ui.dto.ProductResponseDto;
-import kkakka.mainservice.product.ui.dto.ProductResponseDto.CategoryResponse;
+import kkakka.mainservice.product.ui.dto.ProductCategoryResponse;
+import kkakka.mainservice.product.ui.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,13 +33,13 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductResponseDto> showProductDetail(
+    public ResponseEntity<ProductResponse> showProductDetail(
             @PathVariable("productId") Long productId) {
         ProductDto productDto = productService.showProductDetail(productId);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ProductResponseDto(
+                new ProductResponse(
                         productDto.getId(),
-                        new CategoryResponse(productDto.getCategoryId(),
+                        new ProductCategoryResponse(productDto.getCategoryId(),
                                 productDto.getCategoryName()),
                         productDto.getName(),
                         productDto.getPrice(),
@@ -53,7 +53,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<PageableResponse<List<ProductResponseDto>>> showAllProducts(
+    public ResponseEntity<PageableResponse<List<ProductResponse>>> showAllProducts(
             @RequestParam(value = "category", required = false) Long categoryId,
             Pageable pageable) {
         final Page<ProductDto> productDtos = productService.showAllProductsWithCategory(
@@ -63,7 +63,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<PageableResponse<List<ProductResponseDto>>> showProductsBySearch(
+    public ResponseEntity<PageableResponse<List<ProductResponse>>> showProductsBySearch(
             @RequestParam(value = "keyword", required = false) String keyword,
             Pageable pageable
     ) {
@@ -79,13 +79,13 @@ public class ProductController {
                 .body(dtoToPageableResponse(pageable, productDtos));
     }
 
-    private PageableResponse<List<ProductResponseDto>> dtoToPageableResponse(Pageable pageable,
+    private PageableResponse<List<ProductResponse>> dtoToPageableResponse(Pageable pageable,
             Page<ProductDto> productDtos) {
 
-        final List<ProductResponseDto> response = productDtos
-                .map(productDto -> new ProductResponseDto(
+        final List<ProductResponse> response = productDtos
+                .map(productDto -> new ProductResponse(
                         productDto.getId(),
-                        new CategoryResponse(productDto.getCategoryId(),
+                        new ProductCategoryResponse(productDto.getCategoryId(),
                                 productDto.getCategoryName()),
                         productDto.getName(),
                         productDto.getPrice(),

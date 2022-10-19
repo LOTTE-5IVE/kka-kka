@@ -11,6 +11,7 @@ import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.order.domain.ProductOrder;
+import kkakka.mainservice.product.domain.Nutrition;
 import kkakka.mainservice.product.domain.Product;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +34,8 @@ public class ReviewTest extends TestContext {
         );
         final Product product = new Product(
                 (new Category("test-category")),
-                "product-name", 1000, 10, "", ""
+                "product-name", 1000, 10, "", "",
+                new Nutrition("398", "51", "0", "7", "22", "12", "0.5", "35", "370", "0")
         );
         productOrder = ProductOrder.create(
                 product,

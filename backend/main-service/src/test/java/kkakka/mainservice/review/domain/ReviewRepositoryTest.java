@@ -15,7 +15,9 @@ import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
+import kkakka.mainservice.product.domain.Nutrition;
 import kkakka.mainservice.product.domain.Product;
+import kkakka.mainservice.product.domain.repository.NutritionRepository;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.review.domain.repository.ReviewRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +42,8 @@ public class ReviewRepositoryTest extends TestContext {
     private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private NutritionRepository nutritionRepository;
 
     @DisplayName("상품 id로 후기를 조회할 수 있는지 테스트")
     @Test
@@ -57,7 +61,11 @@ public class ReviewRepositoryTest extends TestContext {
         final Product product = productRepository.save(
                 new Product(
                         categoryRepository.save(new Category("test-category")),
-                        "product-name", 1000, 10, "", ""
+                        "product-name", 1000, 10, "", "",
+                        nutritionRepository.save(
+                                new Nutrition("398", "51", "0", "7", "22", "12", "0.5", "35", "370",
+                                        "0")
+                        )
                 )
         );
         final ProductOrder productOrder = productOrderRepository.save(

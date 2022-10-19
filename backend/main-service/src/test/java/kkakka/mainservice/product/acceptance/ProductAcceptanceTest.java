@@ -9,7 +9,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import kkakka.mainservice.DocumentConfiguration;
-import kkakka.mainservice.product.ui.dto.ProductResponseDto;
+import kkakka.mainservice.product.ui.dto.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -95,17 +95,17 @@ public class ProductAcceptanceTest extends DocumentConfiguration {
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body().jsonPath().getList("data", ProductResponseDto.class)).hasSize(1);
+        assertThat(response.body().jsonPath().getList("data", ProductResponse.class)).hasSize(1);
         assertThat(
-                response.body().jsonPath().getList("data", ProductResponseDto.class)
+                response.body().jsonPath().getList("data", ProductResponse.class)
                         .stream()
-                        .map(productResponseDto -> productResponseDto.getName().contains("제로"))
+                        .map(productResponse -> productResponse.getName().contains("제로"))
                         .findAny())
                 .isNotEmpty();
         assertThat(
-                response.body().jsonPath().getList("data", ProductResponseDto.class)
+                response.body().jsonPath().getList("data", ProductResponse.class)
                         .stream()
-                        .map(productResponseDto -> productResponseDto.getName().contains("쿠키"))
+                        .map(productResponse -> productResponse.getName().contains("쿠키"))
                         .findAny())
                 .isNotEmpty();
     }
