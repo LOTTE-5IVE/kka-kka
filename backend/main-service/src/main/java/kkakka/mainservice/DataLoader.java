@@ -2,7 +2,7 @@ package kkakka.mainservice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import kkakka.mainservice.category.domain.Category;
@@ -34,7 +34,7 @@ public class DataLoader {
     private final OrderRepository orderRepository;
     private final ReviewRepository reviewRepository;
 
-    private static final Map<String, Category> categories = new HashMap<>();
+    private static final Map<String, Category> categories = new LinkedHashMap<>();
     private static Product testProduct;
     private static Member testMember;
 
@@ -143,8 +143,8 @@ public class DataLoader {
         Category category1 = categoryRepository.save(new Category("비스킷/샌드"));
         Category category2 = categoryRepository.save(new Category("스낵/봉지과자"));
         Category category3 = categoryRepository.save(new Category("박스과자"));
-        Category category4 = categoryRepository.save(new Category("캔디/사탕/젤리"));
-        Category category5 = categoryRepository.save(new Category("시리얼/바"));
+        Category category4 = categoryRepository.save(new Category("시리얼/바"));
+        Category category5 = categoryRepository.save(new Category("캔디/사탕/젤리"));
         Category category6 = categoryRepository.save(new Category("초콜릿"));
         Category category7 = categoryRepository.save(new Category("껌/자일리톨"));
         Category category8 = categoryRepository.save(new Category("선물세트"));
