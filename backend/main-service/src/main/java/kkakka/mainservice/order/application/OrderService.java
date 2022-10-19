@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,8 +95,13 @@ public class OrderService {
             ProductOrder productOrder = productOrderRepository
                     .findByIdAndMemberId(productOrderId, loginMemberId)
                     .orElseThrow(NotOrderOwnerException::new);
-            productOrder.cancel();
-            productOrderRepository.save(productOrder);
+
+            LocalDateTime orderedAt = productOrder.getOrder().getOrderedAt();
+            boolean isBeforeDay = orderedAt.plusHours(24).isBefore(LocalDateTime.now()); // 24시간 전이면 false
+            if (!isBeforeDay) {
+                productOrder.cancel();
+                productOrderRepository.save(productOrder);
+            }
         });
     }
 
