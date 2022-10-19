@@ -1,12 +1,15 @@
 package kkakka.mainservice.product.application.dto;
 
+import kkakka.mainservice.product.domain.Product;
+import kkakka.mainservice.product.ui.dto.ProductResponse;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductDto {
 
     private Long id;
@@ -19,11 +22,30 @@ public class ProductDto {
     private String nutritionInfoUrl;
     private int discount;
 
-    public Long getCategoryId() {
-        return categoryDto.getId();
+    public static ProductDto toDto(Product product, CategoryDto categoryDto) {
+        return new ProductDto(product.getId(),
+                categoryDto,
+                product.getName(),
+                product.getPrice(),
+                product.getStock(),
+                product.getImageUrl(),
+                product.getDetailImageUrl(),
+                product.getNutritionInfoUrl(),
+                product.getDiscount()
+        );
     }
 
-    public String getCategoryName() {
-        return categoryDto.getName();
+    public ProductResponse toResponseDto() {
+        return new ProductResponse(
+                this.id,
+                this.categoryDto.toResponseDto(),
+                this.name,
+                this.price,
+                this.stock,
+                this.imageUrl,
+                this.detailImageUrl,
+                this.nutritionInfoUrl,
+                this.discount
+        );
     }
 }

@@ -1,6 +1,7 @@
 package kkakka.mainservice.product.ui.dto;
 
 import kkakka.mainservice.category.domain.Category;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
