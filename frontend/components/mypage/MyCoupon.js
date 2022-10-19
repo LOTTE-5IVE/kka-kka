@@ -1,7 +1,5 @@
 import { useState } from "react";
 import Title from "../../components/common/Title";
-import MyInfoCard from "../../components/mypage/MyInfoCard";
-import Mysidebar from "../../components/mypage/mysidebar";
 import MyCouponCard from "./MyCouponCard";
 
 export default function MyCoupon() {
