@@ -1,5 +1,5 @@
 import MyInfoCard from "../../components/mypage/MyInfoCard";
-import Mysidebar from "../../components/mypage/mysidebar";
+import Mysidebar from "../../components/mypage/Mysidebar";
 
 export default function myCoupon() {
   return (
