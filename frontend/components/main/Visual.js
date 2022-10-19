@@ -17,75 +17,79 @@ export default function Visual() {
     <>
       <section className="visual">
         <div className="inner">
-          <div
-            className="title fade-in"
-            ref={(el) => (fadeEls.current[0] = el)}
-          >
-            <img width="350px" src="/main/logo.png" />
-          </div>
           <div className="fade-in" ref={(el) => (fadeEls.current[1] = el)}>
-            <img src="/main1.png" className="cup1 image" />
+            <img src="/giftset.png" className="giftset" />
           </div>
           <div className="fade-in" ref={(el) => (fadeEls.current[2] = el)}>
-            <img width="500px" src="/main2.png" className="cup2 image" />
+            <img width="500px" src="/cookie.png" className="cookie" />
           </div>
           <div className="fade-in" ref={(el) => (fadeEls.current[3] = el)}>
-            <img width="420px" src="/main3.png" alt="Spoon" className="spoon" />
+            <img width="420px" src="/bts.png" className="bts" />
           </div>
           <div className="fade-in" ref={(el) => (fadeEls.current[4] = el)}>
-            <img src="/images/visual_cup2_text.png" className="cup2 text" />
+            <div className="logoComment">
+              <img width="845px" src="/intro.png" />
+              {/* <p
+                style={{
+                  fontSize: "20px",
+                  fontWeight: "500",
+                  color: "#523020",
+                  margin: "0",
+                }}
+              >
+                다가오는 겨울을 따뜻하게 까까와 함께 <br />
+                차가운 일상을 달콤함으로 채워보세요
+              </p> */}
+            </div>
           </div>
         </div>
       </section>
 
       <style jsx>{`
         .visual {
-          background-image: url("/images/visual_bg.jpg");
+          background-image: url("/main/visual_bg.jpg");
           background-position: center;
-        }
-        .visual .inner {
-          width: 1100px;
-          margin: 0 auto;
-          position: relative;
-          height: 646px;
-        }
-        .visual .title {
-          position: absolute;
-          top: 15px;
-          left: -80px;
-        }
-        .visual .title .btn {
-          position: absolute;
-          top: 259px;
-          left: 173px;
-        }
-        .visual .cup1.image {
-          position: absolute;
-          bottom: 15px;
-          right: -200px;
-        }
-        .visual .cup1.text {
-          position: absolute;
-          top: 38px;
-          right: 171px;
-        }
-        .visual .cup2.image {
-          position: absolute;
-          bottom: 0;
-          right: 105px;
-        }
-        .visual .cup2.text {
-          position: absolute;
-          top: 80px;
-          right: 416px;
-        }
-        .visual .spoon {
-          position: absolute;
-          bottom: -10px;
-          left: 280px;
-        }
-        .visual .fade-in {
-          opacity: 0;
+
+          .inner {
+            width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            height: 646px;
+
+            .title {
+              position: absolute;
+              top: 15px;
+              left: -80px;
+            }
+          }
+
+          .giftset {
+            position: absolute;
+            bottom: 15px;
+            right: -200px;
+          }
+
+          .cookie {
+            position: absolute;
+            bottom: 0;
+            right: 105px;
+          }
+
+          .logoComment {
+            position: absolute;
+            top: 40px;
+            right: 560px;
+          }
+
+          .bts {
+            position: absolute;
+            bottom: -10px;
+            left: 280px;
+          }
+
+          .fade-in {
+            opacity: 0;
+          }
         }
       `}</style>
     </>

@@ -1,6 +1,6 @@
-import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { isLogin } from "../../hooks/isLogin";
 import { useGetToken } from "../../hooks/useGetToken";
 import { useMemberInfo } from "../../hooks/useMemberInfo";
 
@@ -40,8 +40,9 @@ export default function Header() {
             onClick={() => {
               document.location.href = "/";
             }}
+            style={{ cursor: "pointer" }}
           >
-            <img height="60px" src="/main/logo.png" />
+            <img height="95px" src="/main/logo.png" />
           </div>
         </div>
         <div className="search">
@@ -71,6 +72,7 @@ export default function Header() {
                     localStorage.removeItem("accessToken");
                     document.location.href = "/";
                   }}
+                  style={{ cursor: "pointer" }}
                 >
                   <a>로그아웃</a>
                 </div>
@@ -91,21 +93,33 @@ export default function Header() {
             {token ? (
               <>
                 <Link href="/mypage">
-                  <img src="/common/top_mypage.png" />
+                  <img
+                    src="/common/top_mypage.png"
+                    style={{ cursor: "pointer" }}
+                  />
                 </Link>
 
                 <Link href="/member/cart">
-                  <img src="/common/top_cart.png" />
+                  <img
+                    src="/common/top_cart.png"
+                    style={{ cursor: "pointer" }}
+                  />
                 </Link>
               </>
             ) : (
               <>
                 <Link href="/member/login">
-                  <img src="/common/top_mypage.png" />
+                  <img
+                    src="/common/top_mypage.png"
+                    style={{ cursor: "pointer" }}
+                  />
                 </Link>
 
-                <Link href="/member/cart">
-                  <img src="/common/top_cart.png" />
+                <Link href="/member/login">
+                  <img
+                    src="/common/top_cart.png"
+                    style={{ cursor: "pointer" }}
+                  />
                 </Link>
               </>
             )}
