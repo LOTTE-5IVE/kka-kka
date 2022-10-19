@@ -22,6 +22,7 @@ public class ProductDetailDto {
     private String nutritionInfoUrl;
     private int discount;
     private NutritionDto nutritionDto;
+    private double ratingAvg;
 
     public static ProductDetailDto toDto(Product product, CategoryDto categoryDto,
             NutritionDto nutritionDto) {
@@ -34,7 +35,8 @@ public class ProductDetailDto {
                 product.getDetailImageUrl(),
                 product.getNutritionInfoUrl(),
                 product.getDiscount(),
-                nutritionDto
+                nutritionDto,
+                product.getRatingAvg()
         );
     }
 
@@ -49,7 +51,8 @@ public class ProductDetailDto {
                 this.detailImageUrl,
                 this.nutritionInfoUrl,
                 this.discount,
-                this.nutritionDto.toResponseDto()
+                this.nutritionDto.toResponseDto(),
+                this.ratingAvg
         );
     }
 }

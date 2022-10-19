@@ -21,6 +21,7 @@ public class ProductDto {
     private String detailImageUrl;
     private String nutritionInfoUrl;
     private int discount;
+    private double ratingAvg;
 
     public static ProductDto toDto(Product product, CategoryDto categoryDto) {
         return new ProductDto(product.getId(),
@@ -31,7 +32,8 @@ public class ProductDto {
                 product.getImageUrl(),
                 product.getDetailImageUrl(),
                 product.getNutritionInfoUrl(),
-                product.getDiscount()
+                product.getDiscount(),
+                product.getRatingAvg()
         );
     }
 
@@ -45,7 +47,8 @@ public class ProductDto {
                 this.imageUrl,
                 this.detailImageUrl,
                 this.nutritionInfoUrl,
-                this.discount
+                this.discount,
+                this.ratingAvg
         );
     }
 }

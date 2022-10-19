@@ -26,4 +26,5 @@ public class ProductResponse {
     @JsonProperty("nutritionInfo_url")
     private String nutritionInfoUrl;
     private int discount;
+    private double ratingAvg;
 }
