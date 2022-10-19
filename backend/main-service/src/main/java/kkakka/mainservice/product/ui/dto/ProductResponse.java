@@ -26,17 +26,4 @@ public class ProductResponse {
     @JsonProperty("nutritionInfo_url")
     private String nutritionInfoUrl;
     private int discount;
-
-    public static ProductResponse create(Product product) {
-        return new ProductResponse(product.getId(),
-                ProductCategoryResponse.create(product.getCategory()),
-                product.getName(),
-                product.getPrice(),
-                product.getStock(),
-                product.getImageUrl(),
-                product.getDetailImageUrl(),
-                product.getNutritionInfoUrl(),
-                product.getDiscount()
-        );
-    }
 }

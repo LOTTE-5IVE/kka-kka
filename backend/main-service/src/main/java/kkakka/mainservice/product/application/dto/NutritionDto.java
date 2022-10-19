@@ -1,6 +1,5 @@
-package kkakka.mainservice.product.ui.dto;
+package kkakka.mainservice.product.application.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NutritionResponse {
+public class NutritionDto {
 
     private Long id;
     private String calorie;
@@ -16,9 +15,7 @@ public class NutritionResponse {
     private String sugar;
     private String protein;
     private String fat;
-    @JsonProperty(value = "saturated_fat")
     private String saturatedFat;
-    @JsonProperty(value = "trans_fat")
     private String transFat;
     private String cholesterol;
     private String sodium;

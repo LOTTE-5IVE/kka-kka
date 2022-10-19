@@ -6,8 +6,11 @@ import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.category.ui.dto.ResponseCategoryProducts;
 import kkakka.mainservice.common.dto.ResponsePageDto;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.product.application.dto.CategoryDto;
+import kkakka.mainservice.product.application.dto.NutritionDto;
+import kkakka.mainservice.product.application.dto.ProductDetailDto;
 import kkakka.mainservice.product.application.dto.ProductDto;
-import kkakka.mainservice.product.application.dto.ProductDto.CategoryDto;
+import kkakka.mainservice.product.domain.Nutrition;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.SearchWords;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
@@ -26,10 +29,11 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductRepositorySupport productRepositorySupport;
 
-    public ProductDto showProductDetail(Long productId) {
+    public ProductDetailDto showProductDetail(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(KkaKkaException::new);
-        return new ProductDto(
+        Nutrition nutrition = product.getNutrition();
+        return new ProductDetailDto(
                 product.getId(),
                 new CategoryDto(product.getCategoryId(), product.getCategoryName()),
                 product.getName(),
@@ -38,7 +42,21 @@ public class ProductService {
                 product.getImageUrl(),
                 product.getDetailImageUrl(),
                 product.getNutritionInfoUrl(),
-                product.getDiscount());
+                product.getDiscount(),
+                new NutritionDto(
+                        nutrition.getId(),
+                        nutrition.getCalorie(),
+                        nutrition.getCarbohydrate(),
+                        nutrition.getSugar(),
+                        nutrition.getProtein(),
+                        nutrition.getFat(),
+                        nutrition.getSaturatedFat(),
+                        nutrition.getTransFat(),
+                        nutrition.getCholesterol(),
+                        nutrition.getSodium(),
+                        nutrition.getCalcium()
+                )
+        );
     }
 
     public ResponsePageDto getProductByRand() {

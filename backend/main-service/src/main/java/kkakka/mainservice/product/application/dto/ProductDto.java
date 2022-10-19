@@ -26,13 +26,4 @@ public class ProductDto {
     public String getCategoryName() {
         return categoryDto.getName();
     }
-
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class CategoryDto {
-
-        private Long id;
-        private String name;
-    }
 }

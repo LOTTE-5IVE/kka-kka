@@ -6,8 +6,11 @@ import java.util.stream.Collectors;
 import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.common.dto.PageableResponse;
 import kkakka.mainservice.product.application.ProductService;
+import kkakka.mainservice.product.application.dto.ProductDetailDto;
 import kkakka.mainservice.product.application.dto.ProductDto;
+import kkakka.mainservice.product.ui.dto.NutritionResponse;
 import kkakka.mainservice.product.ui.dto.ProductCategoryResponse;
+import kkakka.mainservice.product.ui.dto.ProductDetailResponse;
 import kkakka.mainservice.product.ui.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,21 +36,34 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductResponse> showProductDetail(
+    public ResponseEntity<ProductDetailResponse> showProductDetail(
             @PathVariable("productId") Long productId) {
-        ProductDto productDto = productService.showProductDetail(productId);
+        ProductDetailDto productDetailDto = productService.showProductDetail(productId);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ProductResponse(
-                        productDto.getId(),
-                        new ProductCategoryResponse(productDto.getCategoryId(),
-                                productDto.getCategoryName()),
-                        productDto.getName(),
-                        productDto.getPrice(),
-                        productDto.getStock(),
-                        productDto.getImageUrl(),
-                        productDto.getDetailImageUrl(),
-                        productDto.getNutritionInfoUrl(),
-                        productDto.getDiscount()
+                new ProductDetailResponse(
+                        productDetailDto.getId(),
+                        new ProductCategoryResponse(productDetailDto.getCategoryId(),
+                                productDetailDto.getCategoryName()),
+                        productDetailDto.getName(),
+                        productDetailDto.getPrice(),
+                        productDetailDto.getStock(),
+                        productDetailDto.getImageUrl(),
+                        productDetailDto.getDetailImageUrl(),
+                        productDetailDto.getNutritionInfoUrl(),
+                        productDetailDto.getDiscount(),
+                        new NutritionResponse(
+                                productDetailDto.getNutritionId(),
+                                productDetailDto.getCalorie(),
+                                productDetailDto.getCarbohydrate(),
+                                productDetailDto.getSugar(),
+                                productDetailDto.getProtein(),
+                                productDetailDto.getFat(),
+                                productDetailDto.getSaturatedFat(),
+                                productDetailDto.getTransFat(),
+                                productDetailDto.getCholesterol(),
+                                productDetailDto.getSodium(),
+                                productDetailDto.getCalcium()
+                        )
                 )
         );
     }
