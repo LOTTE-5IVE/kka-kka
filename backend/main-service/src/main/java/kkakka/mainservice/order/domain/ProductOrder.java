@@ -38,9 +38,10 @@ public class ProductOrder {
 
     private Integer price; //주문가격
     private Integer quantity; //주문수량
+    private Integer deleted;
 
     public static ProductOrder create(Product product, int price, int quantity) {
-        ProductOrder productOrder = new ProductOrder(null, null, product, price, quantity);
+        ProductOrder productOrder = new ProductOrder(null, null, product, price, quantity, 0);
 
         if (product.inStock(quantity)) {
             product.reduceStock(quantity);
@@ -55,5 +56,9 @@ public class ProductOrder {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public void cancel() {
+        this.deleted = 1;
     }
 }

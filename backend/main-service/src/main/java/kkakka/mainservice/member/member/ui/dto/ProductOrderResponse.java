@@ -14,14 +14,15 @@ public class ProductOrderResponse {
     private Long id;
     private Integer price;
     private Integer quantity;
+    private Integer deleted;
     @JsonProperty("product")
     private ProductResponse productResponse;
     @JsonProperty("review")
     private ReviewSimpleRespnse reviewResponse;
 
     public static ProductOrderResponse create(Long id, Integer price,
-            Integer quantity, ProductResponse productResponse, ReviewSimpleRespnse reviewResponse) {
-        return new ProductOrderResponse(id, price, quantity, productResponse, reviewResponse);
+            Integer quantity, Integer deleted,ProductResponse productResponse, ReviewSimpleRespnse reviewResponse) {
+        return new ProductOrderResponse(id, price, quantity, deleted,productResponse, reviewResponse);
     }
 }
 

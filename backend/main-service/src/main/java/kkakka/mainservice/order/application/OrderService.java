@@ -1,9 +1,8 @@
 package kkakka.mainservice.order.application;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.exception.NotOrderOwnerException;
+import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.application.dto.MemberOrderDto;
@@ -23,6 +22,10 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -82,6 +85,20 @@ public class OrderService {
         return dtos;
     }
 
+    @Transactional
+    public void cancelOrder(List<Long> productOrderIds, LoginMember loginMember) {
+
+        Long loginMemberId = loginMember.getId();
+
+        productOrderIds.forEach(productOrderId -> {
+            ProductOrder productOrder = productOrderRepository
+                    .findByIdAndMemberId(productOrderId, loginMemberId)
+                    .orElseThrow(NotOrderOwnerException::new);
+            productOrder.cancel();
+            productOrderRepository.save(productOrder);
+        });
+    }
+
     @NotNull
     private List<MemberProductOrderDto> toMemberProductOrderListWithProductOrders(
             Long memberId,
@@ -98,7 +115,7 @@ public class OrderService {
 
     @NotNull
     private MemberProductOrderDto toMemberProductOrderDto(Long memberId,
-            ProductOrder productOrder) {
+                                                          ProductOrder productOrder) {
         final Optional<Review> review = reviewRepository.findByMemberIdAndProductOrderId(
                 memberId, productOrder.getId());
         return MemberProductOrderDto.create(productOrder, productOrder.getProduct(), review);

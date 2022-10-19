@@ -22,6 +22,7 @@ public class MemberProductOrderDto {
     private Long id;
     private Integer price;
     private Integer quantity;
+    private Integer deleted;
     private MemberProductDto productDto;
     @Nullable
     private MemberReviewDto reviewDto;
@@ -33,6 +34,7 @@ public class MemberProductOrderDto {
                     productOrder.getId(),
                     productOrder.getPrice(),
                     productOrder.getQuantity(),
+                    productOrder.getDeleted(),
                     new MemberProductDto(
                             product.getId(),
                             product.getName(),
@@ -49,6 +51,7 @@ public class MemberProductOrderDto {
                 productOrder.getId(),
                 productOrder.getPrice(),
                 productOrder.getQuantity(),
+                productOrder.getDeleted(),
                 new MemberProductDto(
                         product.getId(),
                         product.getName(),
@@ -68,6 +71,7 @@ public class MemberProductOrderDto {
                     this.id,
                     this.price,
                     this.quantity,
+                    this.deleted,
                     ProductResponse.create(
                             this.productDto.getId(),
                             this.productDto.getName(),
@@ -83,6 +87,7 @@ public class MemberProductOrderDto {
                 this.id,
                 this.price,
                 this.quantity,
+                this.deleted,
                 ProductResponse.create(
                         this.productDto.getId(),
                         this.productDto.getName(),
