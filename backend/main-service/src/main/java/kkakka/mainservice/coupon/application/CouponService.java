@@ -170,4 +170,12 @@ public class CouponService {
         return coupon.isNotExpired() && coupon.getPriceRule().equals(PriceRule.COUPON)
             && !coupon.isDeleted();
     }
+
+    /* 상품에 대해 적용 가능한 쿠폰 조회 */
+    public List<CouponResponseDto> showCouponsByProductId(Long productId) {
+        List<Coupon> coupons = couponRepository.findCouponsByProductIdAndNotDeleted(productId);
+        return coupons.stream()
+            .map(coupon -> CouponResponseDto.create(coupon))
+            .collect(Collectors.toList());
+    }
 }

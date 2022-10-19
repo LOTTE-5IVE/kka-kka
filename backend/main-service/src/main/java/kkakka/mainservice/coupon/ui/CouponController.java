@@ -101,4 +101,13 @@ public class CouponController {
         List<DiscountResponseDto> discounts = discountService.showAllDiscounts();
         return ResponseEntity.status(HttpStatus.OK).body(discounts);
     }
+
+    /* 상품에 대해 적용 가능한 쿠폰 조회 */
+    @GetMapping("/{productId}")
+    public ResponseEntity<List<CouponResponseDto>> showCouponsByProductId(
+        @PathVariable Long productId) {
+        List<CouponResponseDto> couponResponseDtos = couponService.showCouponsByProductId(
+            productId);
+        return ResponseEntity.status(HttpStatus.OK).body(couponResponseDtos);
+    }
 }
