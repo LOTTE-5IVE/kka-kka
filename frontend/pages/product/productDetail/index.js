@@ -6,6 +6,7 @@ import Title from "../../../components/common/Title";
 import { useGetToken } from "../../../hooks/useGetToken";
 import ProductDetailLayout from "../../../layouts/ProductDetailLayout";
 import Swal from "sweetalert2";
+import { isLogin } from "../../../hooks/isLogin";
 
 export default function productDetail() {
   const router = useRouter();
@@ -32,32 +33,35 @@ export default function productDetail() {
   }
 
   const addCartItem = async (product, quantity) => {
-    setToken(useGetToken());
+    if (!isLogin()) {
+      alert("로그인이 필요한 서비스입니다.");
+      document.location.href = "/member/login";
+    } else {
+      Swal.fire({
+        title: "장바구니에 담으시겠습니까?",
+        html: `${product.name}` + "<br/>" + `수량 : ${quantity}개`,
+        imageUrl: `${product.image_url}`,
+        imageHeight: 300,
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "장바구니 담기",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          PostHApi(
+            "/api/carts",
+            {
+              productId: product.id,
+              quantity: quantity,
+            },
+            token,
+          );
 
-    Swal.fire({
-      title: "장바구니에 담으시겠습니까?",
-      html: `${product.name}` + "<br/>" + `수량 : ${quantity}개`,
-      imageUrl: `${product.image_url}`,
-      imageHeight: 300,
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "장바구니 담기",
-      cancelButtonText: "취소",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire("", "장바구니에 성공적으로 담겼습니다.", "success");
-      }
-    });
-
-    PostHApi(
-      "/api/carts",
-      {
-        productId: product.id,
-        quantity: quantity,
-      },
-      token,
-    );
+          Swal.fire("", "장바구니에 성공적으로 담겼습니다.", "success");
+        }
+      });
+    }
   };
 
   const getItem = async () => {
@@ -70,7 +74,7 @@ export default function productDetail() {
 
   const getReview = async () => {
     if (productId) {
-      await axios.get(`/api/reviews?product=4330`).then((res) => {
+      await axios.get(`/api/reviews?product=703`).then((res) => {
         setReviews(res.data);
       });
     }
@@ -82,9 +86,13 @@ export default function productDetail() {
     }
 
     getReview();
-  }, [router.isReady, token, quantity]);
+  }, [router.isReady]);
 
-  useState(() => {
+  useEffect(() => {
+    setToken(useGetToken());
+  }, [token, quantity]);
+
+  useEffect(() => {
     getItem();
   }, [productId]);
 

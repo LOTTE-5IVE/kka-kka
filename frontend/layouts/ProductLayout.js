@@ -44,7 +44,7 @@ export default function ProductLayout({ cat_id, search, data }) {
                       id={product.id}
                       imgsrc={product.image_url}
                       name={product.name}
-                      price={useMoney(product.price)}
+                      price={product.price}
                       discount={product.discount}
                     />
                   </div>

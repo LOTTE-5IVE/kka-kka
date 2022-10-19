@@ -8,6 +8,7 @@ import { CouponDown } from "../../components/coupon/CouponDown";
 import { CouponModal } from "../../components/coupon/CouponModal";
 import { useGetToken } from "../../hooks/useGetToken";
 import { useMoney } from "../../hooks/useMoney";
+import { ThemeRed } from "../../typings/ThemeColor";
 
 export default function cart() {
   const [token, setToken] = useState("");
@@ -70,6 +71,7 @@ export default function cart() {
   const getCartItem = async () => {
     GetHApi("/api/carts", token).then((res) => {
       if (res) {
+        console.log(res.cartItems);
         setCartItems(res.cartItems);
       }
     });
@@ -224,7 +226,7 @@ export default function cart() {
                         </span>
                       </td>
                       <td>무료</td>
-                      <td>{useMoney(product.price * product.quantity)}원</td>
+                      <td>{product.discount}</td>
                       <td
                         onClick={() => {
                           removeCartItem(product.id);

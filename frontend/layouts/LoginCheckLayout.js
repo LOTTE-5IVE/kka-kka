@@ -53,6 +53,7 @@ export default function LoginCheckLayout({ loginFlag }) {
         .contents {
           width: 70%;
           margin: 0 auto;
+          margin: 100px auto;
 
           .login-area {
             display: block;

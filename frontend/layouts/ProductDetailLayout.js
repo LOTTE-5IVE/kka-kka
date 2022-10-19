@@ -5,6 +5,7 @@ import { CouponModal } from "../components/coupon/CouponModal";
 import Info from "../components/product/productDetail/Info";
 import Nutri from "../components/product/productDetail/Nutri";
 import Review from "../components/product/productDetail/Review";
+import { isLogin } from "../hooks/isLogin";
 import { useMoney } from "../hooks/useMoney";
 import { NBlack, NGray, NLightGray } from "../typings/NormalColor";
 import {
@@ -47,7 +48,9 @@ export default function ProductDetailLayout({
                       </p>
                       <p>
                         {useMoney(
-                          product.price * (1 - 0.01 * product.discount),
+                          Math.ceil(
+                            product.price * (1 - 0.01 * product.discount),
+                          ),
                         )}
                         원 <span>{useMoney(product.price)}원</span>
                       </p>
@@ -109,7 +112,14 @@ export default function ProductDetailLayout({
                         </span>
                       </td>
                       <td style={{ textAlign: "right" }}>
-                        {useMoney(product.price * quantity)}원
+                        {useMoney(
+                          Math.ceil(
+                            product.price *
+                              (1 - 0.01 * product.discount) *
+                              quantity,
+                          ),
+                        )}
+                        원
                       </td>
                     </tr>
                   </tbody>
@@ -120,7 +130,17 @@ export default function ProductDetailLayout({
                   <strong>TOTAL</strong>
                 </p>
                 <p>
-                  <span>{useMoney(product.price * quantity)}원</span>({quantity}
+                  <span>
+                    {useMoney(
+                      Math.ceil(
+                        product.price *
+                          (1 - 0.01 * product.discount) *
+                          quantity,
+                      ),
+                    )}
+                    원
+                  </span>
+                  ({quantity}
                   개)
                 </p>
               </div>
@@ -133,19 +153,30 @@ export default function ProductDetailLayout({
                 >
                   장바구니
                 </div>
-
-                <Link
-                  href={{
-                    pathname: `/payment`,
-                    query: {
-                      buyItem: JSON.stringify(product),
-                      quantity: quantity,
-                    },
-                  }}
-                  as={`/payment`}
-                >
-                  <div className="buyBtn">바로 구매</div>
-                </Link>
+                {isLogin() ? (
+                  <Link
+                    href={{
+                      pathname: `/payment`,
+                      query: {
+                        buyItem: JSON.stringify(product),
+                        quantity: quantity,
+                      },
+                    }}
+                    as={`/payment`}
+                  >
+                    <div className="buyBtn">바로 구매</div>
+                  </Link>
+                ) : (
+                  <div
+                    className="buyBtn"
+                    onClick={() => {
+                      alert("로그인이 필요한 서비스입니다.");
+                      document.location.href = "/member/login";
+                    }}
+                  >
+                    바로 구매
+                  </div>
+                )}
               </div>
             </div>
           </div>
