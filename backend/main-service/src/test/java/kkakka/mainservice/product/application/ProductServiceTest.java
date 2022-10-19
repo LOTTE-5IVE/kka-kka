@@ -49,7 +49,7 @@ public class ProductServiceTest extends TestContext {
         Product product = productRepository.save(
                 new Product(null, category, "단백질 초코바 120g", 1200, 10, "imageUrl", "detailImageUrl",
                         "nutritionInfoUrl", 0, new Date(),
-                        nutrition
+                        nutrition, 0.0
                 )
         );
 

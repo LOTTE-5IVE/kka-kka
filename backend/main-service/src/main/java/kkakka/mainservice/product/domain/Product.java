@@ -53,10 +53,12 @@ public class Product {
     @JoinColumn(name = "nutrition_id")
     private Nutrition nutrition;
 
+    private Double ratingAvg;
+
     public Product(Long id, Category category, String name, int price, int stock, String imageUrl,
         String detailImageUrl, String nutritionInfoUrl, Nutrition nutrition) {
         this(id, category, name, price, stock, imageUrl, detailImageUrl, nutritionInfoUrl, 0,
-            new Date(), nutrition);
+            new Date(), nutrition, 0.0);
     }
 
     public Product(Category category, String name, int price, int stock, String imageUrl,
@@ -72,20 +74,16 @@ public class Product {
         return this.stock - quantity > 0;
     }
 
-    public Long getCategoryId() {
-        return this.category.getId();
-    }
-
-    public String getCategoryName() {
-        return this.category.getName();
-    }
-
     public void changeDiscount(int discount) {
         this.discount = discount;
     }
 
     public void deleteDiscount() {
         this.discount = 0;
+    }
+
+    public void updateRatingAvg(Double ratingAvg) {
+        this.ratingAvg = ratingAvg;
     }
 
     @Override
@@ -99,6 +97,7 @@ public class Product {
         Product product = (Product) o;
         return Objects.equals(id, product.id);
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);

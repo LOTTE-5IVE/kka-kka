@@ -5,6 +5,7 @@ import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.common.exception.NotFoundProductException;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
+import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.review.application.dto.MemberDto;
 import kkakka.mainservice.review.application.dto.ReviewDto;
 import kkakka.mainservice.review.domain.Review;
@@ -46,6 +47,9 @@ public class ReviewService {
                         NotFoundProductException::new)
         );
         reviewRepository.save(review);
+
+        updateProductRatingAvg(review.getProductOrder().getProduct());
+
         return review.getId();
     }
 
@@ -54,5 +58,11 @@ public class ReviewService {
                 .ifPresent(review -> {
                     throw new KkaKkaException();
                 });
+    }
+
+    private void updateProductRatingAvg(Product product) {
+        final Double ratingAvg = reviewRepository.findRatingAvgByProductId(product.getId())
+                .orElse(0.0);
+        product.updateRatingAvg(ratingAvg);
     }
 }

@@ -4,6 +4,7 @@ import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.stream.DoubleStream;
 import kkakka.mainservice.TestContext;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
@@ -91,4 +92,56 @@ public class ReviewRepositoryTest extends TestContext {
         assertThat(reviews).contains(review);
     }
 
+    @DisplayName("상품 후기 평점 평균 구하는 테스트")
+    @Test
+    void productReviewRatingAvgTest() {
+        // given
+        final Member member = memberRepository.save(
+                Member.create(
+                        Provider.create(TEST_MEMBER_01.getProviderId(), MemberProviderName.TEST),
+                        TEST_MEMBER_01.getName(),
+                        TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAgeGroup()
+                )
+        );
+        final Product product = productRepository.save(
+                new Product(
+                        categoryRepository.save(new Category("test-category")),
+                        "product-name", 1000, 10, "", "",
+                        nutritionRepository.save(
+                                new Nutrition("398", "51", "0", "7", "22", "12", "0.5", "35", "370",
+                                        "0")
+                        )
+                )
+        );
+        final ProductOrder productOrder = productOrderRepository.save(
+                ProductOrder.create(
+                        product,
+                        product.getPrice(),
+                        1
+                )
+        );
+        orderRepository.save(
+                Order.create(member, product.getPrice(), List.of(productOrder)));
+
+        final Review review_1 = reviewRepository.save(
+                Review.create("test-review", 5.0, member, productOrder)
+        );
+        final Review review_2 = reviewRepository.save(
+                Review.create("test-review", 1.5, member, productOrder)
+        );
+        final Review review_3 = reviewRepository.save(
+                Review.create("test-review", 4.0, member, productOrder)
+        );
+
+        // when
+        final Double ratingAvg = reviewRepository.findRatingAvgByProductId(product.getId()).get();
+
+        // then
+        assertThat(ratingAvg).isEqualTo(
+                DoubleStream.of(review_1.getRating(), review_2.getRating(), review_3.getRating())
+                        .average().getAsDouble()
+        );
+    }
 }
