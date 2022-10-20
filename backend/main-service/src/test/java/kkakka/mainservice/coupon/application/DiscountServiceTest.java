@@ -112,7 +112,7 @@ public class DiscountServiceTest extends TestContext {
             LocalDateTime.of(2025, 1, 1, 0, 0)));
 
         // when
-        List<DiscountResponseDto> discounts = discountService.showAllDiscounts();
+        List<DiscountResponseDto> discounts = discountService.showAllDiscountsNotDeleted();
 
         // then
         assertThat(discounts.size()).isEqualTo(1);
