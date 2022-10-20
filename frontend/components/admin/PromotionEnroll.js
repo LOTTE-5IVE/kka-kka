@@ -1,9 +1,4 @@
 import { useState } from "react";
-import Button from "../common/Button/Button";
-import ApplyGrade from "./ApplyGrade";
-import ApplyCategory from "./ApplyCategory";
-import ApplyProduct from "./ApplyProduct";
-import { PostHApi } from "../../apis/Apis";
 import axios from "axios";
 import DiscountEnrollTable from "./DiscountEnrollTable";
 import CouponEnrollTable from "./CouponEnrollTable";

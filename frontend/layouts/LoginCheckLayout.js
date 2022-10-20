@@ -53,9 +53,12 @@ export default function LoginCheckLayout({ loginFlag }) {
         .contents {
           width: 70%;
           margin: 0 auto;
-          margin: 100px auto;
 
           .login-area {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
             display: block;
             text-align: center;
           }
@@ -74,7 +77,7 @@ export default function LoginCheckLayout({ loginFlag }) {
           }
 
           .login-button {
-            margin: 50px auto;
+            margin: 50px auto 0;
             width: 250px;
             height: 80px;
             color: #fff;

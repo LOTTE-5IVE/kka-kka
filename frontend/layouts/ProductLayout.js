@@ -5,15 +5,14 @@ import { useMoney } from "../hooks/useMoney";
 export default function ProductLayout({ cat_id, search, data }) {
   const cat_name = {
     0: "전체 상품",
-    1: "전체 상품",
-    2: "비스킷/샌드",
-    3: "스낵/봉지과자",
-    4: "박스과자",
+    1: "비스킷/샌드",
+    2: "스낵/봉지과자",
+    3: "박스과자",
+    4: "캔디/사탕/젤리",
     5: "시리얼/바",
-    6: "캔디/사탕/젤리",
-    7: "초콜릿",
-    8: "껌/자일리톨",
-    9: "선물세트",
+    6: "초콜릿",
+    7: "껌/자일리톨",
+    8: "선물세트",
   };
 
   return (
