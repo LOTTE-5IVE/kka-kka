@@ -57,7 +57,10 @@ export default function CouponEnrollTable() {
         minOrderPrice: minorder,
       })
       .then((res) => {
-        console.log(res);
+        alert("등록완료!");
+      })
+      .catch((err) => {
+        alert("등록실패!");
       });
   };
 
@@ -76,8 +79,10 @@ export default function CouponEnrollTable() {
         minOrderPrice: minorder,
       })
       .then((res) => {
-        console.log(res);
-        console.log(res.headers.location);
+        alert("등록완료!");
+      })
+      .catch((err) => {
+        alert("등록실패!");
       });
   };
 
