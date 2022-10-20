@@ -39,7 +39,7 @@ export default function PromotionEnroll() {
           </colgroup>
 
           <tbody>
-            <tr style={{ height: "6vw" }}>
+            <tr style={{ height: "4vw" }}>
               <th scope="row">혜택 유형</th>
               <td>
                 <div style={{ display: "flex" }}>

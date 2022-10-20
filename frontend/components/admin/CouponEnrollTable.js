@@ -96,7 +96,7 @@ export default function CouponEnrollTable() {
           </colgroup>
 
           <tbody>
-            <tr style={{ height: "4vw" }}>
+            <tr style={{ height: "3vw" }}>
               <th scope="row">혜택 이름</th>
               <td
                 style={{
@@ -132,7 +132,7 @@ export default function CouponEnrollTable() {
                 </div> */}
               </td>
             </tr>
-            <tr style={{ height: "4vw" }}>
+            <tr style={{ height: "3vw" }}>
               <th scope="row">할인 설정</th>
               <td
                 style={{
@@ -227,7 +227,7 @@ export default function CouponEnrollTable() {
                 )}
               </td>
             </tr>
-            <tr style={{ height: "30vw", position: "relative" }}>
+            <tr style={{ height: "20vw", position: "relative" }}>
               <th scope="row">적용 대상 지정</th>
               <td style={{ position: "absolute", top: "5%" }}>
                 <div style={{ display: "flex", marginBottom: "15px" }}>
