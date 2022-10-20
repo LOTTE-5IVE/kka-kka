@@ -140,7 +140,7 @@ export default function DiscountEnrollTable() {
                 </div>
               </td>
             </tr>
-            <tr style={{ height: "9vw" }}>
+            <tr style={{ height: "30vw" }}>
               <th scope="row">적용 대상 지정</th>
               <td>
                 <div style={{ display: "flex", marginBottom: "15px" }}>

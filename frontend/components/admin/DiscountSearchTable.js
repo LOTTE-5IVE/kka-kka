@@ -78,6 +78,7 @@ export default function DiscountSearchTable() {
 
       <style jsx>{`
         table {
+          overflow: auto;
           height: 100%;
           width: 100%;
           text-align: center;

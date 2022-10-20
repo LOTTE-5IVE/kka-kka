@@ -37,19 +37,24 @@ export default function Sidebar({ menu }) {
               <a className={`${tab === "0" ? "active" : ""}`}>전체</a>
             </Link>
           </li>
+          <li onClick={() => setTab("1")}>
+            <div onClick={() => category(1)} className="category">
+              <a className={`${tab === "1" ? "active" : ""}`}>비스킷/샌드</a>
+            </div>
+          </li>
           <li onClick={() => setTab("2")}>
             <div onClick={() => category(2)} className="category">
-              <a className={`${tab === "2" ? "active" : ""}`}>비스킷/샌드</a>
+              <a className={`${tab === "2" ? "active" : ""}`}>스낵/봉지과자</a>
             </div>
           </li>
           <li onClick={() => setTab("3")}>
             <div onClick={() => category(3)} className="category">
-              <a className={`${tab === "3" ? "active" : ""}`}>스낵/봉지과자</a>
+              <a className={`${tab === "3" ? "active" : ""}`}>박스과자</a>
             </div>
           </li>
           <li onClick={() => setTab("4")}>
             <div onClick={() => category(4)} className="category">
-              <a className={`${tab === "4" ? "active" : ""}`}>박스과자</a>
+              <a className={`${tab === "4" ? "active" : ""}`}>캔디/사탕/젤리</a>
             </div>
           </li>
           <li onClick={() => setTab("5")}>
@@ -57,24 +62,20 @@ export default function Sidebar({ menu }) {
               <a className={`${tab === "5" ? "active" : ""}`}>시리얼/바</a>
             </div>
           </li>
+
           <li onClick={() => setTab("6")}>
             <div onClick={() => category(6)} className="category">
-              <a className={`${tab === "6" ? "active" : ""}`}>캔디/사탕/젤리</a>
+              <a className={`${tab === "6" ? "active" : ""}`}>초콜릿</a>
             </div>
           </li>
           <li onClick={() => setTab("7")}>
             <div onClick={() => category(7)} className="category">
-              <a className={`${tab === "7" ? "active" : ""}`}>초콜릿</a>
+              <a className={`${tab === "7" ? "active" : ""}`}>껌/자일리톨</a>
             </div>
           </li>
           <li onClick={() => setTab("8")}>
             <div onClick={() => category(8)} className="category">
-              <a className={`${tab === "8" ? "active" : ""}`}>껌/자일리톨</a>
-            </div>
-          </li>
-          <li onClick={() => setTab("9")}>
-            <div onClick={() => category(9)} className="category">
-              <a className={`${tab === "9" ? "active" : ""}`}>선물세트</a>
+              <a className={`${tab === "8" ? "active" : ""}`}>선물세트</a>
             </div>
           </li>
         </ul>

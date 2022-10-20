@@ -53,12 +53,11 @@ export default function payment() {
       arr.push({ productId: buyItem.id, quantity: Number(buyQuantity) });
     }
 
-    PostHApi("/api/orders", { productOrders: arr }, token).then((res) => {
-      if (res) {
-        console.log(res);
-        alert("결제되었습니다.");
-      }
-    });
+    PostHApi("/api/orders", { productOrders: arr }, token).then((res) => {});
+
+    alert("결제되었습니다.");
+
+    document.location.href = "/";
   };
 
   function modalHandler() {
