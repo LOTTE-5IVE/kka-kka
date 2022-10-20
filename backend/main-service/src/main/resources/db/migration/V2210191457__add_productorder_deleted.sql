@@ -1,0 +1,1 @@
+ALTER TABLE product_order ADD COLUMN deleted INTEGER(1);

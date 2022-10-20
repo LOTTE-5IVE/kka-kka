@@ -27,13 +27,14 @@ public class DataLoadRunner implements CommandLineRunner {
 
         List<String[]> rows = new ArrayList<>();
 
-        ClassPathResource classPathResource = new ClassPathResource("/static/product-data.csv");
+        ClassPathResource classPathResource = new ClassPathResource("/static/product-data-v2.csv");
         if (classPathResource.exists() == false) {
             throw new IllegalArgumentException();
         }
         try (InputStream is = new BufferedInputStream(classPathResource.getInputStream())) {
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            bufferedReader.readLine();
             while ((line = bufferedReader.readLine()) != null) {
                 final String[] row = line.split(CSV_DELIMITER);
                 rows.add(row);

@@ -17,4 +17,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("select r from Review r where r.member.id = :memberId and r.productOrder.id = :productId")
     Optional<Review> findByMemberIdAndProductOrderId(@Param(value = "memberId") Long memberId,
             @Param("productId") Long productId);
+
+    @Query("select avg(r.rating) from Review r where r.productOrder.product.id = :productId")
+    Optional<Double> findRatingAvgByProductId(@Param(value = "productId") Long productId);
 }

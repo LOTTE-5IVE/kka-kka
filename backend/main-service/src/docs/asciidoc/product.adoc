@@ -1,0 +1,65 @@
+= 상품 API
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlight.js
+:toc: left
+:toclevels: 2
+:sectlinks:
+:nofooter:
+
+*link:index.html[메인 화면]*
+
+== Product
+
+=== 전체 상품 조회
+
+- Request
+
+include::{snippets}/products-show-all-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/products-show-all-success/http-response.adoc[]
+
+=== 카테고리 기준 조회
+
+- Request
+
+include::{snippets}/showCategoryProducts-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/showCategoryProducts-success/http-response.adoc[]
+
+=== 상품 상세 조회 성공
+
+- Request
+
+include::{snippets}/showDetailProduct-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/showDetailProduct-success/http-response.adoc[]
+
+=== 상품 상세 조회 실패
+
+- Request
+
+include::{snippets}/showDetailProduct-fail/http-request.adoc[]
+
+- Response
+
+include::{snippets}/showDetailProduct-fail/http-response.adoc[]
+
+=== 검색
+
+- Request
+
+include::{snippets}/products-show-search/http-request.adoc[]
+
+- Response
+
+include::{snippets}/products-show-search/http-response.adoc[]

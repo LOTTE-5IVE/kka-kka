@@ -2,7 +2,7 @@ package kkakka.mainservice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import kkakka.mainservice.category.domain.Category;
@@ -15,7 +15,9 @@ import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
+import kkakka.mainservice.product.domain.Nutrition;
 import kkakka.mainservice.product.domain.Product;
+import kkakka.mainservice.product.domain.repository.NutritionRepository;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.review.domain.Review;
 import kkakka.mainservice.review.domain.repository.ReviewRepository;
@@ -33,8 +35,9 @@ public class DataLoader {
     private final ProductOrderRepository productOrderRepository;
     private final OrderRepository orderRepository;
     private final ReviewRepository reviewRepository;
+    private final NutritionRepository nutritionRepository;
 
-    private static final Map<String, Category> categories = new HashMap<>();
+    private static final Map<String, Category> categories = new LinkedHashMap<>();
     private static Product testProduct;
     private static Member testMember;
 
@@ -64,7 +67,7 @@ public class DataLoader {
                         ProductOrder.create(testProduct, testProduct.getPrice(), 1)
                 ));
         orderRepository.save(Order.create(testMember, testProduct.getPrice(), productOrders));
-        reviewRepository.save(Review.create("test-review1", 5.0,  testMember, productOrders.get(0)));
+        reviewRepository.save(Review.create("test-review1", 5.0, testMember, productOrders.get(0)));
         reviewRepository.save(Review.create("test-review2", 3.5, testMember, productOrders.get(1)));
         reviewRepository.save(Review.create("test-review3", 4.5, testMember, productOrders.get(2)));
         reviewRepository.save(Review.create("test-review4", 4.0, testMember, productOrders.get(3)));
@@ -127,6 +130,24 @@ public class DataLoader {
         final String price = productRow[2];
         final String defaultImageUrl = productRow[3];
         final String detailImageUrl = productRow[4];
+        final String calorie = productRow[5];
+        final String carbohydrate = productRow[6];
+        final String sugar = productRow[7];
+        final String protein = productRow[8];
+        final String fat = productRow[9];
+        final String saturatedFat = productRow[10];
+        final String transFat = productRow[11];
+        final String cholesterol = productRow[12];
+        final String sodium = productRow[13];
+        final String calcium = productRow[14];
+
+        final Nutrition nutrition = nutritionRepository.save(
+                new Nutrition(
+                        calorie, carbohydrate, sugar, protein,
+                        fat, saturatedFat, transFat, cholesterol, sodium, calcium
+                )
+        );
+
         return productRepository.save(
                 new Product(
                         categories.get(category),
@@ -134,7 +155,8 @@ public class DataLoader {
                         Integer.parseInt(price),
                         1000,
                         defaultImageUrl,
-                        detailImageUrl
+                        detailImageUrl,
+                        nutrition
                 )
         );
     }
@@ -143,8 +165,8 @@ public class DataLoader {
         Category category1 = categoryRepository.save(new Category("비스킷/샌드"));
         Category category2 = categoryRepository.save(new Category("스낵/봉지과자"));
         Category category3 = categoryRepository.save(new Category("박스과자"));
-        Category category4 = categoryRepository.save(new Category("캔디/사탕/젤리"));
-        Category category5 = categoryRepository.save(new Category("시리얼/바"));
+        Category category4 = categoryRepository.save(new Category("시리얼/바"));
+        Category category5 = categoryRepository.save(new Category("캔디/사탕/젤리"));
         Category category6 = categoryRepository.save(new Category("초콜릿"));
         Category category7 = categoryRepository.save(new Category("껌/자일리톨"));
         Category category8 = categoryRepository.save(new Category("선물세트"));

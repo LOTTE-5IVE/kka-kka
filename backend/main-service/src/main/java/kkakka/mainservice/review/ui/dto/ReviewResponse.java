@@ -17,6 +17,7 @@ public class ReviewResponse {
 
     private Long id;
     private String contents;
+    private Double rating;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createdAt;
     @JsonProperty(value = "member")
@@ -26,6 +27,7 @@ public class ReviewResponse {
             MemberSimpleResponse memberSimpleResponse) {
         return new ReviewResponse(reviewDto.getId(),
                 reviewDto.getContents(),
+                reviewDto.getRating(),
                 reviewDto.getCreatedAt(),
                 memberSimpleResponse);
     }

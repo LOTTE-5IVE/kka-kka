@@ -12,8 +12,11 @@ import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
+import kkakka.mainservice.product.domain.Nutrition;
 import kkakka.mainservice.product.domain.Product;
+import kkakka.mainservice.product.domain.repository.NutritionRepository;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +35,22 @@ public class CartRepositoryTest extends TestContext {
     private CartRepository cartRepository;
     @Autowired
     private CartItemRepository cartItemRepository;
+    @Autowired
+    private NutritionRepository nutritionRepository;
+
+    private Nutrition nutrition;
+
+    @BeforeEach
+    void setUp() {
+        nutrition = nutritionRepository.save(
+                new Nutrition("398", "51", "0", "7", "22", "12", "0.5", "35", "370", "0")
+        );
+    }
+
 
     @DisplayName("장바구니에 처음으로 아이템 추가할 때 잘 되는지 테스트")
     @Test
-    void addCartItem(){
+    void addCartItem() {
         // given
         final Member member = memberRepository.save(
                 Member.create(
@@ -49,7 +64,8 @@ public class CartRepositoryTest extends TestContext {
         final Product product = productRepository.save(
                 new Product(
                         categoryRepository.save(new Category("test-category")),
-                        "product-name", 1000, 10, "", ""
+                        "product-name", 1000, 10, "", "",
+                        nutrition
                 )
         );
         final Cart cart = cartRepository.save(
@@ -69,7 +85,7 @@ public class CartRepositoryTest extends TestContext {
 
     @DisplayName("장바구니에 담긴 아이템 변경 테스트")
     @Test
-    void changeCartItem(){
+    void changeCartItem() {
         // given
         final Member member = memberRepository.save(
                 Member.create(
@@ -83,7 +99,8 @@ public class CartRepositoryTest extends TestContext {
         final Product product = productRepository.save(
                 new Product(
                         categoryRepository.save(new Category("test-category")),
-                        "product-name", 1000, 10, "", ""
+                        "product-name", 1000, 10, "", "",
+                        nutrition
                 )
         );
         final Cart cart = cartRepository.save(

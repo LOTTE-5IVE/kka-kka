@@ -6,11 +6,16 @@ spring:
   profiles:
     active: local
     group:
-      "local": "console-logging"
-      "dev": "file-logging,console-logging,performance-logging"
-      "prod": "file-logging"
+      "local": "console-logging, error-file-logging"
+      "dev": "console-logging, file-logging, performance-logging, error-file-logging"
+      "prod": "file-logging, error-file-logging"
 
 logging:
   config: classpath:logback-spring.xml
   level:
-    root: info
+    root: INFO
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG

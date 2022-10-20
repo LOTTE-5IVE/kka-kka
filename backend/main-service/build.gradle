@@ -58,7 +58,7 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.flywaydb:flyway-core'
-    compileOnly 'org.flywaydb:flyway-mysql'
+    implementation 'org.flywaydb:flyway-mysql'
 
     /* lombok */
     compileOnly 'org.projectlombok:lombok'
@@ -101,9 +101,8 @@ asciidoctor {
 task createDocument(type: Copy) {
     dependsOn asciidoctor
     asciidoctor
-    delete file('src/main/resources/static/index.html')
-    from file("build/docs/asciidoc/index.html")
-    into file("src/main/resources/static")
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static/docs")
 }
 
 build {

@@ -13,7 +13,9 @@ import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
+import kkakka.mainservice.product.domain.Nutrition;
 import kkakka.mainservice.product.domain.Product;
+import kkakka.mainservice.product.domain.repository.NutritionRepository;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -34,10 +36,17 @@ public class TestDataLoader implements CommandLineRunner {
     private OrderRepository orderRepository;
     @Autowired
     private ProductOrderRepository productOrderRepository;
+    @Autowired
+    private NutritionRepository nutritionRepository;
 
     public static Member MEMBER;
     public static Category CATEGORY_1;
     public static Category CATEGORY_2;
+    public static Nutrition NUTRITION_1;
+    public static Nutrition NUTRITION_2;
+    public static Nutrition NUTRITION_3;
+    public static Nutrition NUTRITION_4;
+    public static Nutrition NUTRITION_5;
     public static Product PRODUCT_1;
     public static Product PRODUCT_2;
     public static Product PRODUCT_3;
@@ -65,21 +74,37 @@ public class TestDataLoader implements CommandLineRunner {
         CATEGORY_1 = categoryRepository.save(new Category("test-category-01"));
         CATEGORY_2 = categoryRepository.save(new Category("test-category-02"));
 
+        NUTRITION_1 = nutritionRepository.save(
+                new Nutrition("398", "51", "0", "7", "22", "12", "0.5", "35", "370", "0")
+        );
+        NUTRITION_2 = nutritionRepository.save(
+                new Nutrition("112", "13", "6", "1.5", "6", "3.3", "0.2", "15", "80", "0")
+        );
+        NUTRITION_3 = nutritionRepository.save(
+                new Nutrition("285", "31", "15", "2", "17", "12", "0", "1.5", "45", "0")
+        );
+        NUTRITION_4 = nutritionRepository.save(
+                new Nutrition("285", "33", "15", "2", "16", "11", "0", "1.5", "4.5", "0")
+        );
+        NUTRITION_5 = nutritionRepository.save(
+                new Nutrition("270", "36", "15", "2.2", "13", "7", "0.5", "0", "150", "0")
+        );
+
         PRODUCT_1 = productRepository.save(new Product(CATEGORY_1, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-                "상세URL"));
+                "상세URL", NUTRITION_1));
         PRODUCT_2 = productRepository.save(new Product(CATEGORY_1, "롯데 마가렛트 오리지널 176g", 4480, 10,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-                "상세URL"));
+                "상세URL", NUTRITION_2));
         PRODUCT_3 = productRepository.save(new Product(CATEGORY_1, "롯데 웨하스 바닐라맛 50g", 4480, 10,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-                "상세URL"));
+                "상세URL", NUTRITION_3));
         PRODUCT_4 = productRepository.save(new Product(CATEGORY_2, "롯데 웨하스 딸기맛 50g", 4480, 10,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-                "상세URL"));
+                "상세URL", NUTRITION_4));
         PRODUCT_5 = productRepository.save(new Product(CATEGORY_2, "롯데 롯샌 파인애플 105g", 4480, 10,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-                "상세URL"));
+                "상세URL", NUTRITION_5));
 
         PRODUCT_ORDER_1 = productOrderRepository.save(
                 ProductOrder.create(PRODUCT_1, PRODUCT_1.getPrice(), 1)

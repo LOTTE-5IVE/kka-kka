@@ -9,11 +9,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
+            "classpath:/META-INF/resources/", "classpath:/resources/",
+            "classpath:/static/", "classpath:/public/"};
 
     private final JwtTokenProvider jwtTokenProvider;
     private final LoginInterceptor loginInterceptor;
@@ -32,7 +37,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
         return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider);
     }
-    
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
@@ -40,5 +45,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/**/auth")
                 .excludePathPatterns("/**/login/token")
                 .excludePathPatterns("/**/coupons/**");
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**")
+                .addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
     }
 }

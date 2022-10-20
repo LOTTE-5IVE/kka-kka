@@ -1,16 +1,12 @@
 package kkakka.mainservice.product.application.dto;
 
 import kkakka.mainservice.product.domain.Product;
-import kkakka.mainservice.product.ui.dto.ProductResponse;
+import kkakka.mainservice.product.ui.dto.ProductDetailResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProductDto {
+public class ProductDetailDto {
 
     private Long id;
     private CategoryDto categoryDto;
@@ -21,10 +17,12 @@ public class ProductDto {
     private String detailImageUrl;
     private String nutritionInfoUrl;
     private int discount;
+    private NutritionDto nutritionDto;
     private double ratingAvg;
 
-    public static ProductDto toDto(Product product, CategoryDto categoryDto) {
-        return new ProductDto(product.getId(),
+    public static ProductDetailDto toDto(Product product, CategoryDto categoryDto,
+            NutritionDto nutritionDto) {
+        return new ProductDetailDto(product.getId(),
                 categoryDto,
                 product.getName(),
                 product.getPrice(),
@@ -33,12 +31,13 @@ public class ProductDto {
                 product.getDetailImageUrl(),
                 product.getNutritionInfoUrl(),
                 product.getDiscount(),
+                nutritionDto,
                 product.getRatingAvg()
         );
     }
 
-    public ProductResponse toResponseDto() {
-        return new ProductResponse(
+    public ProductDetailResponse toResponseDto() {
+        return new ProductDetailResponse(
                 this.id,
                 this.categoryDto.toResponseDto(),
                 this.name,
@@ -48,6 +47,7 @@ public class ProductDto {
                 this.detailImageUrl,
                 this.nutritionInfoUrl,
                 this.discount,
+                this.nutritionDto.toResponseDto(),
                 this.ratingAvg
         );
     }
