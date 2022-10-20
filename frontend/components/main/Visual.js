@@ -29,17 +29,6 @@ export default function Visual() {
           <div className="fade-in" ref={(el) => (fadeEls.current[4] = el)}>
             <div className="logoComment">
               <img width="845px" src="/intro.png" />
-              {/* <p
-                style={{
-                  fontSize: "20px",
-                  fontWeight: "500",
-                  color: "#523020",
-                  margin: "0",
-                }}
-              >
-                다가오는 겨울을 따뜻하게 까까와 함께 <br />
-                차가운 일상을 달콤함으로 채워보세요
-              </p> */}
             </div>
           </div>
         </div>
@@ -78,7 +67,7 @@ export default function Visual() {
           .logoComment {
             position: absolute;
             top: 40px;
-            right: 560px;
+            right: 500px;
           }
 
           .bts {
