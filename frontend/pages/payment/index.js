@@ -403,19 +403,28 @@ export default function payment() {
               <tbody>
                 <tr>
                   <th scope="row">주문상품</th>
-                  <td>48,900원</td>
+                  <td>
+                    {useMoney(orderItems.reduce((prev, cur) => prev + (cur.price * cur.quantity), 0))} 원
+                  </td>
                 </tr>
                 <tr>
                   <th scope="row">할인/부가결제</th>
-                  <td>-3,000원</td>
+                  <td>
+                    - {useMoney(orderItems.reduce((prev, cur) => prev + Math.ceil(cur.price * 0.01 * cur.productDiscount * cur.quantity), 0)) || 0} 원
+                  </td>
                 </tr>
                 <tr>
                   <th scope="row">배송비</th>
-                  <td>0원</td>
+                  <td>0 원</td>
                 </tr>
                 <tr>
                   <th scope="row">결제금액</th>
-                  <td>45,900원</td>
+                  <td>
+                    {useMoney(
+                      (orderItems.reduce((prev, cur) => prev + (cur.price * cur.quantity), 0)
+                        - (orderItems.reduce((prev, cur) => prev + Math.ceil(cur.price * 0.01 * cur.productDiscount * cur.quantity), 0)))
+                    )} 원
+                  </td>
                 </tr>
               </tbody>
             </table>
