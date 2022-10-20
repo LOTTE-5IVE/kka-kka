@@ -18,7 +18,7 @@ export default function ApplyProduct({ productId, setProductId }) {
   }, []);
 
   return (
-    <>
+    <div className="wrapper">
       <div className="title">
         <div className="check">
           <p style={{ width: "90px" }}>선택</p>
@@ -80,47 +80,51 @@ export default function ApplyProduct({ productId, setProductId }) {
       })}
 
       <style jsx>{`
-        .title {
-          display: flex;
-
-          p {
-            border: 1px solid;
-            margin: 0;
-            text-align: center;
-          }
-        }
-
-        .outter {
-          display: flex;
-
-          p {
-            width: 192px;
-            border: 1px solid;
-            margin: 0;
-            text-align: center;
-          }
-
-          ul {
+        .wrapper {
+          overflow: auto;
+          height: 23vw;
+          .title {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 70px;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            border: 1px solid;
-            text-align: center;
 
-            li {
-              border-bottom: 1px solid #dedede;
+            p {
+              border: 1px solid;
+              margin: 0;
+              text-align: center;
+            }
+          }
+
+          .outter {
+            display: flex;
+
+            p {
+              width: 192px;
+              border: 1px solid;
+              margin: 0;
+              text-align: center;
             }
 
-            li:last-child {
-              border: 0;
+            ul {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 70px;
+              margin: 0;
+              padding: 0;
+              list-style: none;
+              border: 1px solid;
+              text-align: center;
+
+              li {
+                border-bottom: 1px solid #dedede;
+              }
+
+              li:last-child {
+                border: 0;
+              }
             }
           }
         }
       `}</style>
-    </>
+    </div>
   );
 }

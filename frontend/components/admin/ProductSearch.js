@@ -86,6 +86,7 @@ export default function ProductSearch() {
           color: #7a7a7a;
 
           table {
+            overflow: auto;
             height: 100%;
             width: 100%;
             text-align: center;

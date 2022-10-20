@@ -57,7 +57,10 @@ export default function CouponEnrollTable() {
         minOrderPrice: minorder,
       })
       .then((res) => {
-        console.log(res);
+        alert("등록완료!");
+      })
+      .catch((err) => {
+        alert("등록실패!");
       });
   };
 
@@ -76,8 +79,10 @@ export default function CouponEnrollTable() {
         minOrderPrice: minorder,
       })
       .then((res) => {
-        console.log(res);
-        console.log(res.headers.location);
+        alert("등록완료!");
+      })
+      .catch((err) => {
+        alert("등록실패!");
       });
   };
 
@@ -222,9 +227,9 @@ export default function CouponEnrollTable() {
                 )}
               </td>
             </tr>
-            <tr style={{ height: "12vw" }}>
+            <tr style={{ height: "30vw", position: "relative" }}>
               <th scope="row">적용 대상 지정</th>
-              <td>
+              <td style={{ position: "absolute", top: "5%" }}>
                 <div style={{ display: "flex", marginBottom: "15px" }}>
                   <div
                     className={`btn ${target === "카테고리" ? "active" : ""}`}
