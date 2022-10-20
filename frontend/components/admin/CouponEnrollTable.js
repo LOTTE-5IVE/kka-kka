@@ -227,7 +227,7 @@ export default function CouponEnrollTable() {
                 )}
               </td>
             </tr>
-            <tr style={{ height: "30vw", position: "relative" }}>
+            <tr style={{ height: "18vw", position: "relative" }}>
               <th scope="row">적용 대상 지정</th>
               <td style={{ position: "absolute", top: "5%" }}>
                 <div style={{ display: "flex", marginBottom: "15px" }}>
