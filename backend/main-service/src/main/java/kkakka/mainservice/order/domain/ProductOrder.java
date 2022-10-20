@@ -1,19 +1,13 @@
 package kkakka.mainservice.order.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import kkakka.mainservice.common.exception.OutOfStockException;
 import kkakka.mainservice.product.domain.Product;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "product_order")
@@ -38,9 +32,10 @@ public class ProductOrder {
 
     private Integer price; //주문가격
     private Integer quantity; //주문수량
+    private Integer deleted;
 
     public static ProductOrder create(Product product, int price, int quantity) {
-        ProductOrder productOrder = new ProductOrder(null, null, product, price, quantity);
+        ProductOrder productOrder = new ProductOrder(null, null, product, price, quantity, 0);
 
         if (product.inStock(quantity)) {
             product.reduceStock(quantity);
@@ -55,5 +50,13 @@ public class ProductOrder {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public void cancel() {
+        this.deleted = 1;
+    }
+
+    public boolean isOrderedAtInDay() {
+        return this.order.isOrderedAtInDay();
     }
 }

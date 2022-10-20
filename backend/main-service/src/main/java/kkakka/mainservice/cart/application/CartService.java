@@ -1,7 +1,5 @@
 package kkakka.mainservice.cart.application;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import kkakka.mainservice.cart.domain.Cart;
 import kkakka.mainservice.cart.domain.CartItem;
 import kkakka.mainservice.cart.domain.repository.CartItemRepository;
@@ -10,6 +8,7 @@ import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.exception.NotOrderOwnerException;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
@@ -18,6 +17,9 @@ import kkakka.mainservice.product.domain.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,8 +70,13 @@ public class CartService {
     @Transactional
     public void deleteCartItems(List<Long> cartItemIds, LoginMember loginMember) {
         Long loginMemberId = loginMember.getId();
-        cartItemIds.forEach(deleteRequestId ->
-                cartItemRepository.deleteByIdAndMemberId(deleteRequestId, loginMemberId));
+
+        cartItemIds.forEach(cartItemId -> {
+            CartItem cartItem = cartItemRepository
+                    .findByIdandMemberId(cartItemId, loginMemberId)
+                    .orElseThrow(NotOrderOwnerException::new);
+            cartItemRepository.delete(cartItem);
+        });
     }
 
     private Cart findOrCreateCart(Member member) {
