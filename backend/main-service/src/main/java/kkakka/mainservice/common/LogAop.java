@@ -20,11 +20,11 @@ public class LogAop {
 
     @AfterThrowing(value = "execution(* kkakka.mainservice..*(..))", throwing = "e")
     public void checkException(JoinPoint joinPoint, Exception e) {
-        log.warn("예외 발생지점 : {}", joinPoint.getSignature().toString());
-        log.warn("------- StackTrace Start -------");
+        log.error("예외 발생지점 : {}", joinPoint.getSignature().toString());
+        log.error("------- StackTrace Start -------");
         for (StackTraceElement element : e.getStackTrace()) {
-            log.warn("{}", element);
+            log.error("{}", element);
         }
-        log.warn("------- StackTrace End -------");
+        log.error("------- StackTrace End -------");
     }
 }
