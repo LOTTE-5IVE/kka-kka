@@ -6,8 +6,10 @@ import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.category.ui.dto.ResponseCategoryProducts;
 import kkakka.mainservice.common.dto.ResponsePageDto;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.product.application.dto.CategoryDto;
+import kkakka.mainservice.product.application.dto.NutritionDto;
+import kkakka.mainservice.product.application.dto.ProductDetailDto;
 import kkakka.mainservice.product.application.dto.ProductDto;
-import kkakka.mainservice.product.application.dto.ProductDto.CategoryDto;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.SearchWords;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
@@ -26,19 +28,14 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductRepositorySupport productRepositorySupport;
 
-    public ProductDto showProductDetail(Long productId) {
+    public ProductDetailDto showProductDetail(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(KkaKkaException::new);
-        return new ProductDto(
-                product.getId(),
-                new CategoryDto(product.getCategoryId(), product.getCategoryName()),
-                product.getName(),
-                product.getPrice(),
-                product.getStock(),
-                product.getImageUrl(),
-                product.getDetailImageUrl(),
-                product.getNutritionInfoUrl(),
-                product.getDiscount());
+        return ProductDetailDto.toDto(
+                product,
+                CategoryDto.toDto(product.getCategory()),
+                NutritionDto.toDto(product.getNutrition())
+        );
     }
 
     public ResponsePageDto getProductByRand() {
@@ -47,10 +44,10 @@ public class ProductService {
         Page<Product> randomProducts = productRepository.findAll(PageRequest.of(idx, 10));
 
         return ResponsePageDto.from(
-            randomProducts,
-            randomProducts.getContent().stream()
-                .map(ResponseCategoryProducts::from)
-                .collect(Collectors.toList())
+                randomProducts,
+                randomProducts.getContent().stream()
+                        .map(ResponseCategoryProducts::from)
+                        .collect(Collectors.toList())
         );
     }
 
@@ -58,17 +55,11 @@ public class ProductService {
             Pageable pageable) {
         if (categoryIsEmpty(categoryId)) {
             return productRepository.findAll(pageable)
-                    .map(product -> new ProductDto(
-                            product.getId(),
-                            new CategoryDto(product.getCategoryId(), product.getCategoryName()),
-                            product.getName(),
-                            product.getPrice(),
-                            product.getStock(),
-                            product.getImageUrl(),
-                            product.getDetailImageUrl(),
-                            product.getNutritionInfoUrl(),
-                            product.getDiscount()
-                    ));
+                    .map(product -> ProductDto.toDto(
+                                    product,
+                                    CategoryDto.toDto(product.getCategory())
+                            )
+                    );
         }
 
         return showAllProductsByCategory(categoryId.get(), pageable);
@@ -79,33 +70,20 @@ public class ProductService {
 
         final Page<Product> products = productRepositorySupport.findBySearch(searchWords, pageable);
 
-        return products.map(product -> new ProductDto(
-                product.getId(),
-                new CategoryDto(product.getCategoryId(), product.getCategoryName()),
-                product.getName(),
-                product.getPrice(),
-                product.getStock(),
-                product.getImageUrl(),
-                product.getDetailImageUrl(),
-                product.getNutritionInfoUrl(),
-                product.getDiscount()
+        return products.map(product -> ProductDto.toDto(
+                product,
+                CategoryDto.toDto(product.getCategory())
         ));
     }
 
     private Page<ProductDto> showAllProductsByCategory(Long categoryId,
             Pageable pageable) {
         return productRepository.findByCategoryId(categoryId, pageable)
-                .map(product -> new ProductDto(
-                        product.getId(),
-                        new CategoryDto(product.getCategoryId(), product.getCategoryName()),
-                        product.getName(),
-                        product.getPrice(),
-                        product.getStock(),
-                        product.getImageUrl(),
-                        product.getDetailImageUrl(),
-                        product.getNutritionInfoUrl(),
-                        product.getDiscount()
-                ));
+                .map(product -> ProductDto.toDto(
+                                product,
+                                CategoryDto.toDto(product.getCategory())
+                        )
+                );
     }
 
     private boolean categoryIsEmpty(Optional<Long> categoryId) {
