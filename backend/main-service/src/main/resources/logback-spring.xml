@@ -5,14 +5,14 @@
   <!-- log file name -->
   <property name="LOG_FILE_NAME" value="kka-kka"/>
   <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
   <property name="LOG_FILE_PATTERN"
-    value="%d{HH:mm:ss.SSS} [%thread] [%-5level] [%logger{0}] - %m%n"/>
-  <property name="LOG_PATTERN"
-    value="%white(%d{HH:mm:ss.SSS}) %cyan([%thread]) %highlight([%-5level]) %yellow([%logger{0}]) - %boldWhite(%m%n)"/>
+            value="%d{HH:mm:ss.SSS} [%thread] [%-5level] [%logger{0}] - %m%n"/>
 
   <springProfile name="console-logging">
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
       <layout class="ch.qos.logback.classic.PatternLayout">
+        <!-- default pattern -->
         <pattern>${CONSOLE_LOG_PATTERN}</pattern>
       </layout>
     </appender>
@@ -25,17 +25,16 @@
       <maxFlushTime>3000</maxFlushTime>
     </appender>
   </springProfile>
-
   <springProfile name="file-logging">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
       <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-        <pattern>${LOG_PATTERN}</pattern>
+        <pattern>%msg%n</pattern>
       </encoder>
       <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
         <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.zip</fileNamePattern>
         <timeBasedFileNamingAndTriggeringPolicy
-          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
           <maxFileSize>100MB</maxFileSize>
         </timeBasedFileNamingAndTriggeringPolicy>
         <maxHistory>3</maxHistory>
@@ -51,7 +50,7 @@
     </appender>
   </springProfile>
 
-  <springProfile name="error-file-logging">
+  <springProfile name="dev">
     <appender name="file-error-logger" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>${LOG_PATH}/error.log</file>
       <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -69,18 +68,17 @@
       <encoder>
         <charset>utf8</charset>
         <Pattern>
-          ${LOG_PATTERN}
+          %d{yyyy-MM-dd HH:mm:ss}:%-4relative %-5level [%C.%M]:%L] %n    > %msg%n
         </Pattern>
       </encoder>
     </appender>
   </springProfile>
-
   <appender name="PERFORMANCE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${LOG_PATH}/performance.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>${LOG_PATH}/performance-%d{yyyyMMdd}-%i.log</fileNamePattern>
       <timeBasedFileNamingAndTriggeringPolicy
-        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+              class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
         <maxFileSize>15MB</maxFileSize>
       </timeBasedFileNamingAndTriggeringPolicy>
       <maxHistory>7</maxHistory>
@@ -92,13 +90,11 @@
       </Pattern>
     </encoder>
   </appender>
-
   <springProfile name="performance-logging">
     <logger name="PERFORMANCE">
       <appender-ref ref="PERFORMANCE"/>
     </logger>
   </springProfile>
-
   <root level="INFO">
     <springProfile name="console-logging">
       <appender-ref ref="CONSOLE-async"/>
