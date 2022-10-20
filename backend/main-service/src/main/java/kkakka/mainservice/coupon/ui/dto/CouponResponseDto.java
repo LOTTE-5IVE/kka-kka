@@ -21,7 +21,6 @@ public class CouponResponseDto {
     private Grade grade;
     private Long productId;
     private String name;
-    private String detail;
     private PriceRule priceRule;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -42,7 +41,6 @@ public class CouponResponseDto {
             coupon.getGrade(),
             coupon.getProductId(),
             coupon.getName(),
-            coupon.getDetail(),
             coupon.getPriceRule(),
             coupon.getRegisteredAt(),
             coupon.getStartedAt(),

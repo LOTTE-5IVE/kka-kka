@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DiscountResponseDto {
 
+    private Long id;
     private Long categoryId;
     private Long productId;
     private String name;
@@ -24,12 +25,13 @@ public class DiscountResponseDto {
     private LocalDateTime expiredAt;
 
     public static DiscountResponseDto create(Discount discount) {
-        return new DiscountResponseDto(discount.getCategoryId(),
+        return new DiscountResponseDto(
+            discount.getId(),
+            discount.getCategoryId(),
             discount.getProductId(),
             discount.getName(),
             discount.getDiscount(),
             discount.getStartedAt(),
             discount.getExpiredAt());
     }
-
 }

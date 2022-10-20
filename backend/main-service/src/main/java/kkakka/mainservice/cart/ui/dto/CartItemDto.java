@@ -12,6 +12,7 @@ public class CartItemDto {
     private Long id;
     private Long productId;
     private String productName;
+    private Integer productDiscount;
     private String imageUrl;
     private Integer coupon_id;
     private Integer quantity;
@@ -23,6 +24,7 @@ public class CartItemDto {
                 c.getId(),
                 c.getProduct().getId(),
                 c.getProduct().getName(),
+                c.getProduct().getDiscount(),
                 c.getProduct().getImageUrl(),
                 null,
                 c.getQuantity(),
