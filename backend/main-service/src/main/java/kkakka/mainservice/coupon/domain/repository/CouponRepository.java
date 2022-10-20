@@ -11,4 +11,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     @Query("select c from Coupon c where c.product.id = :productId and c.isDeleted = false")
     List<Coupon> findCouponsByProductIdAndNotDeleted(@Param(value = "productId") Long productId);
 
+    @Query("select c from Coupon c where c.isDeleted = false")
+    List<Coupon> findAllCouponsNotDeleted();
+
 }

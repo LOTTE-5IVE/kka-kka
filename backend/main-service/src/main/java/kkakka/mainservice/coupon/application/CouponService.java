@@ -65,7 +65,6 @@ public class CouponService {
         return Coupon.create(
             couponRequestDto.getGrade(),
             couponRequestDto.getName(),
-            couponRequestDto.getDetail(),
             PriceRule.GRADE_COUPON,
             couponRequestDto.getStartedAt(),
             couponRequestDto.getExpiredAt(),
@@ -80,7 +79,6 @@ public class CouponService {
             category,
             product,
             couponRequestDto.getName(),
-            couponRequestDto.getDetail(),
             PriceRule.COUPON,
             couponRequestDto.getStartedAt(),
             couponRequestDto.getExpiredAt(),
@@ -114,8 +112,8 @@ public class CouponService {
         }
     }
 
-    public List<CouponResponseDto> showAllCoupons() {
-        List<Coupon> coupons = couponRepository.findAll();
+    public List<CouponResponseDto> showAllCouponsNotDeleted() {
+        List<Coupon> coupons = couponRepository.findAllCouponsNotDeleted();
         return coupons.stream()
             .map(CouponResponseDto::create)
             .collect(Collectors.toList());

@@ -106,7 +106,7 @@ public class DiscountService {
     }
 
     /* 할인 조회 */
-    public List<DiscountResponseDto> showAllDiscounts() {
+    public List<DiscountResponseDto> showAllDiscountsNotDeleted() {
         List<Discount> discounts = discountRepository.findAllDiscountsNotDeleted();
         return discounts.stream()
             .map(discount -> DiscountResponseDto.create(discount))

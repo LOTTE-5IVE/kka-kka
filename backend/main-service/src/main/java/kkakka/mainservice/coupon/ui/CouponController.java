@@ -49,7 +49,7 @@ public class CouponController {
     /* 쿠폰 조회 */
     @GetMapping
     public ResponseEntity<List<CouponResponseDto>> findAllCoupons() {
-        List<CouponResponseDto> couponResponseDto = couponService.showAllCoupons();
+        List<CouponResponseDto> couponResponseDto = couponService.showAllCouponsNotDeleted();
         return ResponseEntity.status(HttpStatus.OK).body(couponResponseDto);
     }
 
@@ -98,7 +98,7 @@ public class CouponController {
     /* 할인 조회 */
     @GetMapping("/discount")
     public ResponseEntity<List<DiscountResponseDto>> showAllDiscounts() {
-        List<DiscountResponseDto> discounts = discountService.showAllDiscounts();
+        List<DiscountResponseDto> discounts = discountService.showAllDiscountsNotDeleted();
         return ResponseEntity.status(HttpStatus.OK).body(discounts);
     }
 
