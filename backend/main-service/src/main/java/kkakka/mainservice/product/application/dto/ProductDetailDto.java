@@ -4,11 +4,7 @@ import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.ui.dto.ProductDetailResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductDetailDto {
 

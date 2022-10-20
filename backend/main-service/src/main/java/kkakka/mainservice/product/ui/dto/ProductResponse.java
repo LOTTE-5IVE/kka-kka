@@ -1,14 +1,11 @@
 package kkakka.mainservice.product.ui.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kkakka.mainservice.product.domain.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductResponse {
