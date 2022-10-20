@@ -72,10 +72,13 @@ dependencies {
     /* Log */
     implementation 'dev.akkinoc.spring.boot:logback-access-spring-boot-starter:3.4.0'
     implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.12.0'
-
+    
     /* Querydsl*/
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+    /* micrometer */
+    implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.9.3'
 }
 
 dependencyManagement {

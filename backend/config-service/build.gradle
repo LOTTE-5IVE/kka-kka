@@ -21,6 +21,8 @@ dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bus-amqp'
     implementation 'org.springframework.cloud:spring-cloud-config-server'
     implementation 'org.springframework.cloud:spring-cloud-starter'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-monitor', version: '3.1.1'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
 }
