@@ -35,14 +35,6 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void createGradeCoupon() {
         // given
-        CouponRequestDto couponRequestDto = new CouponRequestDto(
-            null, Grade.GOLD, null, "test", "test-detail",
-            PriceRule.GRADE_COUPON.name(),
-            LocalDateTime.of(2020, 1, 1, 0, 0),
-            LocalDateTime.of(2025, 1, 1, 0, 0),
-            10, 2000, 20000
-        );
-
         // when
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -53,7 +45,6 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
                 + "  \"grade\": \"GOLD\",\n"
                 + "  \"productId\": null,\n"
                 + "  \"name\": \"test\",\n"
-                + "  \"detail\": \"test-detail\",\n"
                 + "  \"priceRule\": \"GRADE_COUPON\",\n"
                 + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
                 + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
@@ -73,15 +64,6 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void createCoupon() {
         // given
-        Product product = PRODUCT_1;
-        CouponRequestDto couponRequestDto = new CouponRequestDto(
-            null, null, product.getId(), "쿠폰", "쿠폰설명",
-            PriceRule.COUPON.name(),
-            LocalDateTime.of(2020, 1, 1, 9, 0),
-            LocalDateTime.of(2025, 1, 1, 9, 0),
-            10, 2000, 20000
-        );
-
         // when
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -90,9 +72,8 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
             .body("{\n"
                 + "  \"categoryId\": null,\n"
                 + "  \"grade\": null,\n"
-                + "  \"productId\": " + product.getId() + ",\n"
+                + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
                 + "  \"name\": \"test\",\n"
-                + "  \"detail\": \"test-detail\",\n"
                 + "  \"priceRule\": \"COUPON\",\n"
                 + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
                 + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
@@ -193,16 +174,14 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     }
 
     private String 일반_쿠폰_생성함() {
-        Product product = PRODUCT_1;
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("{\n"
                 + "  \"categoryId\": null,\n"
                 + "  \"grade\": null,\n"
-                + "  \"productId\": " + product.getId() + ",\n"
+                + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
                 + "  \"name\": \"test\",\n"
-                + "  \"detail\": \"test-detail\",\n"
                 + "  \"priceRule\": \"COUPON\",\n"
                 + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
                 + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
