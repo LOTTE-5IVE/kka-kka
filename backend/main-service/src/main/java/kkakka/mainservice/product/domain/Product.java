@@ -49,7 +49,7 @@ public class Product {
         columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private Date registeredAt;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "nutrition_id")
     private Nutrition nutrition;
 
