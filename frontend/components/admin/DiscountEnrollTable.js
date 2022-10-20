@@ -11,20 +11,45 @@ export default function DiscountEnrollTable() {
   const [discount, setDiscount] = useState();
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
-  const [targetVal, setTargetVal] = useState("1");
+  const [targetVal, setTargetVal] = useState(1);
+  const [productId, setProductId] = useState(1);
 
   const makeDiscount = async () => {
-    console.log(typeof startDate);
-    console.log(startDate);
-    await axios.post("/api/coupons/discount", {
-      categoryId: targetVal,
-      productId: null,
-      name: promotionName,
-      discount: discount,
-      discountType: "CATEGORY_DISCOUNT",
-      startedAt: `${startDate} 00:00:00`,
-      expiredAt: `${endDate} 00:00:00`,
-    });
+    await axios
+      .post("/api/coupons/discount", {
+        categoryId: targetVal,
+        productId: null,
+        name: promotionName,
+        discount: discount,
+        discountType: "CATEGORY_DISCOUNT",
+        startedAt: `${startDate} 00:00:00`,
+        expiredAt: `${endDate} 00:00:00`,
+      })
+      .then((res) => {
+        alert("등록완료!");
+      })
+      .catch((err) => {
+        alert("등록실패!");
+      });
+  };
+
+  const makeDiscountProduct = async () => {
+    await axios
+      .post("/api/coupons/discount", {
+        categoryId: null,
+        productId: productId,
+        name: promotionName,
+        discount: discount,
+        discountType: "PRODUCT_DISCOUNT",
+        startedAt: `${startDate} 00:00:00`,
+        expiredAt: `${endDate} 00:00:00`,
+      })
+      .then((res) => {
+        alert("등록완료!");
+      })
+      .catch((err) => {
+        alert("등록실패!");
+      });
   };
 
   return (
@@ -138,7 +163,10 @@ export default function DiscountEnrollTable() {
                     setTargetVal={setTargetVal}
                   />
                 ) : (
-                  <ApplyProduct />
+                  <ApplyProduct
+                    productId={productId}
+                    setProductId={setProductId}
+                  />
                 )}
               </td>
             </tr>
@@ -146,15 +174,25 @@ export default function DiscountEnrollTable() {
         </table>
 
         <div className="btnWrapper">
-          <div
-            onClick={() => {
-              console.log("click");
-              makeDiscount();
-            }}
-          >
-            <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
-          </div>
-          <Button context="취소" border="1px solid" />
+          {target == "카테고리" ? (
+            <div
+              onClick={() => {
+                console.log("click");
+                makeDiscount();
+              }}
+            >
+              <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+            </div>
+          ) : (
+            <div
+              onClick={() => {
+                console.log("click");
+                makeDiscountProduct();
+              }}
+            >
+              <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+            </div>
+          )}
         </div>
       </div>
 

@@ -1,32 +1,26 @@
-import { useState } from "react";
-import ApplyGrade from "./ApplyGrade";
-import ApplyProduct from "./ApplyProduct";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import Button from "../common/Button/Button";
-import ApplyCategory from "./ApplyCategory";
 import { AdminButton } from "../common/Button/AdminButton";
+import { useMoney } from "../../hooks/useMoney";
 
 export default function CouponSearchTable() {
-  const [target, setTarget] = useState("카테고리");
-  const [promotionName, setPromotionName] = useState("");
-  const [discount, setDiscount] = useState();
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
-  const [targetVal, setTargetVal] = useState("1");
+  const [coupons, setCoupons] = useState();
 
-  const makeDiscount = async () => {
-    console.log(typeof startDate);
-    console.log(startDate);
-    await axios.post("/api/coupons/discount", {
-      categoryId: targetVal,
-      productId: null,
-      name: promotionName,
-      discount: discount,
-      discountType: "CATEGORY_DISCOUNT",
-      startedAt: `${startDate} 00:00:00`,
-      expiredAt: `${endDate} 00:00:00`,
+  const getCoupon = async () => {
+    await axios.get("/api/coupons").then((res) => {
+      setCoupons(res.data);
     });
   };
+
+  const deleteCoupon = async (id) => {
+    await axios.put(`/api/coupons/${id}`).then((res) => {});
+
+    getCoupon();
+  };
+
+  useEffect(() => {
+    getCoupon();
+  }, []);
 
   return (
     <>
@@ -42,40 +36,50 @@ export default function CouponSearchTable() {
           <col style={{ width: "8%" }} />
         </colgroup>
         <thead>
-          <th></th>
-          <th>혜택 유형</th>
-          <th>혜택 이름</th>
-          <th>할인 설정</th>
-          <th>최소 주문 금액</th>
-          <th>다운로드 가능 기간</th>
-          <th>유효기간</th>
-          <th>적용 유형</th>
+          <tr>
+            <th></th>
+            <th>혜택 유형</th>
+            <th>혜택 이름</th>
+            <th>할인 설정</th>
+            <th>최소 주문 금액</th>
+            <th>유효기간</th>
+            <th>등록일</th>
+            <th>적용 유형</th>
+          </tr>
         </thead>
         <tbody>
-          <tr style={{ height: "5vw" }}>
-            <td>
-              <AdminButton context="중지" color="#F2B90C" />
-            </td>
-            <td>쿠폰</td>
-            <td>스낵/쿠키 카테고리 쿠폰</td>
-            <td>15% (최대 5,000원)</td>
-            <td>10,000원</td>
-            <td>2022-09-15 ~ 2022-09-15</td>
-            <td>2022-09-15 ~ 2022-09-15</td>
-            <td>회원 등급</td>
-          </tr>
-          <tr style={{ height: "5vw" }}>
-            <td>
-              <AdminButton context="중지" color="#F2B90C" />
-            </td>
-            <td>쿠폰</td>
-            <td>스낵/쿠키 카테고리 쿠폰</td>
-            <td>15% (최대 5,000원)</td>
-            <td>10,000원</td>
-            <td>2022-09-15 ~ 2022-09-15</td>
-            <td>2022-09-15 ~ 2022-09-15</td>
-            <td>상품</td>
-          </tr>
+          {coupons?.map((coupon) => {
+            return (
+              <tr style={{ height: "50px" }} key={coupon.id}>
+                <td
+                  onClick={() => {
+                    deleteCoupon(coupon.id);
+                  }}
+                >
+                  <AdminButton context="중지" color="#F2B90C" />
+                </td>
+                <td>쿠폰</td>
+                <td>{coupon.name}</td>
+                <td>
+                  {coupon.percentage}% (최대 {useMoney(coupon.maxDiscount)}원)
+                </td>
+                <td>{useMoney(coupon.minOrderPrice)}원</td>
+                <td>
+                  {coupon.startedAt.slice(0, 10)} ~{" "}
+                  {coupon.expiredAt.slice(0, 10)}
+                </td>
+                <td>{coupon.registeredAt}</td>
+                <td>
+                  {coupon.categoryId
+                    ? "카테고리"
+                    : coupon.grade
+                    ? "등급"
+                    : "상품"}
+                </td>
+              </tr>
+            );
+          })}
+
           <tr style={{ height: "100%" }}>
             <td></td>
             <td></td>

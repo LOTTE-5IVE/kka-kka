@@ -16,8 +16,9 @@ export default function MyCoupon() {
               <colgroup>
                 <col style={{ width: "20%" }} />
                 <col style={{ width: "30%" }} />
-                <col style={{ width: "30%" }} />
                 <col style={{ width: "20%" }} />
+                <col style={{ width: "20%" }} />
+                <col style={{ width: "10%" }} />
               </colgroup>
               <thead>
                 <th
@@ -30,12 +31,19 @@ export default function MyCoupon() {
                 <th
                   className={`${tab === "invalid" ? "right" : "normalRight"}`}
                   onClick={() => setTab("invalid")}
-                  colSpan="2"
+                  colSpan="3"
                 >
                   사용한 쿠폰
                 </th>
               </thead>
               <tbody>
+                <tr>
+                  <td>쿠폰명</td>
+                  <td>할인율</td>
+                  <td>최소 주문금액</td>
+                  <td>사용 가능 기간</td>
+                  <td>분류</td>
+                </tr>
                 {tab == "valid" ? (
                   <MyCouponCard test="사용 가능한" />
                 ) : (

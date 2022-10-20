@@ -6,6 +6,7 @@ import ButtonComp from "../../components/common/Button/ButtonComp";
 import DaumPost from "../../components/payment/DaumPost";
 import { useGetToken } from "../../hooks/useGetToken";
 import { useMoney } from "../../hooks/useMoney";
+import { NGray } from "../../typings/NormalColor";
 
 export default function payment() {
   const [token, setToken] = useState("");
@@ -55,6 +56,7 @@ export default function payment() {
     PostHApi("/api/orders", { productOrders: arr }, token).then((res) => {
       if (res) {
         console.log(res);
+        alert("결제되었습니다.");
       }
     });
   };
@@ -136,7 +138,32 @@ export default function payment() {
                       </td>
                       <td>{product.productName}</td>
                       <td>x{product.quantity}</td>
-                      <td>{useMoney(product.price * product.quantity)}원</td>
+                      <td>
+                        {product.productDiscount ? (
+                          <>
+                            <p>
+                              {useMoney(
+                                Math.ceil(
+                                  product.price *
+                                    (1 - 0.01 * product.productDiscount),
+                                ) * product.quantity,
+                              )}
+                              원
+                            </p>
+                            <p>
+                              <span>
+                                {useMoney(product.price * product.quantity)}원
+                              </span>
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <p>
+                              {useMoney(product.price * product.quantity)}원
+                            </p>
+                          </>
+                        )}
+                      </td>
                       <td>
                         <div
                           onClick={() => {
@@ -400,6 +427,7 @@ export default function payment() {
           onClick={() => {
             orderItem();
           }}
+          style={{ cursor: "pointer" }}
         >
           <ButtonComp context="결제하기" />
         </div>
@@ -433,6 +461,18 @@ export default function payment() {
               tr:not(:last-child) {
                 height: 2vw;
                 border-bottom: 1.5px solid #d0cfcf;
+              }
+
+              td {
+                p {
+                  margin: 0;
+
+                  span {
+                    font-size: 14px;
+                    color: ${NGray};
+                    text-decoration: line-through;
+                  }
+                }
               }
             }
           }
