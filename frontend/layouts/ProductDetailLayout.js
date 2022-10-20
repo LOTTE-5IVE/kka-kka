@@ -204,7 +204,7 @@ export default function ProductDetailLayout({
               {tab == "info" ? (
                 <Info detailImage_url={product.detailImage_url} />
               ) : tab == "nutri" ? (
-                <Nutri nutritionInfo_url={product.nutritionInfo_url} />
+                <Nutri nutrition={product.nutrition} />
               ) : (
                 <Review reviews={reviews} />
               )}
