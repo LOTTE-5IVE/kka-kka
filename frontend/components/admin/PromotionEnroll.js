@@ -1,13 +1,40 @@
 import { useState } from "react";
-import Button from "../common/Button/Button";
-import ApplyGrade from "./ApplyGrade";
-import ApplyCategory from "./ApplyCategory";
-import ApplyProduct from "./ApplyProduct";
+import axios from "axios";
+import DiscountEnrollTable from "./DiscountEnrollTable";
+import CouponEnrollTable from "./CouponEnrollTable";
 
 export default function PromotionEnroll() {
   const [btn, setBtn] = useState("할인");
   const [valid, setValid] = useState("기간");
   const [target, setTarget] = useState("카테고리");
+  const [promotionName, setPromotionName] = useState("");
+  const [discount, setDiscount] = useState();
+  const [maxdis, setMaxdis] = useState();
+  const [minorder, setMinorder] = useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [targetVal, setTargetVal] = useState("1");
+
+  const handleChange = (e) => {
+    // <- input값으로 text 변경 함수
+    this.setState({
+      text: e.target.value,
+    });
+  };
+
+  const makeDiscount = async () => {
+    console.log(typeof startDate);
+    console.log(startDate);
+    await axios.post("/api/coupons/discount", {
+      categoryId: targetVal,
+      productId: null,
+      name: promotionName,
+      discount: discount,
+      discountType: "CATEGORY_DISCOUNT",
+      startedAt: `${startDate} 00:00:00`,
+      expiredAt: `${endDate} 00:00:00`,
+    });
+  };
 
   return (
     <>
@@ -38,162 +65,21 @@ export default function PromotionEnroll() {
                 </div>
               </td>
             </tr>
-            <tr style={{ height: "4vw" }}>
-              <th scope="row">혜택 이름</th>
-              <td
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  height: "100%",
-                }}
-              >
-                <div>
-                  <input
-                    id="oname"
-                    className="inputTypeText"
-                    size="25"
-                    type="text"
-                  />
-                </div>
-
-                <div style={{ width: "40%" }}>
-                  <span>
-                    수량 x{" "}
-                    <input
-                      id="oname"
-                      className="inputTypeText"
-                      size="1"
-                      type="text"
-                    />
-                  </span>
-                </div>
-              </td>
-            </tr>
-            <tr style={{ height: "4vw" }}>
-              <th scope="row">할인 설정</th>
-              <td
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  height: "100%",
-                }}
-              >
-                <div style={{ width: "15%" }}>
-                  <input
-                    id="oname"
-                    className="inputTypeText"
-                    size="2"
-                    type="text"
-                  />
-                  %
-                </div>
-                <div style={{ width: "25%" }}>
-                  최대{" "}
-                  <input
-                    id="oname"
-                    className="inputTypeText"
-                    size="10"
-                    type="text"
-                  />{" "}
-                  원
-                </div>
-                <span style={{ color: "red" }}>
-                  *최대 금액만 설정시 정액 할인
-                </span>
-              </td>
-            </tr>
-            <tr style={{ height: "3vw" }}>
-              <th scope="row">최소 주문 금액</th>
-              <td>
-                <input
-                  id="oname"
-                  className="inputTypeText"
-                  placeholder=""
-                  size="10"
-                  defaultValue=""
-                  type="text"
-                />
-                원
-              </td>
-            </tr>
-            <tr style={{ height: "6vw" }}>
-              <th scope="row">유효 기간</th>
-              <td>
-                <div style={{ display: "flex", marginBottom: "15px" }}>
-                  <div
-                    className={`btn ${valid === "기간" ? "active" : ""}`}
-                    onClick={() => setValid("기간")}
-                  >
-                    기간으로 설정
-                  </div>
-                  <div
-                    className={`btn ${valid === "발급일" ? "active" : ""}`}
-                    onClick={() => setValid("발급일")}
-                  >
-                    발급일로부터 설정
-                  </div>
-                </div>
-                <div className="dateWrapper" style={{ display: "flex" }}>
-                  <div className="date">
-                    <input id="oname" className="inputTypeText" type="date" /> ~{" "}
-                    <input id="oname" className="inputTypeText" type="date" />
-                  </div>
-                  {valid == "발급일" ? (
-                    <div style={{ marginLeft: "30px" }}>
-                      발급일로부터{" "}
-                      <input
-                        id="oname"
-                        className="inputTypeText"
-                        size="1"
-                        type="text"
-                      />{" "}
-                      일 유효
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </td>
-            </tr>
-            <tr style={{ height: "12vw" }}>
-              <th scope="row">적용 대상 지정</th>
-              <td>
-                <div style={{ display: "flex", marginBottom: "15px" }}>
-                  <div
-                    className={`btn ${target === "카테고리" ? "active" : ""}`}
-                    onClick={() => setTarget("카테고리")}
-                  >
-                    카테고리
-                  </div>
-                  <div
-                    className={`btn ${target === "상품" ? "active" : ""}`}
-                    onClick={() => setTarget("상품")}
-                  >
-                    상품
-                  </div>
-                  <div
-                    className={`btn ${target === "회원 등급" ? "active" : ""}`}
-                    onClick={() => setTarget("회원 등급")}
-                  >
-                    회원 등급
-                  </div>
-                </div>
-                {target == "카테고리" ? (
-                  <ApplyCategory />
-                ) : target == "상품" ? (
-                  <ApplyProduct />
-                ) : (
-                  <ApplyGrade />
-                )}
-              </td>
-            </tr>
           </tbody>
         </table>
-        <div className="btnWrapper">
-          <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+        {btn === "할인" ? <DiscountEnrollTable /> : <CouponEnrollTable />}
+
+        {/* <div className="btnWrapper">
+          <div
+            onClick={() => {
+              console.log("click");
+              makeDiscount();
+            }}
+          >
+            <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+          </div>
           <Button context="취소" border="1px solid" />
-        </div>
+        </div> */}
       </div>
 
       <style jsx>{`
@@ -204,7 +90,7 @@ export default function PromotionEnroll() {
 
           table {
             width: 90%;
-            height: 85%;
+            height: 10%;
             margin: auto;
             border-collapse: collapse;
             th {

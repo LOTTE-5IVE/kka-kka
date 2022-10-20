@@ -1,7 +1,7 @@
 import MyCoupon from "../components/mypage/MyCoupon";
 import MyInfoCard from "../components/mypage/MyInfoCard";
 import MyOrder from "../components/mypage/MyOrder";
-import Mysidebar from "../components/mypage/mysidebar";
+import Mysidebar from "../components/mypage/Mysidebar";
 
 export default function MyPageLayout({
   name,

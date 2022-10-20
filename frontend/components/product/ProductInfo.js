@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useMoney } from "../../hooks/useMoney";
 import { NBlack } from "../../typings/NormalColor";
 import { ThemeRed } from "../../typings/ThemeColor";
 
@@ -30,25 +31,32 @@ export default function ProductInfo({ id, name, price, discount }) {
                       textDecoration: "line-through",
                     }}
                   >
-                    {price}원
+                    {useMoney(price)}원
                   </p>
                   <div
                     className="priceRate"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <span>{price * (1 - discount * 0.01)}원</span>
+                    <span>
+                      {useMoney(Math.ceil(price * (1 - discount * 0.01)))}원
+                    </span>
                     <span style={{ color: `${ThemeRed}` }}>{discount}%</span>
                   </div>
                 </>
               ) : (
                 <>
-                  <p> </p>
+                  <p
+                    style={{
+                      height: "19px",
+                    }}
+                  >
+                    {/* {useMoney(price)}원 */}
+                  </p>
                   <div
                     className="priceRate"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <span>{price}원</span>
-                    <span> </span>
+                    <span>{useMoney(price)}원</span>
                   </div>
                 </>
               )}

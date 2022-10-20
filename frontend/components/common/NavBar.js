@@ -33,7 +33,7 @@ export default function NavBar() {
               href={{
                 pathname: "/product",
                 query: {
-                  cat_id: 2,
+                  cat_id: 1,
                 },
               }}
             >
@@ -41,13 +41,18 @@ export default function NavBar() {
             </Link>
           </li>
           <li>
-            <div onClick={() => category(3)} className="category">
+            <div onClick={() => category(2)} className="category">
               <a>스낵/봉지과자</a>
             </div>
           </li>
           <li>
-            <div onClick={() => category(4)} className="category">
+            <div onClick={() => category(3)} className="category">
               <a>박스과자</a>
+            </div>
+          </li>
+          <li>
+            <div onClick={() => category(4)} className="category">
+              <a>캔디/사탕/젤리</a>
             </div>
           </li>
           <li>
@@ -55,23 +60,19 @@ export default function NavBar() {
               <a>시리얼/바</a>
             </div>
           </li>
+
           <li>
             <div onClick={() => category(6)} className="category">
-              <a>캔디/사탕/젤리</a>
-            </div>
-          </li>
-          <li>
-            <div onClick={() => category(7)} className="category">
               <a>초콜릿</a>
             </div>
           </li>
           <li>
-            <div onClick={() => category(8)} className="category">
+            <div onClick={() => category(7)} className="category">
               <a>껌/자일리톨</a>
             </div>
           </li>
           <li>
-            <div onClick={() => category(9)} className="category">
+            <div onClick={() => category(8)} className="category">
               <a>선물세트</a>
             </div>
           </li>
