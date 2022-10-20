@@ -47,24 +47,25 @@ public class CartService {
         return cart.getId();
     }
 
+    @Transactional
+    public CartResponseDto showCartByMember(LoginMember loginMember) {
+        Member member = memberRepository.findById(loginMember.getId())
+            .orElseThrow(KkaKkaException::new);
+
+        Cart cart = findOrCreateCart(member);
+        final List<CartItemDto> cartItemDtos = cart.getCartItems().stream()
+            .map(CartItemDto::from)
+            .collect(Collectors.toList());
+
+        return new CartResponseDto(cart.getId(), cartItemDtos);
+    }
+
     private CartItem findOrCreateCartItem(Product product, Cart cart) {
         return cartItemRepository.findByCartIdAndProductId(cart.getId(),
                         product.getId())
                 .orElseGet(() -> cartItemRepository.save(
                         CartItem.create(cart, product)
                 ));
-    }
-
-    public CartResponseDto showCartByMember(LoginMember loginMember) {
-        Member member = memberRepository.findById(loginMember.getId())
-                .orElseThrow(KkaKkaException::new);
-
-        Cart cart = findOrCreateCart(member);
-        final List<CartItemDto> cartItemDtos = cart.getCartItems().stream()
-                .map(CartItemDto::from)
-                .collect(Collectors.toList());
-
-        return new CartResponseDto(cart.getId(), cartItemDtos);
     }
 
     @Transactional

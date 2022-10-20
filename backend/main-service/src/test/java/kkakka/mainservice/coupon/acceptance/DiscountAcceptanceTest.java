@@ -107,7 +107,7 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("할인 생성 - 실패(유효하지않은 날짜)")
+    @DisplayName("할인 생성 - 실패(유효하지않은 할인율)")
     @Test
     void createDiscountNotValidateDiscount() {
         // given

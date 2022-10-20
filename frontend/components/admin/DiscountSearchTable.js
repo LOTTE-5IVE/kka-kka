@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import ApplyGrade from "./ApplyGrade";
-import ApplyProduct from "./ApplyProduct";
 import axios from "axios";
-import Button from "../common/Button/Button";
-import ApplyCategory from "./ApplyCategory";
 import { AdminButton } from "../common/Button/AdminButton";
 
 export default function DiscountSearchTable() {
@@ -11,15 +7,12 @@ export default function DiscountSearchTable() {
 
   const getDiscount = async () => {
     await axios.get("/api/coupons/discount").then((res) => {
-      console.log(res.data);
       setDiscounts(res.data);
     });
   };
 
   const deleteDiscount = async (id) => {
-    await axios.put(`/api/coupons/discount/${id}`).then((res) => {
-      console.log(res);
-    });
+    await axios.put(`/api/coupons/discount/${id}`).then((res) => {});
 
     getDiscount();
   };
@@ -40,20 +33,21 @@ export default function DiscountSearchTable() {
           <col style={{ width: "10%" }} />
         </colgroup>
         <thead>
-          <th></th>
-          <th>혜택 유형</th>
-          <th>혜택 이름</th>
-          <th>할인 설정</th>
-          <th>유효기간</th>
-          <th>적용 유형</th>
+          <tr>
+            <th></th>
+            <th>혜택 유형</th>
+            <th>혜택 이름</th>
+            <th>할인 설정</th>
+            <th>유효기간</th>
+            <th>적용 유형</th>
+          </tr>
         </thead>
         <tbody>
           {discounts?.map((discount) => {
             return (
-              <tr style={{ height: "3vw" }}>
+              <tr style={{ height: "3vw" }} key={discount.id}>
                 <td
                   onClick={() => {
-                    console.log("click");
                     deleteDiscount(discount.id);
                   }}
                 >
@@ -63,7 +57,8 @@ export default function DiscountSearchTable() {
                 <td>{discount.name}</td>
                 <td>{discount.discount}%</td>
                 <td>
-                  {discount.startedAt} ~ {discount.expiredAt}
+                  {discount.startedAt.slice(0, 10)} ~{" "}
+                  {discount.expiredAt.slice(0, 10)}
                 </td>
                 <td>{discount.categoryId ? "카테고리" : "상품"}</td>
               </tr>

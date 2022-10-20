@@ -1,17 +1,14 @@
 export default function ApplyCategory({ targetVal, setTargetVal }) {
-  const makeDiscount = async () => {
-    console.log(typeof startDate);
-    console.log(startDate);
-    await axios.post("/api/coupons/discount", {
-      categoryId: null,
-      productId: null,
-      name: promotionName,
-      discount: discount,
-      discountType: "PRODUCT_DISCOUNT",
-      startedAt: `${startDate} 00:00:00`,
-      expiredAt: `${endDate} 00:00:00`,
-    });
-  };
+  const cat_name = [
+    "비스킷/샌드",
+    "스낵/봉지과자",
+    "박스과자",
+    "캔디/사탕/젤리",
+    "시리얼/바",
+    "초콜릿",
+    "껌/자일리톨",
+    "선물세트",
+  ];
 
   return (
     <>
@@ -19,39 +16,21 @@ export default function ApplyCategory({ targetVal, setTargetVal }) {
         <div>
           <p>카테고리</p>
           <ul>
-            <li>
-              <input
-                type="radio"
-                value="1"
-                checked={targetVal === "1"}
-                onChange={(e) => {
-                  setTargetVal(e.target.value);
-                }}
-              />
-              카테고리1
-            </li>
-            <li>
-              <input
-                type="radio"
-                value="2"
-                checked={targetVal === "2"}
-                onChange={(e) => {
-                  setTargetVal(e.target.value);
-                }}
-              />
-              카테고리2
-            </li>
-            <li>
-              <input
-                type="radio"
-                value="3"
-                checked={targetVal === "3"}
-                onChange={(e) => {
-                  setTargetVal(e.target.value);
-                }}
-              />
-              카테고리3
-            </li>
+            {cat_name.map((category, index) => {
+              return (
+                <li key={index}>
+                  <input
+                    type="radio"
+                    value={index + 1}
+                    checked={targetVal == index + 1}
+                    onChange={(e) => {
+                      setTargetVal(e.target.value);
+                    }}
+                  />
+                  {category}
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
@@ -76,7 +55,7 @@ export default function ApplyCategory({ targetVal, setTargetVal }) {
             li {
               padding: 0 100px 0 0;
               border-bottom: 1px solid #dedede;
-
+              /* 
               [type="radio"] {
                 appearance: none;
                 border: max(2px, 0.1em) solid gray;
@@ -84,7 +63,7 @@ export default function ApplyCategory({ targetVal, setTargetVal }) {
                 width: 1em;
                 height: 1em;
                 transition: border 0.5s ease-in-out;
-              }
+              } */
             }
 
             li:last-child {
