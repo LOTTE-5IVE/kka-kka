@@ -7,10 +7,15 @@ spring:
     active: local
     group:
       "local": "console-logging"
-      "dev": "file-logging,console-logging,performance-logging"
+      "dev": "console-logging, file-logging, performance-logging"
       "prod": "file-logging"
 
 logging:
   config: classpath:logback-spring.xml
   level:
-    root: info
+    root: INFO
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG

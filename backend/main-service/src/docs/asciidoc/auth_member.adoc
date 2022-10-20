@@ -1,0 +1,69 @@
+= 인증/회원 API
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlight.js
+:toc: left
+:toclevels: 2
+:sectlinks:
+:nofooter:
+
+*link:index.html[메인 화면]*
+
+== Auth
+=== 회원가입 & 로그인
+
+- Request
+
+include::{snippets}/join-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/join-success/http-response.adoc[]
+
+
+== Member
+=== 회원 정보 조회
+
+- Request
+
+include::{snippets}/member-info/http-request.adoc[]
+
+- Response
+
+include::{snippets}/member-info/http-response.adoc[]
+
+
+=== 회원 정보 수정
+==== 이름 수정
+
+- Request
+
+include::{snippets}/member-info-update-name/http-request.adoc[]
+
+- Response
+
+include::{snippets}/member-info-update-name/http-response.adoc[]
+
+==== 이메일, 연락처 수정
+
+- Request
+
+include::{snippets}/member-info-update-email-phone/http-request.adoc[]
+
+- Response
+
+include::{snippets}/member-info-update-email-phone/http-response.adoc[]
+
+
+==== 회원 주문내역 조회
+
+- Request
+
+include::{snippets}/orders-info-member-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/orders-info-member-success/http-response.adoc[]
