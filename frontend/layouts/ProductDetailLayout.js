@@ -204,9 +204,13 @@ export default function ProductDetailLayout({
               {tab == "info" ? (
                 <Info detailImage_url={product.detailImage_url} />
               ) : tab == "nutri" ? (
-                <Nutri nutritionInfo_url={product.nutritionInfo_url} />
+                <Nutri nutrition={product.nutrition} />
               ) : (
-                <Review reviews={reviews} />
+                  reviews.size
+                      ? <Review reviews={reviews} />
+                      : <div className="noReview">
+                          <p>아직 작성된 후기가 없습니다.</p>
+                      </div>
               )}
             </div>
           </div>
@@ -418,6 +422,8 @@ export default function ProductDetailLayout({
             }
           }
         }
+        
+        .noReview { text-align: center; margin: 2rem 0 3rem 0;}
       `}</style>
     </>
   );

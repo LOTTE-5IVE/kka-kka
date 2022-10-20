@@ -288,13 +288,13 @@ export default function cart() {
               <tbody>
                 <tr style={{ height: "7vw" }}>
                   <td>
-                    {checkItems.map((product, index) => {
-                      return (
-                        <span key={index}>
-                          {product.price}*{product.quantity}
-                        </span>
-                      );
-                    })}
+                    {/*{checkItems.map((product, index) => {*/}
+                    {/*  return (*/}
+                    {/*    <span key={index}>*/}
+                    {/*      {product.price}*{product.quantity}*/}
+                    {/*    </span>*/}
+                    {/*  );*/}
+                    {/*})}*/}
                     상품금액
                   </td>
                   <td>-</td>
