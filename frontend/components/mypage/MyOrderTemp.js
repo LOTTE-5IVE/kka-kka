@@ -69,7 +69,7 @@ export default function MyOrderTemp() {
                     {order.productOrders.map((productOrder, idx) => {
                       return (
                         <>
-                          <MyProductOrder productOrder={productOrder} key={idx}/>
+                          <MyProductOrder productOrder={productOrder} key={idx} />
                           {(order.productOrders.length >= 1 && idx !== order.productOrders.length - 1) &&
                             <p className="po-divider"></p>}
                         </>

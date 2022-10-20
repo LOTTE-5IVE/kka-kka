@@ -1,36 +1,53 @@
 import {useMoney} from "../../hooks/useMoney";
+import Review from "./review/Review";
+import {useEffect, useState} from "react";
 
 export default function MyProductOrder({productOrder}) {
+  const [reviewed, setReviewed] = useState(productOrder.review != null);
+
+  const setReviewedState = () => {
+    setReviewed(true);
+  }
+
+  useEffect(() => {
+  }, [reviewed]);
 
   return (
     <>
       <div className="wrapper">
-        <div className="d-flex flex-column align-start">
-          <div className="d-flex align-start">
-            <div className="title-label">상품주문번호</div>
-            <div className="title-id">{productOrder.id}</div>
-          </div>
-          <div className="d-flex align-start">
-            <img className="mt-3" src={productOrder.product.imageUrl}/>
-            <div className="d-flex flex-column">
-              <div className="d-flex flex-column align-start">
-                <p>
-                  {productOrder.product.name}
-                </p>
-              </div>
+        <div className="d-flex justify-space-between">
+          <div className="d-flex flex-column align-start">
+            <div className="d-flex align-start">
+              <div className="title-label">상품주문번호</div>
+              <div className="title-id">{productOrder.id}</div>
+            </div>
+            <div className="d-flex align-start">
+              <img className="mt-3" src={productOrder.product.imageUrl}/>
               <div className="d-flex flex-column">
-                <div>
-                  <span className="detail">수량: {productOrder.quantity}</span>
+                <div className="d-flex flex-column align-start">
+                  <p>
+                    {productOrder.product.name}
+                  </p>
                 </div>
-                <div className="d-flex justify-space-between">
-                  <span className="detail">상품가격: {useMoney(productOrder.product.price)} 원</span>
-                  <span className="detail">|</span>
-                  <span className="detail">할인가격: {useMoney(productOrder.product.price * (0.01 * productOrder.product.discount)) || 0} 원</span>
+                <div className="d-flex flex-column">
+                  <div>
+                    <span className="detail">수량: {productOrder.quantity}</span>
+                  </div>
+                  <div className="d-flex justify-space-between">
+                    <span className="detail">상품가격: {useMoney(productOrder.product.price)} 원</span>
+                    <span className="detail">|</span>
+                    <span
+                      className="detail">할인가격: {useMoney(productOrder.product.price * (0.01 * productOrder.product.discount)) || 0} 원</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <div className="reviewed">
+            {reviewed && <span>후기작성완료</span>}
+          </div>
         </div>
+        {!reviewed && <Review productOrderId={productOrder.id} setReviewed={setReviewedState}/>}
       </div>
       <style jsx>{`
         .wrapper {
@@ -113,6 +130,14 @@ export default function MyProductOrder({productOrder}) {
 
         .detail-content {
           padding-inline: 0;
+        }
+
+        .reviewed {
+          width: fit-content;
+          font-size: 0.8rem;
+          color: #3e3e3e;
+          margin-top: auto;
+          margin-bottom: auto;
         }
       `}
       </style>
