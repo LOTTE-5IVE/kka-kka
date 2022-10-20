@@ -24,8 +24,9 @@ public class DiscountRequestDto {
     private LocalDateTime expiredAt;
 
     public boolean isValidDate() {
-        return this.getStartedAt().isBefore(LocalDateTime.now())
-            && this.getExpiredAt().isAfter(LocalDateTime.now());
+        return (this.getStartedAt().isAfter(LocalDateTime.now())
+            || this.getExpiredAt().isAfter(LocalDateTime.now()))
+            && this.getStartedAt().isBefore(this.getExpiredAt());
     }
 
     public boolean isValidDiscount() {

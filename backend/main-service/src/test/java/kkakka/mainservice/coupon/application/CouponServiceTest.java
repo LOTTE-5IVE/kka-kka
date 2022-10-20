@@ -49,7 +49,7 @@ public class CouponServiceTest extends TestContext {
         // given
         Member member = new Member();
         Coupon coupon = Coupon.create(
-            null, null, "testCoupon", "test 입니다",
+            null, null, "testCoupon",
             PriceRule.COUPON,
             LocalDateTime.of(2020, 3, 16, 3, 16),
             LocalDateTime.of(2025, 3, 16, 3, 16),
@@ -86,7 +86,7 @@ public class CouponServiceTest extends TestContext {
         // when
         couponService.createCoupon(new CouponRequestDto(
             null, Grade.GOLD, null,
-            "test", "testCoupon", "GRADE_COUPON",
+            "test", "GRADE_COUPON",
             LocalDateTime.of(2020, 3, 16, 3, 16),
             LocalDateTime.of(2025, 3, 16, 3, 16),
             10, 2000, 10000
@@ -117,7 +117,6 @@ public class CouponServiceTest extends TestContext {
             null,
             null,
             "testCoupon",
-            "test 입니다",
             PriceRule.COUPON,
             LocalDateTime.of(2020, 3, 16, 3, 16),
             LocalDateTime.of(2025, 3, 16, 3, 16),
@@ -142,7 +141,7 @@ public class CouponServiceTest extends TestContext {
         Member member = new Member();
         Coupon coupon1 = Coupon.create(
             null, null,
-            "testCoupon", "test 입니다",
+            "testCoupon",
             PriceRule.COUPON,
             LocalDateTime.of(2020, 3, 16, 3, 16),
             LocalDateTime.of(2025, 3, 16, 3, 16),
@@ -150,7 +149,7 @@ public class CouponServiceTest extends TestContext {
         );
         Coupon coupon2 = Coupon.create(
             null, null,
-            "testCoupon", "test 입니다",
+            "testCoupon",
             PriceRule.COUPON,
             LocalDateTime.of(2020, 3, 16, 3, 16),
             LocalDateTime.of(2025, 3, 16, 3, 16),
@@ -176,20 +175,20 @@ public class CouponServiceTest extends TestContext {
         // given
         Member member = new Member();
         Coupon coupon1 = Coupon.create(
-            null, null, "testCoupon", "test 입니다", PriceRule.COUPON,
+            null, null, "testCoupon", PriceRule.COUPON,
             LocalDateTime.of(2024, 3, 16, 3, 16),
             LocalDateTime.of(2025, 3, 16, 3, 16),
             15, 1000, 2000
         );
         Coupon coupon2 = Coupon.create(
-            null, null, "testCoupon", "test 입니다", PriceRule.COUPON,
+            null, null, "testCoupon", PriceRule.COUPON,
             LocalDateTime.of(2020, 3, 16, 3, 16),
             LocalDateTime.of(2025, 3, 16, 3, 16),
             15, 1000, 2000
         );
         Coupon coupon3 = Coupon.create(
             Grade.VIP,
-            "testCoupon", "test입니다", PriceRule.GRADE_COUPON,
+            "testCoupon", PriceRule.GRADE_COUPON,
             LocalDateTime.of(2020, 3, 16, 3, 16),
             LocalDateTime.of(2025, 3, 16, 3, 16),
             15, 1000, 2000

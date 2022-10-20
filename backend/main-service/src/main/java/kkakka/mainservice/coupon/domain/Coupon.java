@@ -44,7 +44,6 @@ public class Coupon {
     private Product product;
 
     private String name;
-    private String detail;
 
     @Enumerated(EnumType.STRING)
     private PriceRule priceRule;
@@ -61,7 +60,6 @@ public class Coupon {
         Category category,
         Product product,
         String name,
-        String detail,
         PriceRule priceRule,
         LocalDateTime startedAt,
         LocalDateTime expiredAt,
@@ -69,7 +67,7 @@ public class Coupon {
         int maxDiscount,
         int minOrderPrice
     ) {
-        return new Coupon(null, category, null, product, name, detail, priceRule,
+        return new Coupon(null, category, null, product, name, priceRule,
             LocalDateTime.now(),
             startedAt, expiredAt, percentage, maxDiscount, minOrderPrice, false);
     }
@@ -77,7 +75,6 @@ public class Coupon {
     public static Coupon create(
         Grade grade,
         String name,
-        String detail,
         PriceRule priceRule,
         LocalDateTime startedAt,
         LocalDateTime expiredAt,
@@ -85,7 +82,7 @@ public class Coupon {
         int maxDiscount,
         int minOrderPrice
     ) {
-        return new Coupon(null, null, grade, null, name, detail, priceRule, LocalDateTime.now(),
+        return new Coupon(null, null, grade, null, name, priceRule, LocalDateTime.now(),
             startedAt, expiredAt, percentage, maxDiscount, minOrderPrice, false);
     }
 
