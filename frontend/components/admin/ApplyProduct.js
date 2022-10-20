@@ -2,22 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useMoney } from "../../hooks/useMoney";
 
-export default function ApplyProduct() {
+export default function ApplyProduct({ productId, setProductId }) {
   const [products, setProducts] = useState();
-
-  const cat_name = {
-    0: "전체 상품",
-    1: "전체 상품",
-    2: "비스킷/샌드",
-    3: "스낵/봉지과자",
-    4: "박스과자",
-    5: "시리얼/바",
-    6: "캔디/사탕/젤리",
-    7: "초콜릿",
-    8: "껌/자일리톨",
-    9: "선물세트",
-  };
-
   const getProducts = async () => {
     await axios.get("/api/products?category=0").then((res) => {
       console.log(res.data);
@@ -35,9 +21,7 @@ export default function ApplyProduct() {
     <>
       <div className="title">
         <div className="check">
-          <p style={{ width: "90px" }}>
-            <input type="checkbox" />
-          </p>
+          <p style={{ width: "90px" }}>선택</p>
         </div>
         <div>
           <p style={{ width: "70px" }}>이미지</p>
@@ -58,7 +42,14 @@ export default function ApplyProduct() {
             <div className="check">
               <ul style={{ width: "90px" }}>
                 <li>
-                  <input type="checkbox" />
+                  <input
+                    type="radio"
+                    value={product.id}
+                    checked={productId == product.id}
+                    onChange={(e) => {
+                      setProductId(e.target.value);
+                    }}
+                  />
                 </li>
               </ul>
             </div>

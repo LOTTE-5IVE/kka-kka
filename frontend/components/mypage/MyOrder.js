@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Title from "../../components/common/Title";
 import { useMoney } from "../../hooks/useMoney";
+import { NGray } from "../../typings/NormalColor";
 
 export default function MyOrder({ orderList }) {
   const [marker, setMarker] = useState(1);
@@ -9,7 +10,7 @@ export default function MyOrder({ orderList }) {
     setMarker(marker + 1);
   }
 
-  const olist = orderList.map((order) => (
+  const olist = orderList?.map((order) => (
     <>
       <tr style={{ height: "3vw" }}>
         <td
@@ -34,15 +35,21 @@ export default function MyOrder({ orderList }) {
               <img width="96px" src={product.product.imageUrl} />
             </td>
             <td>{product.product.name}</td>
-            <td
-              style={{
-                color: "#898989",
-                textAlign: "right",
-                paddingRight: "15px",
-              }}
-            >
-              {useMoney(product.product.price)}원
-            </td>
+
+            {product.product.discount ? (
+              <td
+                style={{
+                  color: `${NGray}`,
+                  textDecoration: "line-through",
+                  textAlign: "right",
+                  paddingRight: "15px",
+                }}
+              >
+                <p>{useMoney(product.product.price * product.quantity)}원</p>
+              </td>
+            ) : (
+              ""
+            )}
           </tr>
           <tr style={{ height: "1vw" }}>
             <td style={{ color: "#898989" }}>상품상세옵션</td>
@@ -54,7 +61,19 @@ export default function MyOrder({ orderList }) {
                 paddingRight: "15px",
               }}
             >
-              {useMoney(product.product.price)}원
+              {product.product.discount ? (
+                <>
+                  {useMoney(
+                    Math.ceil(
+                      product.product.price *
+                        (1 - 0.01 * product.product.discount),
+                    ) * product.quantity,
+                  )}
+                  원
+                </>
+              ) : (
+                <>{useMoney(product.product.price)}원</>
+              )}
             </td>
           </tr>
           <tr style={{ height: "2vw", borderBottom: "2px solid #d0cfcf" }}>
@@ -124,7 +143,7 @@ export default function MyOrder({ orderList }) {
                 font-size: 14px;
                 font-weight: 600;
                 color: #2c2c2c;
-
+                margin-bottom: 100px;
                 tr:nth-child(4n + 2) td:nth-child(3) {
                   text-align: right;
                   text-decoration: line-through;

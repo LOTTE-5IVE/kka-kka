@@ -3,6 +3,9 @@ import ApplyGrade from "./ApplyGrade";
 import ApplyProduct from "./ApplyProduct";
 import axios from "axios";
 import Button from "../common/Button/Button";
+import ApplyCategory from "./ApplyCategory";
+import ValidDuration from "./ValidDuration";
+import ValidDate from "./ValidDate";
 
 export default function CouponEnrollTable() {
   const [valid, setValid] = useState("기간");
@@ -13,20 +16,67 @@ export default function CouponEnrollTable() {
   const [minorder, setMinorder] = useState();
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
-  const [targetVal, setTargetVal] = useState("1");
+  const [targetVal, setTargetVal] = useState(1);
+  const [productId, setProductId] = useState(1);
 
   const makeCoupon = async () => {
-    console.log(typeof startDate);
-    console.log(startDate);
-    await axios.post("/api/coupons/discount", {
-      categoryId: targetVal,
-      productId: null,
-      name: promotionName,
-      discount: discount,
-      discountType: "CATEGORY_DISCOUNT",
-      startedAt: `${startDate} 00:00:00`,
-      expiredAt: `${endDate} 00:00:00`,
-    });
+    await axios
+      .post("/api/coupons", {
+        categoryId: targetVal,
+        grade: null,
+        productId: null,
+        name: promotionName,
+
+        priceRule: "COUPON",
+        startedAt: `${startDate} 00:00:00`,
+        expiredAt: `${endDate} 00:00:00`,
+        percentage: discount,
+        maxDiscount: maxdis,
+        minOrderPrice: minorder,
+      })
+      .then((res) => {
+        console.log(res);
+        console.log(res.headers.location);
+      });
+  };
+
+  const makeCouponProduct = async () => {
+    await axios
+      .post("/api/coupons", {
+        categoryId: null,
+        grade: null,
+        productId: productId,
+        name: promotionName,
+        priceRule: "COUPON",
+        startedAt: `${startDate} 00:00:00`,
+        expiredAt: `${endDate} 00:00:00`,
+        percentage: discount,
+        maxDiscount: maxdis,
+        minOrderPrice: minorder,
+      })
+      .then((res) => {
+        console.log(res);
+      });
+  };
+
+  const makeCouponGrade = async () => {
+    await axios
+      .post("/api/coupons", {
+        categoryId: null,
+        grade: targetVal,
+        productId: null,
+        name: promotionName,
+        priceRule: "GRADE_COUPON",
+        startedAt: `${startDate} 00:00:00`,
+        expiredAt: `${endDate} 00:00:00`,
+        percentage: discount,
+        maxDiscount: maxdis,
+        minOrderPrice: minorder,
+      })
+      .then((res) => {
+        console.log(res);
+        console.log(res.headers.location);
+      });
   };
 
   return (
@@ -153,43 +203,21 @@ export default function CouponEnrollTable() {
                     발급일로부터 설정
                   </div>
                 </div>
-                <div className="dateWrapper" style={{ display: "flex" }}>
-                  <div className="date">
-                    <input
-                      id="oname"
-                      className="inputTypeText"
-                      type="date"
-                      defaultValue={startDate}
-                      onChange={(e) => {
-                        setStartDate(e.target.value + "");
-                      }}
-                    />{" "}
-                    {startDate}~{" "}
-                    <input
-                      id="oname"
-                      className="inputTypeText"
-                      type="date"
-                      defaultValue={endDate}
-                      onChange={(e) => {
-                        setEndDate(e.target.value + "");
-                      }}
-                    />
-                  </div>
-                  {valid == "발급일" ? (
-                    <div style={{ marginLeft: "30px" }}>
-                      발급일로부터{" "}
-                      <input
-                        id="oname"
-                        className="inputTypeText"
-                        size="1"
-                        type="text"
-                      />{" "}
-                      일 유효
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
+                {valid == "기간" ? (
+                  <ValidDuration
+                    startDate={startDate}
+                    setStartDate={setStartDate}
+                    endDate={endDate}
+                    setEndDate={setEndDate}
+                  />
+                ) : (
+                  <ValidDate
+                    startDate={startDate}
+                    setStartDate={setStartDate}
+                    endDate={endDate}
+                    setEndDate={setEndDate}
+                  />
+                )}
               </td>
             </tr>
             <tr style={{ height: "12vw" }}>
@@ -216,51 +244,20 @@ export default function CouponEnrollTable() {
                   </div>
                 </div>
                 {target == "카테고리" ? (
-                  <div className="outter">
-                    <div>
-                      <ul>
-                        <li>
-                          <input
-                            type="radio"
-                            value="1"
-                            checked={targetVal === "1"}
-                            onChange={(e) => {
-                              setTargetVal(e.target.value);
-                            }}
-                          />
-                          카테고리1
-                        </li>
-                        <li>
-                          <input
-                            type="radio"
-                            value="2"
-                            checked={targetVal === "2"}
-                            onChange={(e) => {
-                              setTargetVal(e.target.value);
-                            }}
-                          />
-                          카테고리2
-                        </li>
-                        <li>
-                          <input
-                            type="radio"
-                            value="3"
-                            checked={targetVal === "3"}
-                            onChange={(e) => {
-                              setTargetVal(e.target.value);
-                            }}
-                          />
-                          카테고리3
-                        </li>
-                        <li>{targetVal}</li>
-                      </ul>
-                    </div>
-                  </div>
-                ) : // <ApplyCategory />
-                target == "상품" ? (
-                  <ApplyProduct />
+                  <ApplyCategory
+                    targetVal={targetVal}
+                    setTargetVal={setTargetVal}
+                  />
+                ) : target == "상품" ? (
+                  <ApplyProduct
+                    productId={productId}
+                    setProductId={setProductId}
+                  />
                 ) : (
-                  <ApplyGrade />
+                  <ApplyGrade
+                    targetVal={targetVal}
+                    setTargetVal={setTargetVal}
+                  />
                 )}
               </td>
             </tr>
@@ -268,15 +265,34 @@ export default function CouponEnrollTable() {
         </table>
 
         <div className="btnWrapper">
-          <div
-            onClick={() => {
-              console.log("click");
-              makeCoupon();
-            }}
-          >
-            <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
-          </div>
-          <Button context="취소" border="1px solid" />
+          {target == "카테고리" ? (
+            <div
+              onClick={() => {
+                console.log("click");
+                makeCoupon();
+              }}
+            >
+              <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+            </div>
+          ) : target == "상품" ? (
+            <div
+              onClick={() => {
+                console.log("click");
+                makeCouponProduct();
+              }}
+            >
+              <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+            </div>
+          ) : (
+            <div
+              onClick={() => {
+                console.log("click");
+                makeCouponGrade();
+              }}
+            >
+              <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+            </div>
+          )}
         </div>
       </div>
 
@@ -287,7 +303,7 @@ export default function CouponEnrollTable() {
 
           table {
             width: 90%;
-            height: 100%;
+            height: 90%;
             margin: auto;
             border-collapse: collapse;
             th {
