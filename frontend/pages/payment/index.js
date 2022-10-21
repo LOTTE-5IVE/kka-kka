@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
+import { CouponDown } from "../../components/coupon/CouponDown";
+import { CouponModal } from "../../components/coupon/CouponModal";
 import DaumPost from "../../components/payment/DaumPost";
 import { useGetToken } from "../../hooks/useGetToken";
 import { useMoney } from "../../hooks/useMoney";
@@ -60,7 +62,7 @@ export default function payment() {
     document.location.href = "/";
   };
 
-  function modalHandler() {
+  function handleModal() {
     setModal(false);
   }
 
@@ -121,7 +123,7 @@ export default function payment() {
                       {modal && (
                         <CouponModal>
                           <div>
-                            <CouponDown modalHandler={modalHandler} />
+                            <CouponDown handleModal={handleModal} />
                           </div>
                         </CouponModal>
                       )}
@@ -403,13 +405,33 @@ export default function payment() {
                 <tr>
                   <th scope="row">주문상품</th>
                   <td>
-                    {useMoney(orderItems.reduce((prev, cur) => prev + (cur.price * cur.quantity), 0))} 원
+                    {useMoney(
+                      orderItems.reduce(
+                        (prev, cur) => prev + cur.price * cur.quantity,
+                        0,
+                      ),
+                    )}{" "}
+                    원
                   </td>
                 </tr>
                 <tr>
                   <th scope="row">할인/부가결제</th>
                   <td>
-                    - {useMoney(orderItems.reduce((prev, cur) => prev + Math.ceil(cur.price * 0.01 * cur.productDiscount * cur.quantity), 0)) || 0} 원
+                    -{" "}
+                    {useMoney(
+                      orderItems.reduce(
+                        (prev, cur) =>
+                          prev +
+                          Math.ceil(
+                            cur.price *
+                              0.01 *
+                              cur.productDiscount *
+                              cur.quantity,
+                          ),
+                        0,
+                      ),
+                    ) || 0}{" "}
+                    원
                   </td>
                 </tr>
                 <tr>
@@ -420,9 +442,23 @@ export default function payment() {
                   <th scope="row">결제금액</th>
                   <td>
                     {useMoney(
-                      (orderItems.reduce((prev, cur) => prev + (cur.price * cur.quantity), 0)
-                        - (orderItems.reduce((prev, cur) => prev + Math.ceil(cur.price * 0.01 * cur.productDiscount * cur.quantity), 0)))
-                    )} 원
+                      orderItems.reduce(
+                        (prev, cur) => prev + cur.price * cur.quantity,
+                        0,
+                      ) -
+                        orderItems.reduce(
+                          (prev, cur) =>
+                            prev +
+                            Math.ceil(
+                              cur.price *
+                                0.01 *
+                                cur.productDiscount *
+                                cur.quantity,
+                            ),
+                          0,
+                        ),
+                    )}{" "}
+                    원
                   </td>
                 </tr>
               </tbody>
