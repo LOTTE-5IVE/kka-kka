@@ -10,10 +10,10 @@ export default function Review({ reviews }) {
             <col style={{ width: "20vw" }} />
           </colgroup>
           <tbody>
-            {reviews?.data.map((review, index) => {
+            {reviews.length > 0 && reviews.map((review, index) => {
               return (
-                <tr style={{ height: "5vw" }}>
-                  <td>별점</td>
+                <tr key={index} style={{ height: "5vw" }}>
+                  <td>{review.rating}</td>
                   <td>{review.contents}</td>
                   <td>{review.member.name}</td>
                   <td>{review.createdAt}</td>
