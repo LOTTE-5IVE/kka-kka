@@ -5,10 +5,10 @@ const FILL = {
 };
 
 const StarIcon = ({
-  borderColor = '#ffd151',
+  borderColor = {borderColor},
   color = '#ffd151',
   status = {status},
-  width = '25px',
+  width = {width},
 }) => {
   return (
     <svg
