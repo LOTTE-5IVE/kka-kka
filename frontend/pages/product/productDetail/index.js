@@ -74,7 +74,7 @@ export default function productDetail() {
 
   const getReview = async () => {
     if (productId) {
-      await axios.get(`/api/reviews?product=703`).then((res) => {
+      await axios.get(`/api/reviews?product=${productId}`).then((res) => {
         setReviews(res.data);
       });
     }
