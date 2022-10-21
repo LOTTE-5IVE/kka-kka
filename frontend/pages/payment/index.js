@@ -62,7 +62,7 @@ export default function payment() {
     document.location.href = "/";
   };
 
-  function modalHandler() {
+  function handleModal() {
     setModal(false);
   }
 
@@ -123,7 +123,7 @@ export default function payment() {
                       {modal && (
                         <CouponModal>
                           <div>
-                            <CouponDown modalHandler={modalHandler} />
+                            <CouponDown handleModal={handleModal} />
                           </div>
                         </CouponModal>
                       )}
