@@ -1,19 +1,14 @@
 import Link from "next/link";
-import { AdminButton } from "../components/common/Button/AdminButton";
-import { CouponDown } from "../components/coupon/CouponDown";
-import { CouponModal } from "../components/coupon/CouponModal";
+import {AdminButton} from "../components/common/Button/AdminButton";
+import {CouponDown} from "../components/coupon/CouponDown";
+import {CouponModal} from "../components/coupon/CouponModal";
 import Info from "../components/product/productDetail/Info";
 import Nutri from "../components/product/productDetail/Nutri";
 import Review from "../components/product/productDetail/Review";
-import { isLogin } from "../hooks/isLogin";
-import { useMoney } from "../hooks/useMoney";
-import { NBlack, NGray, NLightGray } from "../typings/NormalColor";
-import {
-  ThemeBlue,
-  ThemeGray,
-  ThemePink,
-  ThemeRed,
-} from "../typings/ThemeColor";
+import {isLogin} from "../hooks/isLogin";
+import {useMoney} from "../hooks/useMoney";
+import {NBlack, NGray, NLightGray} from "../typings/NormalColor";
+import {ThemeBlue, ThemeGray, ThemePink, ThemeRed,} from "../typings/ThemeColor";
 
 export default function ProductDetailLayout({
   tab,
@@ -206,7 +201,7 @@ export default function ProductDetailLayout({
               ) : tab == "nutri" ? (
                 <Nutri nutrition={product.nutrition} />
               ) : (
-                  reviews.size
+                  reviews.length > 0
                       ? <Review reviews={reviews} />
                       : <div className="noReview">
                           <p>아직 작성된 후기가 없습니다.</p>

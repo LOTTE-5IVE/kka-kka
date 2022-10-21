@@ -1,12 +1,12 @@
 import axios from "axios";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { PostHApi } from "../../../apis/Apis";
+import {useRouter} from "next/router";
+import {useEffect, useState} from "react";
+import {PostHApi} from "../../../apis/Apis";
 import Title from "../../../components/common/Title";
-import { useGetToken } from "../../../hooks/useGetToken";
+import {useGetToken} from "../../../hooks/useGetToken";
 import ProductDetailLayout from "../../../layouts/ProductDetailLayout";
 import Swal from "sweetalert2";
-import { isLogin } from "../../../hooks/isLogin";
+import {isLogin} from "../../../hooks/isLogin";
 
 export default function productDetail() {
   const router = useRouter();
@@ -16,7 +16,7 @@ export default function productDetail() {
   const [tab, setTab] = useState("info");
   const [modal, setModal] = useState(false);
   const [product, setProduct] = useState({});
-  const [reviews, setReviews] = useState();
+  const [reviews, setReviews] = useState([]);
 
   const handleQuantity = (type) => {
     if (type !== "minus" || quantity > 1) {
@@ -75,7 +75,7 @@ export default function productDetail() {
   const getReview = async () => {
     if (productId) {
       await axios.get(`/api/reviews?product=${productId}`).then((res) => {
-        setReviews(res.data);
+        setReviews(res.data.data);
       });
     }
   };
