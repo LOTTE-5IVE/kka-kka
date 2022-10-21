@@ -25,12 +25,12 @@ export default function Sidebar({ menu }) {
           <h2>과자모음</h2>
         </div>
         <ul>
-          <li onClick={() => setTab("1")}>
+          <li onClick={() => setTab("0")}>
             <Link
               href={{
                 pathname: "/product",
                 query: {
-                  cat_id: 1,
+                  cat_id: 0,
                 },
               }}
             >
