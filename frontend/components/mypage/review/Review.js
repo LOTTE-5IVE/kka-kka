@@ -52,6 +52,8 @@ export default function Review({productOrderId, setReviewed}) {
             value={rating}
             setValue={setRatingValue}
             onStart={onRatingStart}
+            borderColor={'#ffd151'}
+            starWidth={'25px'}
           />
           <textarea value={contents} onChange={onWriteContents}/>
           <span className="submitBtn" onClick={() => handleSubmit()}>

@@ -1,18 +1,20 @@
 import StarIcon from './StartIcon';
 
 const RangeWithIcons = ({
-                          labelText,
-                          color = 'red',
-                          min = 0,
-                          max,
-                          step,
-                          value,
-                          disabled,
-                          setValue,
-                          onStart,
-                          onEnd,
-                          readOnly,
-                        }) => {
+  labelText,
+  color = 'red',
+  min = 0,
+  max,
+  step,
+  value,
+  disabled,
+  setValue,
+  onStart,
+  onEnd,
+  readOnly,
+  borderColor,
+  starWidth
+}) => {
 
   const onChange = (event) => {
     setValue?.(Number(event.target.value));
@@ -35,32 +37,34 @@ const RangeWithIcons = ({
   };
 
   return (
-    <>
-      <div className="wrapper">
-        <span>{labelText}</span>
-        <input
-          type="range"
-          min={min}
-          max={max}
-          step={step}
-          value={value}
-          onChange={(event) => !disabled && onChange(event)}
-          onTouchStart={onStart}
-          onKeyDown={onStart}
-          onMouseDown={onStart}
-          onTouchEnd={onEnd}
-          onMouseUp={onEnd}
-          onKeyUp={onEnd}
-          readOnly={readOnly}
-          tabIndex={readOnly ? -1 : 0}
-        />
-        <div>
-          {Array.from({length: 5}, (_, i) => i + 1).map((_, index) => {
-            return <StarIcon color={color} key={index} status={getIconsStatus(index)}/>;
-          })}
+      <>
+        <div className="wrapper">
+          <span>{labelText}</span>
+          <input
+              type="range"
+              min={min}
+              max={max}
+              step={step}
+              value={value}
+              onChange={(event) => !disabled && onChange(event)}
+              onTouchStart={onStart}
+              onKeyDown={onStart}
+              onMouseDown={onStart}
+              onTouchEnd={onEnd}
+              onMouseUp={onEnd}
+              onKeyUp={onEnd}
+              readOnly={readOnly}
+              tabIndex={readOnly ? -1 : 0}
+          />
+          <div>
+            {Array.from({length: 5}, (_, i) => i + 1).map((_, index) => {
+              return <StarIcon borderColor={borderColor} color={color}
+                               key={index} width={starWidth}
+                               status={getIconsStatus(index)}/>;
+            })}
+          </div>
         </div>
-      </div>
-      <style jsx>{`
+        <style jsx>{`
         span {
           width: 0;
           height: 0;
@@ -104,7 +108,7 @@ const RangeWithIcons = ({
           justify-content: center;
         }
       `}</style>
-    </>
+      </>
   );
 };
 
