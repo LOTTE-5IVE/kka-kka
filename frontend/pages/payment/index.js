@@ -180,7 +180,7 @@ export default function payment() {
                         {modal && (
                           <CouponModal>
                             <div>
-                              <CouponDown modalHandler={modalHandler} />
+                              <CouponDown handleModal={handleModal} />
                             </div>
                           </CouponModal>
                         )}
