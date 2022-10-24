@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import kkakka.mainservice.TestContext;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +26,7 @@ public class MemberRepositoryTest extends TestContext {
         final Member member = memberRepository.save(
                 Member.create(
                         Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
-                                MemberProviderName.TEST),
+                                ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),
@@ -50,7 +50,7 @@ public class MemberRepositoryTest extends TestContext {
         final Member member = memberRepository.save(
                 Member.create(
                         Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
-                                MemberProviderName.TEST),
+                                ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),
@@ -74,7 +74,7 @@ public class MemberRepositoryTest extends TestContext {
         final Member member = memberRepository.save(
                 Member.create(
                         Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
-                                MemberProviderName.TEST),
+                                ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),
@@ -99,7 +99,7 @@ public class MemberRepositoryTest extends TestContext {
         final Member member = memberRepository.save(
                 Member.create(
                         Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
-                                MemberProviderName.TEST),
+                                ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),
@@ -123,7 +123,7 @@ public class MemberRepositoryTest extends TestContext {
         final Member member = memberRepository.save(
                 Member.create(
                         Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
-                                MemberProviderName.TEST),
+                                ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),
@@ -148,7 +148,7 @@ public class MemberRepositoryTest extends TestContext {
         final Member member = memberRepository.save(
                 Member.create(
                         Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
-                                MemberProviderName.TEST),
+                                ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),

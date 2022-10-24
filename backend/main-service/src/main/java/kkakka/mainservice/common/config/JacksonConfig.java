@@ -1,4 +1,4 @@
-package kkakka.mainservice.auth.infrastructure.config;
+package kkakka.mainservice.common.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

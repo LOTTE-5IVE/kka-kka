@@ -6,7 +6,7 @@ import java.util.List;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.domain.Order;
@@ -63,7 +63,7 @@ public class TestDataLoader implements CommandLineRunner {
     public void run(String... args) {
         MEMBER = memberRepository.save(
                 Member.create(
-                        Provider.create(TEST_MEMBER_00.getProviderId(), MemberProviderName.TEST),
+                        Provider.create(TEST_MEMBER_00.getProviderId(), ProviderName.TEST),
                         TEST_MEMBER_00.getName(),
                         TEST_MEMBER_00.getEmail(),
                         TEST_MEMBER_00.getPhone(),

@@ -1,4 +1,4 @@
-package kkakka.mainservice.auth.domain;
+package kkakka.mainservice.member.member.domain;
 
 public enum ProviderName {
 

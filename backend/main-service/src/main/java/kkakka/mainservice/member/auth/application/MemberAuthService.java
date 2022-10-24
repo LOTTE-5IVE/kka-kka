@@ -1,32 +1,30 @@
 package kkakka.mainservice.member.auth.application;
 
-import kkakka.mainservice.auth.application.dto.UserProfileDto;
-import kkakka.mainservice.auth.domain.ProviderName;
-import kkakka.mainservice.auth.ui.AuthController;
-import kkakka.mainservice.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.auth.application.dto.SocialProviderCodeDto;
 import kkakka.mainservice.member.auth.application.dto.UserProfile;
-import kkakka.mainservice.member.auth.exception.SocialAuthenticateException;
+import kkakka.mainservice.member.auth.infrastructure.ResponseConverter;
 import kkakka.mainservice.member.auth.ui.dto.TokenDto;
 import kkakka.mainservice.member.auth.util.JwtTokenProvider;
 import kkakka.mainservice.member.member.application.MemberService;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
-import kkakka.mainservice.member.member.domain.Provider;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Nullable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
 public class MemberAuthService {
 
-    // TODO: Controller 직접 참조 대신 MSA 통신으로 변경
-    private final AuthController authController;
     private final MemberService memberService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RestTemplate restTemplate;
+    private final ResponseConverter converter;
 
     @Transactional
     public TokenDto createOrFindMember(SocialProviderCodeDto socialProviderCodeDto) {
@@ -38,43 +36,20 @@ public class MemberAuthService {
     }
 
     private UserProfile getUserProfile(SocialProviderCodeDto socialProviderCodeDto) {
-        final UserProfileDto userProfileDto = authenticateUser(socialProviderCodeDto);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE));
 
-        // TODO: UserProfileDto 의존성 제거하고 직접 UserProfile 로 consume
-        return new UserProfile(
-                Provider.create(
-                        userProfileDto.getProviderId(),
-                        MemberProviderName.valueOf(
-                                userProfileDto.getProvider().getProviderName().toString()
-                        )
+        final ResponseEntity<String> response = restTemplate.exchange(
+                "http://localhost:9001/api/auth",
+                HttpMethod.POST,
+                new HttpEntity<>(
+                        socialProviderCodeDto,
+                        headers
                 ),
-                userProfileDto.getName(),
-                userProfileDto.getEmail(),
-                userProfileDto.getAgeGroup(),
-                userProfileDto.getPhone()
-        );
-    }
-
-    @Nullable
-    private UserProfileDto authenticateUser(SocialProviderCodeDto socialProviderCodeDto) {
-        // TODO: 의존성 분리하고 auth 서버에 직접 요청보내도록 변경
-        final ResponseEntity<UserProfileDto> response = authController.authenticateSocialUser(
-                SocialProviderCodeRequest.create(
-                        socialProviderCodeDto.getCode(),
-                        ProviderName.valueOf(
-                                socialProviderCodeDto.getMemberProviderName().toString()
-                        )
-                )
+                String.class
         );
 
-        validateAuthenticationResponse(response);
-
-        return response.getBody();
-    }
-
-    private void validateAuthenticationResponse(ResponseEntity<UserProfileDto> response) {
-        if (!response.getStatusCode().is2xxSuccessful() || !response.hasBody()) {
-            throw new SocialAuthenticateException();
-        }
+        return converter.extractDataAsAccount(response.getBody(),
+                UserProfile.class);
     }
 }
