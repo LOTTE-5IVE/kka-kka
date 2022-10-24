@@ -1,5 +1,6 @@
 package kkakka.mainservice.member.acceptance;
 
+import static kkakka.mainservice.fixture.TestDataLoader.MEMBER;
 import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -35,7 +36,7 @@ public class MemberAcceptanceTest extends DocumentConfiguration {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat((String) response.path("name")).isEqualTo(TEST_MEMBER_01.getName());
+        assertThat((String) response.path("name")).isEqualTo(MEMBER.getName());
     }
 
     @DisplayName("회원 정보 조회 - 실패(토큰 없음)")

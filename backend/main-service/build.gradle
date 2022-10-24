@@ -68,6 +68,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+    implementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
 
     /* Log */
     implementation 'dev.akkinoc.spring.boot:logback-access-spring-boot-starter:3.4.0'
