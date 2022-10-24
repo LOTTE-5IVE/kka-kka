@@ -65,7 +65,6 @@ public class CouponService {
         return Coupon.create(
             couponRequestDto.getGrade(),
             couponRequestDto.getName(),
-            couponRequestDto.getDetail(),
             PriceRule.GRADE_COUPON,
             couponRequestDto.getStartedAt(),
             couponRequestDto.getExpiredAt(),
@@ -80,7 +79,6 @@ public class CouponService {
             category,
             product,
             couponRequestDto.getName(),
-            couponRequestDto.getDetail(),
             PriceRule.COUPON,
             couponRequestDto.getStartedAt(),
             couponRequestDto.getExpiredAt(),
@@ -114,8 +112,8 @@ public class CouponService {
         }
     }
 
-    public List<CouponResponseDto> showAllCoupons() {
-        List<Coupon> coupons = couponRepository.findAll();
+    public List<CouponResponseDto> showAllCouponsNotDeleted() {
+        List<Coupon> coupons = couponRepository.findAllCouponsNotDeleted();
         return coupons.stream()
             .map(CouponResponseDto::create)
             .collect(Collectors.toList());
@@ -169,5 +167,13 @@ public class CouponService {
     private boolean isDownloadable(Coupon coupon) {
         return coupon.isNotExpired() && coupon.getPriceRule().equals(PriceRule.COUPON)
             && !coupon.isDeleted();
+    }
+
+    /* 상품에 대해 적용 가능한 쿠폰 조회 */
+    public List<CouponResponseDto> showCouponsByProductId(Long productId) {
+        List<Coupon> coupons = couponRepository.findCouponsByProductIdAndNotDeleted(productId);
+        return coupons.stream()
+            .map(coupon -> CouponResponseDto.create(coupon))
+            .collect(Collectors.toList());
     }
 }

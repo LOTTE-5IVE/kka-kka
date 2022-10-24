@@ -15,13 +15,6 @@ export default function PromotionEnroll() {
   const [endDate, setEndDate] = useState();
   const [targetVal, setTargetVal] = useState("1");
 
-  const handleChange = (e) => {
-    // <- input값으로 text 변경 함수
-    this.setState({
-      text: e.target.value,
-    });
-  };
-
   const makeDiscount = async () => {
     console.log(typeof startDate);
     console.log(startDate);
@@ -46,7 +39,7 @@ export default function PromotionEnroll() {
           </colgroup>
 
           <tbody>
-            <tr style={{ height: "6vw" }}>
+            <tr style={{ height: "4vw" }}>
               <th scope="row">혜택 유형</th>
               <td>
                 <div style={{ display: "flex" }}>
@@ -68,18 +61,6 @@ export default function PromotionEnroll() {
           </tbody>
         </table>
         {btn === "할인" ? <DiscountEnrollTable /> : <CouponEnrollTable />}
-
-        {/* <div className="btnWrapper">
-          <div
-            onClick={() => {
-              console.log("click");
-              makeDiscount();
-            }}
-          >
-            <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
-          </div>
-          <Button context="취소" border="1px solid" />
-        </div> */}
       </div>
 
       <style jsx>{`

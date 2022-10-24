@@ -1,25 +1,26 @@
-export default function ApplyGrade() {
+export default function ApplyGrade({ targetVal, setTargetVal }) {
+  const grades = ["GOLD", "SILVER", "BRONZE"];
+
   return (
     <>
       <div className="outter">
         <div>
           <ul>
-            <li>
-              <input type="checkbox" />
-              등급1
-            </li>
-            <li>
-              <input type="checkbox" />
-              등급2
-            </li>
-            <li>
-              <input type="checkbox" />
-              등급3
-            </li>
-            <li>
-              <input type="checkbox" />
-              등급4
-            </li>
+            {grades?.map((grade, index) => {
+              return (
+                <li key={index}>
+                  <input
+                    type="radio"
+                    value={grade}
+                    checked={targetVal == grade}
+                    onChange={(e) => {
+                      setTargetVal(e.target.value);
+                    }}
+                  />
+                  {grade}
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>

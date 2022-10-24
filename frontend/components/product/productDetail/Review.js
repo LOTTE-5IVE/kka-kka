@@ -1,25 +1,35 @@
-export default function Review({ reviews }) {
+import RangeWithIcons from "../../mypage/review/RangeWithIcons";
+
+export default function Review({reviews}) {
   return (
     <>
       <div className="tableWrapper">
         <table>
           <colgroup>
-            <col style={{ width: "10vw" }} />
-            <col style={{ width: "30vw" }} />
-            <col style={{ width: "7vw" }} />
-            <col style={{ width: "20vw" }} />
+            <col style={{width: "10vw"}}/>
+            <col style={{width: "30vw"}}/>
+            <col style={{width: "7vw"}}/>
+            <col style={{width: "20vw"}}/>
           </colgroup>
           <tbody>
-            {reviews?.data.map((review, index) => {
-              return (
-                <tr style={{ height: "5vw" }}>
-                  <td>별점</td>
-                  <td>{review.contents}</td>
-                  <td>{review.member.name}</td>
-                  <td>{review.createdAt}</td>
-                </tr>
-              );
-            })}
+          {reviews.length > 0 && reviews.map((review, index) => {
+            return (
+              <tr key={index} style={{height: "5vw"}}>
+                <td>
+                  <RangeWithIcons
+                    borderColor={'#ffd151'}
+                    value={review.rating}
+                    disabled={true}
+                    readOnly={true}
+                    starWidth={'15px'}
+                  />
+                </td>
+                <td>{review.contents}</td>
+                <td>{review.member.name}</td>
+                <td>{review.createdAt}</td>
+              </tr>
+            );
+          })}
           </tbody>
         </table>
       </div>

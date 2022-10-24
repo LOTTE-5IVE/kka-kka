@@ -1,19 +1,20 @@
 import Link from "next/link";
-import { AdminButton } from "../components/common/Button/AdminButton";
-import { CouponDown } from "../components/coupon/CouponDown";
-import { CouponModal } from "../components/coupon/CouponModal";
+import {AdminButton} from "../components/common/Button/AdminButton";
+import {CouponDown} from "../components/coupon/CouponDown";
+import {CouponModal} from "../components/coupon/CouponModal";
 import Info from "../components/product/productDetail/Info";
 import Nutri from "../components/product/productDetail/Nutri";
 import Review from "../components/product/productDetail/Review";
-import { isLogin } from "../hooks/isLogin";
-import { useMoney } from "../hooks/useMoney";
-import { NBlack, NGray, NLightGray } from "../typings/NormalColor";
+import {isLogin} from "../hooks/isLogin";
+import {useMoney} from "../hooks/useMoney";
+import {NBlack, NGray, NLightGray} from "../typings/NormalColor";
 import {
   ThemeBlue,
   ThemeGray,
   ThemePink,
   ThemeRed,
 } from "../typings/ThemeColor";
+import RangeWithIcons from "../components/mypage/review/RangeWithIcons";
 
 export default function ProductDetailLayout({
   tab,
@@ -27,192 +28,209 @@ export default function ProductDetailLayout({
   addCartItem,
 }) {
   return (
-    <>
-      {product && (
-        <div className="wrapper" key={product.id}>
-          <div className="detailTop">
-            <div className="detailImg">
-              {/* <ProductRec id={product.id} imgsrc={product.image_url} /> */}
-              <img src={`${product.image_url}`} />
-            </div>
-
-            <div className="detailEtc" key={product.id}>
-              <div className="headingArea">
-                <div className="headingAreaName">{product.name}</div>
-
-                <div className="headingDescription">
-                  {product.discount !== 0 ? (
-                    <>
-                      <p style={{ color: `${ThemeRed}` }}>
-                        {product.discount}%
-                      </p>
-                      <p>
-                        {useMoney(
-                          Math.ceil(
-                            product.price * (1 - 0.01 * product.discount),
-                          ),
-                        )}
-                        원 <span>{useMoney(product.price)}원</span>
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <p>{useMoney(product.price)}원</p>
-                    </>
-                  )}
+      <>
+        {product && (
+            <div className="wrapper" key={product.id}>
+              <div className="detailTop">
+                <div className="detailImg">
+                  {/* <ProductRec id={product.id} imgsrc={product.image_url} /> */}
+                  <img src={`${product.image_url}`}/>
                 </div>
-              </div>
-              <div className="delivery">
-                <p>배송비</p> <p style={{ color: `${NGray}` }}>무료</p>
-              </div>
-              <div className="coupon">
-                <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
-                <div
-                  onClick={() => {
-                    handleModal(true);
-                  }}
-                >
-                  <AdminButton context="쿠폰받기" color="red" width="70px" />
-                </div>
-                {modal && (
-                  <CouponModal>
-                    <div>
-                      <CouponDown handleModal={handleModal} />
+
+                <div className="detailEtc" key={product.id}>
+                  <div className="headingArea">
+                    <div className="headingAreaName">{product.name}</div>
+
+                    <div className="headingDescription">
+                      {product.discount !== 0 ? (
+                          <>
+                            <p style={{color: `${ThemeRed}`}}>
+                              {product.discount}%
+                            </p>
+                            <p>
+                              {useMoney(
+                                  Math.ceil(
+                                      product.price * (1 - 0.01
+                                          * product.discount),
+                                  ),
+                              )}
+                              원 <span>{useMoney(product.price)}원</span>
+                            </p>
+                          </>
+                      ) : (
+                          <>
+                            <p>{useMoney(product.price)}원</p>
+                          </>
+                      )}
+                      <div className="mt-3">
+                        <div className="d-flex align-start"><RangeWithIcons
+                            value={product.ratingAvg}
+                            max={5}
+                            min={0.5}
+                            step={0.1}
+                            borderColor={'#ffd151'}
+                            color={'#ffd151'}
+                            starWidth={'40px'}
+                        />
+                        </div>
+                      </div>
                     </div>
-                  </CouponModal>
-                )}
-              </div>
-              <div className="totalProducts">
-                <table>
-                  <colgroup>
-                    <col style={{ width: "20vw" }} />
-                    <col style={{ width: "7vw" }} />
-                  </colgroup>
+                  </div>
+                  <div className="delivery">
+                    <p>배송비</p> <p style={{color: `${NGray}`}}>무료</p>
+                  </div>
+                  <div className="coupon">
+                    <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
+                    <div
+                        onClick={() => {
+                          handleModal(true);
+                        }}
+                    >
+                      <AdminButton context="쿠폰받기" color="red" width="70px"/>
+                    </div>
+                    {modal && (
+                        <CouponModal>
+                          <div>
+                            <CouponDown handleModal={handleModal}/>
+                          </div>
+                        </CouponModal>
+                    )}
+                  </div>
+                  <div className="totalProducts">
+                    <table>
+                      <colgroup>
+                        <col style={{width: "20vw"}}/>
+                        <col style={{width: "7vw"}}/>
+                      </colgroup>
 
-                  <tbody>
-                    <tr>
-                      <td colSpan="2">{product.name}</td>
-                    </tr>
-                    <tr style={{ height: "3vw" }}>
-                      <td>
+                      <tbody>
+                      <tr>
+                        <td colSpan="2">{product.name}</td>
+                      </tr>
+                      <tr style={{height: "3vw"}}>
+                        <td>
                         <span>
                           <input
-                            type="button"
-                            onClick={() => handleQuantity("minus")}
-                            value="-"
-                            style={{ marginRight: "15px" }}
+                              type="button"
+                              onClick={() => handleQuantity("minus")}
+                              value="-"
+                              style={{marginRight: "15px"}}
                           />
                           <span>{quantity}</span>
                           <input
-                            type="button"
-                            onClick={() => handleQuantity("plus")}
-                            value="+"
-                            style={{ marginLeft: "15px" }}
+                              type="button"
+                              onClick={() => handleQuantity("plus")}
+                              value="+"
+                              style={{marginLeft: "15px"}}
                           />
                         </span>
-                      </td>
-                      <td style={{ textAlign: "right" }}>
-                        {useMoney(
-                          Math.ceil(
-                            product.price *
-                              (1 - 0.01 * product.discount) *
-                              quantity,
-                          ),
-                        )}
-                        원
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="totalPrice">
-                <p>
-                  <strong>TOTAL</strong>
-                </p>
-                <p>
+                        </td>
+                        <td style={{textAlign: "right"}}>
+                          {useMoney(
+                              Math.ceil(
+                                  product.price *
+                                  (1 - 0.01 * product.discount) *
+                                  quantity,
+                              ),
+                          )}
+                          원
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="totalPrice">
+                    <p>
+                      <strong>TOTAL</strong>
+                    </p>
+                    <p>
                   <span>
                     {useMoney(
-                      Math.ceil(
-                        product.price *
-                          (1 - 0.01 * product.discount) *
-                          quantity,
-                      ),
+                        Math.ceil(
+                            product.price *
+                            (1 - 0.01 * product.discount) *
+                            quantity,
+                        ),
                     )}
                     원
                   </span>
-                  ({quantity}
-                  개)
-                </p>
-              </div>
-              <div className="btn">
-                <div
-                  className="cartBtn"
-                  onClick={() => {
-                    addCartItem(product, quantity);
-                  }}
-                >
-                  장바구니
-                </div>
-                {isLogin() ? (
-                  <Link
-                    href={{
-                      pathname: `/payment`,
-                      query: {
-                        buyItem: JSON.stringify(product),
-                        quantity: quantity,
-                      },
-                    }}
-                    as={`/payment`}
-                  >
-                    <div className="buyBtn">바로 구매</div>
-                  </Link>
-                ) : (
-                  <div
-                    className="buyBtn"
-                    onClick={() => {
-                      alert("로그인이 필요한 서비스입니다.");
-                      document.location.href = "/member/login";
-                    }}
-                  >
-                    바로 구매
+                      ({quantity}
+                      개)
+                    </p>
                   </div>
-                )}
+                  <div className="btn">
+                    <div
+                        className="cartBtn"
+                        onClick={() => {
+                          addCartItem(product, quantity);
+                        }}
+                    >
+                      장바구니
+                    </div>
+                    {isLogin() ? (
+                        <Link
+                            href={{
+                              pathname: `/payment`,
+                              query: {
+                                buyItem: JSON.stringify(product),
+                                quantity: quantity,
+                              },
+                            }}
+                            as={`/payment`}
+                        >
+                          <div className="buyBtn">바로 구매</div>
+                        </Link>
+                    ) : (
+                        <div
+                            className="buyBtn"
+                            onClick={() => {
+                              alert("로그인이 필요한 서비스입니다.");
+                              document.location.href = "/member/login";
+                            }}
+                        >
+                          바로 구매
+                        </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="detailBottom">
+                <div className="tabMenu">
+                  <ul>
+                    <li onClick={() => handleTab("info")}>
+                      <a className={`${tab === "info" ? "active" : ""}`}>
+                        상품정보
+                      </a>
+                    </li>
+                    <li onClick={() => handleTab("nutri")}>
+                      <a className={`${tab === "nutri" ? "active" : ""}`}>
+                        영양정보
+                      </a>
+                    </li>
+                    <li onClick={() => handleTab("review")}>
+                      <a className={`${tab === "review" ? "active" : ""}`}>
+                        상품후기
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="descriptions">
+                  {tab == "info" ? (
+                      <Info detailImage_url={product.detailImage_url}/>
+                  ) : tab == "nutri" ? (
+                      <Nutri nutrition={product.nutrition}/>
+                  ) : (
+                      reviews.length > 0
+                          ? <Review reviews={reviews}/>
+                          : <div className="noReview">
+                            <p>아직 작성된 후기가 없습니다.</p>
+                          </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="detailBottom">
-            <div className="tabMenu">
-              <ul>
-                <li onClick={() => handleTab("info")}>
-                  <a className={`${tab === "info" ? "active" : ""}`}>
-                    상품정보
-                  </a>
-                </li>
-                <li onClick={() => handleTab("nutri")}>
-                  <a className={`${tab === "nutri" ? "active" : ""}`}>
-                    영양정보
-                  </a>
-                </li>
-                <li onClick={() => handleTab("review")}>
-                  <a className={`${tab === "review" ? "active" : ""}`}>
-                    상품후기
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="descriptions">
-              {tab == "info" ? (
-                <Info detailImage_url={product.detailImage_url} />
-              ) : tab == "nutri" ? (
-                <Nutri nutritionInfo_url={product.nutritionInfo_url} />
-              ) : (
-                <Review reviews={reviews} />
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-      <style jsx>{`
+        )}
+        <style jsx>{`
         .wrapper {
           margin: 3% auto 0;
           width: 65%;
@@ -241,6 +259,7 @@ export default function ProductDetailLayout({
                 line-height: 40px;
                 color: ${NBlack};
                 font-weight: 700;
+
                 .headingAreaName {
                   margin-top: 23px;
                 }
@@ -263,6 +282,7 @@ export default function ProductDetailLayout({
                   }
                 }
               }
+
               .delivery {
                 margin: 20px 0 10px;
                 font-size: 16px;
@@ -278,6 +298,7 @@ export default function ProductDetailLayout({
                 font-size: 16px;
                 display: flex;
                 align-items: center;
+
                 p {
                   width: 100%;
                   font-size: 12px;
@@ -285,6 +306,7 @@ export default function ProductDetailLayout({
                   font-weight: 700;
                 }
               }
+
               .totalProducts {
                 /* background-color: #f8f8f8; */
                 background-color: ${ThemeGray};
@@ -318,6 +340,7 @@ export default function ProductDetailLayout({
                   font-size: 14px;
                   color: ${NBlack};
                   font-weight: 500;
+
                   span {
                     font-size: 32px;
                     color: ${ThemeRed};
@@ -377,6 +400,7 @@ export default function ProductDetailLayout({
 
           .detailBottom {
             padding-top: 40px;
+
             .tabMenu {
               margin: 0 auto 60px;
               border-bottom: 2px solid ${NLightGray};
@@ -418,7 +442,26 @@ export default function ProductDetailLayout({
             }
           }
         }
+
+        .noReview {
+          text-align: center;
+          margin: 2rem 0 3rem 0;
+        }
+        
+        .d-flex {
+          display: flex;
+          justify-content: center;
+        }
+        
+        .align-start {
+          align-items: start;
+        }
+        
+        .mt-3 {
+          margin-top: 1rem;
+          width: fit-content;
+        }
       `}</style>
-    </>
+      </>
   );
 }

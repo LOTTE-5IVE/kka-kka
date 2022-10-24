@@ -1,24 +1,39 @@
-import { AdminButton } from "../common/button/AdminButton";
+import axios from "axios";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useMoney } from "../../hooks/useMoney";
+import { AdminButton } from "../common/Button/AdminButton";
 
 export default function ProductSearch() {
+  const [products, setProducts] = useState();
+
+  const getProducts = async () => {
+    await axios.get("/api/products?category=0").then((res) => {
+      console.log(res.data.data);
+      setProducts(res.data.data);
+    });
+  };
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+
   return (
     <>
       <div className="contents">
         <table>
           <colgroup>
-            <col style={{ width: "5%" }} />
-            <col style={{ width: "20%" }} />
+            <col style={{ width: "10%" }} />
+            <col style={{ width: "30%" }} />
+            <col style={{ width: "10%" }} />
+            <col style={{ width: "10%" }} />
             <col style={{ width: "20%" }} />
             <col style={{ width: "10%" }} />
             <col style={{ width: "10%" }} />
-            <col style={{ width: "12%" }} />
-            <col style={{ width: "5%" }} />
-            <col style={{ width: "5%" }} />
           </colgroup>
           <thead>
             <th>대표사진</th>
             <th>상품 이름</th>
-            <th>상세옵션</th>
             <th>가격</th>
             <th>재고</th>
             <th>카테고리</th>
@@ -26,40 +41,32 @@ export default function ProductSearch() {
             <th>상품 페이지</th>
           </thead>
           <tbody>
-            <tr style={{ height: "5vw" }}>
-              <td>
-                <img width="60px" src="/sample.png" />
-              </td>
-              <td>쿠키 어쩌구 저쩌구 샌드</td>
-              <td>600g x 2개 1200g</td>
-              <td>10,000원</td>
-              <td>130</td>
-              <td>스낵/쿠키</td>
-              <td>
-                <AdminButton context="수정" color="#F21D2F" />
-              </td>
-              <td>
-                <AdminButton context="이동" color="#05C7F2" />
-              </td>
-            </tr>
-            <tr style={{ height: "5vw" }}>
-              <td>
-                <img width="60px" src="/sample.png" />
-              </td>
-              <td>쿠키 어쩌구 저쩌구 샌드</td>
-              <td>600g x 2개 1200g</td>
-              <td>10,000원</td>
-              <td>130</td>
-              <td>스낵/쿠키</td>
-              <td>
-                <AdminButton context="수정" color="#F21D2F" />
-              </td>
-              <td>
-                <AdminButton context="이동" color="#05C7F2" />
-              </td>
-            </tr>
+            {products?.map((product) => {
+              return (
+                <tr style={{ height: "3vw" }} key={product.id}>
+                  <td>
+                    <img width="60px" src={product.image_url} />
+                  </td>
+                  <td>{product.name}</td>
+
+                  <td>{useMoney(product.price)}원</td>
+                  <td>{product.stock}</td>
+                  <td>{product.category.name}</td>
+                  <td>
+                    <AdminButton context="수정" color="#F21D2F" />
+                  </td>
+                  <td>
+                    <Link href={`/product/productDetail?id=${product.id}`}>
+                      <a>
+                        <AdminButton context="이동" color="#05C7F2" />
+                      </a>
+                    </Link>
+                  </td>
+                </tr>
+              );
+            })}
+
             <tr style={{ height: "100%" }}>
-              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -79,6 +86,7 @@ export default function ProductSearch() {
           color: #7a7a7a;
 
           table {
+            overflow: auto;
             height: 100%;
             width: 100%;
             text-align: center;
@@ -107,6 +115,10 @@ export default function ProductSearch() {
             tr:last-child {
               td {
                 border-bottom: 0;
+              }
+
+              td:last-child {
+                border-right: 0;
               }
             }
           }

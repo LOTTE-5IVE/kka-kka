@@ -3,9 +3,12 @@ import { useEffect, useState } from "react";
 import { PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
+import { CouponDown } from "../../components/coupon/CouponDown";
+import { CouponModal } from "../../components/coupon/CouponModal";
 import DaumPost from "../../components/payment/DaumPost";
 import { useGetToken } from "../../hooks/useGetToken";
 import { useMoney } from "../../hooks/useMoney";
+import { NGray } from "../../typings/NormalColor";
 
 export default function payment() {
   const [token, setToken] = useState("");
@@ -52,14 +55,14 @@ export default function payment() {
       arr.push({ productId: buyItem.id, quantity: Number(buyQuantity) });
     }
 
-    PostHApi("/api/orders", { productOrders: arr }, token).then((res) => {
-      if (res) {
-        console.log(res);
-      }
-    });
+    PostHApi("/api/orders", { productOrders: arr }, token).then((res) => {});
+
+    alert("결제되었습니다.");
+
+    document.location.href = "/";
   };
 
-  function modalHandler() {
+  function handleModal() {
     setModal(false);
   }
 
@@ -120,7 +123,7 @@ export default function payment() {
                       {modal && (
                         <CouponModal>
                           <div>
-                            <CouponDown modalHandler={modalHandler} />
+                            <CouponDown handleModal={handleModal} />
                           </div>
                         </CouponModal>
                       )}
@@ -136,7 +139,32 @@ export default function payment() {
                       </td>
                       <td>{product.productName}</td>
                       <td>x{product.quantity}</td>
-                      <td>{useMoney(product.price * product.quantity)}원</td>
+                      <td>
+                        {product.productDiscount ? (
+                          <>
+                            <p>
+                              {useMoney(
+                                Math.ceil(
+                                  product.price *
+                                    (1 - 0.01 * product.productDiscount),
+                                ) * product.quantity,
+                              )}
+                              원
+                            </p>
+                            <p>
+                              <span>
+                                {useMoney(product.price * product.quantity)}원
+                              </span>
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <p>
+                              {useMoney(product.price * product.quantity)}원
+                            </p>
+                          </>
+                        )}
+                      </td>
                       <td>
                         <div
                           onClick={() => {
@@ -152,7 +180,7 @@ export default function payment() {
                         {modal && (
                           <CouponModal>
                             <div>
-                              <CouponDown modalHandler={modalHandler} />
+                              <CouponDown handleModal={handleModal} />
                             </div>
                           </CouponModal>
                         )}
@@ -376,19 +404,62 @@ export default function payment() {
               <tbody>
                 <tr>
                   <th scope="row">주문상품</th>
-                  <td>48,900원</td>
+                  <td>
+                    {useMoney(
+                      orderItems.reduce(
+                        (prev, cur) => prev + cur.price * cur.quantity,
+                        0,
+                      ),
+                    )}{" "}
+                    원
+                  </td>
                 </tr>
                 <tr>
                   <th scope="row">할인/부가결제</th>
-                  <td>-3,000원</td>
+                  <td>
+                    -{" "}
+                    {useMoney(
+                      orderItems.reduce(
+                        (prev, cur) =>
+                          prev +
+                          Math.ceil(
+                            cur.price *
+                              0.01 *
+                              cur.productDiscount *
+                              cur.quantity,
+                          ),
+                        0,
+                      ),
+                    ) || 0}{" "}
+                    원
+                  </td>
                 </tr>
                 <tr>
                   <th scope="row">배송비</th>
-                  <td>0원</td>
+                  <td>0 원</td>
                 </tr>
                 <tr>
                   <th scope="row">결제금액</th>
-                  <td>45,900원</td>
+                  <td>
+                    {useMoney(
+                      orderItems.reduce(
+                        (prev, cur) => prev + cur.price * cur.quantity,
+                        0,
+                      ) -
+                        orderItems.reduce(
+                          (prev, cur) =>
+                            prev +
+                            Math.ceil(
+                              cur.price *
+                                0.01 *
+                                cur.productDiscount *
+                                cur.quantity,
+                            ),
+                          0,
+                        ),
+                    )}{" "}
+                    원
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -400,6 +471,7 @@ export default function payment() {
           onClick={() => {
             orderItem();
           }}
+          style={{ cursor: "pointer" }}
         >
           <ButtonComp context="결제하기" />
         </div>
@@ -433,6 +505,18 @@ export default function payment() {
               tr:not(:last-child) {
                 height: 2vw;
                 border-bottom: 1.5px solid #d0cfcf;
+              }
+
+              td {
+                p {
+                  margin: 0;
+
+                  span {
+                    font-size: 14px;
+                    color: ${NGray};
+                    text-decoration: line-through;
+                  }
+                }
               }
             }
           }

@@ -17,7 +17,6 @@ public class CouponRequestDto {
     private Grade grade;
     private Long productId;
     private String name;
-    private String detail;
     private String priceRule;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -30,8 +29,9 @@ public class CouponRequestDto {
     private Integer minOrderPrice;
 
     public boolean isValidDate() {
-        return this.getStartedAt().isBefore(LocalDateTime.now())
-            && this.getExpiredAt().isAfter(LocalDateTime.now());
+        return (this.getStartedAt().isAfter(LocalDateTime.now())
+            || this.getExpiredAt().isAfter(LocalDateTime.now()))
+            && this.getStartedAt().isBefore(this.getExpiredAt());
     }
 
     public boolean isValidPercentage() {

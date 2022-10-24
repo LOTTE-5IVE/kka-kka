@@ -7,6 +7,7 @@ export default function Youtube() {
     playerVars: {
       autoplay: 1,
       loop: 1,
+      mute: 1,
       playlist: "ARZsFfz-Saw",
     },
   };

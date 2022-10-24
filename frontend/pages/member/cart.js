@@ -8,7 +8,7 @@ import { CouponDown } from "../../components/coupon/CouponDown";
 import { CouponModal } from "../../components/coupon/CouponModal";
 import { useGetToken } from "../../hooks/useGetToken";
 import { useMoney } from "../../hooks/useMoney";
-import { ThemeRed } from "../../typings/ThemeColor";
+import { NGray } from "../../typings/NormalColor";
 
 export default function cart() {
   const [token, setToken] = useState("");
@@ -16,6 +16,8 @@ export default function cart() {
   const [cartItems, setCartItems] = useState([]);
   const [checkItemsIdx, setCheckItemsIdx] = useState([]);
   const [checkItems, setCheckItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [discountPrice, setDiscountPrice] = useState(0);
 
   const handleSingleCheck = (checked, product) => {
     if (checked) {
@@ -73,6 +75,8 @@ export default function cart() {
       if (res) {
         console.log(res.cartItems);
         setCartItems(res.cartItems);
+        setTotalPrice(res.cartItems.reduce((prev, cur) => prev + (cur.price * cur.quantity), 0));
+        setDiscountPrice(res.cartItems.reduce((prev, cur) => prev + Math.ceil(cur.price * 0.01 * cur.productDiscount * cur.quantity), 0));
       }
     });
   };
@@ -226,7 +230,32 @@ export default function cart() {
                         </span>
                       </td>
                       <td>무료</td>
-                      <td>{product.discount}</td>
+                      <td>
+                        {product.productDiscount ? (
+                          <>
+                            <p>
+                              {useMoney(
+                                Math.ceil(
+                                  product.price *
+                                    (1 - 0.01 * product.productDiscount),
+                                ) * product.quantity,
+                              )}
+                              원
+                            </p>
+                            <p>
+                              <span>
+                                {useMoney(product.price * product.quantity)}원
+                              </span>
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <p>
+                              {useMoney(product.price * product.quantity)}원
+                            </p>
+                          </>
+                        )}
+                      </td>
                       <td
                         onClick={() => {
                           removeCartItem(product.id);
@@ -262,15 +291,18 @@ export default function cart() {
               <tbody>
                 <tr style={{ height: "7vw" }}>
                   <td>
-                    {/* {checkItems.map((product, index) => {
-                      return <span key={index}> {product.id}</span>;
-                    })} */}
-                    상품금액
+                    <span>
+                      {useMoney(totalPrice)}
+                    </span>
                   </td>
                   <td>-</td>
-                  <td>할인금액</td>
+                  <td>
+                    <span>
+                      {useMoney(discountPrice) || 0}
+                    </span>
+                  </td>
                   <td>=</td>
-                  <td>결제예정금액</td>
+                  <td>{useMoney(totalPrice - discountPrice)}</td>
                 </tr>
               </tbody>
             </table>
@@ -358,6 +390,16 @@ export default function cart() {
                   background-color: #fff;
                   border: 1px solid #c8c8c8;
                   border-radius: 50%;
+                }
+
+                p {
+                  margin: 0;
+
+                  span {
+                    font-size: 14px;
+                    color: ${NGray};
+                    text-decoration: line-through;
+                  }
                 }
               }
             }
