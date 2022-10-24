@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import kkakka.mainservice.category.domain.Category;
+import kkakka.mainservice.coupon.domain.Coupon;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -101,5 +102,10 @@ public class Product {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public Integer getMaxDiscount(Coupon coupon) {
+        Integer maxDiscount = this.price * coupon.getPercentage();
+        return maxDiscount > coupon.getMaxDiscount() ? maxDiscount : coupon.getMaxDiscount();
     }
 }

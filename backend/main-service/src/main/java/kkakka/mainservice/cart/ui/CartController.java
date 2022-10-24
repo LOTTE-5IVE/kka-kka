@@ -47,4 +47,7 @@ public class CartController {
         cartService.deleteCartItems(cartItemList, loginMember);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @PostMapping("/{cartItemId}/{couponId}")
+    public ResponseEntity<>
 }
