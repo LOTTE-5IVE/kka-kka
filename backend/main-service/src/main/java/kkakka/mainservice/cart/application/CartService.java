@@ -7,6 +7,7 @@ import kkakka.mainservice.cart.domain.repository.CartRepository;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
+import kkakka.mainservice.cart.ui.dto.CouponDto;
 import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
 import kkakka.mainservice.coupon.domain.Coupon;
@@ -53,12 +54,12 @@ public class CartService {
     @Transactional
     public CartResponseDto showCartByMember(LoginMember loginMember) {
         Member member = memberRepository.findById(loginMember.getId())
-            .orElseThrow(KkaKkaException::new);
+                .orElseThrow(KkaKkaException::new);
 
         Cart cart = findOrCreateCart(member);
         final List<CartItemDto> cartItemDtos = cart.getCartItems().stream()
-            .map(CartItemDto::from)
-            .collect(Collectors.toList());
+                .map(CartItemDto::from)
+                .collect(Collectors.toList());
 
         return new CartResponseDto(cart.getId(), cartItemDtos);
     }
@@ -88,10 +89,10 @@ public class CartService {
         CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(KkaKkaException::new);
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
         cartItem.applyCoupon(coupon);
+
         Integer discountedPrice = cartItem.getDiscountedPrice(coupon);
 
-
-        return CartItemDto.applyCouponDto(cartItem);
+        return CartItemDto.applyCouponDto(cartItem, discountedPrice, CouponDto.toDto(coupon));
     }
 
     private Cart findOrCreateCart(Member member) {

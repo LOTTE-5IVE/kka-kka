@@ -104,8 +104,8 @@ public class Product {
         return Objects.hash(id);
     }
 
-    public Integer getMaxDiscount(Coupon coupon) {
-        Integer maxDiscount = this.price * coupon.getPercentage();
-        return maxDiscount > coupon.getMaxDiscount() ? maxDiscount : coupon.getMaxDiscount();
+    public double getMaxDiscount(Coupon coupon) {
+        double maxDiscount = this.price * coupon.getPercentage()/100;
+        return maxDiscount > coupon.getMaxDiscount() ? coupon.getMaxDiscount() : maxDiscount;
     }
 }

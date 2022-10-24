@@ -75,7 +75,7 @@ public class CartItem {
     }
 
     public Integer getDiscountedPrice(Coupon coupon) {
-        Integer maxDiscount = product.getMaxDiscount(coupon);
-        return product.getPrice() - maxDiscount;
+        int maxDiscount = (int) product.getMaxDiscount(coupon);
+        return product.getPrice() - (Integer) maxDiscount;
     }
 }
