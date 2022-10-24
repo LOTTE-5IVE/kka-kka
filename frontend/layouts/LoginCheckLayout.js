@@ -1,7 +1,16 @@
+import { useEffect } from "react";
 import SNSButton from "../components/member/SNSButton";
 import { ThemeBlue, ThemeRed } from "../typings/ThemeColor";
 
 export default function LoginCheckLayout({ loginFlag }) {
+  useEffect(() => {
+    if (loginFlag) {
+      document.location.href = "/";
+    } else {
+      document.location.href = "/member/login";
+    }
+  }, []);
+
   return (
     <>
       <div className="contents">
@@ -28,25 +37,6 @@ export default function LoginCheckLayout({ loginFlag }) {
               </>
             )}
           </div>
-          {loginFlag ? (
-            <div
-              className="login-button"
-              onClick={() => {
-                document.location.href = "/";
-              }}
-            >
-              메인 페이지로 이동
-            </div>
-          ) : (
-            <div
-              className="login-button"
-              onClick={() => {
-                document.location.href = "/member/login";
-              }}
-            >
-              로그인 페이지로 이동
-            </div>
-          )}
         </div>
       </div>
       <style jsx>{`
