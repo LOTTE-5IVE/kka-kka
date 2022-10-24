@@ -8,6 +8,7 @@ import kkakka.mainservice.member.auth.util.JwtTokenProvider;
 import kkakka.mainservice.member.member.application.MemberService;
 import kkakka.mainservice.member.member.domain.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,9 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class MemberAuthService {
+
+    @Value("${auth.client-url}")
+    private String AUTH_URL;
 
     private final MemberService memberService;
     private final JwtTokenProvider jwtTokenProvider;
@@ -40,7 +44,7 @@ public class MemberAuthService {
         headers.setContentType(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE));
 
         final ResponseEntity<String> response = restTemplate.exchange(
-                "http://localhost:9001/api/auth",
+                AUTH_URL + "/auth",
                 HttpMethod.POST,
                 new HttpEntity<>(
                         socialProviderCodeDto,
