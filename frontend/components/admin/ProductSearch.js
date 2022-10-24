@@ -84,6 +84,9 @@ export default function ProductSearch() {
           height: 100%;
           border: 2px solid #dedede;
           color: #7a7a7a;
+          font-size: 0.8rem;
+          background: #fcfcfc;
+          border-radius: 2em;
 
           table {
             overflow: auto;

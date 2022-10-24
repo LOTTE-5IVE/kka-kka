@@ -227,7 +227,7 @@ export default function CouponEnrollTable() {
                 )}
               </td>
             </tr>
-            <tr style={{ height: "30vw", position: "relative" }}>
+            <tr style={{ height: "20vw", position: "relative" }}>
               <th scope="row">적용 대상 지정</th>
               <td style={{ position: "absolute", top: "5%" }}>
                 <div style={{ display: "flex", marginBottom: "15px" }}>
@@ -279,7 +279,7 @@ export default function CouponEnrollTable() {
                 makeCoupon();
               }}
             >
-              <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+              <Button context="혜택 등록하기" color="#F21D2F" tcolor="#fff" />
             </div>
           ) : target == "상품" ? (
             <div
@@ -288,7 +288,7 @@ export default function CouponEnrollTable() {
                 makeCouponProduct();
               }}
             >
-              <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+              <Button context="혜택 등록하기" color="#F21D2F" tcolor="#fff" />
             </div>
           ) : (
             <div
@@ -297,7 +297,7 @@ export default function CouponEnrollTable() {
                 makeCouponGrade();
               }}
             >
-              <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+              <Button context="혜택 등록하기" color="#F21D2F" tcolor="#fff" />
             </div>
           )}
         </div>
@@ -306,11 +306,11 @@ export default function CouponEnrollTable() {
       <style jsx>{`
         .contents {
           height: 80%;
-          color: #7a7a7a;
+          color: #2c2c2c;
 
           table {
             width: 90%;
-            height: 90%;
+            height: 102%;
             margin: auto;
             border-collapse: collapse;
             th {
@@ -324,12 +324,14 @@ export default function CouponEnrollTable() {
             .btn {
               border: 1px solid;
               padding: 7px 25px;
+              border-radius: 1em;
             }
 
             .active {
-              background-color: #f2889b;
+              background-color: #fe5c57;
               color: #fff;
-              border: 1px solid #f2889b;
+              border: 1px solid #fe5c57;
+              border-radius: 1em;
             }
           }
 
