@@ -45,6 +45,9 @@ dependencies {
     /* Spring Cloud */
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
+    /* Spring OpenFeign */
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
     /* Spring Cloud Config */
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
