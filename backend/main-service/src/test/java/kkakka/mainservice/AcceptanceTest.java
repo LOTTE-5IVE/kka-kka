@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import kkakka.mainservice.member.auth.application.dto.UserProfile;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -28,10 +27,9 @@ import org.springframework.test.context.ActiveProfiles;
 @AutoConfigureWireMock(port = 9001)
 public abstract class AcceptanceTest {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @LocalServerPort
     int port;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void setUp() throws JsonProcessingException {

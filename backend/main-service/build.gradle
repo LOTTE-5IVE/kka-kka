@@ -39,9 +39,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'com.google.code.gson:gson:2.9.0'
 
-    /* Model mapper */
-    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
-
     /* Spring Cloud */
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
