@@ -19,6 +19,7 @@ import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.member.member.domain.Grade;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
+import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -203,5 +204,40 @@ public class CouponServiceTest extends TestContext {
 
         // then
         assertThat(coupons.size()).isEqualTo(1);
+    }
+
+    @DisplayName("등급쿠폰 금액할인 생성 테스트 - 성공")
+    @Test
+    void createMoneyGradeCoupon_success() {
+        // given
+        // when
+        couponService.createCoupon(new CouponRequestDto(
+            null, Grade.GOLD, null,
+            "test", "GRADE_COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+
+        // then
+        assertThat(couponRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @DisplayName("일반쿠폰 금액할인 생성 테스트 - 성공")
+    @Test
+    void createMoneyCoupon_success() {
+        // given
+        Product product = new Product();
+        // when
+        couponService.createCoupon(new CouponRequestDto(
+            null, null, product.getId(),
+            "test", "COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+
+        // then
+        assertThat(couponRepository.findAll().size()).isEqualTo(1);
     }
 }
