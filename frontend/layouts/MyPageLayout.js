@@ -3,6 +3,7 @@ import MyInfoCard from "../components/mypage/MyInfoCard";
 import MyOrder from "../components/mypage/MyOrder";
 import Mysidebar from "../components/mypage/Mysidebar";
 import MyOrderTemp from "../components/mypage/MyOrderTemp";
+import MyInfoEdit from "../components/mypage/MyInfoEdit";
 
 export default function MyPageLayout({
   name,
@@ -16,16 +17,18 @@ export default function MyPageLayout({
       <div>
         <div className="contents">
           <div className="sidebar">
-            <Mysidebar mypageCallback={handleTab}/>
+            <Mysidebar mypageCallback={handleTab} />
           </div>
           <div className="wrapper">
             <div>
-              <MyInfoCard name={name} grade={grade}/>
+              <MyInfoCard name={name} grade={grade} />
             </div>
 
             <div className="mypageMenu">
-              {tab == "order" ? (
-                <MyOrderTemp/>
+              {tab == "info" ? (
+                <MyInfoEdit />
+              ) : tab == "order" ? (
+                <MyOrderTemp />
               ) : (
                 <MyCoupon />
               )}

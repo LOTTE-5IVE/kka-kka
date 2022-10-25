@@ -216,7 +216,6 @@ export default function payment() {
                   </td>
                 </tr>
                 <tr>
-                  {/* https://choiiis.github.io/web/toy-project-sign-up-and-in-page-2/ */}
                   <th scope="row">이메일</th>
                   <td>
                     <input
@@ -540,6 +539,43 @@ export default function payment() {
                 height: 5vw;
                 border-bottom: 1.5px solid #d0cfcf;
               }
+            }
+          }
+
+          .orderInfo {
+            font-size: 20px;
+
+            input {
+              margin: 0 10px;
+              line-height: 40px;
+              padding: 0 0 0 13px;
+              border: 0 none;
+              color: #3a3a3a;
+              background: #fff;
+              border-radius: 8px;
+              font-size: 16px;
+              border: 1px solid #000;
+            }
+
+            select {
+              margin: 0 10px;
+              height: 40px;
+              border-radius: 8px;
+              font-size: 16px;
+              color: #3a3a3a;
+              padding: 0 10px 0 13px;
+              border: 1px solid #000;
+            }
+
+            button {
+              margin: 0 10px;
+              line-height: 40px;
+              padding: 0 13px;
+              border: 0 none;
+              color: #3a3a3a;
+              border-radius: 8px;
+              font-size: 16px;
+              border: 1px solid #000;
             }
           }
 

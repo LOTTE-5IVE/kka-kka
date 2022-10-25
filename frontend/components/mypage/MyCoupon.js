@@ -21,20 +21,22 @@ export default function MyCoupon() {
                 <col style={{ width: "10%" }} />
               </colgroup>
               <thead>
-                <th
-                  className={`${tab === "valid" ? "left" : "normalLeft"}`}
-                  onClick={() => setTab("valid")}
-                  colSpan="2"
-                >
-                  사용 가능한 쿠폰
-                </th>
-                <th
-                  className={`${tab === "invalid" ? "right" : "normalRight"}`}
-                  onClick={() => setTab("invalid")}
-                  colSpan="3"
-                >
-                  사용한 쿠폰
-                </th>
+                <tr>
+                  <th
+                    className={`${tab === "valid" ? "left" : "normalLeft"}`}
+                    onClick={() => setTab("valid")}
+                    colSpan="2"
+                  >
+                    사용 가능한 쿠폰
+                  </th>
+                  <th
+                    className={`${tab === "invalid" ? "right" : "normalRight"}`}
+                    onClick={() => setTab("invalid")}
+                    colSpan="3"
+                  >
+                    사용한 쿠폰
+                  </th>
+                </tr>
               </thead>
               <tbody>
                 <tr>

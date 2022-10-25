@@ -25,6 +25,6 @@ export default function Button({ context, color, tcolor, border }) {
 
 Button.defaultProps = {
   tcolor: "000",
-  color: "000",
+  color: "rgb(242, 29, 47)",
   border: "none",
 };

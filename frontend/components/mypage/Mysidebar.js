@@ -1,7 +1,4 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import NavBar from "../../components/common/NavBar";
 
 export default function Mysidebar({ mypageCallback }) {
   const [tab, setTab] = useState("order");
@@ -17,6 +14,9 @@ export default function Mysidebar({ mypageCallback }) {
           <h2>마이페이지</h2>
         </div>
         <ul>
+          <li onClick={() => setTab("info")}>
+            <a className={`${tab === "info" ? "active" : ""}`}>내 정보 수정</a>
+          </li>
           <li onClick={() => setTab("order")}>
             <a className={`${tab === "order" ? "active" : ""}`}>주문내역</a>
           </li>

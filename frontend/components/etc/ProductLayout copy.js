@@ -1,12 +1,17 @@
-import Sidebar from "../components/product/Sidebar";
-import ProductRecCard from "../components/product/ProductRecCard";
+import Sidebar from "../product/Sidebar";
+import ProductRecCard from "../product/ProductRecCard";
 import { useEffect, useState } from "react";
-import Pagination from "../components/product/Pagination";
-import axios from "axios";
+import Pagination from "../product/Pagination";
+import Pagination2 from "../components/product/Pagination2";
 
 export default function ProductLayout({
   cat_id,
   search,
+  data,
+  start,
+  setStart,
+  end,
+  setEnd,
   page,
   setPage,
   lastPage,
@@ -24,34 +29,13 @@ export default function ProductLayout({
     8: "선물세트",
   };
 
-  const [data, setData] = useState();
-
-  const getProduct = async () => {
-    await axios
-      .get(`/api/products?category=${cat_id}&page=${page}`)
-      .then((res) => {
-        setData(res);
-        setPage(res.data.pageInfo.currentPage);
-        setLastPage(res.data.pageInfo.lastPage);
-      });
-  };
-
-  const getProductc = async () => {
-    await axios.get(`/api/products?category=${cat_id}&page=1`).then((res) => {
-      setData(res);
-      setPage(res.data.pageInfo.currentPage);
-      setLastPage(res.data.pageInfo.lastPage);
-    });
-  };
-
   useEffect(() => {
-    getProduct();
-  }, [page]);
-
-  useEffect(() => {
-    setPage(1);
-    getProductc();
-  }, [cat_id]);
+    console.log("productlayout");
+    if (data && data.data.pageInfo) {
+      setLastPage(data.data.pageInfo.lastPage);
+      setPage(data.data.pageInfo.currentPage);
+    }
+  }, []);
 
   return (
     <>
@@ -89,7 +73,15 @@ export default function ProductLayout({
               );
             })}
           </ul>
-          <Pagination page={page} setPage={setPage} lastPage={lastPage} />
+          <Pagination
+            start={start}
+            setStart={setStart}
+            end={end}
+            setEnd={setEnd}
+            page={page}
+            setPage={setPage}
+            lastPage={lastPage}
+          />
         </div>
       </div>
 

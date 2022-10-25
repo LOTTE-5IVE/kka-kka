@@ -23,8 +23,6 @@ export default function Header() {
     if (token !== "") {
       useMemberInfo(token).then((res) => {
         if (res) {
-          console.log("headercomp");
-          console.log(res);
           setName(res.name);
           setGrade(res.grade);
         }
@@ -66,13 +64,15 @@ export default function Header() {
           <div className="top">
             {token ? (
               <>
-                <div>{name}님</div>
+                <div style={{ width: "100px", textAlign: "right" }}>
+                  {name}님
+                </div>
                 <div
                   onClick={() => {
                     localStorage.removeItem("accessToken");
                     document.location.href = "/";
                   }}
-                  style={{ cursor: "pointer" }}
+                  style={{ width: "60px", cursor: "pointer" }}
                 >
                   <a>로그아웃</a>
                 </div>
@@ -80,11 +80,19 @@ export default function Header() {
             ) : (
               <>
                 <Link href="/member/join">
-                  <a>회원가입</a>
+                  <a style={{ width: "100px", textAlign: "right" }}>회원가입</a>
                 </Link>
 
                 <Link href="/member/login">
-                  <a>로그인</a>
+                  <a
+                    style={{
+                      width: "60px",
+                      marginRight: "10px",
+                      textAlign: "right",
+                    }}
+                  >
+                    로그인
+                  </a>
                 </Link>
               </>
             )}
@@ -140,12 +148,18 @@ export default function Header() {
               align-items: center;
 
               .logo {
-                margin-left: 160px;
+                position: absolute;
+                left: 27%;
+                top: 35%;
+                transform: translate(-50%, -50%);
               }
             }
 
             .search {
-              margin-left: -35%;
+              position: absolute;
+              left: 45%;
+              top: 35%;
+              transform: translate(-50%, -50%);
               border: 2px solid #ed1b23;
               border-radius: 40px;
               padding: 0 17px;
@@ -177,9 +191,12 @@ export default function Header() {
             }
 
             .icons {
+              position: absolute;
+              right: 17%;
+              top: 35%;
+              transform: translate(-50%, -50%);
               height: 80px;
-              width: 100px;
-              margin: auto 0;
+              width: 180px;
 
               .top {
                 line-height: 40px;
@@ -193,7 +210,11 @@ export default function Header() {
 
               .bottom {
                 display: flex;
-                justify-content: space-around;
+                justify-content: right;
+
+                img {
+                  margin: 0 15px;
+                }
               }
             }
           }
