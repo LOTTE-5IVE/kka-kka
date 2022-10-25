@@ -2,6 +2,8 @@ package kkakka.mainservice.member.member.ui;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import kkakka.mainservice.common.dto.NoOffsetPageInfo;
+import kkakka.mainservice.common.dto.PageableNoOffsetResponse;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.auth.ui.MemberOnly;
@@ -54,7 +56,7 @@ public class MemberController {
     }
 
     @GetMapping("/me/orders")
-    public ResponseEntity<List<OrderResponse>> findOrders(
+    public ResponseEntity<PageableNoOffsetResponse<List<OrderResponse>>> findOrders(
             @AuthenticationPrincipal LoginMember loginMember,
             @RequestParam(required = false) Long orderId,
             @RequestParam(defaultValue = "6") int pageSize
@@ -62,10 +64,19 @@ public class MemberController {
         final List<MemberOrderDto> memberOrderDtos = orderService.showMemberOrders(
                 loginMember.getId(),
                 orderId, pageSize);
+        final boolean isLastOrder = orderService.checkIsLastOrder(
+                loginMember.getId(),
+                memberOrderDtos.get(memberOrderDtos.size() - 1).getId()
+        );
+
+        final NoOffsetPageInfo pageInfo = NoOffsetPageInfo.from(isLastOrder, pageSize,
+                memberOrderDtos.size());
+
         return ResponseEntity.status(HttpStatus.OK).body(
-                memberOrderDtos.stream()
-                        .map(MemberOrderDto::toResponseDto)
-                        .collect(Collectors.toList())
+                PageableNoOffsetResponse.from(
+                        memberOrderDtos.stream()
+                                .map(MemberOrderDto::toResponseDto)
+                                .collect(Collectors.toList()), pageInfo)
         );
     }
 }

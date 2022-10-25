@@ -42,4 +42,14 @@ public class OrderRepositorySupport extends QuerydslRepositorySupport {
         }
         return QOrder.order.id.lt(lastId);
     }
+
+    public List<Order> isLastId(Long memberId, Long lastId) {
+        return jpaQueryFactory
+                .selectFrom(QOrder.order)
+                .where(QOrder.order.member.id.eq(memberId))
+                .where(QOrder.order.id.lt(lastId))
+                .orderBy(QOrder.order.id.desc())
+                .limit(1)
+                .fetch();
+    }
 }

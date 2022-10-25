@@ -19,6 +19,7 @@ import javax.persistence.PersistenceContext;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.ui.dto.OrderResponse;
 import kkakka.mainservice.order.application.dto.ProductOrderDto;
 import kkakka.mainservice.order.ui.dto.OrderRequest;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
@@ -85,8 +86,7 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         //given
         String accessToken = 액세스_토큰_가져옴();
         주문_요청함(accessToken, PRODUCT_1.getId());
-        후기_작성함(accessToken, "test-review", 5.0, PRODUCT_1.getId());
-
+        후기_작성함(accessToken, "test-review", 5.0);
         주문_요청함(accessToken, PRODUCT_2.getId());
 
         //when
@@ -102,10 +102,10 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body().as(List.class)).hasSize(2);
+        assertThat(response.jsonPath().getList("data")).hasSize(2);
     }
 
-    private void 후기_작성함(String accessToken, String contents, Double rating, Long productId) {
+    private void 후기_작성함(String accessToken, String contents, Double rating) {
         final ReviewRequest reviewRequest = new ReviewRequest(contents, rating);
         final ExtractableResponse<Response> orderResponse = RestAssured
                 .given().log().all()
@@ -115,7 +115,7 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
                 .get("/api/members/me/orders")
                 .then().log().all()
                 .extract();
-        final String productOrderId = orderResponse.body().path("[0].productOrders[0].id")
+        final String productOrderId = orderResponse.body().path("data[0].productOrders[0].id")
                 .toString();
 
         RestAssured.given().log().all()
