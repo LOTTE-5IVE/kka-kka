@@ -10,11 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class NoOffsetPageInfo {
 
+    private long lastId;
     private boolean isLastPage;
     private int pageSize;
     private int curSize;
 
-    public static NoOffsetPageInfo from(boolean isLastPage, int pageSize, int curSize) {
-        return new NoOffsetPageInfo(isLastPage, pageSize, curSize);
+    public static NoOffsetPageInfo from(long lastId, boolean isLastPage, int pageSize, int curSize) {
+        return new NoOffsetPageInfo(lastId, isLastPage, pageSize, curSize);
     }
 }

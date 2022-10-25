@@ -64,13 +64,19 @@ public class MemberController {
         final List<MemberOrderDto> memberOrderDtos = orderService.showMemberOrders(
                 loginMember.getId(),
                 orderId, pageSize);
+        final Long lastOrderIdInList = memberOrderDtos.get(memberOrderDtos.size() - 1).getId();
+
         final boolean isLastOrder = orderService.checkIsLastOrder(
                 loginMember.getId(),
-                memberOrderDtos.get(memberOrderDtos.size() - 1).getId()
+                lastOrderIdInList
         );
 
-        final NoOffsetPageInfo pageInfo = NoOffsetPageInfo.from(isLastOrder, pageSize,
-                memberOrderDtos.size());
+        final NoOffsetPageInfo pageInfo = NoOffsetPageInfo.from(
+                lastOrderIdInList,
+                isLastOrder,
+                pageSize,
+                memberOrderDtos.size()
+        );
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 PageableNoOffsetResponse.from(

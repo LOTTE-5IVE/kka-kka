@@ -19,7 +19,6 @@ import javax.persistence.PersistenceContext;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
-import kkakka.mainservice.member.member.ui.dto.OrderResponse;
 import kkakka.mainservice.order.application.dto.ProductOrderDto;
 import kkakka.mainservice.order.ui.dto.OrderRequest;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
@@ -103,6 +102,38 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("data")).hasSize(2);
+    }
+
+    @DisplayName("주문 조회 마지막 페이지가 아닐 때 - 성공")
+    @Test
+    void findMemberOrdersWithPage_success() {
+        //given
+        String accessToken = 액세스_토큰_가져옴();
+        주문_요청함(accessToken, PRODUCT_1.getId());
+        주문_요청함(accessToken, PRODUCT_1.getId());
+        주문_요청함(accessToken, PRODUCT_1.getId());
+        주문_요청함(accessToken, PRODUCT_1.getId());
+        주문_요청함(accessToken, PRODUCT_1.getId());
+
+        String curSize = "4";
+
+        //when
+        final ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("orders-info-member-not-last-success"))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/members/me/orders?pageSize=" + curSize)
+                .then().log().all()
+                .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().path("pageInfo.curSize").toString())
+                .isEqualTo(curSize);
+        assertThat(response.body().path("pageInfo.lastPage").toString())
+                .isEqualTo("false");
     }
 
     private void 후기_작성함(String accessToken, String contents, Double rating) {
