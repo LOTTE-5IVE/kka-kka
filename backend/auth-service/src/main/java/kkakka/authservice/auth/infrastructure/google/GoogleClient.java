@@ -3,6 +3,7 @@ package kkakka.authservice.auth.infrastructure.google;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
+import kkakka.authservice.auth.application.SocialAuthenticateException;
 import kkakka.authservice.auth.application.SocialClient;
 import kkakka.authservice.auth.application.UserProfile;
 import kkakka.authservice.auth.application.dto.SocialProviderCodeDto;
@@ -46,6 +47,7 @@ public class GoogleClient implements SocialClient {
                 new HttpEntity<>(httpHeaders),
                 String.class
         );
+        validateResponseStatus(response);
         return converter.extractDataAsAccount(
                 convertResponseToUserProfile(response),
                 GoogleUserProfile.class
@@ -71,6 +73,7 @@ public class GoogleClient implements SocialClient {
                         ),
                         httpHeaders), String.class
         );
+        validateResponseStatus(response);
         return converter.extractDataAsString(response.getBody(), ACCESS_TOKEN);
     }
 
@@ -108,7 +111,7 @@ public class GoogleClient implements SocialClient {
 
             return jsonObject.toString();
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new SocialAuthenticateException();
         }
     }
 

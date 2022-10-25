@@ -1,10 +1,12 @@
 package kkakka.authservice.auth.ui;
 
 import kkakka.authservice.auth.application.AuthService;
+import kkakka.authservice.auth.application.SocialAuthenticateException;
 import kkakka.authservice.auth.application.dto.UserProfileDto;
 import kkakka.authservice.auth.ui.dto.SocialProviderCodeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,5 +26,10 @@ public class AuthController {
         final UserProfileDto userProfileDto = authService.getUserProfile(
                 socialProviderCodeRequest.toDto());
         return ResponseEntity.ok().body(userProfileDto);
+    }
+
+    @ExceptionHandler(SocialAuthenticateException.class)
+    public ResponseEntity<Void> authenticateExceptionHandler() {
+        return ResponseEntity.badRequest().build();
     }
 }

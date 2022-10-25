@@ -38,6 +38,7 @@ public class KakaoClient implements SocialClient {
         final ResponseEntity<String> response = restTemplate.exchange(
                 kakaoOauthInfo.getProfileRequestUrl(), HttpMethod.GET, new HttpEntity<>(headers),
                 String.class);
+        validateResponseStatus(response);
         return converter.extractDataAsAccount(response.getBody(), KakaoUserProfile.class);
     }
 
@@ -51,6 +52,7 @@ public class KakaoClient implements SocialClient {
                                 new KakaoTokenRequest(GRANT_TYPE, kakaoOauthInfo.getRedirectUrl(),
                                         kakaoOauthInfo.getClientId(), kakaoOauthInfo.getClientKey(),
                                         code)), httpHeaders), String.class);
+        validateResponseStatus(response);
         return converter.extractDataAsString(response.getBody(), ACCESS_TOKEN);
     }
 }
