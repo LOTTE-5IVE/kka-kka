@@ -1,7 +1,17 @@
 spring:
-  cloud:
-    config:
-      uri: http://127.0.0.1:8888
-      name: auth-service
+  application:
+    name: auth-service
   profiles:
-    active: oauth
+    group:
+      "default": "console-logging, file-logging, performance-logging"
+      "prod": "file-logging"
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    root: INFO
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG
