@@ -37,6 +37,7 @@ public class NaverClient implements SocialClient {
                 new HttpEntity<>(headers),
                 String.class
         );
+        validateResponseStatus(response);
         return converter.extractDataAsAccount(response.getBody(), NaverUserProfile.class);
     }
 
@@ -58,6 +59,7 @@ public class NaverClient implements SocialClient {
                 ),
                 String.class
         );
+        validateResponseStatus(response);
         return converter.extractDataAsString(response.getBody(), ACCESS_TOKEN);
     }
 }
