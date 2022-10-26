@@ -1,6 +1,7 @@
 import RangeWithIcons from "../../mypage/review/RangeWithIcons";
+import Pagination from "../Pagination";
 
-export default function Review({ reviews }) {
+export default function Review({ reviews, page, setPage, lastPage }) {
   return (
     <>
       <div className="tableWrapper">
@@ -33,6 +34,9 @@ export default function Review({ reviews }) {
               })}
           </tbody>
         </table>
+        <div className="pagination">
+          <Pagination page={page} setPage={setPage} lastPage={lastPage} />
+        </div>
       </div>
       <style jsx>{`
         @media screen and (min-width: 769px) {
@@ -75,6 +79,7 @@ export default function Review({ reviews }) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
           .tableWrapper {
             width: 450px;
+            height: 650px;
             margin: 0 auto 50px;
 
             table {

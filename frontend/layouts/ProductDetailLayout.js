@@ -20,6 +20,9 @@ export default function ProductDetailLayout({
   tab,
   modal,
   product,
+  page,
+  setPage,
+  lastPage,
   reviews,
   quantity,
   handleModal,
@@ -219,7 +222,12 @@ export default function ProductDetailLayout({
               ) : tab == "nutri" ? (
                 <Nutri nutrition={product.nutrition} />
               ) : reviews.length > 0 ? (
-                <Review reviews={reviews} />
+                <Review
+                  reviews={reviews}
+                  page={page}
+                  setPage={setPage}
+                  lastPage={lastPage}
+                />
               ) : (
                 <div className="noReview">
                   <p>아직 작성된 후기가 없습니다.</p>
@@ -701,7 +709,7 @@ export default function ProductDetailLayout({
           .ProductDetailLWrapper {
             margin: 20px auto 0;
             width: 450px;
-            height: 1300px;
+            height: 1400px;
 
             .detailTop {
               display: flex;
@@ -888,7 +896,7 @@ export default function ProductDetailLayout({
 
             .detailBottom {
               position: absolute;
-              top: 90%;
+              top: 770px;
               padding-top: 40px;
 
               .tabMenu {

@@ -94,6 +94,7 @@ export default function Nutri({ nutrition }) {
         @media screen and (max-width: 480px) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
           table {
+            width: 450px;
             border: 1px solid #acacac;
             border-collapse: collapse;
             text-align: center;
@@ -106,9 +107,10 @@ export default function Nutri({ nutrition }) {
             padding: 0.5rem;
           }
           td {
-            font-size: 0.9rem;
+            font-size: 0.5rem;
           }
           th {
+            font-size: 0.5rem;
             background-color: #dfdfdf;
           }
         }

@@ -175,7 +175,7 @@ export default function Pagination({ page, setPage, lastPage }) {
         @media screen and (max-width: 480px) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
           .wrapper {
-            width: 480px;
+            width: 450px;
             height: 66px;
             display: flex;
             justify-content: center;
