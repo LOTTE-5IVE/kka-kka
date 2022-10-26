@@ -175,21 +175,25 @@ class CartAcceptanceTest extends DocumentConfiguration {
     }
 
     @Test
-    @DisplayName("장바구니 쿠폰 적용")
+    @DisplayName("장바구니 쿠폰 적용 - 성공")
     void applyCouponCartItem_success() {
         //given
         final String accessToken = 액세스_토큰_가져옴();
         장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
         final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
         퍼센트_쿠폰_생성();
+        String couponId = 사용가능_쿠폰_조회(PRODUCT_1.getId());
 
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
                 .filter(document("applyCartItemCoupon-success"))
-                .header("Authorization","Bearer " + accessToken)
+                .header("Authorization", "Bearer " + accessToken)
                 .when()
-                .post("/api/carts/" + cart.getCartItemDtos().get(0).getId() + "/" + )
+                .post("/api/carts/" + cart.getCartItemDtos().get(0).getId() + "/" + couponId)
+                .then().log().all().extract();
 
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     private CartResponseDto 장바구니에서_찾아옴(String accessToken) {
@@ -229,7 +233,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
     }
 
     private void 퍼센트_쿠폰_생성() {
-         RestAssured.given(spec).log().all()
+        RestAssured.given(spec).log().all()
                 .filter(document("create-coupon"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("{\n"
@@ -247,5 +251,16 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .when()
                 .post("/api/coupons")
                 .then().log().all().extract();
+    }
+
+    private String 사용가능_쿠폰_조회(Long productId) {
+
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/coupons/" + productId)
+                .then().log().all().extract();
+        return response.body().path("[0].id").toString();
     }
 }
