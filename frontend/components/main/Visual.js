@@ -16,68 +16,165 @@ export default function Visual() {
   return (
     <>
       <section className="visual">
-        <div className="inner">
-          <div className="fade-in" ref={(el) => (fadeEls.current[1] = el)}>
-            <img src="/giftset.png" className="giftset" />
+        <div className="fade-in" ref={(el) => (fadeEls.current[4] = el)}>
+          <div className="logoComment">
+            <img src="/main/intro.png" />
           </div>
-          <div className="fade-in" ref={(el) => (fadeEls.current[2] = el)}>
-            <img width="500px" src="/cookie.png" className="cookie" />
-          </div>
-          <div className="fade-in" ref={(el) => (fadeEls.current[3] = el)}>
-            <img width="420px" src="/bts.png" className="bts" />
-          </div>
-          <div className="fade-in" ref={(el) => (fadeEls.current[4] = el)}>
-            <div className="logoComment">
-              <img width="845px" src="/intro.png" />
-            </div>
-          </div>
+        </div>
+
+        <div className="fade-in" ref={(el) => (fadeEls.current[1] = el)}>
+          <img className="giftset" src="/main/giftset.png" />
+        </div>
+        <div className="fade-in" ref={(el) => (fadeEls.current[2] = el)}>
+          <img className="cookie" src="/main/cookie.png" />
+        </div>
+        <div className="fade-in" ref={(el) => (fadeEls.current[3] = el)}>
+          <img className="bts" src="/main/bts.png" />
         </div>
       </section>
 
       <style jsx>{`
-        .visual {
-          background-image: url("/main/visual_bg.jpg");
-          background-position: center;
-
-          .inner {
-            width: 1100px;
-            margin: 0 auto;
-            position: relative;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .visual {
+            width: 1903px;
             height: 646px;
+            position: relative;
 
-            .title {
+            background-image: url("/main/visual_bg.jpg");
+            background-position: center;
+
+            .logoComment {
               position: absolute;
-              top: 15px;
-              left: -80px;
+              top: 30px;
+              left: 130px;
+
+              img {
+                width: 845px;
+              }
+            }
+
+            .bts {
+              width: 420px;
+              position: absolute;
+              bottom: 0px;
+              left: 805px;
+            }
+
+            .cookie {
+              width: 500px;
+              position: absolute;
+              bottom: 0px;
+              right: 380px;
+            }
+
+            .giftset {
+              width: 600px;
+              position: absolute;
+              bottom: 20px;
+              right: 75px;
+            }
+
+            .fade-in {
+              opacity: 0;
             }
           }
+        }
 
-          .giftset {
-            position: absolute;
-            bottom: 15px;
-            right: -200px;
+        @media screen and (max-width: 768px) {
+          .visual {
+            width: 951.5px;
+            height: 323px;
+            position: relative;
+
+            background-image: url("/main/visual_bg.jpg");
+            background-position: center;
+
+            .logoComment {
+              position: absolute;
+              top: 15px;
+              left: 65px;
+
+              img {
+                width: 422.5px;
+              }
+            }
+
+            .bts {
+              width: 210px;
+              position: absolute;
+              bottom: 0px;
+              left: 402.5px;
+            }
+
+            .cookie {
+              width: 250px;
+              position: absolute;
+              bottom: 0px;
+              right: 190px;
+            }
+
+            .giftset {
+              width: 300px;
+              position: absolute;
+              bottom: 10px;
+              right: 37.5px;
+            }
+
+            .fade-in {
+              opacity: 0;
+            }
           }
+        }
 
-          .cookie {
-            position: absolute;
-            bottom: 0;
-            right: 105px;
-          }
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .visual {
+            width: 480px;
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+            background-image: url("/main/visual_bg.jpg");
+            background-position: center;
 
-          .logoComment {
-            position: absolute;
-            top: 40px;
-            right: 500px;
-          }
+            .logoComment {
+              position: absolute;
+              left: 52%;
+              top: 25%;
+              transform: translate(-50%, -50%);
 
-          .bts {
-            position: absolute;
-            bottom: -10px;
-            left: 280px;
-          }
+              img {
+                width: 510px;
+              }
+            }
 
-          .fade-in {
-            opacity: 0;
+            .bts {
+              width: 200px;
+              position: absolute;
+              left: 25%;
+              top: 75%;
+              transform: translate(-50%, -50%);
+            }
+
+            .cookie {
+              width: 280px;
+              position: absolute;
+              left: 50%;
+              top: 70%;
+              transform: translate(-50%, -50%);
+            }
+
+            .giftset {
+              width: 350px;
+              position: absolute;
+              left: 70%;
+              top: 63%;
+              transform: translate(-50%, -50%);
+            }
+
+            .fade-in {
+              opacity: 0;
+            }
           }
         }
       `}</style>

@@ -1,6 +1,4 @@
 import { useEffect } from "react";
-import SNSButton from "../components/member/SNSButton";
-import { ThemeBlue, ThemeRed } from "../typings/ThemeColor";
 
 export default function LoginCheckLayout({ loginFlag }) {
   useEffect(() => {
@@ -13,16 +11,16 @@ export default function LoginCheckLayout({ loginFlag }) {
 
   return (
     <>
-      <div className="contents">
-        <div className="login-area">
-          <div className="login-title">
+      <div className="LoginCheckLContents">
+        <div className="loginArea">
+          <div className="loginTitle">
             {loginFlag ? (
-              <img width="100px" src="/success.png" />
+              <img width="100px" src="/member/success.png" />
             ) : (
-              <img width="100px" src="/fail.png" />
+              <img width="100px" src="/member/fail.png" />
             )}
           </div>
-          <div className="login-subtitle">
+          <div className="loginSubtitle">
             {loginFlag ? (
               <>
                 로그인 성공 <br />
@@ -40,50 +38,89 @@ export default function LoginCheckLayout({ loginFlag }) {
         </div>
       </div>
       <style jsx>{`
-        .contents {
-          width: 70%;
-          margin: 0 auto;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .LoginCheckLContents {
+            .loginArea {
+              position: absolute;
+              left: 951px;
+              top: 470px;
+              transform: translate(-50%, -50%);
+              display: block;
+              text-align: center;
 
-          .login-area {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            display: block;
-            text-align: center;
+              .loginTitle {
+                min-height: 30px;
+                padding: 34px 0 20px;
+                line-height: 1;
+                margin: 0px;
+              }
+
+              .loginSubtitle {
+                color: #999999;
+                font-size: 16px;
+                line-height: 26px;
+              }
+            }
           }
+        }
 
-          .login-title {
-            min-height: 30px;
-            padding: 34px 0 20px;
-            line-height: 1;
-            margin: 0px;
+        @media screen and (max-width: 768px) {
+          /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
+          .LoginCheckLContents {
+            .loginArea {
+              position: absolute;
+              left: 951px;
+              top: 470px;
+              transform: translate(-50%, -50%);
+              display: block;
+              text-align: center;
+
+              .loginTitle {
+                min-height: 30px;
+                padding: 34px 0 20px;
+                line-height: 1;
+                margin: 0px;
+              }
+
+              .loginSubtitle {
+                color: #999999;
+                font-size: 16px;
+                line-height: 26px;
+              }
+            }
           }
+        }
 
-          .login-subtitle {
-            color: #999999;
-            font-size: 16px;
-            line-height: 26px;
-          }
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .LoginCheckLContents {
+            width: 480px;
+            height: 500px;
 
-          .login-button {
-            margin: 50px auto 0;
-            width: 250px;
-            height: 80px;
-            color: #fff;
-            font-size: 20px;
-            background-color: ${ThemeRed};
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: 0.7s;
-          }
+            .loginArea {
+              width: 280px;
 
-          .login-button:hover {
-            color: ${ThemeRed};
-            background-color: #fff;
-            border: 1px solid ${ThemeRed};
+              position: absolute;
+              left: 240px;
+              top: 350px;
+              transform: translate(-50%, -50%);
+              display: block;
+              text-align: center;
+
+              .loginTitle {
+                min-height: 30px;
+                padding: 34px 0 20px;
+                line-height: 1;
+                margin: 0px;
+              }
+
+              .loginSubtitle {
+                color: #999999;
+                font-size: 16px;
+                line-height: 26px;
+              }
+            }
           }
         }
       `}</style>

@@ -108,88 +108,269 @@ export default function MyOrderTemp() {
       </div>
       <style jsx>
         {`
-          .order-divider {
-            border-bottom: 1.1px solid #adadad;
-            width: 100%;
-          }
-
-          .po-divider {
-            border-bottom: 1px solid #e0e0e0;
-            width: 100%;
-          }
-
-          .d-flex {
-            display: flex;
-            justify-content: center;
-          }
-
-          .flex-column {
-            flex-direction: column;
-          }
-
-          .align-center {
-            align-items: center;
-          }
-
-          .align-start {
-            align-items: start;
-          }
-
-          .mr-2 {
-            margin-right: 0.2rem;
-          }
-
-          .moreBtn {
-            margin-bottom: 2rem;
-            padding: 1rem;
-            border: 1px solid #c5c5c5;
-            color: #525252;
-          }
-
-          .myorder {
-            .myorderTitle {
-              font-size: 24px;
-              font-weight: 700;
-              color: #3a3a3a;
-              border-bottom: 2px solid #3a3a3a;
-              line-height: 24px;
-              padding-bottom: 15px;
+          @media screen and (min-width: 769px) {
+            /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+            .order-divider {
+              border-bottom: 1.1px solid #adadad;
+              width: 100%;
             }
 
-            margin-bottom: 3rem;
+            .po-divider {
+              border-bottom: 1px solid #e0e0e0;
+              width: 100%;
+            }
+
+            .d-flex {
+              display: flex;
+              justify-content: center;
+            }
+
+            .flex-column {
+              flex-direction: column;
+            }
+
+            .align-center {
+              align-items: center;
+            }
+
+            .align-start {
+              align-items: start;
+            }
+
+            .mr-2 {
+              margin-right: 0.2rem;
+            }
+
+            .moreBtn {
+              margin-bottom: 2rem;
+              padding: 1rem;
+              border: 1px solid #c5c5c5;
+              color: #525252;
+            }
+
+            .myorder {
+              .myorderTitle {
+                font-size: 24px;
+                font-weight: 700;
+                color: #3a3a3a;
+                border-bottom: 2px solid #3a3a3a;
+                line-height: 24px;
+                padding-bottom: 15px;
+              }
+
+              margin-bottom: 3rem;
+            }
+
+            .wrapper {
+              max-width: 970px;
+              width: 100%;
+            }
+
+            .el-container {
+              width: 100%;
+            }
+
+            .order-title {
+              margin: 1rem 0 1rem 0;
+            }
+
+            .title-label {
+              color: #3e3e3e;
+            }
+
+            .title-id {
+              color: red;
+              font-weight: bold;
+            }
+
+            .title-content {
+              color: #3e3e3e;
+              font-weight: normal;
+              font-size: 1rem;
+            }
+
+            .title-divider {
+              color: #3e3e3e;
+              margin: 0 1rem 0 1rem;
+            }
           }
 
-          .wrapper {
-            max-width: 970px;
-            width: 100%;
+          @media screen and (max-width: 768px) {
+            /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
+            .order-divider {
+              border-bottom: 1.1px solid #adadad;
+              width: 100%;
+            }
+
+            .po-divider {
+              border-bottom: 1px solid #e0e0e0;
+              width: 100%;
+            }
+
+            .d-flex {
+              display: flex;
+              justify-content: center;
+            }
+
+            .flex-column {
+              flex-direction: column;
+            }
+
+            .align-center {
+              align-items: center;
+            }
+
+            .align-start {
+              align-items: start;
+            }
+
+            .mr-2 {
+              margin-right: 0.2rem;
+            }
+
+            .moreBtn {
+              margin-bottom: 2rem;
+              padding: 1rem;
+              border: 1px solid #c5c5c5;
+              color: #525252;
+            }
+
+            .myorder {
+              .myorderTitle {
+                font-size: 24px;
+                font-weight: 700;
+                color: #3a3a3a;
+                border-bottom: 2px solid #3a3a3a;
+                line-height: 24px;
+                padding-bottom: 15px;
+              }
+
+              margin-bottom: 3rem;
+            }
+
+            .wrapper {
+              max-width: 970px;
+              width: 100%;
+            }
+
+            .el-container {
+              width: 100%;
+            }
+
+            .order-title {
+              margin: 1rem 0 1rem 0;
+            }
+
+            .title-label {
+              color: #3e3e3e;
+            }
+
+            .title-id {
+              color: red;
+              font-weight: bold;
+            }
+
+            .title-content {
+              color: #3e3e3e;
+              font-weight: normal;
+              font-size: 1rem;
+            }
+
+            .title-divider {
+              color: #3e3e3e;
+              margin: 0 1rem 0 1rem;
+            }
           }
 
-          .el-container {
-            width: 100%;
-          }
+          @media screen and (max-width: 480px) {
+            /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+            .order-divider {
+              border-bottom: 1.1px solid #adadad;
+              width: 100%;
+            }
 
-          .order-title {
-            margin: 1rem 0 1rem 0;
-          }
+            .po-divider {
+              border-bottom: 1px solid #e0e0e0;
+              width: 100%;
+            }
 
-          .title-label {
-            color: #3e3e3e;
-          }
+            .d-flex {
+              display: flex;
+              justify-content: center;
+            }
 
-          .title-id {
-            color: red;
-            font-weight: bold;
-          }
+            .flex-column {
+              flex-direction: column;
+            }
 
-          .title-content {
-            color: #3e3e3e;
-            font-weight: normal;
-            font-size: 1rem;
-          }
+            .align-center {
+              align-items: center;
+            }
 
-          .title-divider {
-            color: #3e3e3e;
-            margin: 0 1rem 0 1rem;
+            .align-start {
+              align-items: start;
+            }
+
+            .mr-2 {
+              margin-right: 0.2rem;
+            }
+
+            .moreBtn {
+              margin-bottom: 1rem;
+              padding: 0.5rem;
+              border: 1px solid #c5c5c5;
+              color: #525252;
+
+              span {
+                font-size: 12px;
+              }
+            }
+
+            .myorder {
+              .myorderTitle {
+                font-size: 16px;
+                font-weight: 700;
+                color: #3a3a3a;
+                border-bottom: 2px solid #3a3a3a;
+                line-height: 16px;
+                padding-bottom: 10px;
+              }
+
+              margin-bottom: 3rem;
+            }
+
+            .wrapper {
+              max-width: 970px;
+              width: 100%;
+            }
+
+            .el-container {
+              width: 100%;
+            }
+
+            .order-title {
+              margin: 1rem 0 1rem 0;
+            }
+
+            .title-label {
+              color: #3e3e3e;
+            }
+
+            .title-id {
+              color: red;
+              font-weight: bold;
+            }
+
+            .title-content {
+              color: #3e3e3e;
+              font-weight: normal;
+              font-size: 1rem;
+            }
+
+            .title-divider {
+              color: #3e3e3e;
+              margin: 0 1rem 0 1rem;
+            }
           }
         `}
       </style>

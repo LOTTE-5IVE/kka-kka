@@ -2,12 +2,9 @@ import { useRef, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
-// import required modules
 import SwiperCore, { Autoplay, Navigation, Pagination, Keyboard } from "swiper";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -39,11 +36,8 @@ export default function RecommSlider({ tab, handleTab }) {
 
   return (
     <>
-      {/* notice */}
       <section className="notice">
         <div className="notice-line">
-          <div className="bg-left"></div>
-          <div className="bg-right"></div>
           <div className="inner">
             <div
               className="inner__left"
@@ -54,9 +48,7 @@ export default function RecommSlider({ tab, handleTab }) {
             >
               <h2>맞춤 추천</h2>
               <div className="toggle-promotion">
-                <div className="material-icons">
-                  <ArrowDropDownIcon style={{ color: "#fff" }} />
-                </div>
+                <ArrowDropDownIcon style={{ color: "#fff" }} />
               </div>
             </div>
             <div
@@ -68,9 +60,7 @@ export default function RecommSlider({ tab, handleTab }) {
             >
               <h2>리뷰 추천</h2>
               <div className="toggle-promotion">
-                <div className="material-icons">
-                  <ArrowDropDownIcon />
-                </div>
+                <ArrowDropDownIcon />
               </div>
             </div>
           </div>
@@ -82,9 +72,10 @@ export default function RecommSlider({ tab, handleTab }) {
               <div className="swiper-container">
                 <Swiper
                   className="swiper-wrapper"
+                  loop={true}
                   spaceBetween={10}
                   centeredSlides={true}
-                  slidesPerView={5} // 한 슬라이드에 보여줄 갯수
+                  slidesPerView={5}
                   cssMode={true}
                   navigation={{
                     prevEl: navigationPrevRef.current,
@@ -126,14 +117,10 @@ export default function RecommSlider({ tab, handleTab }) {
 
               <div className="swiper-pagination"></div>
               <div className="swiper-prev">
-                <div className="material-icons" style={{ display: "flex" }}>
-                  <ArrowBackIcon ref={navigationPrevRef} />
-                </div>
+                <ArrowBackIcon ref={navigationPrevRef} />
               </div>
               <div className="swiper-next">
-                <div className="material-icons" style={{ display: "flex" }}>
-                  <ArrowForwardIcon ref={navigationNextRef} />
-                </div>
+                <ArrowForwardIcon ref={navigationNextRef} />
               </div>
             </div>
           </>
@@ -144,6 +131,7 @@ export default function RecommSlider({ tab, handleTab }) {
               <div className="swiper-container">
                 <Swiper
                   className="swiper-wrapper"
+                  loop={true}
                   spaceBetween={20}
                   centeredSlides={true}
                   slidesPerView={5} // 한 슬라이드에 보여줄 갯수
@@ -188,14 +176,10 @@ export default function RecommSlider({ tab, handleTab }) {
 
               <div className="swiper-pagination"></div>
               <div className="swiper-prev">
-                <div className="material-icons" style={{ display: "flex" }}>
-                  <ArrowBackIcon ref={navigationPrevRef} />
-                </div>
+                <ArrowBackIcon ref={navigationPrevRef} />
               </div>
               <div className="swiper-next">
-                <div className="material-icons" style={{ display: "flex" }}>
-                  <ArrowForwardIcon ref={navigationNextRef} />
-                </div>
+                <ArrowForwardIcon ref={navigationNextRef} />
               </div>
             </div>
           </>
@@ -203,156 +187,324 @@ export default function RecommSlider({ tab, handleTab }) {
       </section>
 
       <style jsx>{`
-        /* NOTICE */
-        .notice {
-          .notice-line {
-            position: relative;
-
-            .bg-left {
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 50%;
-              height: 100%;
-              background-color: #333;
-            }
-
-            .bg-right {
-              position: absolute;
-              top: 0;
-              right: 0;
-              width: 50%;
-              height: 100%;
-              background-color: #f6f5ef;
-            }
-
-            .inner {
-              width: 1000px;
-              margin: 0 auto;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .notice {
+            .notice-line {
               position: relative;
-              height: 62px;
-              z-index: 1;
-              display: flex;
-              .inner__left {
-                width: 50%;
-                height: 100%;
-                background-color: #333;
-                display: flex;
-                align-items: center;
 
-                h2 {
-                  color: #fff;
-                  font-size: 17px;
-                  font-weight: 700;
-                  margin-right: 20px;
-                }
-
-                .swiper-container {
-                  height: 62px;
-                  flex-grow: 1;
-                }
-
-                .swiper-slide {
-                  height: 62px;
-                  display: flex;
-                  align-items: center;
-                }
-              }
-            }
-
-            .inner__right {
-              width: 50%;
-              height: 100%;
-              display: flex;
-              justify-content: flex-end;
-              align-items: center;
-
-              h2 {
-                font-size: 17px;
-                font-weight: 700;
-              }
-
-              .toggle-promotion {
-                width: 62px;
+              .inner {
+                width: 1903px;
+                margin: 0 auto;
+                position: relative;
                 height: 62px;
-                cursor: pointer;
+                z-index: 1;
                 display: flex;
-                justify-content: center;
-                align-items: center;
 
-                .material-icons {
-                  font-size: 30px;
+                .inner__left,
+                .inner__right {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  width: 951.5px;
+                  height: 62px;
+
+                  h2 {
+                    font-size: 17px;
+                    font-weight: 700;
+                  }
+
+                  .toggle-promotion {
+                    width: 62px;
+                    height: 62px;
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  }
+                }
+
+                .inner__left {
+                  background-color: #333;
+
+                  h2 {
+                    color: #fff;
+                  }
                 }
               }
             }
           }
-        }
 
-        .notice .promotion {
-          height: 600px;
-          background-color: #f6f5ef;
-          position: relative;
-          transition: height 0.4s;
-          overflow: hidden;
-
-          .swiper-container {
-            width: calc(819px * 3 + 20px);
-            height: 470px;
-            position: absolute;
-            top: 40px;
-            left: 50%;
-            margin-left: calc((819px * 3 + 20px) / -2);
-          }
-
-          .swiper-slide {
-            opacity: 0.5;
-            transition: opacity 1s;
+          .notice .promotion {
+            width: 1903px;
+            height: 600px;
+            background-color: #f6f5ef;
             position: relative;
-          }
+            transition: height 0.4s;
+            overflow: hidden;
 
-          .swiper-slide-active {
-            opacity: 1;
-          }
+            .swiper-container {
+              width: 2400px;
+              height: 470px;
+              position: absolute;
+              top: 40px;
+              left: 50%;
+              transform: translate(-50%, 0%);
+            }
 
-          .swiper-pagination {
-            bottom: 40px;
-            left: 0;
-            right: 0;
-          }
+            .swiper-slide {
+              opacity: 0.5;
+              transition: opacity 1s;
+              position: relative;
+            }
 
-          .swiper-prev,
-          .swiper-next {
-            width: 42px;
-            height: 42px;
-            border: 2px solid #333;
-            border-radius: 50%;
-            position: absolute;
-            top: 300px;
-            z-index: 1;
-            cursor: pointer;
-            outline: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: 0.4s;
-          }
+            .swiper-slide-active {
+              opacity: 1;
+            }
 
-          .swiper-prev {
-            left: 50%;
-            margin-left: -330px;
+            .swiper-pagination {
+              bottom: 40px;
+              left: 0;
+              right: 0;
+            }
+
+            .swiper-prev,
+            .swiper-next {
+              width: 42px;
+              height: 42px;
+              border: 2px solid #333;
+              border-radius: 50%;
+              position: absolute;
+              top: 300px;
+              z-index: 1;
+              cursor: pointer;
+              outline: none;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              transition: 0.4s;
+            }
+
+            .swiper-prev {
+              left: 35%;
+            }
+            .swiper-next {
+              right: 35%;
+            }
+            .swiper-prev:hover,
+            .swiper-next:hover {
+              background-color: #333;
+              color: #fff;
+            }
           }
-          .swiper-next {
-            right: 50%;
-            margin-right: -330px;
-          }
-          .swiper-prev:hover,
-          .swiper-next:hover {
-            background-color: #333;
-            color: #fff;
+          .notice .promotion.hide {
+            height: 0;
           }
         }
-        .notice .promotion.hide {
-          height: 0;
+
+        @media screen and (max-width: 768px) {
+          .notice {
+            .notice-line {
+              position: relative;
+
+              .inner {
+                width: 951.5px;
+                margin: 0 auto;
+                position: relative;
+                height: 31px;
+                z-index: 1;
+                display: flex;
+
+                .inner__left,
+                .inner__right {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  width: 476px;
+                  height: 31px;
+
+                  h2 {
+                    font-size: 8.5px;
+                    font-weight: 700;
+                  }
+
+                  .toggle-promotion {
+                    width: 31px;
+                    height: 31px;
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  }
+                }
+
+                .inner__left {
+                  background-color: #333;
+
+                  h2 {
+                    color: #fff;
+                  }
+                }
+              }
+            }
+          }
+
+          .notice .promotion {
+            width: 951.5px;
+            height: 300px;
+            background-color: #f6f5ef;
+            position: relative;
+            transition: height 0.4s;
+            overflow: hidden;
+
+            .swiper-container {
+              width: 1200px;
+              height: 235px;
+              position: absolute;
+              top: 20px;
+              left: 50%;
+              transform: translate(-50%, 0%);
+            }
+
+            .swiper-slide {
+              opacity: 0.5;
+              transition: opacity 1s;
+              position: relative;
+            }
+
+            .swiper-slide-active {
+              opacity: 1;
+            }
+
+            .swiper-pagination {
+              bottom: 20px;
+              left: 0;
+              right: 0;
+            }
+
+            .swiper-prev,
+            .swiper-next {
+              width: 21px;
+              height: 21px;
+              border: 1px solid #333;
+              border-radius: 50%;
+              position: absolute;
+              top: 150px;
+              z-index: 1;
+              cursor: pointer;
+              outline: none;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              transition: 0.4s;
+            }
+
+            .swiper-prev {
+              left: 35%;
+            }
+            .swiper-next {
+              right: 35%;
+            }
+            .swiper-prev:hover,
+            .swiper-next:hover {
+              background-color: #333;
+              color: #fff;
+            }
+          }
+          .notice .promotion.hide {
+            height: 0;
+          }
+        }
+
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .notice {
+            .notice-line {
+              position: relative;
+
+              .inner {
+                width: 480px;
+                margin: 0 auto;
+                position: relative;
+                height: 62px;
+                z-index: 1;
+                display: flex;
+
+                .inner__left,
+                .inner__right {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  width: 240px;
+                  height: 62px;
+
+                  h2 {
+                    font-size: 17px;
+                    font-weight: 700;
+                  }
+
+                  .toggle-promotion {
+                    width: 62px;
+                    height: 62px;
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  }
+                }
+
+                .inner__left {
+                  background-color: #333;
+
+                  h2 {
+                    color: #fff;
+                  }
+                }
+              }
+            }
+          }
+
+          .notice .promotion {
+            width: 480px;
+            height: 300px;
+            background-color: #f6f5ef;
+            position: relative;
+            transition: height 0.4s;
+            overflow: hidden;
+
+            .swiper-container {
+              width: 800px;
+              height: 260px;
+              position: absolute;
+              top: 40px;
+              left: 50%;
+              transform: translate(-50%, 0%);
+            }
+
+            .swiper-slide {
+              opacity: 0.5;
+              transition: opacity 1s;
+              position: relative;
+            }
+
+            .swiper-slide-active {
+              opacity: 1;
+            }
+
+            .swiper-pagination {
+              bottom: 40px;
+              left: 0;
+              right: 0;
+            }
+
+            .swiper-prev,
+            .swiper-next {
+              display: none;
+            }
+          }
+          .notice .promotion.hide {
+            height: 0;
+          }
         }
       `}</style>
     </>

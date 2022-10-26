@@ -32,7 +32,7 @@ export default function Header() {
 
   return (
     <div>
-      <div className="wrapper">
+      <div className="HeaderWrapper">
         <div className="logo">
           <div
             onClick={() => {
@@ -40,7 +40,7 @@ export default function Header() {
             }}
             style={{ cursor: "pointer" }}
           >
-            <img height="95px" src="/main/logo.png" />
+            <img src="/main/logo.png" />
           </div>
         </div>
         <div className="search">
@@ -64,15 +64,13 @@ export default function Header() {
           <div className="top">
             {token ? (
               <>
-                <div style={{ width: "100px", textAlign: "right" }}>
-                  {name}님
-                </div>
+                <div className="topLeft">{name}님</div>
                 <div
+                  className="topRight"
                   onClick={() => {
                     localStorage.removeItem("accessToken");
                     document.location.href = "/";
                   }}
-                  style={{ width: "60px", cursor: "pointer" }}
                 >
                   <a>로그아웃</a>
                 </div>
@@ -80,19 +78,11 @@ export default function Header() {
             ) : (
               <>
                 <Link href="/member/join">
-                  <a style={{ width: "100px", textAlign: "right" }}>회원가입</a>
+                  <a className="topLeft">회원가입</a>
                 </Link>
 
                 <Link href="/member/login">
-                  <a
-                    style={{
-                      width: "60px",
-                      marginRight: "10px",
-                      textAlign: "right",
-                    }}
-                  >
-                    로그인
-                  </a>
+                  <a className="topRight">로그인</a>
                 </Link>
               </>
             )}
@@ -134,14 +124,11 @@ export default function Header() {
           </div>
         </div>
         <style jsx>{`
-          .wrapper {
-            max-height: 120px;
-            height: 15vh;
-          }
           @media screen and (min-width: 769px) {
             /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
-            .wrapper {
-              max-width: 1280px;
+            .HeaderWrapper {
+              width: 1280px;
+              height: 120px;
               margin: 0 auto;
               display: flex;
               justify-content: space-between;
@@ -152,6 +139,10 @@ export default function Header() {
                 left: 27%;
                 top: 35%;
                 transform: translate(-50%, -50%);
+
+                img {
+                  height: 95px;
+                }
               }
             }
 
@@ -206,6 +197,16 @@ export default function Header() {
                 justify-content: space-between;
                 position: relative;
                 top: -15px;
+
+                .topLeft {
+                  width: 100px;
+                  text-align: right;
+                }
+
+                .topRight {
+                  width: 60px;
+                  cursor: pointer;
+                }
               }
 
               .bottom {
@@ -213,20 +214,206 @@ export default function Header() {
                 justify-content: right;
 
                 img {
+                  width: 29px;
+                  height: 29px;
                   margin: 0 15px;
                 }
               }
             }
           }
 
-          @media screen and (max-width: 900px) {
+          @media screen and (max-width: 768px) {
+            .HeaderWrapper {
+              width: 640px;
+              height: 60px;
+              margin: 0 auto;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+
+              .logo {
+                position: absolute;
+                left: 27%;
+                top: 35%;
+                transform: translate(-50%, -50%);
+
+                img {
+                  height: 47.5px;
+                }
+              }
+            }
+
             .search {
-              display: none;
+              position: absolute;
+              left: 45%;
+              top: 35%;
+              transform: translate(-50%, -50%);
+              border: 2px solid #ed1b23;
+              border-radius: 20px;
+              padding: 0 8.5px;
+
+              input[type="text"] {
+                border: none;
+                border-radius: 20px;
+                width: 158.5px;
+                height: 22.5px;
+                line-height: 22.5px;
+                padding: 0;
+                box-sizing: border-box;
+                color: #c5c9cd;
+                font-size: 0.5em;
+                font-weight: 600;
+              }
+
+              input[type="text"]:focus {
+                outline: none;
+                color: #000;
+              }
+
+              img {
+                width: 12px;
+                height: 12px;
+                position: relative;
+                top: 2.5px;
+              }
+            }
+
+            .icons {
+              position: absolute;
+              right: 17%;
+              top: 35%;
+              transform: translate(-50%, -50%);
+              height: 40px;
+              width: 90px;
+
+              .top {
+                line-height: 20px;
+                font-weight: 700;
+                font-size: 6px;
+                display: flex;
+                justify-content: space-between;
+                position: relative;
+                top: -7.5px;
+
+                .topLeft {
+                  width: 50px;
+                  text-align: right;
+                }
+
+                .topRight {
+                  width: 30px;
+                  cursor: pointer;
+                }
+              }
+
+              .bottom {
+                display: flex;
+                justify-content: right;
+
+                img {
+                  width: 14.5px;
+                  height: 14.5px;
+                  margin: 0 7.5px;
+                }
+              }
             }
           }
 
-          @media screen and (max-width: 768px) {
+          @media screen and (max-width: 480px) {
             /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+            .HeaderWrapper {
+              width: 480px;
+              height: 70px;
+              margin: 0 auto;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+
+              .logo {
+                position: absolute;
+                left: 10%;
+                top: 30%;
+                transform: translate(-50%, -50%);
+
+                img {
+                  height: 60px;
+                }
+              }
+
+              .search {
+                position: absolute;
+                left: 45%;
+                top: 25%;
+                transform: translate(-50%, -50%);
+                border: 2px solid #ed1b23;
+                border-radius: 40px;
+                padding: 0 17px;
+
+                input[type="text"] {
+                  border: none;
+                  border-radius: 40px;
+                  width: 120px;
+                  height: 15px;
+                  padding: 0;
+                  box-sizing: border-box;
+                  color: #c5c9cd;
+                  font-size: 0.5em;
+                  font-weight: 600;
+                }
+
+                input[type="text"]:focus {
+                  outline: none;
+                  color: #000;
+                }
+
+                img {
+                  width: 16px;
+                  height: 16px;
+                  position: relative;
+                  top: 2px;
+                }
+              }
+
+              .icons {
+                position: absolute;
+                right: -18%;
+                top: 30%;
+                transform: translate(-50%, -50%);
+                height: 80px;
+                width: 180px;
+
+                .top {
+                  line-height: 40px;
+                  font-weight: 700;
+                  font-size: 12px;
+                  display: flex;
+                  justify-content: space-between;
+                  position: relative;
+                  top: 0px;
+
+                  .topLeft {
+                    width: 100px;
+                    text-align: right;
+                  }
+
+                  .topRight {
+                    width: 60px;
+                    cursor: pointer;
+                  }
+                }
+
+                .bottom {
+                  display: flex;
+                  justify-content: right;
+
+                  img {
+                    width: 25px;
+                    height: 25px;
+                    margin: 0px 20px;
+                  }
+                }
+              }
+            }
           }
         `}</style>
       </div>
