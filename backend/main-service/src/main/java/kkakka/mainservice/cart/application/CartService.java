@@ -86,10 +86,10 @@ public class CartService {
 
     @Transactional
     public CartItemDto applyCouponCartItem(Long cartItemId, Long couponId) {
+
         CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(KkaKkaException::new);
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
         cartItem.applyCoupon(coupon);
-
         Integer discountedPrice = cartItem.getDiscountedPrice(coupon);
 
         return CartItemDto.applyCouponDto(cartItem, discountedPrice, CouponDto.toDto(coupon));

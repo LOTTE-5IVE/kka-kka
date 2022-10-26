@@ -1,23 +1,15 @@
 package kkakka.mainservice.product.domain;
 
-import java.util.Date;
-import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.coupon.domain.Coupon;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "product")
@@ -47,7 +39,7 @@ public class Product {
     private Integer discount;
 
     @Column(nullable = false, updatable = false, insertable = false,
-        columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private Date registeredAt;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -57,13 +49,13 @@ public class Product {
     private Double ratingAvg;
 
     public Product(Long id, Category category, String name, int price, int stock, String imageUrl,
-        String detailImageUrl, String nutritionInfoUrl, Nutrition nutrition) {
+                   String detailImageUrl, String nutritionInfoUrl, Nutrition nutrition) {
         this(id, category, name, price, stock, imageUrl, detailImageUrl, nutritionInfoUrl, 0,
-            new Date(), nutrition, 0.0);
+                new Date(), nutrition, 0.0);
     }
 
     public Product(Category category, String name, int price, int stock, String imageUrl,
-        String detailImageUrl, Nutrition nutrition) {
+                   String detailImageUrl, Nutrition nutrition) {
         this(null, category, name, price, stock, imageUrl, detailImageUrl, "", nutrition);
     }
 
@@ -104,8 +96,12 @@ public class Product {
         return Objects.hash(id);
     }
 
-    public double getMaxDiscount(Coupon coupon) {
-        double maxDiscount = this.price * coupon.getPercentage()/100;
-        return maxDiscount > coupon.getMaxDiscount() ? coupon.getMaxDiscount() : maxDiscount;
+    public Integer getMaxDiscount(Coupon coupon) {
+        Integer maxDiscount = coupon.getMaxDiscount();
+
+        if (coupon.isPercentageCoupon()) {
+            return Math.min(maxDiscount, this.price * coupon.getPercentage() / 100);
+        }
+        return maxDiscount;
     }
 }

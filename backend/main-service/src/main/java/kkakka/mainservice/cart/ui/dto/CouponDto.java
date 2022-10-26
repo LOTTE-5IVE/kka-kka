@@ -11,14 +11,15 @@ public class CouponDto {
 
     private Long id;
     private String name;
+    private Integer percentage;
     private Integer maxDiscount;
     private Integer minOrderPrice;
 
     public static CouponDto toDto(Coupon coupon) {
         return new CouponDto(coupon.getId(),
                 coupon.getName(),
+                coupon.getPercentage(),
                 coupon.getMaxDiscount(),
                 coupon.getMinOrderPrice());
     }
-
 }

@@ -112,4 +112,8 @@ public class Coupon {
     public boolean isDeleted() {
         return this.isDeleted;
     }
+
+    public boolean isPercentageCoupon() {
+        return this.percentage > 0 || this.percentage != null ? true : false;
+    }
 }
