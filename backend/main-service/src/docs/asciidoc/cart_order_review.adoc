@@ -67,8 +67,11 @@ include::{snippets}/removeCartItem-success/http-response.adoc[]
 
 - Request
 
-include::{snippets}/removeCartItem-success/http-request.adoc[]
+include::{snippets}/applyCartItemCoupon-success/http-request.adoc[]
 
+- Response
+
+include::{snippets}/applyCartItemCoupon-success/http-response.adoc[]
 
 == Order
 === 주문
