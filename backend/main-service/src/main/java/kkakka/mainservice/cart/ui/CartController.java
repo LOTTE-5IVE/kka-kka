@@ -49,7 +49,7 @@ public class CartController {
                                                        @PathVariable("couponId") Long couponId,
                                                        @AuthenticationPrincipal LoginMember loginMember) {
         // TODO : 멤버 카트아이템 검증 추가
-        CartItemDto cartItemDto = cartService.applyCouponCartItem(cartItemId, couponId);
+        CartItemDto cartItemDto = cartService.applyCouponCartItem(cartItemId, couponId, loginMember);
         return ResponseEntity.status(HttpStatus.OK).body(cartItemDto);
     }
 }

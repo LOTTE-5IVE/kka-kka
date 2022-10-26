@@ -85,9 +85,10 @@ public class CartService {
     }
 
     @Transactional
-    public CartItemDto applyCouponCartItem(Long cartItemId, Long couponId) {
+    public CartItemDto applyCouponCartItem(Long cartItemId, Long couponId, LoginMember loginMember) {
+        Long loginMemberId = loginMember.getId();
 
-        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(KkaKkaException::new);
+        CartItem cartItem = cartItemRepository.findByIdandMemberId(cartItemId, loginMemberId).orElseThrow(KkaKkaException::new);
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
         cartItem.applyCoupon(coupon);
         Integer discountedPrice = cartItem.getDiscountedPrice(coupon);

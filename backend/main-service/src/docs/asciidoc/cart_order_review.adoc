@@ -63,6 +63,12 @@ include::{snippets}/removeCartItem-success/http-request.adoc[]
 
 include::{snippets}/removeCartItem-success/http-response.adoc[]
 
+=== 장바구니 쿠폰 적용 성공
+
+- Request
+
+include::{snippets}/removeCartItem-success/http-request.adoc[]
+
 
 == Order
 === 주문
