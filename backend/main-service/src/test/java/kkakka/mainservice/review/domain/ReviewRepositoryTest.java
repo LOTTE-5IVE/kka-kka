@@ -80,8 +80,9 @@ public class ReviewRepositoryTest extends TestContext {
         );
         orderRepository.save(
                 Order.create(member,
-                        Recipient.from(RecipientDto.create(member.getName(), member.getPhone(),
-                                member.getAddress())), product.getPrice(), List.of(productOrder)));
+                        Recipient.from(RecipientDto.create(member.getName(), member.getEmail(),
+                                member.getPhone(), member.getAddress())), product.getPrice(),
+                        List.of(productOrder)));
 
         final Review review = reviewRepository.save(
                 Review.create("test-review", 5.0, member, productOrder)
@@ -128,8 +129,9 @@ public class ReviewRepositoryTest extends TestContext {
         );
         orderRepository.save(
                 Order.create(member,
-                        Recipient.from(RecipientDto.create(member.getName(), member.getPhone(),
-                                member.getAddress())), product.getPrice(), List.of(productOrder)));
+                        Recipient.from(RecipientDto.create(member.getName(), member.getEmail(),
+                                member.getPhone(), member.getAddress())), product.getPrice(),
+                        List.of(productOrder)));
 
         final Review review_1 = reviewRepository.save(
                 Review.create("test-review", 5.0, member, productOrder)

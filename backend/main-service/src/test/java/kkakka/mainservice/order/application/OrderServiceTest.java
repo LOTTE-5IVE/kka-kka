@@ -94,8 +94,8 @@ class OrderServiceTest extends TestContext {
         productOrderDtos.add(productOrderDto2);
 
         OrderRequest orderRequest = new OrderRequest(
-                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getPhone(),
-                        TEST_MEMBER_01.getAddress()), productOrderDtos);
+                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(), TEST_MEMBER_01.getAddress()), productOrderDtos);
 
         //when
         Long orderId = orderService.order(
@@ -118,9 +118,8 @@ class OrderServiceTest extends TestContext {
         productOrderDtos.add(productOrderDto1);
 
         OrderRequest orderRequest = new OrderRequest(
-                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getPhone(),
-                        TEST_MEMBER_01.getAddress()),
-                productOrderDtos);
+                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(), TEST_MEMBER_01.getAddress()), productOrderDtos);
 
         //when
         //then

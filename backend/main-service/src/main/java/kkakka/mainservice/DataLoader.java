@@ -70,7 +70,8 @@ public class DataLoader {
                 ));
 
         Recipient testRecipient = Recipient.from(RecipientDto.create(
-                testMember.getName(), testMember.getPhone(), testMember.getAddress()
+                testMember.getName(), testMember.getEmail(), testMember.getPhone(),
+                testMember.getAddress()
         ));
         orderRepository.save(
                 Order.create(testMember, testRecipient, testProduct.getPrice(), productOrders));

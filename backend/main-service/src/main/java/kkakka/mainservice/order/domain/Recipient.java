@@ -16,13 +16,15 @@ public class Recipient {
 
     @Column(name = "recipient_name")
     private String name;
+    @Column(name = "recipient_email")
+    private String email;
     @Column(name = "recipient_phone")
     private String phone;
     @Column(name = "recipient_address")
     private String address;
 
     public static Recipient from(RecipientDto recipientDto) {
-        return new Recipient(recipientDto.getName(), recipientDto.getPhone(),
+        return new Recipient(recipientDto.getName(), recipientDto.getEmail(), recipientDto.getPhone(),
                 recipientDto.getAddress());
     }
 }

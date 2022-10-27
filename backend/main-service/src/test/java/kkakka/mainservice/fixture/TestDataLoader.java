@@ -128,8 +128,8 @@ public class TestDataLoader implements CommandLineRunner {
                 PRODUCT_ORDER_3, PRODUCT_ORDER_4, PRODUCT_ORDER_5);
         ORDER = orderRepository.save(
                 Order.create(MEMBER,
-                        Recipient.from(RecipientDto.create(MEMBER.getName(), MEMBER.getPhone(),
-                                MEMBER.getAddress())),
+                        Recipient.from(RecipientDto.create(MEMBER.getName(), MEMBER.getEmail(),
+                                MEMBER.getPhone(), MEMBER.getAddress())),
                         productOrders.stream().mapToInt(ProductOrder::getPrice).sum(),
                         productOrders)
         );

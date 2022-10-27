@@ -63,8 +63,8 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         productOrderDtos.add(productOrderDto1);
         productOrderDtos.add(productOrderDto2);
         OrderRequest orderRequest = new OrderRequest(
-                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getPhone(),
-                        TEST_MEMBER_01.getAddress()),
+                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(), TEST_MEMBER_01.getAddress()),
                 productOrderDtos
         );
 
@@ -134,8 +134,8 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
 
     private void 주문_요청함(String accessToken, Long productId) {
         OrderRequest orderRequest = new OrderRequest(
-                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getPhone(),
-                        TEST_MEMBER_01.getAddress()),
+                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(), TEST_MEMBER_01.getAddress()),
                 List.of(new ProductOrderDto(productId, 1))
         );
 

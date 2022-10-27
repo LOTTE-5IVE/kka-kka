@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 public class RecipientResponse {
 
     private String name;
+    private String email;
     private String phone;
     private String address;
 
-    public static RecipientResponse create(String name, String phone, String address) {
-        return new RecipientResponse(name, phone, address);
+    public static RecipientResponse create(String name, String email, String phone, String address) {
+        return new RecipientResponse(name, email, phone, address);
     }
 }

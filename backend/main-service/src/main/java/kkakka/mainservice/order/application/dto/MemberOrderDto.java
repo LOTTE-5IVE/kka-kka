@@ -49,16 +49,17 @@ public class MemberOrderDto {
     private static class RecipientDto {
 
         private String name;
+        private String email;
         private String phone;
         private String address;
 
         public static RecipientDto toDto(Recipient recipient) {
-            return new RecipientDto(recipient.getName(), recipient.getPhone(),
+            return new RecipientDto(recipient.getName(), recipient.getEmail(), recipient.getPhone(),
                     recipient.getAddress());
         }
 
         public RecipientResponse toResponse() {
-            return RecipientResponse.create(this.name, this.phone, this.address);
+            return RecipientResponse.create(this.name, this.email, this.phone, this.address);
         }
     }
 }
