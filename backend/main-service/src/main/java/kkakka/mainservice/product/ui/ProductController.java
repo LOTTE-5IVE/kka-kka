@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.common.dto.PageableResponse;
+import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
+import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.product.application.ProductService;
 import kkakka.mainservice.product.application.dto.ProductDetailDto;
 import kkakka.mainservice.product.application.dto.ProductDto;
@@ -42,26 +44,11 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<PageableResponse<List<ProductResponse>>> showAllProducts(
             @RequestParam(value = "category", required = false) Long categoryId,
-            Pageable pageable) {
-        final Page<ProductDto> productDtos = productService.showAllProductsWithCategory(
-                Optional.ofNullable(categoryId), pageable);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(dtoToPageableResponse(pageable, productDtos));
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<PageableResponse<List<ProductResponse>>> showProductsBySearch(
+            @RequestParam(value = "sortBy", defaultValue = "NON", required = false) String sortBy,
             @RequestParam(value = "keyword", required = false) String keyword,
-            Pageable pageable
-    ) {
-        if (Optional.ofNullable(keyword).isEmpty()) {
-            final Page<ProductDto> productDtos = productService.showAllProductsWithCategory(
-                    Optional.empty(), pageable);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(dtoToPageableResponse(pageable, productDtos));
-        }
-
-        Page<ProductDto> productDtos = productService.showProductsBySearch(keyword, pageable);
+            Pageable pageable) {
+        final Page<ProductDto> productDtos = productService.showAllProductsWithCategoryAndSearch(
+                Optional.ofNullable(categoryId), sortBy, keyword, pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(dtoToPageableResponse(pageable, productDtos));
     }

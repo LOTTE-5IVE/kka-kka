@@ -19,4 +19,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
 
     List<Product> findByCategoryId(@Param("categoryId") Long categoryId);
+
+    @Query(value = "select p from Product p order by p.ratingAvg desc",
+            countQuery = "select count(p) from Product p order by p.ratingAvg desc")
+    Page<Product> findAllOrderByRatingAvg(Pageable pageable);
 }

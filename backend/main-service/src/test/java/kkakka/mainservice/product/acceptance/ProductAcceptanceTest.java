@@ -89,7 +89,7 @@ public class ProductAcceptanceTest extends DocumentConfiguration {
                 .filter(document("products-show-search"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/api/products/search?keyword=제로 쿠키")
+                .get("/api/products?keyword=제로 쿠키")
                 .then().log().all()
                 .extract();
 
