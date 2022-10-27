@@ -19,6 +19,7 @@ import kkakka.mainservice.order.application.dto.ProductOrderDto;
 import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.ui.dto.OrderRequest;
+import kkakka.mainservice.order.ui.dto.RecipientRequest;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,10 +66,14 @@ class OrderServiceTest extends TestContext {
         List<ProductOrderDto> productOrderDtos = new ArrayList<>();
         productOrderDtos.add(productOrderDto1);
 
-        OrderRequest orderRequest = new OrderRequest(productOrderDtos);
+        OrderRequest orderRequest = new OrderRequest(
+                new RecipientRequest(), productOrderDtos
+        );
 
         //when
-        Long orderId = orderService.order(OrderDto.create(member.getId(), orderRequest));
+        Long orderId = orderService.order(
+                OrderDto.create(member.getId(), orderRequest.toRecipientDto(), orderRequest)
+        );
 
         //then
         Order getOrder = orderRepository.findById(orderId).orElseThrow();
@@ -88,10 +93,13 @@ class OrderServiceTest extends TestContext {
         productOrderDtos.add(productOrderDto1);
         productOrderDtos.add(productOrderDto2);
 
-        OrderRequest orderRequest = new OrderRequest(productOrderDtos);
+        OrderRequest orderRequest = new OrderRequest(
+                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAddress()), productOrderDtos);
 
         //when
-        Long orderId = orderService.order(OrderDto.create(member.getId(), orderRequest));
+        Long orderId = orderService.order(
+                OrderDto.create(member.getId(), orderRequest.toRecipientDto(), orderRequest));
 
         //then
         Order getOrder = orderRepository.findById(orderId).orElseThrow();
@@ -109,12 +117,16 @@ class OrderServiceTest extends TestContext {
         List<ProductOrderDto> productOrderDtos = new ArrayList<>();
         productOrderDtos.add(productOrderDto1);
 
-        OrderRequest orderRequest = new OrderRequest(productOrderDtos);
+        OrderRequest orderRequest = new OrderRequest(
+                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAddress()),
+                productOrderDtos);
 
         //when
         //then
         Assertions.assertThrows(OutOfStockException.class, () -> {
-            orderService.order(OrderDto.create(member.getId(), orderRequest));
+            orderService.order(
+                    OrderDto.create(member.getId(), orderRequest.toRecipientDto(), orderRequest));
         });
     }
 }

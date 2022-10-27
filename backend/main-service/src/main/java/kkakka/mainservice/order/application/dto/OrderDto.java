@@ -13,9 +13,14 @@ import lombok.NoArgsConstructor;
 public class OrderDto {
 
     private Long memberId;
+    private RecipientDto recipientDto;
     private List<ProductOrderDto> productOrders;
 
-    public static OrderDto create(Long memberId, OrderRequest orderRequest) {
-        return new OrderDto(memberId,orderRequest.getProductOrders());
+    public static OrderDto create(Long memberId, RecipientDto recipientDto, OrderRequest orderRequest) {
+        return new OrderDto(
+                memberId,
+                recipientDto,
+                orderRequest.getProductOrders()
+        );
     }
 }

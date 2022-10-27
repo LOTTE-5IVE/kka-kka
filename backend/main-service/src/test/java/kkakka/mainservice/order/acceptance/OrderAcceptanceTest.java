@@ -21,6 +21,7 @@ import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.order.application.dto.ProductOrderDto;
 import kkakka.mainservice.order.ui.dto.OrderRequest;
+import kkakka.mainservice.order.ui.dto.RecipientRequest;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
 import org.hibernate.Session;
 import org.junit.jupiter.api.AfterEach;
@@ -61,7 +62,11 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         List<ProductOrderDto> productOrderDtos = new ArrayList<>();
         productOrderDtos.add(productOrderDto1);
         productOrderDtos.add(productOrderDto2);
-        OrderRequest orderRequest = new OrderRequest(productOrderDtos);
+        OrderRequest orderRequest = new OrderRequest(
+                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAddress()),
+                productOrderDtos
+        );
 
         //when
         final ExtractableResponse<Response> response = RestAssured
@@ -129,6 +134,8 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
 
     private void 주문_요청함(String accessToken, Long productId) {
         OrderRequest orderRequest = new OrderRequest(
+                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAddress()),
                 List.of(new ProductOrderDto(productId, 1))
         );
 
