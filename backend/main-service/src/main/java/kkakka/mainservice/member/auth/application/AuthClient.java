@@ -9,11 +9,11 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(value = "auth-service", url = "${auth.client-url}",
+@FeignClient(value = "auth-service",
         configuration = {FeignConfig.class, AuthErrorDecoder.class})
 public interface AuthClient {
 
-    @PostMapping("/auth")
+    @PostMapping("/api/auth")
     @Headers("Content-Type: application/json;charset=utf-8")
     UserProfile getUserProfile(
             @RequestBody SocialProviderCodeDto socialProviderCodeDto
