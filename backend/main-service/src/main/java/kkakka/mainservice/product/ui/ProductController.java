@@ -53,6 +53,19 @@ public class ProductController {
                 .body(dtoToPageableResponse(pageable, productDtos));
     }
 
+    @GetMapping("/recommend")
+    public ResponseEntity<PageableResponse<List<ProductResponse>>> showProductsByRecommendation(
+            @AuthenticationPrincipal LoginMember loginMember,
+            Pageable pageable
+    ) {
+        final Page<ProductDto> productDtos = productService.showProductsByRecommendation(
+                loginMember,
+                pageable
+        );
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(dtoToPageableResponse(pageable, productDtos));
+    }
+
     private PageableResponse<List<ProductResponse>> dtoToPageableResponse(Pageable pageable,
             Page<ProductDto> productDtos) {
 

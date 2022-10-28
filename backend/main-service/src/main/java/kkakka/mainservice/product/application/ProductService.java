@@ -2,6 +2,7 @@ package kkakka.mainservice.product.application;
 
 import java.util.Optional;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.product.application.dto.CategoryDto;
 import kkakka.mainservice.product.application.dto.NutritionDto;
 import kkakka.mainservice.product.application.dto.ProductDetailDto;
@@ -46,5 +47,17 @@ public class ProductService {
                                 CategoryDto.toDto(product.getCategory())
                         )
                 );
+    }
+
+    public Page<ProductDto> showProductsByRecommendation(LoginMember loginMember,
+            Pageable pageable) {
+        final ProductRecommender productRecommender = RecommendStrategyFactory.get(
+                loginMember.getAuthority());
+
+        return productRecommender.recommend(Optional.ofNullable(loginMember.getId()), pageable)
+                .map(product -> ProductDto.toDto(
+                        product,
+                        CategoryDto.toDto(product.getCategory())
+                ));
     }
 }
