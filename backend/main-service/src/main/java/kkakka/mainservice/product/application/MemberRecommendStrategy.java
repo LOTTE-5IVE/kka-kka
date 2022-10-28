@@ -1,11 +1,13 @@
 package kkakka.mainservice.product.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
-import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.exception.InvalidRecommendResponseException;
 import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
@@ -33,7 +35,7 @@ import org.springframework.web.client.RestTemplate;
 @Transactional(readOnly = true)
 public class MemberRecommendStrategy implements ProductRecommender {
 
-    private static final int RECENT_ORDER_LIMIT = 5;
+    private static final int RECENT_ORDER_LIMIT = 3;
 
     // TODO: auth server 분리 반영 후 common 에 bean 등록 필요
     private final RestTemplate restTemplate;
@@ -45,36 +47,28 @@ public class MemberRecommendStrategy implements ProductRecommender {
 
     @Override
     public Page<Product> recommend(Optional<Long> memberId, Pageable pageable) {
-        final Member member = validateMember(Optional.of(1L));
-
-        /*
-            TODO: 추천 서버에 요청
-                1. 구매한 상품 중 평가를 높게 남긴 상품
-                2. 최근 구매 상품
-        */
+        final Member member = validateMember(memberId);
 
         final List<Review> topRatedReview = reviewRepository.findTopRatingReviewByMemberId(
                 member.getId(), Pageable.ofSize(1));
 
         if (topRatedReview.isEmpty()) {
-            // TODO: 그냥 최근 주문한 상품 중에서 주기
-
             final List<Order> orders = orderRepository.findAllByMemberId(member.getId(),
                     Pageable.ofSize(RECENT_ORDER_LIMIT));
-            // TODO: 아직 주문한 적 없다면 best 추천
 
-            final List<ProductOrder> productOrders = orders.stream()
-                    .flatMap(order -> order.getProductOrders().stream())
-                    .collect(Collectors.toList());
-
-            final List<Product> orderedProducts = orders.stream()
-                    .flatMap(order -> order.getProductOrders().stream())
-                    .map(ProductOrder::getProduct)
-                    .distinct()
-                    .collect(Collectors.toList());
+            if (orders.isEmpty()) {
+                return recommendWithTopRated(pageable);
+            }
+            return recommendWithRecentOrderRandom(pageable, orders);
         }
 
         final Product pivotProduct = topRatedReview.get(0).getProductOrder().getProduct();
+        final List<RecommendProductDto> recommendProductDtos = requestRecommendation(
+                pivotProduct);
+        return findRecommendedProducts(pageable, recommendProductDtos);
+    }
+
+    private List<RecommendProductDto> requestRecommendation(Product pivotProduct) {
         final ResponseEntity<String> response = restTemplate.exchange(
                 "http://localhost:8000/recommendation/" + pivotProduct.getId(),
                 HttpMethod.GET,
@@ -82,20 +76,48 @@ public class MemberRecommendStrategy implements ProductRecommender {
                 String.class
         );
 
+        return convertResponseBody(response);
+    }
+
+    private Page<Product> recommendWithRecentOrderRandom(Pageable pageable, List<Order> orders) {
+        final List<Product> orderedProducts = orders.stream()
+                .flatMap(order -> order.getProductOrders().stream())
+                .map(ProductOrder::getProduct)
+                .distinct()
+                .collect(Collectors.toList());
+
+        final Random random = new Random();
+        final int randomIdx = random.nextInt(orderedProducts.size());
+
+        final Product pivotProduct = orderedProducts.get(randomIdx);
+
+        final List<RecommendProductDto> recommendProductDtos = requestRecommendation(pivotProduct);
+        return findRecommendedProducts(pageable, recommendProductDtos);
+    }
+
+    private Page<Product> recommendWithTopRated(Pageable pageable) {
+        return productRepository.findAllOrderByRatingAvg(pageable);
+    }
+
+    private PageImpl<Product> findRecommendedProducts(Pageable pageable,
+            List<RecommendProductDto> recommendProductDtos) {
+        final List<Long> productIds = recommendProductDtos.stream()
+                .map(RecommendProductDto::getId)
+                .collect(Collectors.toList())
+                .subList(0, pageable.getPageSize());
+
+        return new PageImpl<>(productRepository.findAllById(productIds));
+    }
+
+    private List<RecommendProductDto> convertResponseBody(ResponseEntity<String> response) {
         try {
-            final List<RecommendProductDto> recommendProductDtos = objectMapper.readValue(
+            return objectMapper.readValue(
                     response.getBody(),
                     new TypeReference<List<RecommendProductDto>>() {
                     }
             );
-            final List<Long> productIds = recommendProductDtos.stream()
-                    .map(RecommendProductDto::getId)
-                    .collect(Collectors.toList())
-                    .subList(0, pageable.getPageSize());
-
-            return new PageImpl<>(productRepository.findAllById(productIds));
-        } catch (Exception e) {
-            throw new KkaKkaException();
+        } catch (JsonProcessingException e) {
+            throw new InvalidRecommendResponseException();
         }
     }
 

@@ -1,4 +1,4 @@
-package kkakka.mainservice.product;
+package kkakka.mainservice.product.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
