@@ -1,4 +1,4 @@
-package kkakka.mainservice.product.application;
+package kkakka.mainservice.product.application.recommend.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

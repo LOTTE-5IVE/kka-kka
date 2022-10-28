@@ -1,4 +1,4 @@
-package kkakka.mainservice.product.application;
+package kkakka.mainservice.product.application.recommend;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -14,6 +14,7 @@ import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
+import kkakka.mainservice.product.application.recommend.dto.RecommendProductDto;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.review.domain.Review;
@@ -91,7 +92,7 @@ public class MemberRecommendStrategy implements ProductRecommender {
 
         final Product pivotProduct = orderedProducts.get(randomIdx);
         final List<RecommendProductDto> recommendProductDtos = requestRecommendation(pivotProduct);
-        
+
         return findRecommendedProducts(pageable, recommendProductDtos);
     }
 
