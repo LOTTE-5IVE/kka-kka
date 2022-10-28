@@ -38,6 +38,8 @@ import org.springframework.web.client.RestTemplate;
 @Profile("!test")
 public class MemberRecommendStrategy implements ProductRecommender {
 
+    // TODO: config-server 로 분리
+    private static final String RECOMMENDATION_SERVER_URL = "http://localhost:8000/recommendation/";
     private static final int RECENT_ORDER_LIMIT = 3;
 
     // TODO: auth server 분리 반영 후 common 에 bean 등록 필요
@@ -73,7 +75,7 @@ public class MemberRecommendStrategy implements ProductRecommender {
 
     private List<RecommendProductDto> requestRecommendation(Product pivotProduct) {
         final ResponseEntity<String> response = restTemplate.exchange(
-                "http://localhost:8000/recommendation/" + pivotProduct.getId(),
+                RECOMMENDATION_SERVER_URL + pivotProduct.getId(),
                 HttpMethod.GET,
                 new HttpEntity<>(new HttpHeaders()),
                 String.class
