@@ -26,21 +26,6 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
         this.queryFactory = jpaQueryFactory;
     }
 
-    public Page<Product> findBySearch(SearchWords searchWords, Pageable pageable) {
-        final List<Product> result = queryFactory.selectFrom(QProduct.product)
-                .leftJoin(QProduct.product.category, QCategory.category)
-                .fetchJoin()
-                .where(
-                        categoryNameEq(searchWords)
-                                .or(productNameLike(searchWords))
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        return new PageImpl<>(result, pageable, result.size());
-    }
-
     public Page<Product> findAllByCategoryWithSort(
             Optional<Long> categoryId,
             String sortBy,
@@ -81,25 +66,6 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
         }
 
         return new OrderSpecifier<Long>(Order.DESC, QProduct.product.id);
-    }
-
-    public Page<Product> findAllByCategoryIdOrderByRatingAvg(Optional<Long> categoryId,
-            Pageable pageable) {
-        final BooleanBuilder builder = new BooleanBuilder();
-        categoryId.ifPresent((cId) -> {
-            builder.and(QCategory.category.id.eq(cId));
-        });
-
-        final List<Product> result = queryFactory.selectFrom(QProduct.product)
-                .leftJoin(QProduct.product.category, QCategory.category)
-                .fetchJoin()
-                .where(builder)
-                .orderBy(QProduct.product.ratingAvg.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        return new PageImpl<>(result, pageable, result.size());
     }
 
     private BooleanBuilder categoryNameEq(SearchWords searchWords) {
