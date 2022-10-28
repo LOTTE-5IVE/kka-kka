@@ -23,4 +23,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select p from Product p order by p.ratingAvg desc",
             countQuery = "select count(p) from Product p order by p.ratingAvg desc")
     Page<Product> findAllOrderByRatingAvg(Pageable pageable);
+
+    @Query(value = "select p from Product p where p.id not in :productIds order by p.ratingAvg desc",
+            countQuery = "select count(p) from Product p where p.id not in :productIds order by p.ratingAvg desc")
+    Page<Product> findAllOrderByRatingAvg(@Param("productIds") List<Long> productIds,
+            Pageable pageable);
 }
