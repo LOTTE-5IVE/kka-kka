@@ -22,6 +22,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductRepositorySupport productRepositorySupport;
+    private final MemberRecommendStrategy memberRecommendStrategy;
 
     public ProductDetailDto showProductDetail(Long productId) {
         Product product = productRepository.findById(productId)
@@ -53,7 +54,6 @@ public class ProductService {
             Pageable pageable) {
         final ProductRecommender productRecommender = RecommendStrategyFactory.get(
                 loginMember.getAuthority());
-
         return productRecommender.recommend(Optional.ofNullable(loginMember.getId()), pageable)
                 .map(product -> ProductDto.toDto(
                         product,
