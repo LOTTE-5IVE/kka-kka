@@ -90,8 +90,8 @@ public class MemberRecommendStrategy implements ProductRecommender {
         final int randomIdx = random.nextInt(orderedProducts.size());
 
         final Product pivotProduct = orderedProducts.get(randomIdx);
-
         final List<RecommendProductDto> recommendProductDtos = requestRecommendation(pivotProduct);
+        
         return findRecommendedProducts(pageable, recommendProductDtos);
     }
 
@@ -99,8 +99,10 @@ public class MemberRecommendStrategy implements ProductRecommender {
         return productRepository.findAllOrderByRatingAvg(pageable);
     }
 
-    private PageImpl<Product> findRecommendedProducts(Pageable pageable,
-            List<RecommendProductDto> recommendProductDtos) {
+    private PageImpl<Product> findRecommendedProducts(
+            Pageable pageable,
+            List<RecommendProductDto> recommendProductDtos
+    ) {
         final List<Long> productIds = recommendProductDtos.stream()
                 .map(RecommendProductDto::getId)
                 .collect(Collectors.toList())
