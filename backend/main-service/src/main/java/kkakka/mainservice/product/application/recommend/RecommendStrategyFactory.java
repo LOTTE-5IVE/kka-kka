@@ -5,11 +5,13 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import kkakka.mainservice.member.auth.ui.Authority;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class RecommendStrategyFactory {
+@Profile("!test")
+public class RecommendStrategyFactory implements RecommenderFactory {
 
     private static final Map<Authority, ProductRecommender> recommenderFactory = new HashMap<>();
 
@@ -22,7 +24,7 @@ public class RecommendStrategyFactory {
         recommenderFactory.put(Authority.ANONYMOUS, anonymousRecommendStrategy);
     }
 
-    public static ProductRecommender get(Authority authority) {
+    public ProductRecommender get(Authority authority) {
         return recommenderFactory.get(authority);
     }
 }

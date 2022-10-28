@@ -9,6 +9,7 @@ import kkakka.mainservice.product.application.dto.ProductDetailDto;
 import kkakka.mainservice.product.application.dto.ProductDto;
 import kkakka.mainservice.product.application.recommend.ProductRecommender;
 import kkakka.mainservice.product.application.recommend.RecommendStrategyFactory;
+import kkakka.mainservice.product.application.recommend.RecommenderFactory;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.SearchWords;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
@@ -24,6 +25,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductRepositorySupport productRepositorySupport;
+    private final RecommenderFactory recommenderFactory;
 
     public ProductDetailDto showProductDetail(Long productId) {
         Product product = productRepository.findById(productId)
@@ -53,7 +55,7 @@ public class ProductService {
 
     public Page<ProductDto> showProductsByRecommendation(LoginMember loginMember,
             Pageable pageable) {
-        final ProductRecommender productRecommender = RecommendStrategyFactory.get(
+        final ProductRecommender productRecommender = recommenderFactory.get(
                 loginMember.getAuthority());
         return productRecommender.recommend(Optional.ofNullable(loginMember.getId()), pageable)
                 .map(product -> ProductDto.toDto(

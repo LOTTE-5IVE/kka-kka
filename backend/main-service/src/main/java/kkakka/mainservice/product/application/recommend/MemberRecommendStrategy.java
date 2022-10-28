@@ -20,6 +20,7 @@ import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.review.domain.Review;
 import kkakka.mainservice.review.domain.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +35,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Profile("!test")
 public class MemberRecommendStrategy implements ProductRecommender {
 
     private static final int RECENT_ORDER_LIMIT = 3;
@@ -109,7 +111,17 @@ public class MemberRecommendStrategy implements ProductRecommender {
                 .collect(Collectors.toList())
                 .subList(0, pageable.getPageSize());
 
-        return new PageImpl<>(productRepository.findAllById(productIds));
+        final List<Product> recommendedProducts = productRepository.findAllById(productIds);
+        if (productIds.size() < pageable.getPageSize()) {
+            int numberRequired = pageable.getPageSize() - productIds.size();
+            recommendedProducts.addAll(
+                    productRepository.findAllOrderByRatingAvg(
+                            productIds,
+                            Pageable.ofSize(numberRequired)
+                    ).getContent()
+            );
+        }
+        return new PageImpl<>(recommendedProducts);
     }
 
     private List<RecommendProductDto> convertResponseBody(ResponseEntity<String> response) {
