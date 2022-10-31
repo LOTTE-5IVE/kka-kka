@@ -3,7 +3,6 @@ spring:
     config:
       uri: http://127.0.0.1:8888
       name: main-service
-      label: jar-test
   profiles:
     active: dev
     group:
