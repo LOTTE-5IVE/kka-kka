@@ -84,7 +84,7 @@ export default function payment() {
 
   return (
     <>
-      <div className="wrapper">
+      <div className="PaymentWrapper">
         <div className="title">
           <h2>주문/결제</h2>
         </div>
@@ -93,17 +93,17 @@ export default function payment() {
           <div className="orderList">
             <table>
               <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "30%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "40%" }} />
                 <col style={{ width: "15%" }} />
                 <col style={{ width: "20%" }} />
-                <col style={{ width: "5%" }} />
+                <col style={{ width: "10%" }} />
               </colgroup>
               <tbody>
                 {buyItem && (
                   <tr>
                     <td>
-                      <img width="96px" src={buyItem.image_url} />
+                      <img src={buyItem.image_url} />
                     </td>
                     <td>{buyItem.name}</td>
                     <td>x{buyQuantity}</td>
@@ -135,7 +135,7 @@ export default function payment() {
                   return (
                     <tr key={index}>
                       <td>
-                        <img width="96px" src={product.imageUrl} />
+                        <img src={product.imageUrl} />
                       </td>
                       <td>{product.productName}</td>
                       <td>x{product.quantity}</td>
@@ -198,15 +198,14 @@ export default function payment() {
           <div className="tableContents orderInfo">
             <table>
               <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "80%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "85%" }} />
               </colgroup>
               <tbody>
                 <tr>
                   <th scope="row">주문자</th>
                   <td>
                     <input
-                      id="oname"
                       className="inputTypeText"
                       placeholder=""
                       size="15"
@@ -218,27 +217,16 @@ export default function payment() {
                 <tr>
                   <th scope="row">이메일</th>
                   <td>
-                    <input
-                      id="oemail1"
-                      className="mailId"
-                      defaultValue=""
-                      type="text"
-                    />
-                    @{" "}
+                    <input className="mailId" defaultValue="" type="text" />@{" "}
                     <span className="mailAddress">
                       <span className="directInput ec-compact-etc">
                         <input
-                          id="oemail2"
                           placeholder="직접입력"
                           defaultValue={Selected}
                           type="text"
                         />
                       </span>
-                      <select
-                        id="oemail3"
-                        onChange={handleSelect}
-                        defaultValue={"DEFAULT"}
-                      >
+                      <select onChange={handleSelect} defaultValue={"DEFAULT"}>
                         <option value="DEFAULT" disabled>
                           -이메일 선택-
                         </option>
@@ -259,7 +247,7 @@ export default function payment() {
                 <tr>
                   <th scope="row">휴대전화</th>
                   <td>
-                    <select id="ophone1_1" defaultValue={"010"}>
+                    <select defaultValue={"010"}>
                       <option value="02">02</option>
                       <option value="031">031</option>
                       <option value="032">032</option>
@@ -286,21 +274,9 @@ export default function payment() {
                       <option value="019">019</option>
                     </select>
                     -
-                    <input
-                      id="ophone1_2"
-                      maxLength="4"
-                      size="4"
-                      defaultValue=""
-                      type="text"
-                    />
+                    <input maxLength="4" size="4" defaultValue="" type="text" />
                     -
-                    <input
-                      id="ophone1_3"
-                      maxLength="4"
-                      size="4"
-                      defaultValue=""
-                      type="text"
-                    />
+                    <input maxLength="4" size="4" defaultValue="" type="text" />
                   </td>
                 </tr>
                 <tr>
@@ -310,8 +286,6 @@ export default function payment() {
                   <td>
                     <div className="address_search">
                       <input
-                        id="ozipcode1"
-                        name="ozipcode1"
                         placeholder="우편번호"
                         className="inputTypeText"
                         type="text"
@@ -338,8 +312,6 @@ export default function payment() {
                 <tr>
                   <td>
                     <input
-                      id="oaddr1"
-                      name="oaddr1"
                       placeholder="기본주소"
                       className="inputTypeText"
                       type="text"
@@ -353,8 +325,6 @@ export default function payment() {
                 <tr>
                   <td>
                     <input
-                      id="oaddr1"
-                      name="oaddr1"
                       placeholder="상세주소"
                       className="inputTypeText"
                       type="text"
@@ -375,8 +345,8 @@ export default function payment() {
           <div className="tableContents cp">
             <table>
               <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "80%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "85%" }} />
               </colgroup>
               <tbody>
                 <tr>
@@ -397,8 +367,8 @@ export default function payment() {
           <div className="tableContents payInfo">
             <table>
               <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "80%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "85%" }} />
               </colgroup>
               <tbody>
                 <tr>
@@ -477,131 +447,418 @@ export default function payment() {
       </div>
 
       <style jsx>{`
-        .wrapper {
-          width: 70%;
-          margin: 0 auto;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .PaymentWrapper {
+            width: 1332px;
+            margin: 0 auto;
 
-          .title {
-            text-align: center;
+            .title {
+              text-align: center;
 
-            h2 {
-              padding: 0;
-              color: #3a3a3a;
-              font-size: 36px;
-              font-weight: 700;
-              line-height: 1;
-            }
-          }
-
-          .orderList {
-            margin-bottom: 10%;
-            border-bottom: 2px solid;
-            table {
-              border-collapse: collapse;
-              margin: 0 auto;
-              width: 98%;
-
-              tr:not(:last-child) {
-                height: 2vw;
-                border-bottom: 1.5px solid #d0cfcf;
+              h2 {
+                padding: 0;
+                color: #3a3a3a;
+                font-size: 36px;
+                font-weight: 700;
+                line-height: 1;
               }
+            }
 
-              td {
-                p {
-                  margin: 0;
+            .orderList {
+              margin-bottom: 133px;
+              border-bottom: 2px solid;
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 1305px;
 
-                  span {
-                    font-size: 14px;
-                    color: ${NGray};
-                    text-decoration: line-through;
+                tr:not(:last-child) {
+                  height: 103px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
+
+                td {
+                  p {
+                    margin: 0;
+
+                    span {
+                      font-size: 14px;
+                      color: ${NGray};
+                      text-decoration: line-through;
+                    }
+                  }
+
+                  img {
+                    width: 96px;
                   }
                 }
               }
             }
-          }
 
-          .tableTitle {
-            font-size: 20px;
-            font-weight: 500;
-            line-height: 2;
-            border-bottom: 2px solid;
-          }
+            .tableTitle {
+              font-size: 20px;
+              font-weight: 500;
+              line-height: 2;
+              border-bottom: 2px solid;
+            }
 
-          .tableContents {
-            margin-bottom: 10%;
+            .tableContents {
+              margin-bottom: 133px;
 
-            table {
-              border-collapse: collapse;
-              margin: 0 auto;
-              width: 98%;
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 1305px;
 
-              tr {
-                height: 5vw;
-                border-bottom: 1.5px solid #d0cfcf;
+                tr {
+                  height: 96px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
               }
             }
+
+            .orderInfo {
+              font-size: 20px;
+
+              input {
+                margin: 0 10px;
+                line-height: 40px;
+                padding: 0 0 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                background: #fff;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 1px solid #000;
+              }
+
+              select {
+                margin: 0 10px;
+                height: 40px;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #3a3a3a;
+                padding: 0 10px 0 13px;
+                border: 1px solid #000;
+              }
+
+              button {
+                margin: 0 10px;
+                line-height: 40px;
+                padding: 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 1px solid #000;
+              }
+            }
+
+            .cp {
+              td {
+                text-align: right;
+              }
+
+              tr:last-child {
+                background-color: #f8f8f8;
+              }
+            }
+
+            .payInfo {
+              td {
+                text-align: right;
+              }
+
+              tr:last-child {
+                background-color: #f8f8f8;
+              }
+            }
+
+            .payBtn {
+              width: 200px;
+              margin: 0 auto 50px;
+            }
           }
+        }
 
-          .orderInfo {
-            font-size: 20px;
+        @media screen and (max-width: 768px) {
+          /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
+          .PaymentWrapper {
+            width: 1332px;
+            margin: 0 auto;
 
-            input {
-              margin: 0 10px;
-              line-height: 40px;
-              padding: 0 0 0 13px;
-              border: 0 none;
-              color: #3a3a3a;
-              background: #fff;
-              border-radius: 8px;
-              font-size: 16px;
-              border: 1px solid #000;
+            .title {
+              text-align: center;
+
+              h2 {
+                padding: 0;
+                color: #3a3a3a;
+                font-size: 36px;
+                font-weight: 700;
+                line-height: 1;
+              }
             }
 
-            select {
-              margin: 0 10px;
-              height: 40px;
-              border-radius: 8px;
-              font-size: 16px;
-              color: #3a3a3a;
-              padding: 0 10px 0 13px;
-              border: 1px solid #000;
+            .orderList {
+              margin-bottom: 133px;
+              border-bottom: 2px solid;
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 1305px;
+
+                tr:not(:last-child) {
+                  height: 103px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
+
+                td {
+                  p {
+                    margin: 0;
+
+                    span {
+                      font-size: 14px;
+                      color: ${NGray};
+                      text-decoration: line-through;
+                    }
+                  }
+
+                  img {
+                    width: 96px;
+                  }
+                }
+              }
             }
 
-            button {
-              margin: 0 10px;
-              line-height: 40px;
-              padding: 0 13px;
-              border: 0 none;
-              color: #3a3a3a;
-              border-radius: 8px;
-              font-size: 16px;
-              border: 1px solid #000;
+            .tableTitle {
+              font-size: 20px;
+              font-weight: 500;
+              line-height: 2;
+              border-bottom: 2px solid;
+            }
+
+            .tableContents {
+              margin-bottom: 133px;
+
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 1305px;
+
+                tr {
+                  height: 96px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
+              }
+            }
+
+            .orderInfo {
+              font-size: 20px;
+
+              input {
+                margin: 0 10px;
+                line-height: 40px;
+                padding: 0 0 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                background: #fff;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 1px solid #000;
+              }
+
+              select {
+                margin: 0 10px;
+                height: 40px;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #3a3a3a;
+                padding: 0 10px 0 13px;
+                border: 1px solid #000;
+              }
+
+              button {
+                margin: 0 10px;
+                line-height: 40px;
+                padding: 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 1px solid #000;
+              }
+            }
+
+            .cp {
+              td {
+                text-align: right;
+              }
+
+              tr:last-child {
+                background-color: #f8f8f8;
+              }
+            }
+
+            .payInfo {
+              td {
+                text-align: right;
+              }
+
+              tr:last-child {
+                background-color: #f8f8f8;
+              }
+            }
+
+            .payBtn {
+              width: 200px;
+              margin: 0 auto 50px;
             }
           }
+        }
 
-          .cp {
-            td {
-              text-align: right;
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .PaymentWrapper {
+            width: 460px;
+            margin: 0 auto;
+
+            .title {
+              text-align: center;
+
+              h2 {
+                padding: 0;
+                color: #3a3a3a;
+                font-size: 36px;
+                font-weight: 700;
+                line-height: 1;
+              }
             }
 
-            tr:last-child {
-              background-color: #f8f8f8;
-            }
-          }
+            .orderList {
+              margin-bottom: 60px;
+              border-bottom: 2px solid;
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 450px;
 
-          .payInfo {
-            td {
-              text-align: right;
+                tr:not(:last-child) {
+                  height: 70px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
+
+                td {
+                  font-size: 12px;
+
+                  p {
+                    margin: 0;
+
+                    span {
+                      font-size: 14px;
+                      color: ${NGray};
+                      text-decoration: line-through;
+                    }
+                  }
+
+                  img {
+                    width: 64px;
+                  }
+                }
+              }
             }
 
-            tr:last-child {
-              background-color: #f8f8f8;
+            .tableTitle {
+              font-size: 20px;
+              font-weight: 500;
+              line-height: 2;
+              border-bottom: 2px solid;
             }
-          }
 
-          .payBtn {
-            width: 20%;
-            margin: 0 auto 50px;
+            .tableContents {
+              margin-bottom: 60px;
+
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 450px;
+
+                tr {
+                  height: 80px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
+              }
+            }
+
+            .orderInfo {
+              font-size: 15px;
+
+              input {
+                max-width: 300px;
+                height: 30px;
+                margin: 5px 10px;
+                line-height: 40px;
+                padding: 0 0 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                background: #fff;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 1px solid #000;
+              }
+
+              select {
+                margin: 0 10px;
+                width: 100px;
+                height: 30px;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #3a3a3a;
+                padding: 0 10px 0 13px;
+                border: 1px solid #000;
+              }
+
+              button {
+                margin: 0 10px;
+                width: 100px;
+                height: 30px;
+                line-height: 30px;
+                padding: 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                border-radius: 8px;
+                font-size: 10px;
+                font-weight: bold;
+                border: 1px solid #000;
+              }
+            }
+
+            .cp {
+              font-size: 15px;
+              td {
+                text-align: right;
+              }
+
+              tr:last-child {
+                background-color: #f8f8f8;
+              }
+            }
+
+            .payInfo {
+              font-size: 15px;
+              td {
+                text-align: right;
+              }
+
+              tr:last-child {
+                background-color: #f8f8f8;
+              }
+            }
+
+            .payBtn {
+              width: 200px;
+              margin: 0 auto 50px;
+            }
           }
         }
       `}</style>

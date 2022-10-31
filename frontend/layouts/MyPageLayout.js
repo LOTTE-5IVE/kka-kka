@@ -15,7 +15,7 @@ export default function MyPageLayout({
   return (
     <>
       <div>
-        <div className="contents">
+        <div className="MyPageLContents">
           <div className="sidebar">
             <Mysidebar mypageCallback={handleTab} />
           </div>
@@ -36,32 +36,33 @@ export default function MyPageLayout({
           </div>
         </div>
         <style jsx>{`
-          .contents {
-            margin: 0 auto;
-            width: 70%;
-            display: flex;
+          @media screen and (min-width: 769px) {
+            /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+            .MyPageLContents {
+              margin: 0 auto;
+              width: 1332px;
+              display: flex;
 
-            .sidebar {
-              display: inline-block;
-              width: 18%;
-              margin-right: 7%;
-            }
+              .sidebar {
+                display: inline-block;
+                width: 240px;
+                margin-right: 93px;
+              }
 
-            .wrapper {
-              max-width: 970px;
-              width: 75%;
+              .wrapper {
+                width: 970px;
 
-              .myorder {
-                .myorderTitle {
-                  font-size: 24px;
-                  font-weight: 700;
-                  color: #3a3a3a;
-                  border-bottom: 2px solid #3a3a3a;
-                  line-height: 24px;
-                  padding-bottom: 15px;
-                }
+                .myorder {
+                  .myorderTitle {
+                    font-size: 24px;
+                    font-weight: 700;
+                    color: #3a3a3a;
+                    border-bottom: 2px solid #3a3a3a;
+                    line-height: 24px;
+                    padding-bottom: 15px;
+                  }
 
-                table {
+                  /* table {
                   width: 100%;
                   border-collapse: collapse;
                   font-size: 14px;
@@ -77,6 +78,67 @@ export default function MyPageLayout({
                   tr:not(:nth-child(4n + 2)) td:nth-child(2) {
                     text-align: right;
                     padding-right: 20px;
+                  }
+                } */
+                }
+              }
+            }
+          }
+
+          @media screen and (max-width: 768px) {
+            /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
+            .MyPageLContents {
+              margin: 0 auto;
+              width: 1332px;
+              display: flex;
+
+              .sidebar {
+                display: inline-block;
+                width: 240px;
+                margin-right: 93px;
+              }
+
+              .wrapper {
+                width: 970px;
+
+                .myorder {
+                  .myorderTitle {
+                    font-size: 24px;
+                    font-weight: 700;
+                    color: #3a3a3a;
+                    border-bottom: 2px solid #3a3a3a;
+                    line-height: 24px;
+                    padding-bottom: 15px;
+                  }
+                }
+              }
+            }
+          }
+
+          @media screen and (max-width: 480px) {
+            /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+            .MyPageLContents {
+              margin: 0 auto;
+              width: 480px;
+              display: flex;
+
+              .sidebar {
+                display: inline-block;
+                width: 100px;
+                margin-right: 20px;
+              }
+
+              .wrapper {
+                width: 340px;
+
+                .myorder {
+                  .myorderTitle {
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: #3a3a3a;
+                    border-bottom: 2px solid #3a3a3a;
+                    line-height: 24px;
+                    padding-bottom: 15px;
                   }
                 }
               }

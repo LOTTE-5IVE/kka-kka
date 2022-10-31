@@ -3,13 +3,13 @@ import SNSButton from "../components/member/SNSButton";
 export default function EnrollLayout({ title, context }) {
   return (
     <>
-      <div className="contents">
-        <div className="login-area">
-          <div className="login-title">
-            <h2>{title}</h2>
+      <div className="EnrollLContents">
+        <div className="loginArea">
+          <div className="loginTitle">
+            <p>{title}</p>
           </div>
-          <div className="login-subtitle">{context}</div>
-          <div className="login-button">
+          <div className="loginSubtitle">{context}</div>
+          <div className="loginButton">
             <SNSButton
               imgsrc="/member/kakao.png"
               link={SNSUri.KAKAO.requestUri}
@@ -29,42 +29,148 @@ export default function EnrollLayout({ title, context }) {
         </div>
       </div>
       <style jsx>{`
-        .contents {
-          width: 70%;
-          margin: 0 auto;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .EnrollLContents {
+            width: 1330px;
+            display: flex;
+            height: 660px;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
 
-          .login-area {
-            display: block;
-            text-align: center;
-          }
+            .loginArea {
+              display: block;
+              text-align: center;
+              height: 550px;
+            }
 
-          .login-title {
-            min-height: 30px;
-            padding: 34px 0 20px;
-            line-height: 1;
-            margin: 0px;
-
-            h2 {
-              padding: 0;
-              color: #3a3a3a;
-              font-size: 36px;
-              font-weight: 700;
+            .loginTitle {
+              min-height: 30px;
+              padding: 34px 0 20px;
               line-height: 1;
+              margin: 0px;
+
+              p {
+                padding: 0;
+                color: #3a3a3a;
+                font-size: 36px;
+                font-weight: 700;
+                line-height: 1;
+              }
+            }
+
+            .loginSubtitle {
+              color: #999999;
+              font-size: 16px;
+              line-height: 26px;
+            }
+
+            .loginButton {
+              margin: 38px auto;
+              width: 665px;
+              height: 385px;
+              display: flex;
+              justify-content: space-between;
             }
           }
+        }
 
-          .login-subtitle {
-            color: #999999;
-            font-size: 16px;
-            line-height: 26px;
-          }
-
-          .login-button {
-            margin: 2vw auto;
-            width: 50%;
+        @media screen and (max-width: 768px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .EnrollLContents {
+            width: 665px;
             display: flex;
-            height: 20vw;
-            justify-content: space-between;
+            height: 1700px;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+
+            .loginArea {
+              display: block;
+              text-align: center;
+              height: 1500px;
+            }
+
+            .loginTitle {
+              min-height: 15px;
+              padding: 17px 0 10px;
+              line-height: 1;
+              margin: 0px;
+
+              p {
+                padding: 0;
+                color: #3a3a3a;
+                font-size: 72px;
+                font-weight: 700;
+                line-height: 1;
+              }
+            }
+
+            .loginSubtitle {
+              height: 200px;
+              color: #999999;
+              font-size: 32px;
+              line-height: 60px;
+            }
+
+            .loginButton {
+              margin: 19px auto;
+              width: 332.5px;
+              height: 800px;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+            }
+          }
+        }
+
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .EnrollLContents {
+            width: 480px;
+            display: flex;
+            height: 550px;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+
+            .loginArea {
+              display: block;
+              text-align: center;
+              height: 500px;
+            }
+
+            .loginTitle {
+              min-height: 30px;
+              padding: 0 0 20px;
+              line-height: 1;
+              margin: 0px;
+
+              p {
+                padding: 0;
+                color: #3a3a3a;
+                font-size: 36px;
+                font-weight: 700;
+                line-height: 1;
+              }
+            }
+
+            .loginSubtitle {
+              height: 70px;
+              color: #999999;
+              font-size: 16px;
+              line-height: 26px;
+            }
+
+            .loginButton {
+              margin: 38px auto;
+              width: 480px;
+              height: 200px;
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+            }
           }
         }
       `}</style>

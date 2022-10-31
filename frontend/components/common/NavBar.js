@@ -9,7 +9,7 @@ export default function NavBar() {
 
   return (
     <nav>
-      <div className="wrapper">
+      <div className="NavBarWrapper">
         <ul>
           <li>
             <Link href="/">
@@ -82,8 +82,10 @@ export default function NavBar() {
       <style jsx>{`
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
-          .wrapper {
-            max-width: 1300px;
+          .NavBarWrapper {
+            width: 1300px;
+            height: 55px;
+
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -91,8 +93,9 @@ export default function NavBar() {
           }
 
           ul {
+            width: 1040px;
+            height: 55px;
             list-style: none;
-            width: 80%;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -110,22 +113,79 @@ export default function NavBar() {
           }
         }
 
-        @media screen and (max-width: 900px) {
-          .search {
-            display: none;
-          }
-        }
-
         @media screen and (max-width: 768px) {
-          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
-
-          ul {
-            list-style: none;
-            width: 80%;
+          .NavBarWrapper {
+            width: 75vw;
+            height: 6vw;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+          }
+
+          ul {
+            width: 75vw;
+            height: 6vw;
+            list-style: none;
+            padding: 0;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          li {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 15vw;
+            font-size: 0.89vw;
+            font-weight: 600;
+            line-height: 2.89vw;
+
+            a {
+              cursor: pointer;
+            }
+          }
+        }
+
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .NavBarWrapper {
+            width: 480px;
+            height: 60px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          ul {
+            width: 400px;
+            height: 60px;
+            list-style: none;
+            padding: 0;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          li {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 30px;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 20px;
+
+            a {
+              cursor: pointer;
+            }
           }
         }
       `}</style>
