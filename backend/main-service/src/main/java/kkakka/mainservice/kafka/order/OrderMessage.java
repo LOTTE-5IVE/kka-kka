@@ -17,9 +17,11 @@ public class OrderMessage {
 
     private Long id;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonProperty("ordered_at")
     private LocalDateTime orderedAt;
+    @JsonProperty("total_price")
     private Integer totalPrice;
-    @JsonProperty("productOrders")
+    @JsonProperty("product_orders")
     private List<ProductOrderMessage> productOrderMessages;
 
     public static OrderMessage create(

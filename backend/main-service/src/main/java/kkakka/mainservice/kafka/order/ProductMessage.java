@@ -1,5 +1,6 @@
 package kkakka.mainservice.kafka.order;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,7 @@ public class ProductMessage {
     private Long id;
     private String name;
     private Integer price;
+    @JsonProperty("image_url")
     private String imageUrl;
     private Integer discount;
 
