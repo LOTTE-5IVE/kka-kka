@@ -18,6 +18,7 @@ export default function Layout({ children }) {
       <div className="LayoutBottom">
         <Footer />
       </div>
+
       <style jsx>
         {`
           @media screen and (min-width: 769px) {
@@ -51,10 +52,9 @@ export default function Layout({ children }) {
 
           @media screen and (max-width: 768px) {
             .LayoutTop {
-              /* position: fixed; */
               position: absolute;
-              width: 951.5px;
-              height: 87.5px;
+              width: 100vw;
+              height: 12vw;
 
               left: 0;
               right: 0;
@@ -64,18 +64,19 @@ export default function Layout({ children }) {
             }
 
             .content {
-              width: 951.5px;
+              width: 100vw;
+
               min-height: 600px;
 
               .empty {
-                width: 951.5px;
-                height: 87.5px;
+                width: 100vw;
+                height: 12vw;
               }
             }
 
             .LayoutBottom {
-              width: 951.5px;
-              height: 87.5px;
+              width: 100vw;
+              height: 25vw;
             }
           }
 

@@ -133,7 +133,7 @@ export default function Sidebar({ menu }) {
               line-height: 1vw;
 
               p {
-                font-size: 12px;
+                font-size: 1.26vw;
                 font-weight: 700;
               }
             }
@@ -147,9 +147,9 @@ export default function Sidebar({ menu }) {
             }
 
             li {
-              font-size: 8.5px;
+              font-size: 0.89vw;
               font-weight: 700;
-              line-height: 20px;
+              line-height: 4vw;
               padding: 0;
 
               color: #dedede;

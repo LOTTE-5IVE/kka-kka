@@ -41,7 +41,7 @@ export default function RecommInfo({ id, name }) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
           .wrapper {
             .priceRate {
-              font-size: 25px;
+              font-size: 2.63vw;
               font-weight: 700;
               color: ${NBlack};
               margin: 0;

@@ -3,32 +3,51 @@ import { useEffect, useState } from "react";
 import { isLogin } from "../../hooks/isLogin";
 import { useGetToken } from "../../hooks/useGetToken";
 import { useMemberInfo } from "../../hooks/useMemberInfo";
+import { useTextCheck } from "../../hooks/useTextCheck";
 
 export default function Header() {
   const [value, setValue] = useState("");
-  const [token, setToken] = useState("");
   const [name, setName] = useState("");
-  const [grade, setGrade] = useState("");
+  const [login, setLogin] = useState(false);
 
   function search(event) {
     if (event.key === "Enter") {
+      if (value.length < 2 || value.length > 20) {
+        alert("두 글자 이상 스무 글자 이하로 입력하세요.");
+        return;
+      }
+
       window.location.href = `/product?search=${value}`;
       setValue("");
     }
   }
 
   useEffect(() => {
-    setToken(useGetToken());
+    if (!login && isLogin()) {
+      setLogin(true);
 
-    if (token !== "") {
-      useMemberInfo(token).then((res) => {
-        if (res) {
-          setName(res.name);
-          setGrade(res.grade);
-        }
+      useMemberInfo(useGetToken()).then((res) => {
+        setName(res.name);
       });
     }
-  }, [token]);
+  }, [isLogin()]);
+
+  // useEffect(() => {
+  //   setToken(useGetToken());
+
+  //   if (!isLogin) {
+  //     console.log("memberinfo", useMemberInfo());
+  //   }
+
+  //   if (token !== "") {
+  //     useMemberInfo(token).then((res) => {
+  //       if (res) {
+  //         setName(res.name);
+  //         setGrade(res.grade);
+  //       }
+  //     });
+  //   }
+  // }, [token]);
 
   return (
     <div>
@@ -49,7 +68,12 @@ export default function Header() {
             size="30"
             placeholder="검색어를 입력해주세요"
             onChange={(e) => {
-              setValue(e.currentTarget.value);
+              if (useTextCheck(e.currentTarget.value)) {
+                setValue(e.currentTarget.value);
+              } else {
+                alert("특수문자는 입력할 수 없습니다.");
+                e.currentTarget.value = "";
+              }
             }}
             onKeyUp={(event) => {
               search(event, value);
@@ -62,7 +86,7 @@ export default function Header() {
         </div>
         <div className="icons">
           <div className="top">
-            {token ? (
+            {login ? (
               <>
                 <div className="topLeft">{name}님</div>
                 <div
@@ -88,7 +112,7 @@ export default function Header() {
             )}
           </div>
           <div className="bottom">
-            {token ? (
+            {login ? (
               <>
                 <Link href="/mypage">
                   <img
@@ -224,8 +248,8 @@ export default function Header() {
 
           @media screen and (max-width: 768px) {
             .HeaderWrapper {
-              width: 640px;
-              height: 60px;
+              width: 67.5vw;
+              height: 6.3vw;
               margin: 0 auto;
               display: flex;
               justify-content: space-between;
@@ -233,35 +257,35 @@ export default function Header() {
 
               .logo {
                 position: absolute;
-                left: 27%;
-                top: 35%;
+                left: 20vw;
+                top: 3.5vw;
                 transform: translate(-50%, -50%);
 
                 img {
-                  height: 47.5px;
+                  height: 5vw;
                 }
               }
             }
 
             .search {
               position: absolute;
-              left: 45%;
-              top: 35%;
+              left: 45vw;
+              top: 3.5vw;
               transform: translate(-50%, -50%);
               border: 2px solid #ed1b23;
-              border-radius: 20px;
-              padding: 0 8.5px;
+              border-radius: 2vw;
+              padding: 0 0.9vw;
 
               input[type="text"] {
                 border: none;
-                border-radius: 20px;
-                width: 158.5px;
-                height: 22.5px;
-                line-height: 22.5px;
+                border-radius: 2vw;
+                width: 17vw;
+                height: 2.4vw;
+                line-height: 2.4vw;
                 padding: 0;
                 box-sizing: border-box;
                 color: #c5c9cd;
-                font-size: 0.5em;
+                font-size: 1vw;
                 font-weight: 600;
               }
 
@@ -271,37 +295,40 @@ export default function Header() {
               }
 
               img {
-                width: 12px;
-                height: 12px;
+                width: 1.3vw;
+                min-width: 9px;
+                /* height: 1.3vw; */
                 position: relative;
-                top: 2.5px;
+                top: 0;
               }
             }
 
             .icons {
               position: absolute;
-              right: 17%;
-              top: 35%;
+              right: 10vw;
+              top: 3.5vw;
               transform: translate(-50%, -50%);
-              height: 40px;
-              width: 90px;
+              height: 4.2vw;
+              width: 9.5vw;
+              min-width: 110px;
 
               .top {
-                line-height: 20px;
+                line-height: 2.1vw;
                 font-weight: 700;
-                font-size: 6px;
+                font-size: 0.6vw;
                 display: flex;
                 justify-content: space-between;
                 position: relative;
-                top: -7.5px;
+                top: -0.79vw;
+                text-align: right;
 
                 .topLeft {
-                  width: 50px;
+                  width: 55%;
                   text-align: right;
                 }
 
                 .topRight {
-                  width: 30px;
+                  width: 40%;
                   cursor: pointer;
                 }
               }
@@ -311,9 +338,8 @@ export default function Header() {
                 justify-content: right;
 
                 img {
-                  width: 14.5px;
-                  height: 14.5px;
-                  margin: 0 7.5px;
+                  width: 1.53vw;
+                  margin: 0 0.79vw;
                 }
               }
             }

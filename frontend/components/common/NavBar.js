@@ -115,9 +115,8 @@ export default function NavBar() {
 
         @media screen and (max-width: 768px) {
           .NavBarWrapper {
-            width: 650px;
-            height: 27.5px;
-
+            width: 75vw;
+            height: 6vw;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -125,19 +124,25 @@ export default function NavBar() {
           }
 
           ul {
-            width: 520px;
-            height: 27.5px;
+            width: 75vw;
+            height: 6vw;
             list-style: none;
+            padding: 0;
             margin: 0 auto;
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
           }
 
           li {
-            font-size: 8.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 15vw;
+            font-size: 0.89vw;
             font-weight: 600;
-            line-height: 27.5px;
+            line-height: 2.89vw;
 
             a {
               cursor: pointer;
@@ -174,7 +179,7 @@ export default function NavBar() {
             justify-content: center;
             width: 80px;
             height: 30px;
-            font-size: 5px;
+            font-size: 10px;
             font-weight: 600;
             line-height: 20px;
 

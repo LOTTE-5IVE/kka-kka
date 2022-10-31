@@ -60,15 +60,15 @@ export default function Youtube() {
         @media screen and (max-width: 768px) {
           .youtube {
             position: relative;
-            width: 951.5px;
-            height: 350px;
+            width: 100vw;
+            height: 36.84vw;
             background-color: #333;
             overflow: hidden;
 
             .youtube__area {
               position: absolute;
-              width: 951.5px;
-              height: 350px;
+              width: 100vw;
+              height: 36.84vw;
             }
 
             .youtube__cover {
@@ -77,8 +77,8 @@ export default function Youtube() {
               position: absolute;
               top: 0;
               left: 0;
-              width: 951.5px;
-              height: 350px;
+              width: 100vw;
+              height: 36.84vw;
             }
           }
         }

@@ -69,11 +69,11 @@ export default function Mysidebar({ mypageCallback }) {
         @media screen and (max-width: 768px) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .MysidebarContents {
-            width: 240px;
+            width: 25vw;
 
             .title {
               border-bottom: 1px solid;
-              line-height: 19px;
+              line-height: 5vw;
             }
 
             ul {
@@ -85,9 +85,9 @@ export default function Mysidebar({ mypageCallback }) {
             }
 
             li {
-              font-size: 17px;
+              font-size: 0.9vw;
               font-weight: 700;
-              line-height: 40px;
+              line-height: 5vw;
               padding: 0;
               color: #dedede;
               a {

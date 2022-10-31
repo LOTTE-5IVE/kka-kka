@@ -79,6 +79,42 @@ export default function ProductInfo({ id, name, price, discount }) {
         }
 
         @media screen and (max-width: 768px) {
+          /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
+          .ProductInfoWrapper {
+            .text {
+              p {
+                margin: 8px 0;
+              }
+
+              margin-top: 7.5px;
+              .name {
+                font-size: 8px;
+                font-weight: 700;
+                color: #3a3a3a;
+                height: 25px;
+              }
+
+              .discount {
+                font-size: 7px;
+                font-weight: 600;
+                color: #898989;
+                text-decoration: line-through;
+              }
+
+              .blank {
+                height: 9.5px;
+              }
+            }
+
+            .priceRate {
+              font-size: 12px;
+              font-weight: 700;
+              color: ${NBlack};
+            }
+          }
+        }
+
+        @media screen and (max-width: 480px) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
           .ProductInfoWrapper {
             .text {

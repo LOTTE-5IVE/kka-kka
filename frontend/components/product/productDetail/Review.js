@@ -10,7 +10,7 @@ export default function Review({ reviews, page, setPage, lastPage }) {
             <col style={{ width: "15%" }} />
             <col style={{ width: "45%" }} />
             <col style={{ width: "15%" }} />
-            <col style={{ width: "30%" }} />
+            <col style={{ width: "25%" }} />
           </colgroup>
           <tbody>
             {reviews.length > 0 &&
@@ -26,7 +26,9 @@ export default function Review({ reviews, page, setPage, lastPage }) {
                         starWidth={"15px"}
                       />
                     </td>
-                    <td>{review.contents}</td>
+                    <td>
+                      <p className="reviewContents">{review.contents}</p>
+                    </td>
                     <td>{review.member.name}</td>
                     <td>{review.createdAt}</td>
                   </tr>
@@ -46,12 +48,24 @@ export default function Review({ reviews, page, setPage, lastPage }) {
             margin: 0 auto 150px;
 
             table {
+              table-layout: fixed;
               width: 100%;
               border-collapse: collapse;
+              text-align: center;
 
               tr {
                 border-top: 1px solid #dfdfdf;
                 border-bottom: 1px solid #dfdfdf;
+                td {
+                  height: 100%;
+
+                  .reviewContents {
+                    overflow: auto;
+                    width: 100%;
+                    word-wrap: break-word;
+                    text-align: left;
+                  }
+                }
               }
             }
           }
@@ -60,16 +74,28 @@ export default function Review({ reviews, page, setPage, lastPage }) {
         @media screen and (max-width: 768px) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .tableWrapper {
-            width: 1120px;
-            margin: 0 auto 150px;
+            width: 85vw;
+            margin: 0 auto 5vw;
 
             table {
+              table-layout: fixed;
               width: 100%;
               border-collapse: collapse;
+              text-align: center;
 
               tr {
                 border-top: 1px solid #dfdfdf;
                 border-bottom: 1px solid #dfdfdf;
+                td {
+                  height: 100%;
+
+                  .reviewContents {
+                    overflow: auto;
+                    width: 100%;
+                    word-wrap: break-word;
+                    text-align: left;
+                  }
+                }
               }
             }
           }

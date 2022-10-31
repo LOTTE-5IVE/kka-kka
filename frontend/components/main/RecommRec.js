@@ -34,11 +34,11 @@ export default function RecommRec({ id, imgsrc, name, price, discount }) {
           .wrapper {
             .imageSection {
               text-align: center;
-              border-radius: 10px;
+              border-radius: 1.05vw;
               background-color: #f5f5f5;
 
               img {
-                height: 165px;
+                height: 17.37vw;
               }
             }
           }

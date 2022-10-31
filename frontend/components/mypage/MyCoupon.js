@@ -89,6 +89,16 @@ export default function MyCoupon() {
                   text-align: center;
                   color: #2c2c2c;
 
+                  thead {
+                    tr {
+                      height: 36px;
+                    }
+                  }
+
+                  tr {
+                    height: 40px;
+                  }
+
                   .normalLeft {
                     border: 2px solid #e6e4e4;
                     border-right: 2px solid;
@@ -129,11 +139,11 @@ export default function MyCoupon() {
           @media screen and (max-width: 768px) {
             /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
             .MyCouponWrapper {
-              width: 970px;
+              width: 67vw;
 
               .myorder {
                 .myorderTitle {
-                  font-size: 24px;
+                  font-size: 4vw;
                   font-weight: 700;
                   color: #3a3a3a;
                   line-height: 24px;
@@ -141,12 +151,22 @@ export default function MyCoupon() {
                 }
 
                 table {
-                  width: 970px;
+                  width: 67vw;
                   border-collapse: collapse;
-                  font-size: 14px;
+                  font-size: 2vw;
                   font-weight: 600;
                   text-align: center;
                   color: #2c2c2c;
+
+                  thead {
+                    tr {
+                      height: 36px;
+                    }
+                  }
+
+                  tr {
+                    height: 40px;
+                  }
 
                   .normalLeft {
                     border: 2px solid #e6e4e4;
@@ -206,6 +226,16 @@ export default function MyCoupon() {
                   font-weight: 600;
                   text-align: center;
                   color: #2c2c2c;
+
+                  thead {
+                    tr {
+                      height: 20px;
+                    }
+                  }
+
+                  tr {
+                    height: 24px;
+                  }
 
                   .normalLeft {
                     border: 1px solid #e6e4e4;

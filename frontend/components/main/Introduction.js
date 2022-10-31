@@ -216,40 +216,43 @@ export default function Introduction() {
         @media screen and (max-width: 768px) {
           .btsProduct {
             background-image: url("/main/bts_product_bg.jpg");
-            width: 951.5px;
+            width: 100vw;
+            min-height: 150px;
 
             .inner {
-              width: 600px;
+              width: 70vw;
+              height: 21.05vw;
               margin: 0 auto;
               position: relative;
-              height: 200px;
 
               .product {
-                width: 200px;
+                width: 21.05vw;
               }
             }
 
             .textGroup {
               position: absolute;
-              top: 65px;
-              right: 50px;
+              top: 5vw;
+              right: 5.26vw;
+              width: 40vw;
+              height: 12vw;
 
               .text1 {
-                font-size: 10px;
+                font-size: 1.05vw;
                 font-weight: 500;
                 color: #404041;
                 margin: 0;
               }
 
               .text2 {
-                font-size: 16px;
+                font-size: 1.68vw;
                 font-weight: 600;
                 color: #333333;
                 margin: 0;
               }
 
               .text3 {
-                font-size: 8px;
+                font-size: 0.84vw;
                 font-weight: 600;
                 color: #767778;
               }
@@ -258,28 +261,31 @@ export default function Introduction() {
 
           .ganaChoco {
             background-image: url("/main/gana_bg.jpg");
-            width: 951.5px;
+            width: 100vw;
+            min-height: 150px;
 
             .inner {
-              width: 600px;
+              width: 70vw;
               margin: 0 auto;
               position: relative;
-              height: 200px;
+              height: 21.05vw;
 
               .textGroup {
+                width: 40vw;
+
                 position: absolute;
-                top: 75px;
-                left: 65px;
+                top: 7vw;
+                left: 6.84vw;
 
                 .text1 {
-                  font-size: 15px;
+                  font-size: 1.58vw;
                   font-weight: 500;
                   color: #fff;
                   margin: 0;
                 }
 
                 .text2 {
-                  font-size: 8px;
+                  font-size: 0.84vw;
                   font-weight: 600;
                   color: #a9866e;
                 }
@@ -287,7 +293,7 @@ export default function Introduction() {
             }
 
             .product {
-              width: 200px;
+              width: 21.05vw;
               position: absolute;
               top: 0;
               right: 0;
@@ -296,18 +302,19 @@ export default function Introduction() {
 
           .oatmeal {
             background-image: url("/main/oatmeal_bg.jpg");
-            width: 951.5px;
+            width: 100vw;
+            min-height: 150px;
 
             .inner {
-              height: 200px;
-              width: 600px;
+              width: 70vw;
+              height: 21.05vw;
               margin: 0 auto;
               position: relative;
 
               .texture1 {
                 position: absolute;
                 top: 0;
-                left: 200px;
+                left: 21.05vw;
               }
 
               .texture2 {
@@ -321,24 +328,25 @@ export default function Introduction() {
               }
 
               .picture1 {
-                width: 175px;
-                top: -30px;
-                left: 0;
+                width: 18.4vw;
+                top: -3.16vw;
+                left: 0vw;
               }
 
               .picture2 {
-                width: 108px;
-                top: 52.5px;
-                left: 100px;
+                width: 11.37vw;
+                top: 5.53vw;
+                left: 10.53vw;
               }
 
               .textGroup {
                 position: absolute;
-                top: 60px;
-                left: 275px;
+                top: 6.32vw;
+                left: 28.94vw;
+                width: 40vw;
 
                 .title {
-                  margin-bottom: 10px;
+                  margin-bottom: 1.05vw;
 
                   .text1 {
                     font-weight: 600;
@@ -347,14 +355,14 @@ export default function Introduction() {
                   }
 
                   .text2 {
-                    font-size: 15px;
+                    font-size: 1.58vw;
                     font-weight: 600;
                     color: #333333;
                     margin: 0;
                   }
 
                   .text3 {
-                    font-size: 8px;
+                    font-size: 0.84vw;
                     font-weight: 600;
                     color: #5d5d5d;
                   }

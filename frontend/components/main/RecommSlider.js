@@ -308,10 +308,10 @@ export default function RecommSlider({ tab, handleTab }) {
               position: relative;
 
               .inner {
-                width: 951.5px;
+                width: 100vw;
                 margin: 0 auto;
                 position: relative;
-                height: 31px;
+                height: 3.26vw;
                 z-index: 1;
                 display: flex;
 
@@ -320,17 +320,17 @@ export default function RecommSlider({ tab, handleTab }) {
                   display: flex;
                   justify-content: center;
                   align-items: center;
-                  width: 476px;
-                  height: 31px;
+                  width: 50.1vw;
+                  height: 3.26vw;
 
                   h2 {
-                    font-size: 8.5px;
+                    font-size: 0.9vw;
                     font-weight: 700;
                   }
 
                   .toggle-promotion {
-                    width: 31px;
-                    height: 31px;
+                    width: 3.26vw;
+                    height: 3.26vw;
                     cursor: pointer;
                     display: flex;
                     justify-content: center;
@@ -350,19 +350,19 @@ export default function RecommSlider({ tab, handleTab }) {
           }
 
           .notice .promotion {
-            width: 951.5px;
-            height: 300px;
+            width: 100vw;
+            height: 31.58vw;
             background-color: #f6f5ef;
             position: relative;
             transition: height 0.4s;
             overflow: hidden;
 
             .swiper-container {
-              width: 1200px;
-              height: 235px;
+              width: 126vw;
+              height: 28vw;
               position: absolute;
-              top: 20px;
-              left: 50%;
+              top: 2.1vw;
+              left: 50vw;
               transform: translate(-50%, 0%);
             }
 
@@ -377,19 +377,19 @@ export default function RecommSlider({ tab, handleTab }) {
             }
 
             .swiper-pagination {
-              bottom: 20px;
-              left: 0;
-              right: 0;
+              bottom: 2.1vw;
+              left: 0vw;
+              right: 0vw;
             }
 
             .swiper-prev,
             .swiper-next {
-              width: 21px;
-              height: 21px;
+              width: 3vw;
+              height: 3vw;
               border: 1px solid #333;
               border-radius: 50%;
               position: absolute;
-              top: 150px;
+              top: 16vw;
               z-index: 1;
               cursor: pointer;
               outline: none;
@@ -400,10 +400,10 @@ export default function RecommSlider({ tab, handleTab }) {
             }
 
             .swiper-prev {
-              left: 35%;
+              left: 35vw;
             }
             .swiper-next {
-              right: 35%;
+              right: 35vw;
             }
             .swiper-prev:hover,
             .swiper-next:hover {

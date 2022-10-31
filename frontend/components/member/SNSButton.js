@@ -38,20 +38,20 @@ export default function SNSButton({ imgsrc, link, context }) {
 
         @media screen and (max-width: 768px) {
           .btn {
-            width: 50px;
-            height: 50px;
+            width: 12vw;
+            height: 12vw;
             text-align: center;
             margin: 0 auto;
 
             a {
               .context {
                 margin-top: 30%;
-                font-size: 8px;
+                font-size: 2vw;
               }
             }
 
             img {
-              height: 48px;
+              height: 10vw;
             }
           }
         }

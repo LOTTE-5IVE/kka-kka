@@ -92,20 +92,20 @@ export default function Footer() {
 
         @media screen and (max-width: 768px) {
           .footer {
-            width: 951.5px;
-            height: 167px;
+            width: 100vw;
+            height: 26vw;
             border: 0;
             background-color: #f8f8f8;
             font-size: 7px;
 
             .top-wrapper {
-              width: 951.5px;
-              height: 48px;
+              width: 100vw;
+              height: 6vw;
               border-bottom: 0.5px solid #e9e9e9;
 
               .top {
-                width: 713.5px;
-                height: 48px;
+                width: 75.1vw;
+                height: 6vw;
                 margin: 0 auto;
                 display: flex;
                 justify-content: space-between;
@@ -122,16 +122,16 @@ export default function Footer() {
             }
 
             .bottom {
-              width: 713.5px;
-              height: 119px;
+              width: 75.1vw;
+              height: 12.5vw;
               margin: 0 auto;
-              padding: 25px 0 25px;
+              padding: 2.6vw 0;
               .up {
                 color: #5a5a5a;
               }
               .down {
                 color: #9a9a9a;
-                margin: 11px 0 20px;
+                margin: 1.16vw 0 2.1vw;
               }
             }
 

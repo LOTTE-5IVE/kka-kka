@@ -119,16 +119,18 @@ export default function Pagination({ page, setPage, lastPage }) {
         @media screen and (max-width: 768px) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
           .wrapper {
-            width: 517.5px;
-            height: 66px;
+            width: 61.5vw;
+            height: 6vw;
+            margin: 0;
             display: flex;
             justify-content: center;
+            margin: 0 auto;
 
             .pageBtn {
               display: flex;
               justify-content: center;
-              font-size: 12.5px;
-              margin-bottom: 25px;
+              font-size: 1.32vw;
+              margin-bottom: 0.5vw;
               cursor: pointer;
 
               ul {
@@ -143,19 +145,19 @@ export default function Pagination({ page, setPage, lastPage }) {
                 align-items: center;
 
                 .btn {
-                  width: 16px;
+                  width: 3vw;
                 }
               }
 
               .pageIndex {
-                width: 16px;
-                height: 16px;
-                margin: 0 5px;
-                padding: 0px;
-                border-bottom: 0;
+                width: 3vw;
+                height: 3vw;
+                margin: 0 0.52vw;
+                padding: 0vw;
+                border-bottom: 0vw;
                 font-weight: 400;
                 border-radius: 50%;
-                line-height: 17px;
+                line-height: 1.79vw;
                 text-align: center;
                 transition: 0.5s;
               }

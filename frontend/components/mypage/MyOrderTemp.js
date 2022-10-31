@@ -2,7 +2,6 @@ import Title from "../common/Title";
 import { useEffect, useState } from "react";
 import { GetHApi } from "../../apis/Apis";
 import { useGetToken } from "../../hooks/useGetToken";
-import { useMemberInfo } from "../../hooks/useMemberInfo";
 import { useMoney } from "../../hooks/useMoney";
 import MyProductOrder from "./MyProductOrder";
 
@@ -14,7 +13,6 @@ export default function MyOrderTemp() {
   const getOrders = async () => {
     GetHApi(`/api/members/me/orders?pageSize=3`, token).then((res) => {
       if (res) {
-        console.log(res);
         setOrderList(res);
       }
     });
@@ -27,8 +25,6 @@ export default function MyOrderTemp() {
       }`,
       token,
     ).then((res) => {
-      console.log(res);
-
       if (res.length > 0) {
         setOrderList(orderList.concat(res));
       }
@@ -42,11 +38,7 @@ export default function MyOrderTemp() {
   useEffect(() => {
     setToken(useGetToken());
     if (token !== "") {
-      useMemberInfo(token).then((res) => {
-        if (res) {
-          getOrders();
-        }
-      });
+      getOrders();
     }
   }, [token]);
 
@@ -59,7 +51,7 @@ export default function MyOrderTemp() {
             <div className="myorderTitle">주문내역</div>
             {orderList.map((order, idx) => {
               return (
-                <>
+                <div key={idx}>
                   <div className="d-flex flex-column">
                     <div className="d-flex align-start flex-column el-container">
                       <div className="d-flex align-start order-title">
@@ -76,7 +68,7 @@ export default function MyOrderTemp() {
                     </div>
                     {order.productOrders.map((productOrder, idx) => {
                       return (
-                        <>
+                        <div key={idx}>
                           <MyProductOrder
                             productOrder={productOrder}
                             key={idx}
@@ -85,14 +77,14 @@ export default function MyOrderTemp() {
                             idx !== order.productOrders.length - 1 && (
                               <p className="po-divider"></p>
                             )}
-                        </>
+                        </div>
                       );
                     })}
                   </div>
                   {orderList.length >= 1 && idx !== orderList.length - 1 && (
                     <p className="order-divider"></p>
                   )}
-                </>
+                </div>
               );
             })}
           </div>

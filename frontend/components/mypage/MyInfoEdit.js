@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { PatchHApi } from "../../apis/Apis";
 import ButtonComp from "../../components/common/Button/ButtonComp";
 import { useGetToken } from "../../hooks/useGetToken";
+import { useLangCheck } from "../../hooks/useLangCheck";
 import { useMemberInfo } from "../../hooks/useMemberInfo";
+import { useNumberCheck } from "../../hooks/useNumberCheck";
+import { useTextCheck } from "../../hooks/useTextCheck";
 import Title from "../common/Title";
 
 export default function MyInfoEdit() {
@@ -18,12 +21,14 @@ export default function MyInfoEdit() {
   useEffect(() => {
     setToken(useGetToken());
 
-    useMemberInfo(useGetToken()).then((res) => {
-      if (res) {
-        setData(res);
-      }
-    });
-  }, []);
+    if (token !== "") {
+      useMemberInfo(token).then((res) => {
+        if (res) {
+          setData(res);
+        }
+      });
+    }
+  }, [token]);
 
   const editMemberInfo = async () => {
     PatchHApi("/api/members/me", { name: name }, token);
@@ -36,7 +41,7 @@ export default function MyInfoEdit() {
       token,
     );
 
-    useMemberInfo(useGetToken()).then((res) => {
+    useMemberInfo(token).then((res) => {
       if (res) {
         setData(res);
       }
@@ -100,7 +105,12 @@ export default function MyInfoEdit() {
                         defaultValue={name}
                         type="text"
                         onChange={(e) => {
-                          setName(e.target.value);
+                          if (useLangCheck(e.target.value)) {
+                            setName(e.target.value);
+                          } else {
+                            alert("한글 혹은 영문만 입력할 수 있습니다.");
+                            e.target.value = "";
+                          }
                         }}
                       />
                     </td>
@@ -112,7 +122,12 @@ export default function MyInfoEdit() {
                         defaultValue={email1}
                         type="text"
                         onChange={(e) => {
-                          setEmail1(e.target.value);
+                          if (useTextCheck(e.target.value)) {
+                            setEmail1(e.target.value);
+                          } else {
+                            alert("특수문자는 입력할 수 없습니다.");
+                            e.target.value = "";
+                          }
                         }}
                       />
                       @{" "}
@@ -123,7 +138,12 @@ export default function MyInfoEdit() {
                             defaultValue={email2}
                             type="text"
                             onChange={(e) => {
-                              setEmail2(e.target.value);
+                              if (useTextCheck(e.target.value)) {
+                                setEmail2(e.target.value);
+                              } else {
+                                alert("특수문자는 입력할 수 없습니다.");
+                                e.target.value = "";
+                              }
                             }}
                           />
                         </span>
@@ -159,7 +179,12 @@ export default function MyInfoEdit() {
                         defaultValue={phone1}
                         type="text"
                         onChange={(e) => {
-                          setPhone1(e.target.value);
+                          if (useNumberCheck(e.target.value)) {
+                            setPhone1(e.target.value);
+                          } else {
+                            alert("숫자만 입력할 수 있습니다.");
+                            e.target.value = "";
+                          }
                         }}
                       />
                       -
@@ -169,7 +194,12 @@ export default function MyInfoEdit() {
                         defaultValue={phone2}
                         type="text"
                         onChange={(e) => {
-                          setPhone2(e.target.value);
+                          if (useNumberCheck(e.target.value)) {
+                            setPhone2(e.target.value);
+                          } else {
+                            alert("숫자만 입력할 수 있습니다.");
+                            e.target.value = "";
+                          }
                         }}
                       />
                       -
@@ -179,7 +209,12 @@ export default function MyInfoEdit() {
                         defaultValue={phone3}
                         type="text"
                         onChange={(e) => {
-                          setPhone3(e.target.value);
+                          if (useNumberCheck(e.target.value)) {
+                            setPhone3(e.target.value);
+                          } else {
+                            alert("숫자만 입력할 수 있습니다.");
+                            e.target.value = "";
+                          }
                         }}
                       />
                     </td>
@@ -265,7 +300,7 @@ export default function MyInfoEdit() {
         @media screen and (max-width: 768px) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .MyInfoEditWrapper {
-            width: 970px;
+            width: 65vw;
             margin: 0 auto;
 
             .tableTitle {
@@ -276,15 +311,16 @@ export default function MyInfoEdit() {
             }
 
             .tableContents {
-              margin-bottom: 97px;
+              margin-bottom: 5vw;
 
               table {
                 border-collapse: collapse;
                 margin: 0 auto;
-                width: 951px;
+                width: 65vw;
+                font-size: 3vw;
 
                 tr {
-                  height: 95px;
+                  height: 7vw;
                   border-bottom: 1.5px solid #d0cfcf;
                 }
               }
@@ -295,9 +331,8 @@ export default function MyInfoEdit() {
 
               input {
                 margin: 0 10px;
-                line-height: 40px;
+                line-height: 5vw;
                 padding: 0 0 0 13px;
-
                 border: 0 none;
                 color: #3a3a3a;
                 background: #fff;
@@ -307,18 +342,19 @@ export default function MyInfoEdit() {
               }
 
               select {
-                height: 40px;
+                height: 5vw;
                 border-radius: 8px;
-                font-size: 16px;
+                font-size: 2vw;
                 color: #3a3a3a;
-                padding: 0 0px 0 13px;
+                margin-left: 10px;
+                padding-left: 10px;
                 border: 1px solid #000;
               }
             }
 
             .editBtn {
-              width: 200px;
-              margin: 0 auto 50px;
+              width: 20vw;
+              margin: 0 auto 5vw;
             }
           }
         }

@@ -53,7 +53,7 @@ export default function Nutri({ nutrition }) {
             border: 1px solid #acacac;
             border-collapse: collapse;
             text-align: center;
-            margin-bottom: 3rem;
+            margin: 0 auto 3rem;
             font-color: #101010;
           }
           th,
@@ -72,10 +72,11 @@ export default function Nutri({ nutrition }) {
         @media screen and (max-width: 768px) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           table {
+            width: 100%;
             border: 1px solid #acacac;
             border-collapse: collapse;
             text-align: center;
-            margin-bottom: 3rem;
+            margin: 0 auto 3rem;
             font-color: #101010;
           }
           th,
@@ -84,9 +85,10 @@ export default function Nutri({ nutrition }) {
             padding: 0.5rem;
           }
           td {
-            font-size: 0.9rem;
+            font-size: 0.5rem;
           }
           th {
+            font-size: 0.5rem;
             background-color: #dfdfdf;
           }
         }
@@ -98,7 +100,7 @@ export default function Nutri({ nutrition }) {
             border: 1px solid #acacac;
             border-collapse: collapse;
             text-align: center;
-            margin-bottom: 3rem;
+            margin: 0 auto 3rem;
             font-color: #101010;
           }
           th,

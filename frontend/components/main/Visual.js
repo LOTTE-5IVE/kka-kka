@@ -83,8 +83,8 @@ export default function Visual() {
 
         @media screen and (max-width: 768px) {
           .visual {
-            width: 951.5px;
-            height: 323px;
+            width: 100vw;
+            height: 34vw;
             position: relative;
 
             background-image: url("/main/visual_bg.jpg");
@@ -92,33 +92,33 @@ export default function Visual() {
 
             .logoComment {
               position: absolute;
-              top: 15px;
-              left: 65px;
+              top: 1.58vw;
+              left: 6.73vw;
 
               img {
-                width: 422.5px;
+                width: 44.4vw;
               }
             }
 
             .bts {
-              width: 210px;
+              width: 22.1vw;
               position: absolute;
-              bottom: 0px;
-              left: 402.5px;
+              bottom: 0vw;
+              left: 42.37vw;
             }
 
             .cookie {
-              width: 250px;
+              width: 26.31vw;
               position: absolute;
-              bottom: 0px;
-              right: 190px;
+              bottom: 0vw;
+              right: 20vw;
             }
 
             .giftset {
-              width: 300px;
+              width: 31.58vw;
               position: absolute;
-              bottom: 10px;
-              right: 37.5px;
+              bottom: 1.05vw;
+              right: 3.95vw;
             }
 
             .fade-in {
