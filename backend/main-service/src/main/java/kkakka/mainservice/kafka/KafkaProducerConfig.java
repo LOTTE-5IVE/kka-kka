@@ -20,10 +20,12 @@ public class KafkaProducerConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String BOOTSTRAP_SERVER;
+    @Value("${spring.kafka.topic}")
+    private String ORDER_TOPIC_NAME;
 
     @Bean
     public NewTopic orderTopic() {
-        return TopicBuilder.name("kkakka-order")
+        return TopicBuilder.name(ORDER_TOPIC_NAME)
                 .partitions(1)
                 .replicas(3)
                 .build();
