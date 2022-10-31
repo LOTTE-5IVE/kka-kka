@@ -79,6 +79,15 @@ public class Product {
         this.ratingAvg = ratingAvg;
     }
 
+    public Integer getMaxDiscount(Coupon coupon) {
+        Integer maxDiscount = coupon.getMaxDiscount();
+
+        if (coupon.isPercentageCoupon()) {
+            return Math.min(maxDiscount, this.price * coupon.getPercentage() / 100);
+        }
+        return maxDiscount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -96,12 +105,4 @@ public class Product {
         return Objects.hash(id);
     }
 
-    public Integer getMaxDiscount(Coupon coupon) {
-        Integer maxDiscount = coupon.getMaxDiscount();
-
-        if (coupon.isPercentageCoupon()) {
-            return Math.min(maxDiscount, this.price * coupon.getPercentage() / 100);
-        }
-        return maxDiscount;
-    }
 }

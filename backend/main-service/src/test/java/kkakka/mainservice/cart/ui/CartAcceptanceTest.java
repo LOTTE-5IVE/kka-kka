@@ -237,7 +237,6 @@ class CartAcceptanceTest extends DocumentConfiguration {
 
     private void 퍼센트_쿠폰_생성() {
         RestAssured.given(spec).log().all()
-                .filter(document("create-coupon"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("{\n"
                         + "  \"categoryId\": null,\n"

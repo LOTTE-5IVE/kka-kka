@@ -53,6 +53,14 @@ public class CartItem {
         this.cart = cart;
     }
 
+    public void applyCoupon(Coupon coupon) {
+        this.coupon = coupon;
+    }
+
+    public Integer getDiscountedPrice(Coupon coupon) {
+        return product.getPrice() - product.getMaxDiscount(coupon);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -68,13 +76,5 @@ public class CartItem {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public void applyCoupon(Coupon coupon) {
-        this.coupon = coupon;
-    }
-
-    public Integer getDiscountedPrice(Coupon coupon) {
-        return product.getPrice() - product.getMaxDiscount(coupon);
     }
 }

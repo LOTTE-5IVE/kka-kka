@@ -114,6 +114,6 @@ public class Coupon {
     }
 
     public boolean isPercentageCoupon() {
-        return this.percentage > 0 || this.percentage != null ? true : false;
+        return this.percentage != null && this.percentage > 0 ? true : false;
     }
 }
