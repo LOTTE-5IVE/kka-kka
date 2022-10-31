@@ -171,31 +171,31 @@ export default function ProductLayout({
         }
 
         @media screen and (max-width: 768px) {
-          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .ProductLContents {
             margin: 28.5px auto 0;
-            width: 665px;
-            height: 893px;
+            width: 80vw;
+            height: 120vw;
             display: flex;
 
             .sidebar {
               display: inline-block;
-              width: 118px;
-              margin-right: 33.5px;
+              width: 12.42vw;
+              margin-right: 3.53vw;
             }
 
             .productWrapper {
-              width: 536px;
+              width: 62vw;
 
               .title {
-                padding-left: 30px;
+                padding-left: 8vw;
 
                 img {
-                  width: 25px;
+                  width: 2.63vw;
                 }
 
                 .category {
-                  font-size: 12px;
+                  font-size: 1.26vw;
                   font-weight: 700;
                 }
               }
@@ -203,18 +203,18 @@ export default function ProductLayout({
               .searchBar {
                 width: 100%;
                 display: flex;
-                align-items: flex-start;
+                align-items: center;
 
                 p {
                   width: 30%;
                   margin-left: 3%;
                   padding-left: 3%;
-                  line-height: 17.5px;
-                  border-bottom: 1.5px solid red;
+                  line-height: 1.84vw;
+                  border-bottom: 0.16vw solid red;
 
                   input[type="text"] {
                     border: 0;
-                    font-size: 8.5px;
+                    font-size: 0.89vw;
                     font-weight: 600;
                   }
 
@@ -226,16 +226,16 @@ export default function ProductLayout({
 
               .productList {
                 display: table;
-                width: 517.5px;
-                height: 783px;
+                width: 60vw;
+                height: 82.42vw;
 
                 .productInner {
                   display: inline-block;
                   width: 33.3%;
-                  margin-bottom: 34.5px;
+                  margin-bottom: 3vw;
 
                   .productBox {
-                    width: 149px;
+                    width: 15.68vw;
                     margin: 0 auto;
                   }
                 }
@@ -273,7 +273,7 @@ export default function ProductLayout({
               .searchBar {
                 width: 100%;
                 display: flex;
-                align-items: flex-start;
+                align-items: center;
 
                 p {
                   width: 30%;
