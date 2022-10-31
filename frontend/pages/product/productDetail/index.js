@@ -22,7 +22,11 @@ export default function productDetail() {
 
   const handleQuantity = (type) => {
     if (type !== "minus" || quantity > 1) {
-      type === "plus" ? setQuantity(quantity + 1) : setQuantity(quantity - 1);
+      type === "plus"
+        ? quantity + 1 > product.stock
+          ? alert("수량 한도를 초과했습니다.")
+          : setQuantity(quantity + 1)
+        : setQuantity(quantity - 1);
     }
   };
 
@@ -114,6 +118,7 @@ export default function productDetail() {
         modal={modal}
         product={product}
         quantity={quantity}
+        setQuantity={setQuantity}
         page={page}
         setPage={setPage}
         lastPage={lastPage}

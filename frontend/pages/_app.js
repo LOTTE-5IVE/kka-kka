@@ -8,7 +8,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        {Component.name == "admin" ? (
+        {Component.name == "admin" || Component.name == "NotFound" ? (
           <Component {...pageProps} />
         ) : (
           <Layout>
