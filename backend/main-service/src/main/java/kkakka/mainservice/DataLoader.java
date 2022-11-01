@@ -11,8 +11,10 @@ import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
+import kkakka.mainservice.order.application.dto.RecipientDto;
 import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
+import kkakka.mainservice.order.domain.Recipient;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
 import kkakka.mainservice.product.domain.Nutrition;
@@ -66,7 +68,13 @@ public class DataLoader {
                         ProductOrder.create(testProduct, testProduct.getPrice(), 1),
                         ProductOrder.create(testProduct, testProduct.getPrice(), 1)
                 ));
-        orderRepository.save(Order.create(testMember, testProduct.getPrice(), productOrders));
+
+        Recipient testRecipient = Recipient.from(RecipientDto.create(
+                testMember.getName(), testMember.getEmail(), testMember.getPhone(),
+                testMember.getAddress()
+        ));
+        orderRepository.save(
+                Order.create(testMember, testRecipient, testProduct.getPrice(), productOrders));
         reviewRepository.save(Review.create("test-review1", 5.0, testMember, productOrders.get(0)));
         reviewRepository.save(Review.create("test-review2", 3.5, testMember, productOrders.get(1)));
         reviewRepository.save(Review.create("test-review3", 4.5, testMember, productOrders.get(2)));

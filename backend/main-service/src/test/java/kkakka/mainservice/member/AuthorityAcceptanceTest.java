@@ -20,11 +20,13 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+@ContextConfiguration(classes = AuthorityAcceptanceTest.TestConfig.class)
 public class AuthorityAcceptanceTest extends AcceptanceTest {
 
     @Autowired

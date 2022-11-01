@@ -1,13 +1,21 @@
 package kkakka.mainservice.order.domain;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import kkakka.mainservice.member.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "`ORDER`")
@@ -24,7 +32,8 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    //TODO: 2022.09.28 배송지정보 추가할 것 -hyeyeon
+    @Embedded
+    private Recipient recipient;
 
     private LocalDateTime orderedAt;
     private Integer totalPrice;
@@ -36,8 +45,20 @@ public class Order {
         productOrder.setOrder(this);
     }
 
-    public static Order create(Member member, int totalPrice, List<ProductOrder> productOrders) {
-        Order order = new Order(null, member, LocalDateTime.now(), totalPrice, productOrders);
+    public static Order create(
+            Member member,
+            Recipient recipient,
+            int totalPrice,
+            List<ProductOrder> productOrders
+    ) {
+        Order order = new Order(
+                null,
+                member,
+                recipient,
+                LocalDateTime.now(),
+                totalPrice,
+                productOrders
+        );
         for (ProductOrder productOrder : productOrders) {
             order.addProductOrder(productOrder);
         }

@@ -12,8 +12,10 @@ import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
+import kkakka.mainservice.order.application.dto.RecipientDto;
 import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
+import kkakka.mainservice.order.domain.Recipient;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
 import kkakka.mainservice.product.domain.Nutrition;
@@ -77,7 +79,10 @@ public class ReviewRepositoryTest extends TestContext {
                 )
         );
         orderRepository.save(
-                Order.create(member, product.getPrice(), List.of(productOrder)));
+                Order.create(member,
+                        Recipient.from(RecipientDto.create(member.getName(), member.getEmail(),
+                                member.getPhone(), member.getAddress())), product.getPrice(),
+                        List.of(productOrder)));
 
         final Review review = reviewRepository.save(
                 Review.create("test-review", 5.0, member, productOrder)
@@ -123,7 +128,10 @@ public class ReviewRepositoryTest extends TestContext {
                 )
         );
         orderRepository.save(
-                Order.create(member, product.getPrice(), List.of(productOrder)));
+                Order.create(member,
+                        Recipient.from(RecipientDto.create(member.getName(), member.getEmail(),
+                                member.getPhone(), member.getAddress())), product.getPrice(),
+                        List.of(productOrder)));
 
         final Review review_1 = reviewRepository.save(
                 Review.create("test-review", 5.0, member, productOrder)
