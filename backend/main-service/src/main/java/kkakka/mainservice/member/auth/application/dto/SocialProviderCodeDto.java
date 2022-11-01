@@ -1,6 +1,6 @@
 package kkakka.mainservice.member.auth.application.dto;
 
-import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 public class SocialProviderCodeDto {
 
     private String code;
-    private MemberProviderName memberProviderName;
+    private ProviderName providerName;
 
-    public static SocialProviderCodeDto create(String code, MemberProviderName memberProviderName) {
-        return new SocialProviderCodeDto(code, memberProviderName);
+    public static SocialProviderCodeDto create(String code, ProviderName providerName) {
+        return new SocialProviderCodeDto(code, providerName);
     }
 }

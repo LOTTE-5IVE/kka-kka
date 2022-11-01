@@ -3,10 +3,6 @@ package kkakka.mainservice.review.acceptance;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_ORDER_1;
 import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
-import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_02;
-import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_03;
-import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_04;
-import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_05;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
@@ -20,7 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
 import org.hibernate.Session;
@@ -122,10 +118,10 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
     void showReviews_success() {
         // given
         final String accessToken1 = 액세스_토큰_가져옴(TEST_MEMBER_01.getCode());
-        final String accessToken2 = 액세스_토큰_가져옴(TEST_MEMBER_02.getCode());
-        final String accessToken3 = 액세스_토큰_가져옴(TEST_MEMBER_03.getCode());
-        final String accessToken4 = 액세스_토큰_가져옴(TEST_MEMBER_04.getCode());
-        final String accessToken5 = 액세스_토큰_가져옴(TEST_MEMBER_05.getCode());
+        final String accessToken2 = 액세스_토큰_가져옴(TEST_MEMBER_01.getCode());
+        final String accessToken3 = 액세스_토큰_가져옴(TEST_MEMBER_01.getCode());
+        final String accessToken4 = 액세스_토큰_가져옴(TEST_MEMBER_01.getCode());
+        final String accessToken5 = 액세스_토큰_가져옴(TEST_MEMBER_01.getCode());
         후기_작성함(accessToken1, "review_01", PRODUCT_ORDER_1);
         후기_작성함(accessToken2, "review_02", PRODUCT_ORDER_1);
         후기_작성함(accessToken3, "review_03", PRODUCT_ORDER_1);
@@ -159,7 +155,7 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
 
     private String 액세스_토큰_가져옴(String code) {
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-                code, MemberProviderName.TEST);
+                code, ProviderName.TEST);
 
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
@@ -174,7 +170,7 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
 
     private String 액세스_토큰_가져옴() {
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-                TEST_MEMBER_01.getCode(), MemberProviderName.TEST);
+                TEST_MEMBER_01.getCode(), ProviderName.TEST);
 
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
