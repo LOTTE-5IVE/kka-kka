@@ -1,11 +1,8 @@
 package kkakka.mainservice.fixture;
 
-import kkakka.mainservice.auth.application.UserProfile;
-import kkakka.mainservice.auth.application.dto.UserProfileDto;
-import kkakka.mainservice.auth.domain.Provider;
-import kkakka.mainservice.auth.domain.ProviderName;
+import kkakka.mainservice.member.auth.application.dto.UserProfile;
 
-public class TestUserProfile implements UserProfile {
+public class TestUserProfile extends UserProfile {
 
     private String id;
     private String name;
@@ -21,23 +18,6 @@ public class TestUserProfile implements UserProfile {
         this.phone = phone;
     }
 
-    @Override
-    public UserProfileDto toDto() {
-        return new UserProfileDto(
-                Provider.create(id, providerName()),
-                name,
-                email,
-                ageGroup,
-                phone
-        );
-    }
-
-    @Override
-    public ProviderName providerName() {
-        return ProviderName.TEST;
-    }
-
-    @Override
     public String getId() {
         return this.id;
     }

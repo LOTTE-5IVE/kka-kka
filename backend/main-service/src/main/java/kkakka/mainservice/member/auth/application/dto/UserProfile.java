@@ -15,8 +15,4 @@ public class UserProfile {
     private String email;
     private String ageGroup;
     private String phone;
-
-    public String getProviderId() {
-        return provider.getProviderId();
-    }
 }
