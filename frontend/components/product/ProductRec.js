@@ -30,7 +30,7 @@ export default function ProductRec({ id, imgsrc }) {
         }
 
         @media screen and (max-width: 768px) {
-          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .wrapper {
             .imageSection {
               text-align: center;
@@ -39,6 +39,21 @@ export default function ProductRec({ id, imgsrc }) {
 
               img {
                 height: 15.78vw;
+              }
+            }
+          }
+        }
+
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .wrapper {
+            .imageSection {
+              text-align: center;
+              border-radius: 20px;
+              background-color: #f5f5f5;
+
+              img {
+                height: 150px;
               }
             }
           }

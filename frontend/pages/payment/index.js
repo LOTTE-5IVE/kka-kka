@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
+import Title from "../../components/common/Title";
 import { CouponDown } from "../../components/coupon/CouponDown";
 import { CouponModal } from "../../components/coupon/CouponModal";
 import DaumPost from "../../components/payment/DaumPost";
@@ -60,17 +61,21 @@ export default function payment() {
           console.log(res);
           setName(res.name);
 
-          let [e1, e2] = res.email.split("@");
-          if (e1 && e2) {
-            setEmail1(e1);
-            setEmail2(e2);
+          if (res.email) {
+            let [e1, e2] = res.email.split("@");
+            if (e1 && e2) {
+              setEmail1(e1);
+              setEmail2(e2);
+            }
           }
 
-          let [p1, p2, p3] = res.phone.split("-");
-          if (p1 && p2 && p3) {
-            setPhone1(p1);
-            setPhone2(p2);
-            setPhone3(p3);
+          if (res.phone) {
+            let [p1, p2, p3] = res.phone?.split("-");
+            if (p1 && p2 && p3) {
+              setPhone1(p1);
+              setPhone2(p2);
+              setPhone3(p3);
+            }
           }
 
           if (res.address) {
@@ -95,7 +100,19 @@ export default function payment() {
       arr.push({ productId: buyItem.id, quantity: Number(buyQuantity) });
     }
 
-    PostHApi("/api/orders", { productOrders: arr }, token).then((res) => {});
+    PostHApi(
+      "/api/orders",
+      {
+        productOrders: arr,
+        recipient: {
+          name: name,
+          email: email1 + "@" + email2,
+          phone: phone1 + "-" + phone2 + "-" + phone3,
+          address: addr1 + " " + addr2,
+        },
+      },
+      token,
+    ).then((res) => {});
 
     alert("결제되었습니다.");
 
@@ -124,6 +141,7 @@ export default function payment() {
 
   return (
     <>
+      <Title title="주문/결제" />
       <div className="PaymentWrapper">
         <div className="title">
           <h2>주문/결제</h2>
@@ -252,6 +270,7 @@ export default function payment() {
                   <th scope="row">수령인</th>
                   <td>
                     <input
+                      required
                       placeholder=""
                       size="15"
                       defaultValue={name}

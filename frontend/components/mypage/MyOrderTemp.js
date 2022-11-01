@@ -9,30 +9,36 @@ export default function MyOrderTemp() {
   const [token, setToken] = useState("");
   const [orderList, setOrderList] = useState([]);
   const [moreToggle, setMoreToggle] = useState(true);
+  const [lastId, setLastId] = useState();
 
   const getOrders = async () => {
     GetHApi(`/api/members/me/orders?pageSize=3`, token).then((res) => {
       if (res) {
-        setOrderList(res);
+        console.log("order", res.data);
+
+        setOrderList(res.data);
+        setLastId(res.pageInfo.lastId);
+
+        if (res.pageInfo.lastPage) {
+          setMoreToggle(false);
+        }
       }
     });
   };
 
   const getMoreOrders = async () => {
-    GetHApi(
-      `/api/members/me/orders?pageSize=3&orderId=${
-        orderList[orderList.length - 1].id
-      }`,
-      token,
-    ).then((res) => {
-      if (res.length > 0) {
-        setOrderList(orderList.concat(res));
-      }
+    GetHApi(`/api/members/me/orders?pageSize=3&orderId=${lastId}`, token).then(
+      (res) => {
+        if (res.length > 0) {
+          setOrderList(orderList.concat(res.data));
+          setLastId(res.pageInfo.lastId);
+        }
 
-      if (res.length < 3) {
-        setMoreToggle(false);
-      }
-    });
+        if (res.pageInfo.lastPage) {
+          setMoreToggle(false);
+        }
+      },
+    );
   };
 
   useEffect(() => {
@@ -49,7 +55,7 @@ export default function MyOrderTemp() {
         <div className="wrapper">
           <div className="myorder">
             <div className="myorderTitle">주문내역</div>
-            {orderList.map((order, idx) => {
+            {orderList?.map((order, idx) => {
               return (
                 <div key={idx}>
                   <div className="d-flex flex-column">
@@ -66,6 +72,13 @@ export default function MyOrderTemp() {
                         <span className="title-content">{order.orderedAt}</span>
                       </div>
                     </div>
+                    <p>
+                      <span>
+                        {order.productOrders[0].product.name}외{" "}
+                        {order.productOrders.length - 1}건
+                      </span>
+                      <span>주문상세 내역보기</span>
+                    </p>
                     {order.productOrders.map((productOrder, idx) => {
                       return (
                         <div key={idx}>
