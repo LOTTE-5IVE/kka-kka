@@ -69,7 +69,7 @@ public class Member {
         this.address = address;
     }
 
-    public void updateGrade(Grade grade) {
+    public void gradeUp(Grade grade) {
         this.grade = grade;
     }
 

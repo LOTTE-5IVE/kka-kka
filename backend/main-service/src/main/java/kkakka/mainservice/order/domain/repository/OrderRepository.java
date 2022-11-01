@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("select sum(o.totalPrice) from Order o where o.member.id = :memberId")
-    Optional<Integer> findOrderPriceByMemberId(@Param(value = "memberId") Long memberId);
+    Optional<Integer> findTotalPriceByMemberId(@Param(value = "memberId") Long memberId);
 }

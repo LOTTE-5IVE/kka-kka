@@ -1,9 +1,8 @@
 package kkakka.mainservice.coupon.util;
 
 import java.time.LocalDateTime;
-import java.util.Calendar;
+import java.time.YearMonth;
 import java.util.List;
-import java.util.Optional;
 import kkakka.mainservice.coupon.application.CouponService;
 import kkakka.mainservice.coupon.application.DiscountService;
 import kkakka.mainservice.coupon.domain.Discount;
@@ -16,9 +15,11 @@ import kkakka.mainservice.order.domain.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class PromotionScheduler {
 
     private final DiscountRepository discountRepository;
@@ -43,10 +44,10 @@ public class PromotionScheduler {
         updateGradeByTotalPrice(findMembersByGrade(Grade.SILVER), 20000, Grade.GOLD);
         updateGradeByTotalPrice(findMembersByGrade(Grade.GOLD), 30000, Grade.VIP);
         updateGradeByTotalPrice(findMembersByGrade(Grade.VIP), 40000, Grade.VIP);
-        createGradeCoupon(Grade.BRONZE);
-        createGradeCoupon(Grade.SILVER);
-        createGradeCoupon(Grade.GOLD);
-        createGradeCoupon(Grade.VIP);
+        createGradeCoupon(Grade.BRONZE, 10, 1000, 10000);
+        createGradeCoupon(Grade.SILVER, 20, 2000, 10000);
+        createGradeCoupon(Grade.GOLD, 30, 3000, 10000);
+        createGradeCoupon(Grade.VIP, 40, 4000, 10000);
     }
 
     private List<Member> findMembersByGrade(Grade grade) {
@@ -55,23 +56,24 @@ public class PromotionScheduler {
 
     private void updateGradeByTotalPrice(List<Member> members, int price, Grade grade) {
         for (Member member : members) {
-            Optional<Integer> totalPrice = orderRepository.findOrderPriceByMemberId(member.getId());
-            if (totalPrice.get() > price) {
-                member.updateGrade(grade);
+            int totalPrice = orderRepository.findTotalPriceByMemberId(member.getId())
+                .orElseGet(() -> 0);
+            if (totalPrice > price) {
+                member.gradeUp(grade);
                 memberRepository.save(member);
             }
         }
     }
 
-    private void createGradeCoupon(Grade grade) {
+    private void createGradeCoupon(Grade grade, int percentage, int maxDiscount,
+        int minOrderPrice) {
         LocalDateTime now = LocalDateTime.now();
-        Calendar cal = Calendar.getInstance();
         couponService.createCoupon(new CouponRequestDto(
             null, grade, null, "정기 등급 쿠폰", "GRADE_COUPON",
             LocalDateTime.now(),
             LocalDateTime.of(now.getYear(), now.getMonthValue(),
-                cal.getActualMaximum(now.getMonthValue()), 0, 0),
-            10, 2000, 2000
+                YearMonth.of(now.getYear(), now.getMonthValue()).lengthOfMonth(), 11, 59),
+            percentage, maxDiscount, minOrderPrice
         ));
     }
 }
