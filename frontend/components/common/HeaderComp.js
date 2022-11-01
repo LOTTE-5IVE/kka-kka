@@ -32,23 +32,6 @@ export default function Header() {
     }
   }, [isLogin()]);
 
-  // useEffect(() => {
-  //   setToken(useGetToken());
-
-  //   if (!isLogin) {
-  //     console.log("memberinfo", useMemberInfo());
-  //   }
-
-  //   if (token !== "") {
-  //     useMemberInfo(token).then((res) => {
-  //       if (res) {
-  //         setName(res.name);
-  //         setGrade(res.grade);
-  //       }
-  //     });
-  //   }
-  // }, [token]);
-
   return (
     <div>
       <div className="HeaderWrapper">
@@ -425,6 +408,7 @@ export default function Header() {
                   .topRight {
                     width: 60px;
                     cursor: pointer;
+                    text-align: left;
                   }
                 }
 

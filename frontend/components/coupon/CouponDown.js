@@ -140,15 +140,15 @@ export function CouponDown({ handleModal }) {
         @media screen and (max-width: 768px) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .wrapper {
-            width: 600px;
-            height: 660px;
-            margin-top: 5px;
+            width: 80vw;
+            height: 90vw;
+            margin-top: 1vw;
             .container {
-              margin-bottom: 90px;
+              margin-bottom: 6vw;
 
               p {
                 width: 90%;
-                margin: 0 auto 10px;
+                margin: 0 auto 3vw;
                 font-weight: bold;
               }
 
@@ -168,9 +168,9 @@ export function CouponDown({ handleModal }) {
 
             .totalContainer {
               p {
-                font-size: 18px;
+                font-size: 2.5vw;
                 width: 90%;
-                margin: 0 auto 15px;
+                margin: 0 auto 2vw;
                 font-weight: bold;
               }
 

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-export default function Mysidebar({ mypageCallback }) {
+export default function Mysidebar({ handleTab }) {
   const [tab, setTab] = useState("order");
 
   useEffect(() => {
-    mypageCallback(tab);
-  });
+    handleTab(tab);
+  }, [tab]);
 
   return (
     <>

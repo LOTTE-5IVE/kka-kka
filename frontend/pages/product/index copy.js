@@ -4,8 +4,7 @@ import Title from "../../components/common/Title";
 import Sidebar from "../../components/product/Sidebar";
 import ProductRecCard from "../../components/product/ProductRecCard";
 import Pagination from "../../components/product/Pagination";
-import { Suspense } from "react";
-import { fetchData } from "../../apis/ProductApi";
+import axios from "axios";
 
 export default function ProductList() {
   const cat_name = {
@@ -25,180 +24,35 @@ export default function ProductList() {
   const search = router.query.search;
 
   const [page, setPage] = useState(1);
-  const [resource, setResource] = useState();
   const [lastPage, setLastPage] = useState();
+  const [data, setData] = useState();
+
+  const getProduct = async () => {
+    await axios
+      .get(`/api/products?category=${cat_id}&page=${page}`)
+      .then((res) => {
+        setData(res);
+        setPage(res.data.pageInfo.currentPage);
+        setLastPage(res.data.pageInfo.lastPage);
+      });
+  };
+
+  const getProductc = async () => {
+    await axios.get(`/api/products?category=${cat_id}&page=1`).then((res) => {
+      setData(res);
+      setPage(res.data.pageInfo.currentPage);
+      setLastPage(res.data.pageInfo.lastPage);
+    });
+  };
 
   useEffect(() => {
-    setResource(fetchData(cat_id, page));
+    getProduct();
   }, [page]);
 
   useEffect(() => {
     setPage(1);
-    setResource(fetchData(cat_id, 1));
+    getProductc();
   }, [cat_id]);
-
-  function PostSkeleton() {
-    return (
-      <div className="skeletonWrapper">
-        <div className="skeleton">
-          <div className="skeleton__title" />
-          <div className="skeleton__text" />
-          <div className="skeleton__text" />
-        </div>
-        <div className="skeleton">
-          <div className="skeleton__title" />
-          <div className="skeleton__text" />
-          <div className="skeleton__text" />
-        </div>
-        <div className="skeleton">
-          <div className="skeleton__title" />
-          <div className="skeleton__text" />
-          <div className="skeleton__text" />
-        </div>
-        <div className="skeleton">
-          <div className="skeleton__title" />
-          <div className="skeleton__text" />
-          <div className="skeleton__text" />
-        </div>
-        <div className="skeleton">
-          <div className="skeleton__title" />
-          <div className="skeleton__text" />
-          <div className="skeleton__text" />
-        </div>
-        <div className="skeleton">
-          <div className="skeleton__title" />
-          <div className="skeleton__text" />
-          <div className="skeleton__text" />
-        </div>
-        <div className="skeleton">
-          <div className="skeleton__title" />
-          <div className="skeleton__text" />
-          <div className="skeleton__text" />
-        </div>
-        <div className="skeleton">
-          <div className="skeleton__title" />
-          <div className="skeleton__text" />
-          <div className="skeleton__text" />
-        </div>
-        <div className="skeleton">
-          <div className="skeleton__title" />
-          <div className="skeleton__text" />
-          <div className="skeleton__text" />
-        </div>
-
-        <style jsx>{`
-          .skeletonWrapper {
-            display: table;
-            width: 1035px;
-            height: 1566px;
-
-            .skeleton {
-              display: inline-block;
-              width: 33.3%;
-              margin-bottom: 50px;
-            }
-          }
-
-          .skeleton {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-sizing: border-box;
-            min-height: 200px;
-            margin-top: 20px;
-            padding: 30px;
-          }
-
-          .skeleton__title {
-            background-color: #e7edf1;
-            border-radius: 12px;
-            width: 300px;
-            height: 300px;
-            margin-bottom: 24px;
-          }
-
-          .skeleton__text {
-            background-color: #e7edf1;
-            border-radius: 8px;
-            width: 300px;
-            height: 24px;
-            margin-top: 20px;
-          }
-
-          .skeleton__title,
-          .skeleton__text {
-            animation: shimmer 1.2s infinite linear;
-            background-image: linear-gradient(
-              90deg,
-              #e7edf1 0px,
-              #f1f6fa 200px,
-              #e7edf1 400px
-            );
-            background-size: 1200px;
-          }
-
-          @keyframes shimmer {
-            0% {
-              background-position: -400px;
-            }
-            50% {
-              background-position: 700px;
-            }
-            100% {
-              background-position: 700px;
-            }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
-  const ProductList = () => {
-    if (!resource) return;
-
-    const data = resource.productList.read();
-    setLastPage(data.pageInfo.lastPage);
-
-    return (
-      <>
-        <ul className="productList">
-          {data?.data?.map((product) => {
-            return (
-              <li className="productInner" key={product.id}>
-                <div className="productBox">
-                  <ProductRecCard
-                    id={product.id}
-                    imgsrc={product.image_url}
-                    name={product.name}
-                    price={product.price}
-                    discount={product.discount}
-                  />
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-
-        <style jsx>{`
-          .productList {
-            display: table;
-            width: 1035px;
-            height: 1566px;
-
-            .productInner {
-              display: inline-block;
-              width: 33.3%;
-              margin-bottom: 69px;
-
-              .productBox {
-                width: 298px;
-                margin: 0 auto;
-              }
-            }
-          }
-        `}</style>
-      </>
-    );
-  };
 
   return (
     <>
@@ -221,16 +75,7 @@ export default function ProductList() {
               <p className="category">{cat_name[cat_id]}</p>
             )}
           </div>
-          <Suspense
-            fallback={
-              <div>
-                <PostSkeleton />
-              </div>
-            }
-          >
-            <ProductList />
-          </Suspense>
-          {/* <ul className="productList">
+          <ul className="productList">
             {data?.data.data?.map((product) => {
               return (
                 <li className="productInner" key={product.id}>
@@ -246,7 +91,7 @@ export default function ProductList() {
                 </li>
               );
             })}
-          </ul> */}
+          </ul>
           <div className="pagination">
             <Pagination page={page} setPage={setPage} lastPage={lastPage} />
           </div>

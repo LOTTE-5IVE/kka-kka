@@ -17,11 +17,10 @@ export default function Home() {
     <>
       <Head>
         <title>kka-kka</title>
-        <Title title="과자 사러 과자" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <Title title="과자 사러 과자" />
       <Visual />
       <RecommSlider tab={tab} handleTab={handleTab} />
       <Youtube />

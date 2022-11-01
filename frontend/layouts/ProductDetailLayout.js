@@ -15,6 +15,7 @@ import {
   ThemeRed,
 } from "../typings/ThemeColor";
 import RangeWithIcons from "../components/mypage/review/RangeWithIcons";
+import { useNumberCheck } from "../hooks/useNumberCheck";
 
 export default function ProductDetailLayout({
   tab,
@@ -25,6 +26,7 @@ export default function ProductDetailLayout({
   lastPage,
   reviews,
   quantity,
+  setQuantity,
   handleModal,
   handleTab,
   handleQuantity,
@@ -118,7 +120,31 @@ export default function ProductDetailLayout({
                             value="-"
                             style={{ marginRight: "15px" }}
                           />
-                          <span>{quantity}</span>
+
+                          <input
+                            type="text"
+                            onChange={(e) => {
+                              if (!useNumberCheck(e.target.value)) {
+                                alert("숫자만 입력하세요.");
+                                setQuantity(1);
+                                return;
+                              }
+
+                              Number(e.target.value) > product.stock
+                                ? alert("수량 한도를 초과했습니다.")
+                                : setQuantity(Number(e.target.value));
+                            }}
+                            onBlur={(e) => {
+                              if (Number(e.target.value) < 1) {
+                                alert("최소 수량은 1개입니다.");
+                                setQuantity(1);
+                              }
+                            }}
+                            size="1"
+                            value={quantity}
+                            style={{ textAlign: "center" }}
+                          />
+
                           <input
                             type="button"
                             onClick={() => handleQuantity("plus")}
@@ -474,51 +500,51 @@ export default function ProductDetailLayout({
         @media screen and (max-width: 768px) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .ProductDetailLWrapper {
-            margin: 57px auto 0;
-            width: 1240px;
+            margin: 3vw auto 0;
+            width: 85vw;
 
             .detailTop {
               display: flex;
               justify-content: space-between;
 
               .detailImg {
-                width: 600px;
-                height: 600px;
+                width: 33vw;
+                height: 33vw;
                 text-align: center;
-                border-radius: 30px;
+                border-radius: 2vw;
                 background-color: ${ThemeGray};
 
                 img {
-                  width: 600px;
-                  height: 600px;
+                  width: 33vw;
+                  height: 33vw;
                 }
               }
 
               .detailEtc {
-                width: 560px;
+                width: 40vw;
 
                 .headingArea {
-                  font-size: 34px;
-                  line-height: 40px;
+                  font-size: 2.5vw;
+                  line-height: 2vw;
                   color: ${NBlack};
                   font-weight: 700;
 
                   .headingAreaName {
-                    margin-top: 23px;
+                    margin-top: 1.21vw;
                   }
 
                   .headingDescription {
-                    font-size: 32px;
-                    margin: 28px 0 0;
-                    height: 140px;
-                    padding-bottom: 30px;
+                    font-size: 3vw;
+                    margin: 1.5vw 0 0;
+                    height: 12vw;
+                    padding-bottom: 1.58vw;
                     border-bottom: 1px solid ${NLightGray};
 
                     p {
                       margin: 0;
 
                       span {
-                        font-size: 24px;
+                        font-size: 1.26vw;
                         color: ${NGray};
                         text-decoration: line-through;
                       }
@@ -527,24 +553,24 @@ export default function ProductDetailLayout({
                 }
 
                 .delivery {
-                  margin: 20px 0 10px;
-                  font-size: 16px;
+                  margin: 1.05vw 0 0.53vw;
+                  font-size: 0.84vw;
                   display: flex;
 
                   p {
-                    width: 120px;
+                    width: 15vw;
                   }
                 }
 
                 .coupon {
-                  margin: 20px 0 10px;
-                  font-size: 16px;
+                  margin: 1.05vw 0 0.53vw;
+                  font-size: 0.84vw;
                   display: flex;
                   align-items: center;
 
                   p {
-                    width: 490px;
-                    font-size: 12px;
+                    width: 25.79vw;
+                    font-size: 1vw;
                     color: red;
                     font-weight: 700;
                   }
@@ -552,9 +578,10 @@ export default function ProductDetailLayout({
 
                 .totalProducts {
                   background-color: ${ThemeGray};
-                  margin-bottom: 5px;
-                  padding: 20px 15px 15px;
-                  border-radius: 8px;
+                  margin-bottom: 0.26vw;
+                  padding: 1.05vw 0.79vw 0.79vw;
+                  border-radius: 0.42vw;
+                  font-size: 2.5vw;
 
                   input[type="button"] {
                     background-color: #fff;
@@ -564,26 +591,26 @@ export default function ProductDetailLayout({
                 }
 
                 .totalPrice {
-                  padding: 30px 0 10px;
+                  padding: 1.58vw 0 0.53vw;
                   display: flex;
                   justify-content: space-between;
                   align-items: center;
 
                   strong {
-                    font-size: 18px;
+                    font-size: 3vw;
                     color: ${NBlack};
                     font-weight: 500;
                   }
 
                   p {
                     float: right;
-                    line-height: 33px;
-                    font-size: 14px;
+                    line-height: 1.74vw;
+                    font-size: 3vw;
                     color: ${NBlack};
                     font-weight: 500;
 
                     span {
-                      font-size: 32px;
+                      font-size: 5vw;
                       color: ${ThemeRed};
                       font-weight: 700;
                     }
@@ -592,34 +619,34 @@ export default function ProductDetailLayout({
 
                 .btn {
                   display: flex;
-                  padding: 30px 0 10x;
+                  padding: 1.58vw 0 0.53vw;
                   justify-content: space-around;
 
                   .cartBtn {
-                    width: 252px;
-                    margin-top: 5px;
+                    width: 20vw;
+                    margin-top: 0.26vw;
                     background: ${ThemePink};
                     color: #fff;
                     border: 1px solid ${ThemePink};
                     text-align: center;
-                    height: 60px;
-                    line-height: 60px;
-                    font-size: 18px;
+                    height: 9vw;
+                    line-height: 9vw;
+                    font-size: 3vw;
                     vertical-align: middle;
                     padding: 0;
                     cursor: pointer;
                   }
 
                   .buyBtn {
-                    width: 252px;
-                    margin-top: 5px;
+                    width: 20vw;
+                    margin-top: 0.26vw;
                     background: ${ThemeBlue};
                     color: #fff;
                     border: 1px solid ${ThemeBlue};
                     text-align: center;
-                    height: 60px;
-                    line-height: 60px;
-                    font-size: 18px;
+                    height: 9vw;
+                    line-height: 9vw;
+                    font-size: 3vw;
                     padding: 0;
                     cursor: pointer;
                   }
@@ -640,13 +667,14 @@ export default function ProductDetailLayout({
             }
 
             .detailBottom {
-              padding-top: 40px;
+              padding-top: 2.11vw;
 
               .tabMenu {
-                margin: 0 auto 60px;
+                margin: 0 auto 4vw;
                 border-bottom: 2px solid ${NLightGray};
 
                 ul {
+                  padding: 0;
                   margin: 0 auto;
                   display: flex;
                   justify-content: center;
@@ -656,13 +684,13 @@ export default function ProductDetailLayout({
                   li {
                     position: relative;
                     display: inline-block;
-                    width: 280px;
-                    height: 60px;
-                    line-height: 60px;
+                    width: 27vw;
+                    height: 9vw;
+                    line-height: 9vw;
 
                     a {
                       display: block;
-                      font-size: 18px;
+                      font-size: 3.5vw;
                       font-weight: 700;
 
                       color: ${NGray};
@@ -699,7 +727,7 @@ export default function ProductDetailLayout({
           }
 
           .mt-3 {
-            margin-top: 1rem;
+            margin-top: 3vw;
             width: fit-content;
           }
         }

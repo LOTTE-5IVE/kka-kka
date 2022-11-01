@@ -1,9 +1,15 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import { ThemeGray } from "../../typings/ThemeColor";
 
 export default function Pagination({ page, setPage, lastPage }) {
   const [start, setStart] = useState(1);
   const [end, setEnd] = useState(10);
+
+  useEffect(() => {
+    setStart(1);
+    setEnd(10);
+  }, [lastPage]);
 
   return (
     <div className="wrapper">
@@ -136,6 +142,8 @@ export default function Pagination({ page, setPage, lastPage }) {
               ul {
                 list-style: none;
                 display: flex;
+                justify-content: center;
+                align-items: center;
                 padding: 0;
               }
 
@@ -192,14 +200,12 @@ export default function Pagination({ page, setPage, lastPage }) {
               ul {
                 list-style: none;
                 display: flex;
+                justify-content: center;
+                align-items: center;
                 padding: 0;
               }
 
               li {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-
                 .btn {
                   width: 16px;
                 }
