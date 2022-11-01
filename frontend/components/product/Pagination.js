@@ -22,7 +22,7 @@ export default function Pagination({ page, setPage, lastPage }) {
             }}
             disabled={page === 1}
           >
-            <img src="/btn_page_prev.gif" />
+            <img className="btn" src="/common/btn_page_prev.gif" />
           </li>
 
           {lastPage &&
@@ -31,22 +31,20 @@ export default function Pagination({ page, setPage, lastPage }) {
               .slice(start, end + 1)
               .map((_, i) => (
                 <li
-                  className={page == start + i ? "active" : "pageIndex"}
-                  width="15px"
+                  className={
+                    page == start + i ? "active pageIndex" : "normal pageIndex"
+                  }
                   key={i + 1}
                   onClick={() => {
                     setPage(start + i);
                   }}
-                  style={{ margin: "0 10px" }}
                 >
                   {start + i}
                 </li>
               ))}
           <li
             onClick={() => {
-              console.log("next click");
               if (page == end && page < lastPage) {
-                console.log("next click2");
                 setStart(start + 10);
                 setEnd(end + 10);
               }
@@ -56,61 +54,178 @@ export default function Pagination({ page, setPage, lastPage }) {
             }}
             disabled={page === lastPage - 200}
           >
-            <img src="/btn_page_next.gif" />
+            <img className="btn" src="/common/btn_page_next.gif" />
           </li>
         </ul>
       </div>
       <style jsx>{`
-        .wrapper {
-          display: flex;
-          justify-content: center;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .wrapper {
+            width: 1035px;
+            height: 132px;
 
-          .pageBtn {
             display: flex;
             justify-content: center;
-            font-size: 25px;
-            margin-bottom: 50px;
-            cursor: pointer;
 
-            ul {
-              list-style: none;
-              display: flex;
-              padding: 0;
-            }
-
-            li {
+            .pageBtn {
               display: flex;
               justify-content: center;
-              align-items: center;
-            }
+              font-size: 25px;
+              margin-bottom: 50px;
+              cursor: pointer;
 
-            .pageIndex {
-              border-bottom: 0;
-              padding: 0px;
-              font-weight: 400;
-              width: 32px;
-              height: 32px;
-              border-radius: 50%;
-              line-height: 34px;
-              text-align: center;
-              transition: 0.5s;
-            }
+              ul {
+                list-style: none;
+                display: flex;
+                padding: 0;
+              }
 
-            .pageIndex:hover {
-              background: ${ThemeGray};
-            }
+              li {
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
-            .active {
-              border-bottom: 0;
-              padding: 0px;
-              font-weight: 400;
-              color: #fff;
-              width: 32px;
-              height: 32px;
-              border-radius: 50%;
-              background: #ff3d44;
-              line-height: 34px;
-              text-align: center;
+                .btn {
+                  width: 32px;
+                }
+              }
+
+              .pageIndex {
+                width: 32px;
+                height: 32px;
+                margin: 0 10px;
+                padding: 0px;
+                border-bottom: 0;
+                font-weight: 400;
+                border-radius: 50%;
+                line-height: 34px;
+                text-align: center;
+                transition: 0.5s;
+              }
+
+              .normal:hover {
+                background: ${ThemeGray};
+              }
+
+              .active {
+                color: #fff;
+                background: #ff3d44;
+              }
+            }
+          }
+        }
+
+        @media screen and (max-width: 768px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .wrapper {
+            width: 61.5vw;
+            height: 6vw;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            margin: 0 auto;
+
+            .pageBtn {
+              display: flex;
+              justify-content: center;
+              font-size: 1.32vw;
+              margin-bottom: 0.5vw;
+              cursor: pointer;
+
+              ul {
+                list-style: none;
+                display: flex;
+                padding: 0;
+              }
+
+              li {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .btn {
+                  width: 3vw;
+                }
+              }
+
+              .pageIndex {
+                width: 3vw;
+                height: 3vw;
+                margin: 0 0.52vw;
+                padding: 0vw;
+                border-bottom: 0vw;
+                font-weight: 400;
+                border-radius: 50%;
+                line-height: 1.79vw;
+                text-align: center;
+                transition: 0.5s;
+              }
+
+              .normal:hover {
+                background: ${ThemeGray};
+              }
+
+              .active {
+                color: #fff;
+                background: #ff3d44;
+              }
+            }
+          }
+        }
+
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .wrapper {
+            width: 450px;
+            height: 66px;
+            display: flex;
+            justify-content: center;
+
+            .pageBtn {
+              display: flex;
+              justify-content: center;
+              font-size: 12.5px;
+
+              cursor: pointer;
+
+              ul {
+                list-style: none;
+                display: flex;
+                padding: 0;
+              }
+
+              li {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .btn {
+                  width: 16px;
+                }
+              }
+
+              .pageIndex {
+                width: 16px;
+                height: 16px;
+                margin: 0 5px;
+                padding: 0px;
+                border-bottom: 0;
+                font-weight: 400;
+                border-radius: 50%;
+                line-height: 17px;
+                text-align: center;
+                transition: 0.5s;
+              }
+
+              .normal:hover {
+                background: ${ThemeGray};
+              }
+
+              .active {
+                color: #fff;
+                background: #ff3d44;
+              }
             }
           }
         }

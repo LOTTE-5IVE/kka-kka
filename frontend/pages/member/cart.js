@@ -75,8 +75,20 @@ export default function cart() {
       if (res) {
         console.log(res.cartItems);
         setCartItems(res.cartItems);
-        setTotalPrice(res.cartItems.reduce((prev, cur) => prev + (cur.price * cur.quantity), 0));
-        setDiscountPrice(res.cartItems.reduce((prev, cur) => prev + Math.ceil(cur.price * 0.01 * cur.productDiscount * cur.quantity), 0));
+        setTotalPrice(
+          res.cartItems.reduce(
+            (prev, cur) => prev + cur.price * cur.quantity,
+            0,
+          ),
+        );
+        setDiscountPrice(
+          res.cartItems.reduce(
+            (prev, cur) =>
+              prev +
+              Math.ceil(cur.price * 0.01 * cur.productDiscount * cur.quantity),
+            0,
+          ),
+        );
       }
     });
   };
@@ -105,24 +117,24 @@ export default function cart() {
   return (
     <>
       <Title title="장바구니" />
-      <div className="title">
+      <div className="CartTitle">
         <h2>장바구니</h2>
       </div>
-      <div className="contents">
+      <div className="CartContents">
         <div className="orderTables">
           <div className="orderList">
             <table>
               <colgroup>
-                <col style={{ width: "1vw" }} />
-                <col style={{ width: "8vw" }} />
-                <col style={{ width: "27vw" }} />
-                <col style={{ width: "10vw" }} />
-                <col style={{ width: "8vw" }} />
-                <col style={{ width: "8vw" }} />
-                <col style={{ width: "2vw" }} />
+                <col style={{ width: "5%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "40%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "5%" }} />
               </colgroup>
               <thead>
-                <tr style={{ height: "3vw" }}>
+                <tr style={{ height: "57px" }}>
                   <th scope="col">
                     {cartItems ? (
                       <input
@@ -150,7 +162,7 @@ export default function cart() {
               <tbody>
                 {cartItems?.map((product, index) => {
                   return (
-                    <tr key={product.productId} style={{ height: "6vw" }}>
+                    <tr key={product.productId}>
                       <td>
                         <input
                           type="checkbox"
@@ -164,7 +176,7 @@ export default function cart() {
                         />
                       </td>
                       <td>
-                        <img width="50px" src={product.imageUrl} />
+                        <img className="thumnail" src={product.imageUrl} />
                       </td>
                       <td>
                         <div>{product.productName}</div>
@@ -203,6 +215,7 @@ export default function cart() {
                       <td>
                         <span>
                           <input
+                            className="minusBtn"
                             type="button"
                             onClick={() => {
                               editCartItem(
@@ -212,10 +225,10 @@ export default function cart() {
                               handleMinus(product.productId);
                             }}
                             value="-"
-                            style={{ marginRight: "15px" }}
                           />
                           <span>{product.quantity}</span>
                           <input
+                            className="plusBtn"
                             type="button"
                             onClick={() => {
                               editCartItem(
@@ -225,7 +238,6 @@ export default function cart() {
                               handlePlus(product.productId);
                             }}
                             value="+"
-                            style={{ marginLeft: "15px" }}
                           />
                         </span>
                       </td>
@@ -273,14 +285,14 @@ export default function cart() {
           <div className="orderSummary">
             <table>
               <colgroup>
-                <col style={{ width: "14vw" }} />
-                <col style={{ width: "11vw" }} />
-                <col style={{ width: "14vw" }} />
-                <col style={{ width: "12vw" }} />
-                <col style={{ width: "14vw" }} />
+                <col style={{ width: "269px" }} />
+                <col style={{ width: "211px" }} />
+                <col style={{ width: "269px" }} />
+                <col style={{ width: "211px" }} />
+                <col style={{ width: "269px" }} />
               </colgroup>
               <thead>
-                <tr style={{ height: "3vw" }}>
+                <tr style={{ height: "58px" }}>
                   <th scope="col">총 상품금액</th>
                   <th scope="col"></th>
                   <th scope="col">총 할인금액</th>
@@ -289,17 +301,13 @@ export default function cart() {
                 </tr>
               </thead>
               <tbody>
-                <tr style={{ height: "7vw" }}>
+                <tr>
                   <td>
-                    <span>
-                      {useMoney(totalPrice)}
-                    </span>
+                    <span>{useMoney(totalPrice)}</span>
                   </td>
                   <td>-</td>
                   <td>
-                    <span>
-                      {useMoney(discountPrice) || 0}
-                    </span>
+                    <span>{useMoney(discountPrice) || 0}</span>
                   </td>
                   <td>=</td>
                   <td>{useMoney(totalPrice - discountPrice)}</td>
@@ -308,7 +316,7 @@ export default function cart() {
             </table>
           </div>
         </div>
-        <div className="order-btn">
+        <div className="orderBtn">
           <Link
             href={{
               pathname: `/payment`,
@@ -334,26 +342,375 @@ export default function cart() {
         </div>
       </div>
       <style jsx>{`
-        .title {
-          margin-top: 5vw;
-          text-align: center;
-          padding: 0;
-          color: #3a3a3a;
-          font-size: 1.5vw;
-          font-weight: 700;
-          line-height: 1;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .CartTitle {
+            margin-top: 96px;
+            text-align: center;
+            padding: 0;
+            color: #3a3a3a;
+            font-size: 30px;
+            font-weight: 700;
+            line-height: 1;
+          }
+
+          .CartContents {
+            text-align: center;
+
+            .orderTables {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+
+              .orderList {
+                table {
+                  width: 1235px;
+                  border-collapse: collapse;
+                  border-bottom: 1px solid #dfdfdf;
+                }
+                th {
+                  border: 0;
+                  margin: 0;
+                  padding: 0;
+
+                  border-spacing: 0;
+                  border-top: 2px solid #1a1a1a;
+                  border-bottom: 1px solid #dfdfdf;
+                }
+
+                tr {
+                  height: 115px;
+                }
+
+                td {
+                  .thumnail {
+                    width: 50px;
+                  }
+                  img {
+                    width: 20px;
+                  }
+
+                  .couponWrapper {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-top: 10px;
+
+                    .couponContents {
+                      display: flex;
+                      line-height: 15px;
+                      margin-right: 10px;
+
+                      span {
+                        background-color: #05c7f2;
+                        color: #fff;
+                      }
+                    }
+                  }
+
+                  input[type="button"] {
+                    background-color: #fff;
+                    border: 1px solid #c8c8c8;
+                    border-radius: 50%;
+                  }
+
+                  .minusBtn {
+                    margin-right: 15px;
+                  }
+                  .plusBtn {
+                    margin-left: 15px;
+                  }
+
+                  p {
+                    margin: 0;
+
+                    span {
+                      font-size: 14px;
+                      color: ${NGray};
+                      text-decoration: line-through;
+                    }
+                  }
+                }
+              }
+            }
+
+            .orderSummary {
+              margin-top: 96px;
+
+              table {
+                width: 1235px;
+                border-collapse: collapse;
+                border-bottom: 1px solid #dfdfdf;
+
+                tbody {
+                  tr {
+                    height: 134px;
+                  }
+                }
+              }
+              th {
+                border: 0;
+                margin: 0;
+                padding: 0;
+
+                border-spacing: 0;
+                border-top: 2px solid #1a1a1a;
+                border-bottom: 1px solid #dfdfdf;
+              }
+            }
+
+            .orderBtn {
+              margin: 38px auto 58px;
+              width: 571px;
+              display: flex;
+              justify-content: space-around;
+            }
+          }
         }
 
-        .contents {
-          text-align: center;
+        @media screen and (max-width: 768px) {
+          /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
+          .CartTitle {
+            text-align: center;
+            padding: 0;
+            color: #3a3a3a;
+            font-size: 30px;
+            font-weight: 700;
+            line-height: 1;
+          }
 
-          .orderTables {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+          .CartContents {
+            text-align: center;
 
-            .orderList {
+            .orderTables {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+
+              .orderList {
+                table {
+                  border-collapse: collapse;
+                  border-bottom: 1px solid #dfdfdf;
+                }
+                th {
+                  border: 0;
+                  margin: 0;
+                  padding: 0;
+
+                  border-spacing: 0;
+                  border-top: 2px solid #1a1a1a;
+                  border-bottom: 1px solid #dfdfdf;
+                }
+
+                td {
+                  .thumnail {
+                    width: 50px;
+                  }
+                  img {
+                    width: 20px;
+                  }
+
+                  .couponWrapper {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-top: 10px;
+
+                    .couponContents {
+                      display: flex;
+                      line-height: 15px;
+                      margin-right: 10px;
+
+                      span {
+                        background-color: #05c7f2;
+                        color: #fff;
+                      }
+                    }
+                  }
+
+                  input[type="button"] {
+                    background-color: #fff;
+                    border: 1px solid #c8c8c8;
+                    border-radius: 50%;
+                  }
+
+                  .minusBtn {
+                    margin: 0;
+                    position: relative;
+                    width: 15px;
+                    height: 15px;
+                    left: 7px;
+                    top: 25px;
+                  }
+                  .plusBtn {
+                    margin: 0;
+                    position: relative;
+                    width: 15px;
+                    height: 15px;
+                    left: 18px;
+                    top: 6px;
+                  }
+                  p {
+                    margin: 0;
+
+                    span {
+                      font-size: 14px;
+                      color: ${NGray};
+                      text-decoration: line-through;
+                    }
+                  }
+                }
+              }
+            }
+
+            .orderSummary {
+              margin-top: 96px;
+
               table {
+                border-collapse: collapse;
+                border-bottom: 1px solid #dfdfdf;
+
+                tbody {
+                  tr {
+                    height: 80px;
+                  }
+                }
+              }
+              th {
+                border: 0;
+                margin: 0;
+                padding: 0;
+
+                border-spacing: 0;
+                border-top: 2px solid #1a1a1a;
+                border-bottom: 1px solid #dfdfdf;
+              }
+            }
+
+            .orderBtn {
+              margin: 38px auto 58px;
+              width: 571px;
+              display: flex;
+              justify-content: space-around;
+            }
+          }
+        }
+
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .CartTitle {
+            text-align: center;
+            padding: 0;
+            color: #3a3a3a;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1;
+          }
+
+          .CartContents {
+            text-align: center;
+
+            .orderTables {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+
+              .orderList {
+                table {
+                  width: 450px;
+                  font-size: 12px;
+                  border-collapse: collapse;
+                  border-bottom: 1px solid #dfdfdf;
+
+                  th {
+                    border: 0;
+                    margin: 0;
+                    padding: 0;
+
+                    border-spacing: 0;
+                    border-top: 2px solid #1a1a1a;
+                    border-bottom: 1px solid #dfdfdf;
+                  }
+
+                  tr {
+                    height: 75px;
+                  }
+
+                  td {
+                    font-size: 10px;
+
+                    .thumnail {
+                      width: 30px;
+                    }
+                    img {
+                      width: 15px;
+                    }
+
+                    .couponWrapper {
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      margin-top: 10px;
+
+                      .couponContents {
+                        display: flex;
+                        line-height: 15px;
+                        margin-right: 10px;
+
+                        span {
+                          font-size: 10px;
+                          background-color: #05c7f2;
+                          color: #fff;
+                        }
+                      }
+                    }
+
+                    input[type="text"] {
+                      width: 100px;
+                    }
+
+                    input[type="button"] {
+                      background-color: #fff;
+                      border: 1px solid #c8c8c8;
+                      border-radius: 50%;
+                    }
+
+                    .minusBtn {
+                      padding: 0;
+                      position: relative;
+                      width: 15px;
+                      height: 15px;
+                      left: 0px;
+                      top: 20px;
+                    }
+                    .plusBtn {
+                      padding: 0;
+                      position: relative;
+                      width: 15px;
+                      height: 15px;
+                      left: 3px;
+                      top: 20px;
+                    }
+
+                    p {
+                      margin: 0;
+
+                      span {
+                        font-size: 14px;
+                        color: ${NGray};
+                        text-decoration: line-through;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            .orderSummary {
+              margin-top: 30px;
+
+              table {
+                width: 450px;
                 border-collapse: collapse;
                 border-bottom: 1px solid #dfdfdf;
               }
@@ -366,68 +723,14 @@ export default function cart() {
                 border-top: 2px solid #1a1a1a;
                 border-bottom: 1px solid #dfdfdf;
               }
-
-              td {
-                .couponWrapper {
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  margin-top: 10px;
-
-                  .couponContents {
-                    display: flex;
-                    line-height: 15px;
-                    margin-right: 10px;
-
-                    span {
-                      background-color: #05c7f2;
-                      color: #fff;
-                    }
-                  }
-                }
-
-                input[type="button"] {
-                  background-color: #fff;
-                  border: 1px solid #c8c8c8;
-                  border-radius: 50%;
-                }
-
-                p {
-                  margin: 0;
-
-                  span {
-                    font-size: 14px;
-                    color: ${NGray};
-                    text-decoration: line-through;
-                  }
-                }
-              }
             }
-          }
 
-          .orderSummary {
-            margin-top: 5vw;
-
-            table {
-              border-collapse: collapse;
-              border-bottom: 1px solid #dfdfdf;
+            .orderBtn {
+              margin: 38px auto 58px;
+              width: 480px;
+              display: flex;
+              justify-content: space-around;
             }
-            th {
-              border: 0;
-              margin: 0;
-              padding: 0;
-
-              border-spacing: 0;
-              border-top: 2px solid #1a1a1a;
-              border-bottom: 1px solid #dfdfdf;
-            }
-          }
-
-          .order-btn {
-            margin: 2vw auto 3vw;
-            width: 30%;
-            display: flex;
-            justify-content: space-around;
           }
         }
       `}</style>

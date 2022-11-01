@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import kkakka.mainservice.TestContext;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,8 +25,8 @@ public class MemberRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
-                                MemberProviderName.TEST),
+                        Provider.create(TEST_MEMBER_01.getProviderId(),
+                                ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),
@@ -49,8 +49,8 @@ public class MemberRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
-                                MemberProviderName.TEST),
+                        Provider.create(TEST_MEMBER_01.getProviderId(),
+                                ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),
@@ -73,8 +73,8 @@ public class MemberRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
-                                MemberProviderName.TEST),
+                        Provider.create(TEST_MEMBER_01.getProviderId(),
+                                ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),
@@ -98,8 +98,8 @@ public class MemberRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
-                                MemberProviderName.TEST),
+                        Provider.create(TEST_MEMBER_01.getProviderId(),
+                                ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),
@@ -122,8 +122,8 @@ public class MemberRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
-                                MemberProviderName.TEST),
+                        Provider.create(TEST_MEMBER_01.getProviderId(),
+                                ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),
@@ -147,8 +147,8 @@ public class MemberRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(TEST_MEMBER_01.getUserProfile().getId(),
-                                MemberProviderName.TEST),
+                        Provider.create(TEST_MEMBER_01.getProviderId(),
+                                ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),

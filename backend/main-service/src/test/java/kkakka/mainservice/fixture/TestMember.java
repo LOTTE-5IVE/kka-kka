@@ -5,7 +5,7 @@ import static java.util.stream.Collectors.toList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import kkakka.mainservice.auth.application.UserProfile;
+import kkakka.mainservice.member.auth.application.dto.UserProfile;
 import kkakka.mainservice.member.auth.ui.Authority;
 
 public enum TestMember {

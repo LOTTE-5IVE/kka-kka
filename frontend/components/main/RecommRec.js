@@ -14,14 +14,32 @@ export default function RecommRec({ id, imgsrc, name, price, discount }) {
       </div>
 
       <style jsx>{`
-        .wrapper {
-          .imageSection {
-            text-align: center;
-            border-radius: 20px;
-            background-color: #f5f5f5;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .wrapper {
+            .imageSection {
+              text-align: center;
+              border-radius: 20px;
+              background-color: #f5f5f5;
 
-            img {
-              height: 330px;
+              img {
+                height: 330px;
+              }
+            }
+          }
+        }
+
+        @media screen and (max-width: 768px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .wrapper {
+            .imageSection {
+              text-align: center;
+              border-radius: 1.05vw;
+              background-color: #f5f5f5;
+
+              img {
+                height: 17.37vw;
+              }
             }
           }
         }

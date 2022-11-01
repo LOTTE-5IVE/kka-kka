@@ -19,3 +19,4 @@ logging:
         web:
           filter:
             CommonsRequestLoggingFilter: DEBUG
+    kkakka.mainservice.member.auth.application: DEBUG

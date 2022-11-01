@@ -1,6 +1,7 @@
 package kkakka.mainservice.order.application;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import kkakka.mainservice.common.exception.KkaKkaException;
@@ -84,6 +85,11 @@ public class OrderService {
             );
         }
         return dtos;
+    }
+
+    public boolean checkIsLastOrder(Long memberId, Long orderId) {
+        final List<Order> orders = orderRepositorySupport.isLastId(memberId, orderId);
+        return orders.isEmpty();
     }
 
     @Transactional

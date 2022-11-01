@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import kkakka.mainservice.TestContext;
 import kkakka.mainservice.common.exception.OutOfStockException;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.application.dto.OrderDto;
@@ -49,7 +49,7 @@ class OrderServiceTest extends TestContext {
     void setUp() {
         member = memberRepository.save(
                 Member.create(
-                        Provider.create(TEST_MEMBER_01.getCode(), MemberProviderName.TEST),
+                        Provider.create(TEST_MEMBER_01.getCode(), ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),

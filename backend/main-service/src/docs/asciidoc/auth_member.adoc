@@ -67,3 +67,14 @@ include::{snippets}/orders-info-member-success/http-request.adoc[]
 - Response
 
 include::{snippets}/orders-info-member-success/http-response.adoc[]
+
+
+==== 회원 주문내역 조회 (페이지가 더 있을 때)
+
+- Request
+
+include::{snippets}/orders-info-member-not-last-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/orders-info-member-not-last-success/http-response.adoc[]

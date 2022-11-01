@@ -8,8 +8,8 @@ import java.util.Map;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.application.dto.RecipientDto;
 import kkakka.mainservice.order.domain.Order;
@@ -87,7 +87,7 @@ public class DataLoader {
     private void saveUser() {
         testMember = memberRepository.save(
                 Member.create(
-                        Provider.create("0001", MemberProviderName.TEST),
+                        Provider.create("0001", ProviderName.TEST),
                         "신우주",
                         "test@email.com",
                         "010-000-0000",
@@ -96,7 +96,7 @@ public class DataLoader {
         );
         memberRepository.save(
                 Member.create(
-                        Provider.create("0002", MemberProviderName.TEST),
+                        Provider.create("0002", ProviderName.TEST),
                         "서지훈",
                         "test@email.com",
                         "010-000-0000",
@@ -105,7 +105,7 @@ public class DataLoader {
         );
         memberRepository.save(
                 Member.create(
-                        Provider.create("0003", MemberProviderName.TEST),
+                        Provider.create("0003", ProviderName.TEST),
                         "김혜연",
                         "test@email.com",
                         "010-000-0000",
@@ -114,7 +114,7 @@ public class DataLoader {
         );
         memberRepository.save(
                 Member.create(
-                        Provider.create("0004", MemberProviderName.TEST),
+                        Provider.create("0004", ProviderName.TEST),
                         "오명주",
                         "test@email.com",
                         "010-000-0000",
@@ -123,7 +123,7 @@ public class DataLoader {
         );
         memberRepository.save(
                 Member.create(
-                        Provider.create("0005", MemberProviderName.TEST),
+                        Provider.create("0005", ProviderName.TEST),
                         "최솔지",
                         "test@email.com",
                         "010-000-0000",
