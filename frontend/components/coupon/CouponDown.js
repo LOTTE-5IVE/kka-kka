@@ -43,7 +43,7 @@ export function CouponDown({ handleModal }) {
           </table>
         </div>
         <div className="totalContainer">
-          <h3>전체 쿠폰</h3>
+          <p>전체 쿠폰</p>
           <table>
             <colgroup>
               <col style={{ width: "30%" }} />
@@ -84,50 +84,163 @@ export function CouponDown({ handleModal }) {
       </div>
 
       <style jsx>{`
-        .wrapper {
-          width: 600px;
-          height: 660px;
-          margin-top: 5px;
-          .container {
-            margin-bottom: 90px;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .wrapper {
+            width: 600px;
+            height: 660px;
+            margin-top: 5px;
+            .container {
+              margin-bottom: 90px;
 
-            p {
-              width: 90%;
-              margin: 0 auto 10px;
-              font-weight: bold;
+              p {
+                width: 90%;
+                margin: 0 auto 10px;
+                font-weight: bold;
+              }
+
+              table {
+                width: 90%;
+                border-collapse: collapse;
+                margin: 0 auto;
+                text-align: center;
+
+                thead {
+                  height: 4vw;
+                  border-top: 1px solid;
+                  border-bottom: 1px solid;
+                }
+              }
             }
 
-            table {
-              width: 90%;
-              border-collapse: collapse;
-              margin: 0 auto;
-              text-align: center;
+            .totalContainer {
+              p {
+                font-size: 18px;
+                width: 90%;
+                margin: 0 auto 15px;
+                font-weight: bold;
+              }
 
-              thead {
-                height: 4vw;
-                border-top: 1px solid;
-                border-bottom: 1px solid;
+              table {
+                width: 90%;
+                border-collapse: collapse;
+                margin: 0 auto;
+                text-align: center;
+
+                thead {
+                  height: 4vw;
+                  border-top: 1px double;
+                  border-bottom: 1px double;
+                }
               }
             }
           }
+        }
 
-          .totalContainer {
-            h3 {
-              width: 90%;
-              margin: 0 auto 15px;
-              font-weight: bold;
+        @media screen and (max-width: 768px) {
+          /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
+          .wrapper {
+            width: 600px;
+            height: 660px;
+            margin-top: 5px;
+            .container {
+              margin-bottom: 90px;
+
+              p {
+                width: 90%;
+                margin: 0 auto 10px;
+                font-weight: bold;
+              }
+
+              table {
+                width: 90%;
+                border-collapse: collapse;
+                margin: 0 auto;
+                text-align: center;
+
+                thead {
+                  height: 4vw;
+                  border-top: 1px solid;
+                  border-bottom: 1px solid;
+                }
+              }
             }
 
-            table {
-              width: 90%;
-              border-collapse: collapse;
-              margin: 0 auto;
-              text-align: center;
+            .totalContainer {
+              p {
+                font-size: 18px;
+                width: 90%;
+                margin: 0 auto 15px;
+                font-weight: bold;
+              }
 
-              thead {
-                height: 4vw;
-                border-top: 1px double;
-                border-bottom: 1px double;
+              table {
+                width: 90%;
+                border-collapse: collapse;
+                margin: 0 auto;
+                text-align: center;
+
+                thead {
+                  height: 4vw;
+                  border-top: 1px double;
+                  border-bottom: 1px double;
+                }
+              }
+            }
+          }
+        }
+
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .wrapper {
+            width: 380px;
+            height: 500px;
+            margin-top: 5px;
+            .container {
+              margin-bottom: 30px;
+
+              p {
+                width: 90%;
+                margin: 0 auto 10px;
+                font-weight: bold;
+                font-size: 12px;
+              }
+
+              table {
+                width: 90%;
+                border-collapse: collapse;
+                margin: 0 auto;
+                font-size: 12px;
+                text-align: center;
+
+                thead {
+                  height: 4vw;
+                  border-top: 1px solid;
+                  border-bottom: 1px solid;
+                }
+              }
+            }
+
+            .totalContainer {
+              p {
+                font-size: 12px;
+                width: 90%;
+                margin: 0 auto 15px;
+                font-weight: bold;
+              }
+
+              table {
+                width: 90%;
+                border-collapse: collapse;
+                margin: 0 auto;
+                font-size: 12px;
+                text-align: center;
+
+                thead {
+                  height: 4vw;
+                  border-top: 1px double;
+                  border-bottom: 1px double;
+                }
               }
             }
           }

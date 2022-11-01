@@ -11,7 +11,6 @@ export default function mypage() {
   const [name, setName] = useState("");
   const [grade, setGrade] = useState("");
   const [orderList, setOrderList] = useState([]);
-  const [offset, setOffset] = useState();
 
   const getOrders = async () => {
     GetHApi(`/api/members/me/orders?pageSize=3`, token).then((res) => {
@@ -22,17 +21,6 @@ export default function mypage() {
     });
   };
 
-  const getOrders2 = async () => {
-    GetHApi(`/api/members/me/orders?orderId=${offset}&pageSize=3`, token).then(
-      (res) => {
-        if (res) {
-          console.log(res);
-          setOrderList(res);
-        }
-      },
-    );
-  };
-
   useEffect(() => {
     setToken(useGetToken());
 
@@ -41,7 +29,7 @@ export default function mypage() {
         if (res) {
           setName(res.name);
           setGrade(res.grade);
-          getOrders();
+          // getOrders();
         }
       });
     }
@@ -49,10 +37,6 @@ export default function mypage() {
 
   function handleTab(menu) {
     setTab(menu);
-  }
-
-  function handleOffset(num) {
-    setOffset(num);
   }
 
   return (

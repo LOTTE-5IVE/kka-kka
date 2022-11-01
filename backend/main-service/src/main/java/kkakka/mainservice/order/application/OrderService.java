@@ -1,5 +1,9 @@
 package kkakka.mainservice.order.application;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
 import kkakka.mainservice.member.auth.ui.LoginMember;
@@ -22,10 +26,6 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -71,6 +71,10 @@ public class OrderService {
         final List<Order> orders = orderRepositorySupport.findByMemberId(memberId, orderId,
                 pageSize);
 
+        if (orders.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         List<MemberOrderDto> dtos = new ArrayList<>();
         for (Order order : orders) {
             List<ProductOrder> productOrders = order.getProductOrders();
@@ -83,6 +87,11 @@ public class OrderService {
             );
         }
         return dtos;
+    }
+
+    public boolean checkIsLastOrder(Long memberId, Long orderId) {
+        final List<Order> orders = orderRepositorySupport.isLastId(memberId, orderId);
+        return orders.isEmpty();
     }
 
     @Transactional

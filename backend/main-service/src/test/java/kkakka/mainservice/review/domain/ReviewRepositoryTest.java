@@ -9,7 +9,7 @@ import kkakka.mainservice.TestContext;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.domain.Order;
@@ -52,7 +52,7 @@ public class ReviewRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(TEST_MEMBER_01.getProviderId(), MemberProviderName.TEST),
+                        Provider.create(TEST_MEMBER_01.getProviderId(), ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),
@@ -98,7 +98,7 @@ public class ReviewRepositoryTest extends TestContext {
         // given
         final Member member = memberRepository.save(
                 Member.create(
-                        Provider.create(TEST_MEMBER_01.getProviderId(), MemberProviderName.TEST),
+                        Provider.create(TEST_MEMBER_01.getProviderId(), ProviderName.TEST),
                         TEST_MEMBER_01.getName(),
                         TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(),

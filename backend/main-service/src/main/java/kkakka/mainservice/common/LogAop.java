@@ -1,6 +1,5 @@
 package kkakka.mainservice.common;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -15,8 +14,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Profile("!test")
 public class LogAop {
-
-    private final ObjectMapper objectMapper;
 
     @AfterThrowing(value = "execution(* kkakka.mainservice..*(..))", throwing = "e")
     public void checkException(JoinPoint joinPoint, Exception e) {
