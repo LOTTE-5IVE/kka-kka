@@ -1,17 +1,10 @@
 import MyCoupon from "../components/mypage/MyCoupon";
 import MyInfoCard from "../components/mypage/MyInfoCard";
-import MyOrder from "../components/mypage/MyOrder";
 import Mysidebar from "../components/mypage/Mysidebar";
 import MyOrderTemp from "../components/mypage/MyOrderTemp";
 import MyInfoEdit from "../components/mypage/MyInfoEdit";
 
-export default function MyPageLayout({
-  name,
-  grade,
-  tab,
-  handleTab,
-  orderList,
-}) {
+export default function MyPageLayout({ name, grade, tab, handleTab }) {
   return (
     <>
       <div>
@@ -51,36 +44,6 @@ export default function MyPageLayout({
 
               .wrapper {
                 width: 970px;
-
-                .myorder {
-                  .myorderTitle {
-                    font-size: 24px;
-                    font-weight: 700;
-                    color: #3a3a3a;
-                    border-bottom: 2px solid #3a3a3a;
-                    line-height: 24px;
-                    padding-bottom: 15px;
-                  }
-
-                  /* table {
-                  width: 100%;
-                  border-collapse: collapse;
-                  font-size: 14px;
-                  font-weight: 600;
-                  color: #2c2c2c;
-
-                  tr:nth-child(4n + 2) td:nth-child(3) {
-                    text-align: right;
-                    text-decoration: line-through;
-                    padding-right: 20px;
-                  }
-
-                  tr:not(:nth-child(4n + 2)) td:nth-child(2) {
-                    text-align: right;
-                    padding-right: 20px;
-                  }
-                } */
-                }
               }
             }
           }
@@ -89,28 +52,17 @@ export default function MyPageLayout({
             /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
             .MyPageLContents {
               margin: 0 auto;
-              width: 1332px;
+              width: 100vw;
               display: flex;
 
               .sidebar {
                 display: inline-block;
-                width: 240px;
-                margin-right: 93px;
+                width: 25vw;
+                margin-right: 5vw;
               }
 
               .wrapper {
-                width: 970px;
-
-                .myorder {
-                  .myorderTitle {
-                    font-size: 24px;
-                    font-weight: 700;
-                    color: #3a3a3a;
-                    border-bottom: 2px solid #3a3a3a;
-                    line-height: 24px;
-                    padding-bottom: 15px;
-                  }
-                }
+                width: 70vw;
               }
             }
           }
@@ -130,17 +82,6 @@ export default function MyPageLayout({
 
               .wrapper {
                 width: 340px;
-
-                .myorder {
-                  .myorderTitle {
-                    font-size: 20px;
-                    font-weight: 700;
-                    color: #3a3a3a;
-                    border-bottom: 2px solid #3a3a3a;
-                    line-height: 24px;
-                    padding-bottom: 15px;
-                  }
-                }
               }
             }
           }

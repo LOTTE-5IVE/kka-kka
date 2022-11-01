@@ -351,7 +351,7 @@ export default function RecommSlider({ tab, handleTab }) {
 
           .notice .promotion {
             width: 100vw;
-            height: 31.58vw;
+            height: 33vw;
             background-color: #f6f5ef;
             position: relative;
             transition: height 0.4s;
@@ -359,7 +359,7 @@ export default function RecommSlider({ tab, handleTab }) {
 
             .swiper-container {
               width: 126vw;
-              height: 28vw;
+              height: 31vw;
               position: absolute;
               top: 2.1vw;
               left: 50vw;
@@ -389,7 +389,7 @@ export default function RecommSlider({ tab, handleTab }) {
               border: 1px solid #333;
               border-radius: 50%;
               position: absolute;
-              top: 16vw;
+              top: 20vw;
               z-index: 1;
               cursor: pointer;
               outline: none;
@@ -400,10 +400,10 @@ export default function RecommSlider({ tab, handleTab }) {
             }
 
             .swiper-prev {
-              left: 35vw;
+              left: 40vw;
             }
             .swiper-next {
-              right: 35vw;
+              right: 40vw;
             }
             .swiper-prev:hover,
             .swiper-next:hover {
@@ -466,7 +466,7 @@ export default function RecommSlider({ tab, handleTab }) {
 
           .notice .promotion {
             width: 480px;
-            height: 300px;
+            height: 200px;
             background-color: #f6f5ef;
             position: relative;
             transition: height 0.4s;
@@ -474,7 +474,7 @@ export default function RecommSlider({ tab, handleTab }) {
 
             .swiper-container {
               width: 800px;
-              height: 260px;
+              height: 160px;
               position: absolute;
               top: 40px;
               left: 50%;

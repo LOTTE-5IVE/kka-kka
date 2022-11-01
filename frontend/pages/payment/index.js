@@ -3,24 +3,35 @@ import { useEffect, useState } from "react";
 import { PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
+import Title from "../../components/common/Title";
 import { CouponDown } from "../../components/coupon/CouponDown";
 import { CouponModal } from "../../components/coupon/CouponModal";
 import DaumPost from "../../components/payment/DaumPost";
 import { useGetToken } from "../../hooks/useGetToken";
+import { useLangCheck } from "../../hooks/useLangCheck";
+import { useMemberInfo } from "../../hooks/useMemberInfo";
 import { useMoney } from "../../hooks/useMoney";
+import { useNumberCheck } from "../../hooks/useNumberCheck";
+import { useTextCheck } from "../../hooks/useTextCheck";
 import { NGray } from "../../typings/NormalColor";
 
 export default function payment() {
   const [token, setToken] = useState("");
   const [zipcode, setZipcode] = useState("");
+  const [name, setName] = useState();
+  const [email1, setEmail1] = useState();
+  const [email2, setEmail2] = useState();
+  const [phone1, setPhone1] = useState();
+  const [phone2, setPhone2] = useState();
+  const [phone3, setPhone3] = useState();
   const [addr1, setAddr1] = useState("");
   const [addr2, setAddr2] = useState("");
   const [popup, setPopup] = useState(false);
-  const [Selected, setSelected] = useState("");
   const [modal, setModal] = useState(false);
   const [orderItems, setOrderItems] = useState([]);
   const [buyItem, setBuyItem] = useState();
   const [buyQuantity, setBuyQuantity] = useState();
+  const [check, setCheck] = useState(false);
 
   const router = useRouter();
 
@@ -41,6 +52,40 @@ export default function payment() {
     }
   }, [router.isReady]);
 
+  useEffect(() => {
+    if (!check) return;
+
+    if (token !== "") {
+      useMemberInfo(token).then((res) => {
+        if (res) {
+          console.log(res);
+          setName(res.name);
+
+          if (res.email) {
+            let [e1, e2] = res.email.split("@");
+            if (e1 && e2) {
+              setEmail1(e1);
+              setEmail2(e2);
+            }
+          }
+
+          if (res.phone) {
+            let [p1, p2, p3] = res.phone?.split("-");
+            if (p1 && p2 && p3) {
+              setPhone1(p1);
+              setPhone2(p2);
+              setPhone3(p3);
+            }
+          }
+
+          if (res.address) {
+            setAddr1(res.address);
+          }
+        }
+      });
+    }
+  }, [check]);
+
   const orderItem = async () => {
     const arr = [];
 
@@ -55,7 +100,19 @@ export default function payment() {
       arr.push({ productId: buyItem.id, quantity: Number(buyQuantity) });
     }
 
-    PostHApi("/api/orders", { productOrders: arr }, token).then((res) => {});
+    PostHApi(
+      "/api/orders",
+      {
+        productOrders: arr,
+        recipient: {
+          name: name,
+          email: email1 + "@" + email2,
+          phone: phone1 + "-" + phone2 + "-" + phone3,
+          address: addr1 + " " + addr2,
+        },
+      },
+      token,
+    ).then((res) => {});
 
     alert("결제되었습니다.");
 
@@ -78,12 +135,13 @@ export default function payment() {
     setAddr1(addr1);
   }
 
-  const handleSelect = (e) => {
-    setSelected(e.target.value);
+  const handleCheck = (e) => {
+    setCheck(e.target.checked);
   };
 
   return (
     <>
+      <Title title="주문/결제" />
       <div className="PaymentWrapper">
         <div className="title">
           <h2>주문/결제</h2>
@@ -194,7 +252,13 @@ export default function payment() {
         </div>
 
         <div>
-          <div className="tableTitle orderInfoTitle">주문자정보</div>
+          <div className="tableTitle orderInfoTitle">
+            배송정보{" "}
+            <p>
+              <input type="checkbox" checked={check} onChange={handleCheck} />{" "}
+              <span>회원정보와 동일</span>
+            </p>
+          </div>
           <div className="tableContents orderInfo">
             <table>
               <colgroup>
@@ -203,30 +267,68 @@ export default function payment() {
               </colgroup>
               <tbody>
                 <tr>
-                  <th scope="row">주문자</th>
+                  <th scope="row">수령인</th>
                   <td>
                     <input
-                      className="inputTypeText"
+                      required
                       placeholder=""
                       size="15"
-                      defaultValue=""
+                      defaultValue={name}
                       type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+
+                        if (useLangCheck(e.target.value)) {
+                          setName(e.target.value);
+                        } else {
+                          alert("한글 혹은 영문만 입력할 수 있습니다.");
+                          e.target.value = "";
+                        }
+                      }}
                     />
                   </td>
                 </tr>
                 <tr>
                   <th scope="row">이메일</th>
                   <td>
-                    <input className="mailId" defaultValue="" type="text" />@{" "}
+                    <input
+                      defaultValue={email1}
+                      type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (useTextCheck(e.target.value)) {
+                          setEmail1(e.target.value);
+                        } else {
+                          alert("특수문자는 입력할 수 없습니다.");
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                    @{" "}
                     <span className="mailAddress">
                       <span className="directInput ec-compact-etc">
                         <input
                           placeholder="직접입력"
-                          defaultValue={Selected}
+                          defaultValue={email2}
                           type="text"
+                          onChange={(e) => {
+                            setCheck(false);
+                            if (useTextCheck(e.target.value)) {
+                              setEmail2(e.target.value);
+                            } else {
+                              alert("특수문자는 입력할 수 없습니다.");
+                              e.target.value = "";
+                            }
+                          }}
                         />
                       </span>
-                      <select onChange={handleSelect} defaultValue={"DEFAULT"}>
+                      <select
+                        onChange={(e) => {
+                          setCheck(false);
+                          setEmail2(e.target.value);
+                        }}
+                        defaultValue={"DEFAULT"}
+                      >
                         <option value="DEFAULT" disabled>
                           -이메일 선택-
                         </option>
@@ -247,36 +349,53 @@ export default function payment() {
                 <tr>
                   <th scope="row">휴대전화</th>
                   <td>
-                    <select defaultValue={"010"}>
-                      <option value="02">02</option>
-                      <option value="031">031</option>
-                      <option value="032">032</option>
-                      <option value="033">033</option>
-                      <option value="041">041</option>
-                      <option value="042">042</option>
-                      <option value="043">043</option>
-                      <option value="044">044</option>
-                      <option value="051">051</option>
-                      <option value="052">052</option>
-                      <option value="053">053</option>
-                      <option value="054">054</option>
-                      <option value="055">055</option>
-                      <option value="061">061</option>
-                      <option value="062">062</option>
-                      <option value="063">063</option>
-                      <option value="064">064</option>
-                      <option value="070">070</option>
-                      <option value="010">010</option>
-                      <option value="011">011</option>
-                      <option value="016">016</option>
-                      <option value="017">017</option>
-                      <option value="018">018</option>
-                      <option value="019">019</option>
-                    </select>
+                    <input
+                      maxLength="3"
+                      size="3"
+                      defaultValue={phone1}
+                      type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (useNumberCheck(e.target.value)) {
+                          setPhone1(e.target.value);
+                        } else {
+                          alert("숫자만 입력할 수 있습니다.");
+                          e.target.value = "";
+                        }
+                      }}
+                    />
                     -
-                    <input maxLength="4" size="4" defaultValue="" type="text" />
+                    <input
+                      maxLength="4"
+                      size="4"
+                      defaultValue={phone2}
+                      type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (useNumberCheck(e.target.value)) {
+                          setPhone2(e.target.value);
+                        } else {
+                          alert("숫자만 입력할 수 있습니다.");
+                          e.target.value = "";
+                        }
+                      }}
+                    />
                     -
-                    <input maxLength="4" size="4" defaultValue="" type="text" />
+                    <input
+                      maxLength="4"
+                      size="4"
+                      defaultValue={phone3}
+                      type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (useNumberCheck(e.target.value)) {
+                          setPhone3(e.target.value);
+                        } else {
+                          alert("숫자만 입력할 수 있습니다.");
+                          e.target.value = "";
+                        }
+                      }}
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -287,7 +406,6 @@ export default function payment() {
                     <div className="address_search">
                       <input
                         placeholder="우편번호"
-                        className="inputTypeText"
                         type="text"
                         maxLength="14"
                         readOnly
@@ -313,12 +431,14 @@ export default function payment() {
                   <td>
                     <input
                       placeholder="기본주소"
-                      className="inputTypeText"
                       type="text"
                       size="60"
                       maxLength="100"
                       readOnly
                       defaultValue={addr1 ? addr1 : ""}
+                      onChange={(e) => {
+                        setAddr1(e.target.value);
+                      }}
                     />
                   </td>
                 </tr>
@@ -326,12 +446,13 @@ export default function payment() {
                   <td>
                     <input
                       placeholder="상세주소"
-                      className="inputTypeText"
                       type="text"
                       size="60"
                       maxLength="100"
-                      readOnly
-                      value={addr2}
+                      defaultValue={addr2 ? addr2 : ""}
+                      onChange={(e) => {
+                        setAddr2(e.target.value);
+                      }}
                     />
                   </td>
                 </tr>
@@ -518,6 +639,21 @@ export default function payment() {
               }
             }
 
+            .orderInfoTitle {
+              display: flex;
+              align-items: center;
+              p {
+                margin: 0 0 0 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                span {
+                  font-size: 16px;
+                }
+              }
+            }
+
             .orderInfo {
               font-size: 20px;
 
@@ -585,7 +721,7 @@ export default function payment() {
         @media screen and (max-width: 768px) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .PaymentWrapper {
-            width: 1332px;
+            width: 100vw;
             margin: 0 auto;
 
             .title {
@@ -594,22 +730,22 @@ export default function payment() {
               h2 {
                 padding: 0;
                 color: #3a3a3a;
-                font-size: 36px;
+                font-size: 5vw;
                 font-weight: 700;
                 line-height: 1;
               }
             }
 
             .orderList {
-              margin-bottom: 133px;
+              margin-bottom: 7vw;
               border-bottom: 2px solid;
               table {
                 border-collapse: collapse;
                 margin: 0 auto;
-                width: 1305px;
+                width: 95vw;
 
                 tr:not(:last-child) {
-                  height: 103px;
+                  height: 5.53vw;
                   border-bottom: 1.5px solid #d0cfcf;
                 }
 
@@ -618,7 +754,7 @@ export default function payment() {
                     margin: 0;
 
                     span {
-                      font-size: 14px;
+                      font-size: 1.5vw;
                       color: ${NGray};
                       text-decoration: line-through;
                     }
@@ -632,19 +768,19 @@ export default function payment() {
             }
 
             .tableTitle {
-              font-size: 20px;
+              font-size: 3vw;
               font-weight: 500;
               line-height: 2;
               border-bottom: 2px solid;
             }
 
             .tableContents {
-              margin-bottom: 133px;
+              margin-bottom: 7vw;
 
               table {
                 border-collapse: collapse;
                 margin: 0 auto;
-                width: 1305px;
+                width: 95vw;
 
                 tr {
                   height: 96px;
@@ -653,39 +789,54 @@ export default function payment() {
               }
             }
 
+            .orderInfoTitle {
+              display: flex;
+              align-items: center;
+              p {
+                margin: 0 0 0 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                span {
+                  font-size: 12px;
+                }
+              }
+            }
+
             .orderInfo {
-              font-size: 20px;
+              font-size: 2vw;
 
               input {
-                margin: 0 10px;
-                line-height: 40px;
-                padding: 0 0 0 13px;
+                margin: 0 0.53vw;
+                line-height: 30px;
+                padding: 0 0 0 0.7vw;
                 border: 0 none;
                 color: #3a3a3a;
                 background: #fff;
                 border-radius: 8px;
-                font-size: 16px;
+                font-size: 1.5vw;
                 border: 1px solid #000;
               }
 
               select {
-                margin: 0 10px;
-                height: 40px;
+                margin: 0 0.53vw;
+                height: 30px;
                 border-radius: 8px;
-                font-size: 16px;
+                font-size: 2vw;
                 color: #3a3a3a;
-                padding: 0 10px 0 13px;
+                padding: 0 0.53vw 0 0.7vw;
                 border: 1px solid #000;
               }
 
               button {
-                margin: 0 10px;
-                line-height: 40px;
-                padding: 0 13px;
+                margin: 0 0.53vw;
+                line-height: 30px;
+                padding: 0 0.7vw;
                 border: 0 none;
                 color: #3a3a3a;
                 border-radius: 8px;
-                font-size: 16px;
+                font-size: 2vw;
                 border: 1px solid #000;
               }
             }
@@ -711,7 +862,8 @@ export default function payment() {
             }
 
             .payBtn {
-              width: 200px;
+              width: 25vw;
+              height: 10vw;
               margin: 0 auto 50px;
             }
           }
@@ -786,6 +938,21 @@ export default function payment() {
                 tr {
                   height: 80px;
                   border-bottom: 1.5px solid #d0cfcf;
+                }
+              }
+            }
+
+            .orderInfoTitle {
+              display: flex;
+              align-items: center;
+              p {
+                margin: 0 0 0 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                span {
+                  font-size: 12px;
                 }
               }
             }

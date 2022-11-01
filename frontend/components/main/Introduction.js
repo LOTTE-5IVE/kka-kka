@@ -315,6 +315,7 @@ export default function Introduction() {
                 position: absolute;
                 top: 0;
                 left: 21.05vw;
+                width: 50vw;
               }
 
               .texture2 {
@@ -400,7 +401,7 @@ export default function Introduction() {
                 width: 380px;
                 position: absolute;
                 left: 45%;
-                top: 70%;
+                top: 60%;
                 transform: translate(-50%, -50%);
 
                 .text1 {
