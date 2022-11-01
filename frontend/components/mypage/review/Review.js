@@ -1,16 +1,16 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import RangeWithIcons from "./RangeWithIcons";
 import useNoticeToInputPreference from "./useInputRating";
-import {PostHApi} from "../../../apis/Apis";
-import {useGetToken} from "../../../hooks/useGetToken";
+import { PostHApi } from "../../../apis/Apis";
+import { useGetToken } from "../../../hooks/useGetToken";
 
-export default function Review({productOrderId, setReviewed}) {
+export default function Review({ productOrderId, setReviewed }) {
   const [token, setToken] = useState("");
   const [rating, setRating] = useState(0.5);
   const [contents, setContents] = useState("");
   const preferenceRef = useRef(null);
 
-  const {setIsBlinked} = useNoticeToInputPreference({
+  const { setIsBlinked } = useNoticeToInputPreference({
     targetRef: preferenceRef,
   });
 
@@ -20,18 +20,28 @@ export default function Review({productOrderId, setReviewed}) {
 
   const onRatingStart = () => {
     setIsBlinked(false);
-  }
+  };
 
   const onWriteContents = (event) => {
     setContents(event.target.value);
-  }
+  };
 
   const handleSubmit = async () => {
-    PostHApi(`/api/reviews?productOrder=${productOrderId}`,
+    if (contents.length < 5) {
+      alert("글자 수가 너무 적습니다.");
+      return;
+    }
+
+    PostHApi(
+      `/api/reviews?productOrder=${productOrderId}`,
       {
         rating: rating,
-        contents: contents
-      }, token).then(() => { setReviewed(true) });
+        contents: contents.slice(0, 50),
+      },
+      token,
+    ).then(() => {
+      setReviewed(true);
+    });
   };
 
   useEffect(() => {
@@ -45,17 +55,28 @@ export default function Review({productOrderId, setReviewed}) {
           <span className="detail">상품은 어떠셨나요?</span>
           <RangeWithIcons
             labelText="선호도 입력"
-            color={'#ffd151'}
+            color={"#ffd151"}
             max={5}
             min={0.5}
             step={0.5}
             value={rating}
             setValue={setRatingValue}
             onStart={onRatingStart}
-            borderColor={'#ffd151'}
-            starWidth={'25px'}
+            borderColor={"#ffd151"}
+            starWidth={"25px"}
           />
-          <textarea value={contents} onChange={onWriteContents}/>
+          <textarea
+            value={contents}
+            cols="5"
+            rows="3"
+            placeholder="5글자 이상 50글자 이하로 입력해주세요."
+            maxLength={50}
+            onChange={onWriteContents}
+          />
+          <p>
+            <span>({contents.slice(0, 50).length} / 50자)</span>
+          </p>
+
           <span className="submitBtn" onClick={() => handleSubmit()}>
             상품후기 등록하기
           </span>
@@ -93,12 +114,18 @@ export default function Review({productOrderId, setReviewed}) {
           }
 
           textarea {
-            width: 70%;
+            width: 50%;
             min-height: 60px;
             border: 1px solid #c5c5c5;
             border-radius: 10px;
             padding: 0.2rem;
             font-size: 0.8rem;
+          }
+
+          p {
+            width: 50%;
+            text-align: right;
+            margin: 0;
           }
 
           .submitBtn {
@@ -114,5 +141,5 @@ export default function Review({productOrderId, setReviewed}) {
         `}
       </style>
     </>
-  )
+  );
 }

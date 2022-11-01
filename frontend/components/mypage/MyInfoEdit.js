@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { PatchHApi } from "../../apis/Apis";
 import ButtonComp from "../../components/common/Button/ButtonComp";
 import { useGetToken } from "../../hooks/useGetToken";
+import { useLangCheck } from "../../hooks/useLangCheck";
 import { useMemberInfo } from "../../hooks/useMemberInfo";
+import { useNumberCheck } from "../../hooks/useNumberCheck";
+import { useTextCheck } from "../../hooks/useTextCheck";
 import Title from "../common/Title";
 
 export default function MyInfoEdit() {
@@ -18,12 +21,14 @@ export default function MyInfoEdit() {
   useEffect(() => {
     setToken(useGetToken());
 
-    useMemberInfo(useGetToken()).then((res) => {
-      if (res) {
-        setData(res);
-      }
-    });
-  }, []);
+    if (token !== "") {
+      useMemberInfo(token).then((res) => {
+        if (res) {
+          setData(res);
+        }
+      });
+    }
+  }, [token]);
 
   const editMemberInfo = async () => {
     PatchHApi("/api/members/me", { name: name }, token);
@@ -36,7 +41,7 @@ export default function MyInfoEdit() {
       token,
     );
 
-    useMemberInfo(useGetToken()).then((res) => {
+    useMemberInfo(token).then((res) => {
       if (res) {
         setData(res);
       }
@@ -47,14 +52,14 @@ export default function MyInfoEdit() {
     <>
       <Title title="내 정보 수정" />
       {data && (
-        <div className="wrapper">
+        <div className="MyInfoEditWrapper">
           <div>
             <div className="tableTitle">기본정보</div>
             <div className="tableContents orderInfo">
               <table>
                 <colgroup>
-                  <col style={{ width: "15%" }} />
-                  <col style={{ width: "85%" }} />
+                  <col style={{ width: "20%" }} />
+                  <col style={{ width: "80%" }} />
                 </colgroup>
                 <tbody>
                   <tr>
@@ -87,22 +92,25 @@ export default function MyInfoEdit() {
             <div className="tableContents editTable">
               <table>
                 <colgroup>
-                  <col style={{ width: "15%" }} />
-                  <col style={{ width: "85%" }} />
+                  <col style={{ width: "20%" }} />
+                  <col style={{ width: "80%" }} />
                 </colgroup>
                 <tbody>
                   <tr>
                     <th scope="row">이름</th>
                     <td>
                       <input
-                        id="oname"
-                        className="inputTypeText"
                         placeholder=""
                         size="15"
                         defaultValue={name}
                         type="text"
                         onChange={(e) => {
-                          setName(e.target.value);
+                          if (useLangCheck(e.target.value)) {
+                            setName(e.target.value);
+                          } else {
+                            alert("한글 혹은 영문만 입력할 수 있습니다.");
+                            e.target.value = "";
+                          }
                         }}
                       />
                     </td>
@@ -111,29 +119,35 @@ export default function MyInfoEdit() {
                     <th scope="row">이메일</th>
                     <td>
                       <input
-                        id="oemail1"
-                        className="mailId"
                         defaultValue={email1}
                         type="text"
                         onChange={(e) => {
-                          setEmail1(e.target.value);
+                          if (useTextCheck(e.target.value)) {
+                            setEmail1(e.target.value);
+                          } else {
+                            alert("특수문자는 입력할 수 없습니다.");
+                            e.target.value = "";
+                          }
                         }}
                       />
                       @{" "}
                       <span className="mailAddress">
                         <span className="directInput ec-compact-etc">
                           <input
-                            id="oemail2"
                             placeholder="직접입력"
                             defaultValue={email2}
                             type="text"
                             onChange={(e) => {
-                              setEmail2(e.target.value);
+                              if (useTextCheck(e.target.value)) {
+                                setEmail2(e.target.value);
+                              } else {
+                                alert("특수문자는 입력할 수 없습니다.");
+                                e.target.value = "";
+                              }
                             }}
                           />
                         </span>
                         <select
-                          id="oemail3"
                           onChange={(e) => {
                             setEmail2(e.target.value);
                           }}
@@ -165,7 +179,12 @@ export default function MyInfoEdit() {
                         defaultValue={phone1}
                         type="text"
                         onChange={(e) => {
-                          setPhone1(e.target.value);
+                          if (useNumberCheck(e.target.value)) {
+                            setPhone1(e.target.value);
+                          } else {
+                            alert("숫자만 입력할 수 있습니다.");
+                            e.target.value = "";
+                          }
                         }}
                       />
                       -
@@ -175,7 +194,12 @@ export default function MyInfoEdit() {
                         defaultValue={phone2}
                         type="text"
                         onChange={(e) => {
-                          setPhone2(e.target.value);
+                          if (useNumberCheck(e.target.value)) {
+                            setPhone2(e.target.value);
+                          } else {
+                            alert("숫자만 입력할 수 있습니다.");
+                            e.target.value = "";
+                          }
                         }}
                       />
                       -
@@ -185,7 +209,12 @@ export default function MyInfoEdit() {
                         defaultValue={phone3}
                         type="text"
                         onChange={(e) => {
-                          setPhone3(e.target.value);
+                          if (useNumberCheck(e.target.value)) {
+                            setPhone3(e.target.value);
+                          } else {
+                            alert("숫자만 입력할 수 있습니다.");
+                            e.target.value = "";
+                          }
                         }}
                       />
                     </td>
@@ -207,61 +236,191 @@ export default function MyInfoEdit() {
         </div>
       )}
       <style jsx>{`
-        .wrapper {
-          width: 100%;
-          margin: 0 auto;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .MyInfoEditWrapper {
+            width: 970px;
+            margin: 0 auto;
 
-          .tableTitle {
-            font-size: 20px;
-            font-weight: 700;
-            line-height: 2;
-            border-bottom: 2px solid;
-          }
+            .tableTitle {
+              font-size: 20px;
+              font-weight: 700;
+              line-height: 2;
+              border-bottom: 2px solid;
+            }
 
-          .tableContents {
-            margin-bottom: 10%;
+            .tableContents {
+              margin-bottom: 97px;
 
-            table {
-              border-collapse: collapse;
-              margin: 0 auto;
-              width: 98%;
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 951px;
 
-              tr {
-                height: 5vw;
-                border-bottom: 1.5px solid #d0cfcf;
+                tr {
+                  height: 95px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
               }
             }
-          }
 
-          .editTable {
-            font-size: 20px;
+            .editTable {
+              font-size: 20px;
 
-            input {
-              margin: 0 10px;
-              line-height: 40px;
-              padding: 0 0 0 13px;
+              input {
+                margin: 0 10px;
+                line-height: 40px;
+                padding: 0 0 0 13px;
 
-              border: 0 none;
-              color: #3a3a3a;
-              background: #fff;
-              border-radius: 8px;
-              font-size: 16px;
-              border: 1px solid #000;
+                border: 0 none;
+                color: #3a3a3a;
+                background: #fff;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 1px solid #000;
+              }
+
+              select {
+                height: 40px;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #3a3a3a;
+                padding: 0 0px 0 13px;
+                border: 1px solid #000;
+              }
             }
 
-            select {
-              height: 40px;
-              border-radius: 8px;
-              font-size: 16px;
-              color: #3a3a3a;
-              padding: 0 0px 0 13px;
-              border: 1px solid #000;
+            .editBtn {
+              width: 200px;
+              margin: 0 auto 50px;
             }
           }
+        }
 
-          .editBtn {
-            width: 20%;
-            margin: 0 auto 50px;
+        @media screen and (max-width: 768px) {
+          /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
+          .MyInfoEditWrapper {
+            width: 65vw;
+            margin: 0 auto;
+
+            .tableTitle {
+              font-size: 20px;
+              font-weight: 700;
+              line-height: 2;
+              border-bottom: 2px solid;
+            }
+
+            .tableContents {
+              margin-bottom: 5vw;
+
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 65vw;
+                font-size: 3vw;
+
+                tr {
+                  height: 7vw;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
+              }
+            }
+
+            .editTable {
+              font-size: 20px;
+
+              input {
+                margin: 0 10px;
+                line-height: 5vw;
+                padding: 0 0 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                background: #fff;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 1px solid #000;
+              }
+
+              select {
+                height: 5vw;
+                border-radius: 8px;
+                font-size: 2vw;
+                color: #3a3a3a;
+                margin-left: 10px;
+                padding-left: 10px;
+                border: 1px solid #000;
+              }
+            }
+
+            .editBtn {
+              width: 20vw;
+              margin: 0 auto 5vw;
+            }
+          }
+        }
+
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .MyInfoEditWrapper {
+            width: 340px;
+            margin: 0 auto;
+
+            .tableTitle {
+              font-size: 16px;
+              font-weight: 700;
+              line-height: 2;
+              border-bottom: 2px solid;
+            }
+
+            .tableContents {
+              margin-bottom: 50px;
+
+              table {
+                font-size: 12px;
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 320px;
+
+                tr {
+                  height: 50px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
+              }
+            }
+
+            .editTable {
+              font-size: 15px;
+
+              input {
+                max-width: 300px;
+                height: 30px;
+                margin: 5px 10px;
+                line-height: 40px;
+                padding: 0 0 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                background: #fff;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 1px solid #000;
+              }
+
+              select {
+                margin: 5px 10px;
+                width: 100px;
+                height: 25px;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #3a3a3a;
+                padding: 0 10px 0 13px;
+                border: 1px solid #000;
+              }
+            }
+
+            .editBtn {
+              width: 200px;
+              margin: 0 auto 50px;
+            }
           }
         }
       `}</style>

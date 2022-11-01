@@ -14,6 +14,7 @@ import kkakka.mainservice.order.application.dto.OrderDto;
 import kkakka.mainservice.order.application.dto.ProductOrderDto;
 import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
+import kkakka.mainservice.order.domain.Recipient;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.domain.repository.OrderRepositorySupport;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
@@ -44,6 +45,7 @@ public class OrderService {
         Long memberId = orderDto.getMemberId();
         List<ProductOrderDto> productOrderDtos = orderDto.getProductOrders();
         Member member = memberRepository.findById(memberId).orElseThrow();
+        Recipient recipient = Recipient.from(orderDto.getRecipientDto());
 
         List<ProductOrder> productOrders = new ArrayList<>();
         int orderTotalPrice = 0;
@@ -59,7 +61,7 @@ public class OrderService {
             orderTotalPrice += productOrder.getTotalPrice();
         }
 
-        Order order = Order.create(member, orderTotalPrice, productOrders);
+        Order order = Order.create(member, recipient, orderTotalPrice, productOrders);
 
         orderRepository.save(order);
         productOrderRepository.saveAll(productOrders);
@@ -88,6 +90,11 @@ public class OrderService {
             );
         }
         return dtos;
+    }
+
+    public boolean checkIsLastOrder(Long memberId, Long orderId) {
+        final List<Order> orders = orderRepositorySupport.isLastId(memberId, orderId);
+        return orders.isEmpty();
     }
 
     @Transactional
@@ -122,7 +129,7 @@ public class OrderService {
 
     @NotNull
     private MemberProductOrderDto toMemberProductOrderDto(Long memberId,
-                                                          ProductOrder productOrder) {
+            ProductOrder productOrder) {
         final Optional<Review> review = reviewRepository.findByMemberIdAndProductOrderId(
                 memberId, productOrder.getId());
         return MemberProductOrderDto.create(productOrder, productOrder.getProduct(), review);

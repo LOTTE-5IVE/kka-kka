@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.LocalDateTime;
 import java.util.List;
 import kkakka.mainservice.common.LocalDateTimeSerializer;
+import kkakka.mainservice.order.ui.dto.RecipientResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,13 +22,16 @@ public class OrderResponse {
     private Integer totalPrice;
     @JsonProperty("productOrders")
     private List<ProductOrderResponse> productOrderResponse;
+    @JsonProperty("recipient")
+    private RecipientResponse recipientResponse;
 
     public static OrderResponse create(
             Long orderId,
             LocalDateTime orderedAt,
             Integer totalPrice,
-            List<ProductOrderResponse> productOrderResponse
+            List<ProductOrderResponse> productOrderResponse,
+            RecipientResponse recipientResponse
     ) {
-        return new OrderResponse(orderId, orderedAt, totalPrice, productOrderResponse);
+        return new OrderResponse(orderId, orderedAt, totalPrice, productOrderResponse, recipientResponse);
     }
 }
