@@ -79,6 +79,23 @@ public class ProductAcceptanceTest extends DocumentConfiguration {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @Test
+    @DisplayName("전체 상품 조회(카테고리 id = 0) - 성공")
+    void showAllProductsCategory_success() {
+        //given
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("products-show-all-category0-success"))
+                .when()
+                .get("/api/products?category=0")
+                .then()
+                .log().all().extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
     @DisplayName("검색 조회 - 성공")
     @Test
     void showProductsBySearchTest_success() {

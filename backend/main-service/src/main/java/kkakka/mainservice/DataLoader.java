@@ -39,7 +39,7 @@ public class DataLoader {
     private final ReviewRepository reviewRepository;
     private final NutritionRepository nutritionRepository;
 
-    private static final Map<String, Category> categories = new LinkedHashMap<>();
+    public static final Map<String, Category> categories = new LinkedHashMap<>();
     private static Product testProduct;
     private static Member testMember;
 

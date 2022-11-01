@@ -6,6 +6,8 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Optional;
+import kkakka.mainservice.DataLoader;
+import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.QCategory;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.QProduct;
@@ -34,7 +36,9 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
     ) {
         final BooleanBuilder builder = new BooleanBuilder();
         categoryId.ifPresent((cId) -> {
-            builder.and(QCategory.category.id.eq(cId));
+            if (isSavedCategoryId(cId)) {
+                builder.and(QCategory.category.id.eq(cId));
+            }
         });
         builder.and(categoryNameEq(searchWords).or(productNameLike(searchWords)));
 
@@ -54,6 +58,12 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
                 .fetch();
 
         return new PageImpl<>(result, pageable, result.size());
+    }
+
+    private boolean isSavedCategoryId(Long cId) {
+        return DataLoader.categories.values().stream()
+                .mapToLong(Category::getId)
+                .anyMatch(cId::equals);
     }
 
     private OrderSpecifier<?> orderWithSortBy(String sortBy) {
