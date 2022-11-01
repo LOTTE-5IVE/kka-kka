@@ -15,9 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import kkakka.mainservice.AcceptanceTest;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.order.application.dto.ProductOrderDto;
 import kkakka.mainservice.order.ui.dto.OrderRequest;
+import kkakka.mainservice.order.ui.dto.RecipientRequest;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -30,11 +31,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
-import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@EmbeddedKafka
 @ExtendWith(SpringExtension.class)
 public class OrderMessageTest extends AcceptanceTest {
 
@@ -71,7 +70,10 @@ public class OrderMessageTest extends AcceptanceTest {
         List<ProductOrderDto> productOrderDtos = new ArrayList<>();
         productOrderDtos.add(productOrderDto1);
         productOrderDtos.add(productOrderDto2);
-        OrderRequest orderRequest = new OrderRequest(productOrderDtos);
+        OrderRequest orderRequest = new OrderRequest(
+                new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(), TEST_MEMBER_01.getAddress()),
+                productOrderDtos);
 
         //when
         RestAssured.given().log().all()
@@ -94,7 +96,7 @@ public class OrderMessageTest extends AcceptanceTest {
 
     private String 액세스_토큰_가져옴() {
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-                TEST_MEMBER_01.getCode(), MemberProviderName.TEST);
+                TEST_MEMBER_01.getCode(), ProviderName.TEST);
 
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
