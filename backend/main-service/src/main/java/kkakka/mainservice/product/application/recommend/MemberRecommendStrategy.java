@@ -42,7 +42,6 @@ public class MemberRecommendStrategy implements ProductRecommender {
     private static final String RECOMMENDATION_SERVER_URL = "http://localhost:8000/recommendation/";
     private static final int RECENT_ORDER_LIMIT = 3;
 
-    // TODO: auth server 분리 반영 후 common 에 bean 등록 필요
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final OrderRepository orderRepository;
