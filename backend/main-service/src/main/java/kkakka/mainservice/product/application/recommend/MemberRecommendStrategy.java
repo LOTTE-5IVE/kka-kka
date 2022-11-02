@@ -3,6 +3,7 @@ package kkakka.mainservice.product.application.recommend;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -41,6 +42,7 @@ public class MemberRecommendStrategy implements ProductRecommender {
     // TODO: config-server 로 분리
     private static final String RECOMMENDATION_SERVER_URL = "http://localhost:8000/recommendation/";
     private static final int RECENT_ORDER_LIMIT = 3;
+    private static final int DEFAULT_PAGE_SIZE = 9;
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -67,12 +69,11 @@ public class MemberRecommendStrategy implements ProductRecommender {
         }
 
         final Product pivotProduct = topRatedReview.get(0).getProductOrder().getProduct();
-        final List<RecommendProductDto> recommendProductDtos = requestRecommendation(
-                pivotProduct);
-        return findRecommendedProducts(pageable, recommendProductDtos);
+        final RecommendProductDto recommendProductDto = requestRecommendation(pivotProduct);
+        return findRecommendedProducts(pageable, recommendProductDto);
     }
 
-    private List<RecommendProductDto> requestRecommendation(Product pivotProduct) {
+    private RecommendProductDto requestRecommendation(Product pivotProduct) {
         final ResponseEntity<String> response = restTemplate.exchange(
                 RECOMMENDATION_SERVER_URL + pivotProduct.getId(),
                 HttpMethod.GET,
@@ -94,9 +95,9 @@ public class MemberRecommendStrategy implements ProductRecommender {
         final int randomIdx = random.nextInt(orderedProducts.size());
 
         final Product pivotProduct = orderedProducts.get(randomIdx);
-        final List<RecommendProductDto> recommendProductDtos = requestRecommendation(pivotProduct);
+        final RecommendProductDto recommendProductDto = requestRecommendation(pivotProduct);
 
-        return findRecommendedProducts(pageable, recommendProductDtos);
+        return findRecommendedProducts(pageable, recommendProductDto);
     }
 
     private Page<Product> recommendWithTopRated(Pageable pageable) {
@@ -105,31 +106,52 @@ public class MemberRecommendStrategy implements ProductRecommender {
 
     private PageImpl<Product> findRecommendedProducts(
             Pageable pageable,
-            List<RecommendProductDto> recommendProductDtos
+            RecommendProductDto recommendProductDto
     ) {
-        final List<Long> productIds = recommendProductDtos.stream()
-                .map(RecommendProductDto::getId)
-                .collect(Collectors.toList())
-                .subList(0, pageable.getPageSize());
+        final List<Long> productIds = recommendProductDto.getProductIds();
+        final List<Long> pagedProductIds = productIds.subList(
+                (int) pageable.getOffset(),
+                (int) pageable.getOffset() + maximumPageSize(pageable, productIds)
+        );
 
-        final List<Product> recommendedProducts = productRepository.findAllById(productIds);
+        final List<Product> recommendedProducts = productRepository.findAllById(pagedProductIds)
+                .stream()
+                .sorted(new Comparator<Product>() {
+                    @Override
+                    public int compare(Product p1, Product p2) {
+                        return productIds.indexOf(p1.getId()) - productIds.indexOf(p2.getId());
+                    }
+                })
+                .collect(Collectors.toList());
         if (productIds.size() < pageable.getPageSize()) {
             int numberRequired = pageable.getPageSize() - productIds.size();
             recommendedProducts.addAll(
-                    productRepository.findAllOrderByRatingAvg(
-                            productIds,
-                            Pageable.ofSize(numberRequired)
-                    ).getContent()
+                    findMoreProductsByRatingAvg(productIds, numberRequired)
             );
         }
-        return new PageImpl<>(recommendedProducts);
+        return new PageImpl<>(
+                recommendedProducts,
+                pageable,
+                Math.max(productIds.size(), DEFAULT_PAGE_SIZE)
+        );
     }
 
-    private List<RecommendProductDto> convertResponseBody(ResponseEntity<String> response) {
+    private List<Product> findMoreProductsByRatingAvg(List<Long> productIds, int numberRequired) {
+        return productRepository.findAllOrderByRatingAvg(
+                productIds,
+                Pageable.ofSize(numberRequired)
+        ).getContent();
+    }
+
+    private int maximumPageSize(Pageable pageable, List<Long> productIds) {
+        return Math.min(pageable.getPageSize(), (int) (productIds.size() - pageable.getOffset()));
+    }
+
+    private RecommendProductDto convertResponseBody(ResponseEntity<String> response) {
         try {
             return objectMapper.readValue(
                     response.getBody(),
-                    new TypeReference<List<RecommendProductDto>>() {
+                    new TypeReference<RecommendProductDto>() {
                     }
             );
         } catch (JsonProcessingException e) {
