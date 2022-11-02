@@ -28,7 +28,7 @@ public class TestRecommendStrategyFactory implements RecommenderFactory {
             @Override
             public Page<Product> recommend(Optional<Long> memberId, Pageable pageable) {
                 return new PageImpl<>(
-                        List.of(PRODUCT_1, PRODUCT_2, PRODUCT_3, PRODUCT_4, PRODUCT_5));
+                        List.of(PRODUCT_3, PRODUCT_4, PRODUCT_5, PRODUCT_1, PRODUCT_2));
             }
         };
     }
