@@ -1,12 +1,16 @@
 package kkakka.mainservice.order.application;
 
 import java.util.stream.Collectors;
+import kkakka.mainservice.kafka.order.MemberMessage;
 import kkakka.mainservice.kafka.order.OrderMessage;
 import kkakka.mainservice.kafka.order.ProductMessage;
 import kkakka.mainservice.kafka.order.ProductOrderMessage;
+import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.order.domain.Order;
+import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.product.domain.Product;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -27,28 +31,47 @@ public class OrderMessageProducer {
     }
 
     private OrderMessage convertToMessage(Order order) {
+        return orderMessage(order);
+    }
+
+    @NotNull
+    private OrderMessage orderMessage(Order order) {
         return OrderMessage.create(
                 order.getId(),
                 order.getOrderedAt(),
                 order.getTotalPrice(),
                 order.getProductOrders()
                         .stream()
-                        .map(productOrder -> {
-                            Product product = productOrder.getProduct();
-                            return ProductOrderMessage.create(
-                                    productOrder.getId(),
-                                    productOrder.getPrice(),
-                                    productOrder.getQuantity(),
-                                    productOrder.getDeleted(),
-                                    ProductMessage.create(
-                                            product.getId(),
-                                            product.getName(),
-                                            product.getPrice(),
-                                            product.getImageUrl(),
-                                            product.getDiscount()
-                                    ));
-                        })
-                        .collect(Collectors.toList())
+                        .map(productOrder -> productOrderMessage(productOrder))
+                        .collect(Collectors.toList()),
+                memberMessage(order.getMember())
+        );
+    }
+
+    private ProductOrderMessage productOrderMessage(ProductOrder productOrder) {
+        return ProductOrderMessage.create(
+                productOrder.getId(),
+                productOrder.getPrice(),
+                productOrder.getQuantity(),
+                productOrder.getDeleted(),
+                productMessage(productOrder.getProduct()));
+    }
+
+    private ProductMessage productMessage(Product product) {
+        return ProductMessage.create(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                product.getDiscount()
+        );
+    }
+
+    private MemberMessage memberMessage(Member member) {
+        return MemberMessage.create(
+                member.getId(), member.getProvider().getProviderName(), member.getName(),
+                member.getEmail(), member.getPhone(), member.getAddress(),
+                member.getAgeGroup(), member.getGrade()
         );
     }
 }

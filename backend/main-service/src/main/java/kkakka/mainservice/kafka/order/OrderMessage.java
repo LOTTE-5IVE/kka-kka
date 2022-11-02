@@ -23,13 +23,16 @@ public class OrderMessage {
     private Integer totalPrice;
     @JsonProperty("product_orders")
     private List<ProductOrderMessage> productOrderMessages;
+    @JsonProperty("member")
+    private MemberMessage memberMessage;
 
     public static OrderMessage create(
             Long orderId,
             LocalDateTime orderedAt,
             Integer totalPrice,
-            List<ProductOrderMessage> productOrderMessages
+            List<ProductOrderMessage> productOrderMessages,
+            MemberMessage memberMessage
     ) {
-        return new OrderMessage(orderId, orderedAt, totalPrice, productOrderMessages);
+        return new OrderMessage(orderId, orderedAt, totalPrice, productOrderMessages, memberMessage);
     }
 }
