@@ -21,6 +21,7 @@ import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.review.domain.Review;
 import kkakka.mainservice.review.domain.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -39,8 +40,9 @@ import org.springframework.web.client.RestTemplate;
 @Profile("!test")
 public class MemberRecommendStrategy implements ProductRecommender {
 
-    // TODO: config-server 로 분리
-    private static final String RECOMMENDATION_SERVER_URL = "http://localhost:8000/recommendation/";
+    @Value("${recommend.request-url}")
+    private String RECOMMENDATION_SERVER_URL;
+
     private static final int RECENT_ORDER_LIMIT = 3;
     private static final int DEFAULT_PAGE_SIZE = 9;
 
