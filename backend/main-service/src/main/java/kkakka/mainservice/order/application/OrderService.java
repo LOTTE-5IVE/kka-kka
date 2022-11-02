@@ -45,7 +45,8 @@ public class OrderService {
     public Long order(OrderDto orderDto) {
         Long memberId = orderDto.getMemberId();
         List<ProductOrderDto> productOrderDtos = orderDto.getProductOrders();
-        Member member = memberRepository.findById(memberId).orElseThrow();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(NotFoundMemberException::new);
         Recipient recipient = Recipient.from(orderDto.getRecipientDto());
 
         List<ProductOrder> productOrders = new ArrayList<>();
