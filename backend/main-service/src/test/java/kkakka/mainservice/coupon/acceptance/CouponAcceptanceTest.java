@@ -148,7 +148,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         assertThat(response.body()).isNotNull();
     }
 
-    @DisplayName("사용 가능한 쿠폰 조회 - 성공")
+    @DisplayName("회원별 사용 가능한 쿠폰 조회 - 성공")
     @Test
     void usableCoupons() {
         String accessToken = 액세스_토큰_가져옴();
@@ -313,19 +313,6 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         return couponId;
     }
 
-    private String 쿠폰_다운로드3(String accessToken) {
-        String couponId = 일반_쿠폰_생성함3();
-
-        final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
-            .header("Authorization", "Bearer " + accessToken)
-            .when()
-            .post("/api/coupons/download/" + couponId)
-            .then().log().all().extract();
-
-        return couponId;
-    }
-
     private String 쿠폰_다운로드4(String accessToken) {
         String couponId = 등급_쿠폰_생성함();
 
@@ -339,21 +326,41 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         return couponId;
     }
 
-    @DisplayName("상품 사용가능한 쿠폰 조회")
+    @DisplayName("회원 - 상품 사용가능한 쿠폰 조회")
     @Test
-    void showProductCoupons() {
+    void showProductCouponsByProductIdAndMemberId() {
         String accessToken = 액세스_토큰_가져옴();
         쿠폰_다운로드(accessToken);
         쿠폰_다운로드2(accessToken);
-        쿠폰_다운로드3(accessToken);
+        일반_쿠폰_생성함3();
         쿠폰_다운로드4(accessToken);
 
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
-//            .filter(document("download-coupon"))
+            .given(spec).log().all()
+            .filter(document("show-product-coupon-by-productId-and-memberId"))
             .header("Authorization", "Bearer " + accessToken)
             .when()
             .get("/api/coupons/" + PRODUCT_1.getId())
+            .then().log().all().extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body()).isNotNull();
+    }
+
+    @DisplayName("비회원 - 상품 적용가능한 쿠폰 조회")
+    @Test
+    void showProductCouponsByProductId() {
+        String accessToken = 액세스_토큰_가져옴();
+        쿠폰_다운로드(accessToken);
+        쿠폰_다운로드2(accessToken);
+        일반_쿠폰_생성함3();
+        쿠폰_다운로드4(accessToken);
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .filter(document("show-product-coupon-by-productId"))
+            .when()
+            .get("/api/coupons/product/" + PRODUCT_1.getId())
             .then().log().all().extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());

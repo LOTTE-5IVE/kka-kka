@@ -134,4 +134,24 @@ include::{snippets}/show-discounts-success/http-request.adoc[]
 
 include::{snippets}/show-discounts-success/http-response.adoc[]
 
+=== 비회원 상품 적용 가능한 쿠폰 조회
+
+- Request
+
+include::{snippets}/show-product-coupon-by-productId/http-request.adoc[]
+
+- Response
+
+include::{snippets}/show-product-coupon-by-productId/http-response.adoc[]
+
+=== 회원 상품 적용 가능한 쿠폰 조회
+
+- Request
+
+include::{snippets}/show-product-coupon-by-productId-and-memberId/http-request.adoc[]
+
+- Response
+
+include::{snippets}/show-product-coupon-by-productId-and-memberId/http-response.adoc[]
+
 

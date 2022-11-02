@@ -103,12 +103,21 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.OK).body(discounts);
     }
 
-    /* 상품에 대해 적용 가능한 쿠폰 조회 */
+    /* 상품, 멤버에 대해 적용 가능한 쿠폰 조회 */
     @GetMapping("/{productId}")
-    public ResponseEntity<List<CouponProductResponseDto>> showCouponsByProductId(
+    public ResponseEntity<List<CouponProductResponseDto>> showCouponsByProductIdAndMemberId(
         @PathVariable Long productId, @AuthenticationPrincipal LoginMember loginMember) {
-        List<CouponProductResponseDto> couponResponseDtos = couponService.showCouponsByProductId(
+        List<CouponProductResponseDto> couponResponseDtos = couponService.showCouponsByProductIdAndMemberId(
             productId, loginMember.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(couponResponseDtos);
+    }
+
+    /* 상품에 대해 적용 가능한 쿠폰 조회 */
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<List<CouponProductResponseDto>> showCouponsByProductId(
+        @PathVariable Long productId) {
+        List<CouponProductResponseDto> couponResponseDtos = couponService.showCouponsByProductId(
+            productId);
         return ResponseEntity.status(HttpStatus.OK).body(couponResponseDtos);
     }
 }

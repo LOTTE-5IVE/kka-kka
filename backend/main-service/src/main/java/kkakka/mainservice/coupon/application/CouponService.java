@@ -197,7 +197,7 @@ public class CouponService {
     }
 
     /* 상품에 대해 적용 가능한 쿠폰 조회 */
-    public List<CouponProductResponseDto> showCouponsByProductId(Long productId, Long memberId) {
+    public List<CouponProductResponseDto> showCouponsByProductIdAndMemberId(Long productId, Long memberId) {
         Product product = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
         List<Coupon> coupons = couponRepository.findCouponsByProductIdAndNotDeleted(productId);
         if (product.getCategory() != null) {
@@ -214,12 +214,25 @@ public class CouponService {
             }
             couponProductResponseDtos.add(CouponProductResponseDto.create(coupon, false));
         }
-        MemberCoupon memberCoupon = memberCouponRepository.findGradeCouponByMemberId(memberId);
-        if (memberCoupon != null) {
-            couponProductResponseDtos.add(
-                CouponProductResponseDto.create(memberCoupon.getCoupon(), false));
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findGradeCouponByMemberId(memberId);
+        if (!memberCoupons.isEmpty()) {
+            for (MemberCoupon memberCoupon : memberCoupons) {
+                couponProductResponseDtos.add(
+                    CouponProductResponseDto.create(memberCoupon.getCoupon(), false));
+            }
         }
 
         return sortWithMaximumDiscountAmount.sort(couponProductResponseDtos, product);
+    }
+
+    public List<CouponProductResponseDto> showCouponsByProductId(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
+        List<Coupon> coupons = couponRepository.findCouponsByProductIdAndNotDeleted(productId);
+        List<CouponProductResponseDto> couponProductResponseDtos = coupons.stream()
+            .map(coupon -> CouponProductResponseDto.create(coupon, true))
+            .collect(Collectors.toList());
+
+        return sortWithMaximumDiscountAmount.sort(couponProductResponseDtos, product);
+
     }
 }

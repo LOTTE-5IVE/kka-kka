@@ -26,6 +26,6 @@ public interface MemberCouponRepository extends JpaRepository<MemberCoupon, Long
         @Param(value = "memberId") Long memberId);
 
     @Query("select mc from MemberCoupon mc where mc.coupon.priceRule = 'GRADE_COUPON' and mc.member.id = :memberId and mc.isUsed = false")
-    MemberCoupon findGradeCouponByMemberId(@Param(value = "memberId") Long memberId);
+    List<MemberCoupon> findGradeCouponByMemberId(@Param(value = "memberId") Long memberId);
 
 }

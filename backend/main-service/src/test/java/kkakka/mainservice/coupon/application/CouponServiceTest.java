@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import kkakka.mainservice.TestContext;
-import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.PriceRule;
@@ -234,7 +233,7 @@ public class CouponServiceTest extends TestContext {
         couponRepository.save(coupon2);
 
         // when
-        List<CouponProductResponseDto> couponProductResponseDtos = couponService.showCouponsByProductId(
+        List<CouponProductResponseDto> couponProductResponseDtos = couponService.showCouponsByProductIdAndMemberId(
             product.getId(), member.getId());
 
         // then
@@ -274,5 +273,28 @@ public class CouponServiceTest extends TestContext {
 
         // then
         assertThat(couponRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @DisplayName("상품 적용 가능한 쿠폰 조회 - 성공")
+    @Test
+    void showProductCouponsByProductId() {
+        // given
+        Product product = new Product(null, null, "product",
+            1000, 20, "", "", "", null);
+        productRepository.save(product);
+        couponService.createCoupon(new CouponRequestDto(
+            null, null, product.getId(),
+            "test", "COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+
+        // when
+        List<CouponProductResponseDto> couponProductResponseDtos = couponService.showCouponsByProductId(
+            product.getId());
+
+        // then
+        assertThat(couponProductResponseDtos.size()).isEqualTo(1);
     }
 }
