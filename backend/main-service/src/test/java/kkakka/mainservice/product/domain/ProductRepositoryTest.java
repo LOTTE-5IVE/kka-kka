@@ -3,6 +3,7 @@ package kkakka.mainservice.product.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import kkakka.mainservice.TestContext;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.product.domain.Nutrition;
@@ -17,7 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
-public class ProductRepositoryTest {
+public class ProductRepositoryTest extends TestContext {
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -30,8 +31,9 @@ public class ProductRepositoryTest {
     @Test
     void findAllByIdInTest(){
         // given
+        final Category category = categoryRepository.save(new Category("test-category"));
         final Product product1 = productRepository.save(new Product(
-                categoryRepository.save(new Category("test-category")),
+                category,
                 "product-name1", 1000, 10, "", "",
                 nutritionRepository.save(
                         new Nutrition("398", "51", "0", "7", "22", "12", "0.5", "35", "370",
@@ -39,7 +41,7 @@ public class ProductRepositoryTest {
                 )
         ));
         final Product product2 = productRepository.save(new Product(
-                categoryRepository.save(new Category("test-category")),
+                category,
                 "product-name2", 1000, 10, "", "",
                 nutritionRepository.save(
                         new Nutrition("398", "51", "0", "7", "22", "12", "0.5", "35", "370",
@@ -47,7 +49,7 @@ public class ProductRepositoryTest {
                 )
         ));
         final Product product3 = productRepository.save(new Product(
-                categoryRepository.save(new Category("test-category")),
+                category,
                 "product-name3", 1000, 10, "", "",
                 nutritionRepository.save(
                         new Nutrition("398", "51", "0", "7", "22", "12", "0.5", "35", "370",
@@ -55,7 +57,7 @@ public class ProductRepositoryTest {
                 )
         ));
         final Product product4 = productRepository.save(new Product(
-                categoryRepository.save(new Category("test-category")),
+                category,
                 "product-name4", 1000, 10, "", "",
                 nutritionRepository.save(
                         new Nutrition("398", "51", "0", "7", "22", "12", "0.5", "35", "370",
@@ -63,7 +65,7 @@ public class ProductRepositoryTest {
                 )
         ));
         final Product product5 = productRepository.save(new Product(
-                categoryRepository.save(new Category("test-category")),
+                category,
                 "product-name5", 1000, 10, "", "",
                 nutritionRepository.save(
                         new Nutrition("398", "51", "0", "7", "22", "12", "0.5", "35", "370",
