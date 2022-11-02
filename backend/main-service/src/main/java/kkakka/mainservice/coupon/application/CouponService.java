@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
+import kkakka.mainservice.common.exception.InvalidCouponRequestException;
 import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
@@ -40,10 +41,11 @@ public class CouponService {
     /* 관리자 쿠폰 등록 */
     @Transactional
     public Long createCoupon(CouponRequestDto couponRequestDto) {
-        if (couponRequestDto.isValidPercentage() && couponRequestDto.isValidDate()) {
+        if (couponRequestDto.isValidDate()) {
             if (PriceRule.GRADE_COUPON.equals(couponRequestDto.getPriceRule())) {
                 Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
-                List<Member> members = memberRepository.findByGrade(couponRequestDto.getGrade());
+                List<Member> members = memberRepository.findByGrade(
+                    couponRequestDto.getGrade());
                 for (Member member : members) {
                     MemberCoupon memberCoupon = MemberCoupon.create(member, coupon);
                     memberCouponRepository.save(memberCoupon);
@@ -61,23 +63,46 @@ public class CouponService {
                 return coupon.getId();
             }
         }
-        throw new KkaKkaException();
+        throw new InvalidCouponRequestException();
     }
 
     private Coupon toCouponEntity(CouponRequestDto couponRequestDto) {
+        if (couponRequestDto.getPercentage() != null) {
+            return Coupon.create(
+                couponRequestDto.getGrade(),
+                couponRequestDto.getName(),
+                PriceRule.GRADE_COUPON,
+                couponRequestDto.getStartedAt(),
+                couponRequestDto.getExpiredAt(),
+                couponRequestDto.getPercentage(),
+                couponRequestDto.getMaxDiscount(),
+                couponRequestDto.getMinOrderPrice());
+        }
         return Coupon.create(
             couponRequestDto.getGrade(),
             couponRequestDto.getName(),
             PriceRule.GRADE_COUPON,
             couponRequestDto.getStartedAt(),
             couponRequestDto.getExpiredAt(),
-            couponRequestDto.getPercentage(),
             couponRequestDto.getMaxDiscount(),
             couponRequestDto.getMinOrderPrice());
     }
 
     private Coupon toCouponEntity(CouponRequestDto couponRequestDto, Category category,
         Product product) {
+        if (couponRequestDto.getPercentage() != null) {
+            return Coupon.create(
+                category,
+                product,
+                couponRequestDto.getName(),
+                PriceRule.COUPON,
+                couponRequestDto.getStartedAt(),
+                couponRequestDto.getExpiredAt(),
+                couponRequestDto.getPercentage(),
+                couponRequestDto.getMaxDiscount(),
+                couponRequestDto.getMinOrderPrice()
+            );
+        }
         return Coupon.create(
             category,
             product,
@@ -85,7 +110,6 @@ public class CouponService {
             PriceRule.COUPON,
             couponRequestDto.getStartedAt(),
             couponRequestDto.getExpiredAt(),
-            couponRequestDto.getPercentage(),
             couponRequestDto.getMaxDiscount(),
             couponRequestDto.getMinOrderPrice()
         );

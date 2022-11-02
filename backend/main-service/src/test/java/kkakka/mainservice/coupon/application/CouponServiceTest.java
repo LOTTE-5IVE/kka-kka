@@ -240,4 +240,39 @@ public class CouponServiceTest extends TestContext {
         // then
         assertThat(couponProductResponseDtos.size()).isEqualTo(2);
     }
+
+    @DisplayName("등급쿠폰 금액할인 생성 테스트 - 성공")
+    @Test
+    void createMoneyGradeCoupon_success() {
+        // given
+        // when
+        couponService.createCoupon(new CouponRequestDto(
+            null, Grade.GOLD, null,
+            "test", "GRADE_COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+
+        // then
+        assertThat(couponRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @DisplayName("일반쿠폰 금액할인 생성 테스트 - 성공")
+    @Test
+    void createMoneyCoupon_success() {
+        // given
+        Product product = new Product();
+        // when
+        couponService.createCoupon(new CouponRequestDto(
+            null, null, product.getId(),
+            "test", "COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+
+        // then
+        assertThat(couponRepository.findAll().size()).isEqualTo(1);
+    }
 }

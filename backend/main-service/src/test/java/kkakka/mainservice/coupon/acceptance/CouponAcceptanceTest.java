@@ -41,7 +41,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
                 + "  \"priceRule\": \"GRADE_COUPON\",\n"
                 + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
                 + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
-                + "  \"percentage\": null,\n"
+                + "  \"percentage\": 10,\n"
                 + "  \"maxDiscount\": 2000,\n"
                 + "  \"minOrderPrice\": 20000\n"
                 + "}")
@@ -70,7 +70,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
                 + "  \"priceRule\": \"COUPON\",\n"
                 + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
                 + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
-                + "  \"percentage\": null,\n"
+                + "  \"percentage\": 10,\n"
                 + "  \"maxDiscount\": 2000,\n"
                 + "  \"minOrderPrice\": 20000\n"
                 + "}")
@@ -358,5 +358,34 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.body()).isNotNull();
+    }
+
+    @DisplayName("금액할인 일반 쿠폰 생성 - 성공")
+    @Test
+    void createMoneyCoupon() {
+        // given
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body("{\n"
+                + "  \"categoryId\": null,\n"
+                + "  \"grade\": null,\n"
+                + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
+                + "  \"name\": \"test\",\n"
+                + "  \"priceRule\": \"COUPON\",\n"
+                + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
+                + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
+                + "  \"percentage\": null,\n"
+                + "  \"maxDiscount\": 2000,\n"
+                + "  \"minOrderPrice\": 20000\n"
+                + "}")
+            .when()
+            .post("/api/coupons")
+            .then().log().all().extract();
+
+        // then
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        Assertions.assertThat(response.header("Location")).isNotNull();
     }
 }

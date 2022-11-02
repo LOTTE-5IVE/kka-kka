@@ -69,6 +69,10 @@ public class Member {
         this.address = address;
     }
 
+    public void gradeUp(Grade grade) {
+        this.grade = grade;
+    }
+
     public MemberResponse toDto() {
         return new MemberResponse(name, email, phone, address, ageGroup, grade);
     }

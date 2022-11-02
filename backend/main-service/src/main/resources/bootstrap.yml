@@ -9,6 +9,9 @@ spring:
       "local": "console-logging"
       "dev": "console-logging, file-logging, performance-logging"
       "prod": "file-logging"
+  jpa:
+    hibernate:
+      ddl-auto: create
 
 logging:
   config: classpath:logback-spring.xml
