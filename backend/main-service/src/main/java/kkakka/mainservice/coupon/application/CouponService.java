@@ -197,7 +197,8 @@ public class CouponService {
     }
 
     /* 상품에 대해 적용 가능한 쿠폰 조회 */
-    public List<CouponProductResponseDto> showCouponsByProductIdAndMemberId(Long productId, Long memberId) {
+    public List<CouponProductResponseDto> showCouponsByProductIdAndMemberId(Long productId,
+        Long memberId) {
         Product product = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
         List<Coupon> coupons = couponRepository.findCouponsByProductIdAndNotDeleted(productId);
         if (product.getCategory() != null) {
@@ -214,7 +215,8 @@ public class CouponService {
             }
             couponProductResponseDtos.add(CouponProductResponseDto.create(coupon, false));
         }
-        List<MemberCoupon> memberCoupons = memberCouponRepository.findGradeCouponByMemberId(memberId);
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findGradeCouponByMemberId(
+            memberId);
         if (!memberCoupons.isEmpty()) {
             for (MemberCoupon memberCoupon : memberCoupons) {
                 couponProductResponseDtos.add(
