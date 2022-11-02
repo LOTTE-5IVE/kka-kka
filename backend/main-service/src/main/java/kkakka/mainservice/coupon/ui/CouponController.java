@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import kkakka.mainservice.coupon.application.CouponService;
 import kkakka.mainservice.coupon.application.DiscountService;
+import kkakka.mainservice.coupon.ui.dto.CouponProductResponseDto;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
 import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.coupon.ui.dto.DiscountRequestDto;
@@ -104,10 +105,10 @@ public class CouponController {
 
     /* 상품에 대해 적용 가능한 쿠폰 조회 */
     @GetMapping("/{productId}")
-    public ResponseEntity<List<CouponResponseDto>> showCouponsByProductId(
-        @PathVariable Long productId) {
-        List<CouponResponseDto> couponResponseDtos = couponService.showCouponsByProductId(
-            productId);
+    public ResponseEntity<List<CouponProductResponseDto>> showCouponsByProductId(
+        @PathVariable Long productId, @AuthenticationPrincipal LoginMember loginMember) {
+        List<CouponProductResponseDto> couponResponseDtos = couponService.showCouponsByProductId(
+            productId, loginMember.getId());
         return ResponseEntity.status(HttpStatus.OK).body(couponResponseDtos);
     }
 }

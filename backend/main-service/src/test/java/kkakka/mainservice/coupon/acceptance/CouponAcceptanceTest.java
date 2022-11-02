@@ -18,9 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 public class CouponAcceptanceTest extends DocumentConfiguration {
 
     @Autowired
@@ -43,7 +41,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
                 + "  \"priceRule\": \"GRADE_COUPON\",\n"
                 + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
                 + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
-                + "  \"percentage\": 10,\n"
+                + "  \"percentage\": null,\n"
                 + "  \"maxDiscount\": 2000,\n"
                 + "  \"minOrderPrice\": 20000\n"
                 + "}")
@@ -72,7 +70,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
                 + "  \"priceRule\": \"COUPON\",\n"
                 + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
                 + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
-                + "  \"percentage\": 10,\n"
+                + "  \"percentage\": null,\n"
                 + "  \"maxDiscount\": 2000,\n"
                 + "  \"minOrderPrice\": 20000\n"
                 + "}")
@@ -190,6 +188,72 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         return response.header("Location");
     }
 
+    private String 일반_쿠폰_생성함2() {
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body("{\n"
+                + "  \"categoryId\": null,\n"
+                + "  \"grade\": null,\n"
+                + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
+                + "  \"name\": \"test\",\n"
+                + "  \"priceRule\": \"COUPON\",\n"
+                + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
+                + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
+                + "  \"percentage\": 15,\n"
+                + "  \"maxDiscount\": 2000,\n"
+                + "  \"minOrderPrice\": 20000\n"
+                + "}")
+            .when()
+            .post("/api/coupons")
+            .then().log().all().extract();
+        return response.header("Location");
+    }
+
+    private String 일반_쿠폰_생성함3() {
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body("{\n"
+                + "  \"categoryId\": null,\n"
+                + "  \"grade\": null,\n"
+                + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
+                + "  \"name\": \"test\",\n"
+                + "  \"priceRule\": \"COUPON\",\n"
+                + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
+                + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
+                + "  \"percentage\": 13,\n"
+                + "  \"maxDiscount\": 2000,\n"
+                + "  \"minOrderPrice\": 20000\n"
+                + "}")
+            .when()
+            .post("/api/coupons")
+            .then().log().all().extract();
+        return response.header("Location");
+    }
+
+    private String 등급_쿠폰_생성함() {
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body("{\n"
+                + "  \"categoryId\": null,\n"
+                + "  \"grade\": \"GOLD\",\n"
+                + "  \"productId\": null,\n"
+                + "  \"name\": \"test\",\n"
+                + "  \"priceRule\": \"GRADE_COUPON\",\n"
+                + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
+                + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
+                + "  \"percentage\": null,\n"
+                + "  \"maxDiscount\": 2000,\n"
+                + "  \"minOrderPrice\": 20000\n"
+                + "}")
+            .when()
+            .post("/api/coupons")
+            .then().log().all().extract();
+        return response.header("Location");
+    }
+
     @DisplayName("쿠폰 다운로드")
     @Test
     void downloadCoupon() {
@@ -234,5 +298,65 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
             .then().log().all().extract();
 
         return couponId;
+    }
+
+    private String 쿠폰_다운로드2(String accessToken) {
+        String couponId = 일반_쿠폰_생성함2();
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .post("/api/coupons/download/" + couponId)
+            .then().log().all().extract();
+
+        return couponId;
+    }
+
+    private String 쿠폰_다운로드3(String accessToken) {
+        String couponId = 일반_쿠폰_생성함3();
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .post("/api/coupons/download/" + couponId)
+            .then().log().all().extract();
+
+        return couponId;
+    }
+
+    private String 쿠폰_다운로드4(String accessToken) {
+        String couponId = 등급_쿠폰_생성함();
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .post("/api/coupons/download/" + couponId)
+            .then().log().all().extract();
+
+        return couponId;
+    }
+
+    @DisplayName("상품 사용가능한 쿠폰 조회")
+    @Test
+    void showProductCoupons() {
+        String accessToken = 액세스_토큰_가져옴();
+        쿠폰_다운로드(accessToken);
+        쿠폰_다운로드2(accessToken);
+        쿠폰_다운로드3(accessToken);
+        쿠폰_다운로드4(accessToken);
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+//            .filter(document("download-coupon"))
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .get("/api/coupons/" + PRODUCT_1.getId())
+            .then().log().all().extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body()).isNotNull();
     }
 }
