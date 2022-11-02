@@ -26,12 +26,12 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query(value = "select r from Review r "
             + "join fetch r.productOrder po "
             + "join fetch po.product p "
-            + "where r.member.id = :memberId "
+            + "where r.member.id = :memberId and r.rating > 4.0 "
             + "order by r.rating desc",
             countQuery = "select r from Review r "
                     + "join fetch r.productOrder po "
                     + "join fetch po.product p "
-                    + "where r.member.id = :memberId "
+                    + "where r.member.id = :memberId and r.rating > 4.0 "
                     + "order by r.rating desc")
     List<Review> findTopRatingReviewByMemberId(@Param(value = "memberId") Long memberId,
             Pageable pageable);

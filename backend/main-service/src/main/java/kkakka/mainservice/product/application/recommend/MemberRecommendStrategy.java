@@ -43,6 +43,7 @@ public class MemberRecommendStrategy implements ProductRecommender {
     @Value("${recommend.request-url}")
     private String RECOMMENDATION_SERVER_URL;
 
+    private static final Random RANDOM = new Random();
     private static final int RECENT_ORDER_LIMIT = 3;
     private static final int DEFAULT_PAGE_SIZE = 9;
 
@@ -57,10 +58,10 @@ public class MemberRecommendStrategy implements ProductRecommender {
     public Page<Product> recommend(Optional<Long> memberId, Pageable pageable) {
         final Member member = validateMember(memberId);
 
-        final List<Review> topRatedReview = reviewRepository.findTopRatingReviewByMemberId(
-                member.getId(), Pageable.ofSize(1));
+        final List<Review> highRatedReviews = reviewRepository.findTopRatingReviewByMemberId(
+                member.getId(), Pageable.ofSize(5));
 
-        if (topRatedReview.isEmpty()) {
+        if (highRatedReviews.isEmpty()) {
             final List<Order> orders = orderRepository.findAllByMemberId(member.getId(),
                     Pageable.ofSize(RECENT_ORDER_LIMIT));
 
@@ -70,9 +71,45 @@ public class MemberRecommendStrategy implements ProductRecommender {
             return recommendWithRecentOrderRandom(pageable, orders);
         }
 
-        final Product pivotProduct = topRatedReview.get(0).getProductOrder().getProduct();
+        return recommendWithHighRatedReviewRandom(pageable, highRatedReviews);
+    }
+
+    private Page<Product> recommendWithRecentOrderRandom(Pageable pageable, List<Order> orders) {
+        final List<Product> orderedProducts = orders.stream()
+                .flatMap(order -> order.getProductOrders().stream())
+                .map(ProductOrder::getProduct)
+                .distinct()
+                .collect(Collectors.toList());
+
+        final int randomIdx = selectRandomPivotIndex(orderedProducts.size());
+
+        final Product pivotProduct = orderedProducts.get(randomIdx);
         final RecommendProductDto recommendProductDto = requestRecommendation(pivotProduct);
+
         return findRecommendedProducts(pageable, recommendProductDto);
+    }
+
+    private Page<Product> recommendWithHighRatedReviewRandom(Pageable pageable, List<Review> topRatedReview) {
+        final Product pivotProduct = reviewedPivotProduct(topRatedReview);
+        final RecommendProductDto recommendProductDto = requestRecommendation(pivotProduct);
+
+        return findRecommendedProducts(pageable, recommendProductDto);
+    }
+
+    private Product reviewedPivotProduct(List<Review> topRatedReview) {
+        final List<Product> reviewedProducts = topRatedReview.stream()
+                .map(Review::getProductOrder)
+                .map(ProductOrder::getProduct)
+                .collect(Collectors.toList());
+        return reviewedProducts.get(
+                selectRandomPivotIndex(reviewedProducts.size()));
+    }
+
+    private List<Product> findMoreProductsByRatingAvg(List<Long> productIds, int numberRequired) {
+        return productRepository.findAllOrderByRatingAvg(
+                productIds,
+                Pageable.ofSize(numberRequired)
+        ).getContent();
     }
 
     private RecommendProductDto requestRecommendation(Product pivotProduct) {
@@ -86,20 +123,8 @@ public class MemberRecommendStrategy implements ProductRecommender {
         return convertResponseBody(response);
     }
 
-    private Page<Product> recommendWithRecentOrderRandom(Pageable pageable, List<Order> orders) {
-        final List<Product> orderedProducts = orders.stream()
-                .flatMap(order -> order.getProductOrders().stream())
-                .map(ProductOrder::getProduct)
-                .distinct()
-                .collect(Collectors.toList());
-
-        final Random random = new Random();
-        final int randomIdx = random.nextInt(orderedProducts.size());
-
-        final Product pivotProduct = orderedProducts.get(randomIdx);
-        final RecommendProductDto recommendProductDto = requestRecommendation(pivotProduct);
-
-        return findRecommendedProducts(pageable, recommendProductDto);
+    private int selectRandomPivotIndex(int itemSize) {
+        return RANDOM.nextInt(itemSize);
     }
 
     private Page<Product> recommendWithTopRated(Pageable pageable) {
@@ -136,13 +161,6 @@ public class MemberRecommendStrategy implements ProductRecommender {
                 pageable,
                 Math.max(productIds.size(), DEFAULT_PAGE_SIZE)
         );
-    }
-
-    private List<Product> findMoreProductsByRatingAvg(List<Long> productIds, int numberRequired) {
-        return productRepository.findAllOrderByRatingAvg(
-                productIds,
-                Pageable.ofSize(numberRequired)
-        ).getContent();
     }
 
     private int maximumPageSize(Pageable pageable, List<Long> productIds) {
