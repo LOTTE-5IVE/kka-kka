@@ -2,6 +2,7 @@ package kkakka.mainservice.coupon.ui.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.LocalDateTime;
+import java.util.function.BiFunction;
 import kkakka.mainservice.common.LocalDateTimeSerializer;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.PriceRule;
@@ -37,7 +38,42 @@ public class CouponProductResponseDto {
     private Boolean isDownloadable;
     private Integer discountedPrice;
 
-    public static CouponProductResponseDto create(Coupon coupon, Boolean isDownloadable) {
+    static final BiFunction<Integer, Integer, Integer> calculateStaticPrice = new BiFunction<Integer, Integer, Integer>() {
+        @Override
+        public Integer apply(Integer productPrice, Integer couponDiscount) {
+            return productPrice - couponDiscount;
+        }
+    };
+
+    static final BiFunction<Integer, Integer, Integer> calculatePercentage = new BiFunction<Integer, Integer, Integer>() {
+        @Override
+        public Integer apply(Integer productPrice, Integer couponPercentage) {
+            return (int) Math.ceil(productPrice * (1 - (couponPercentage * 0.01)));
+        }
+    };
+
+    public static CouponProductResponseDto create(Coupon coupon, Boolean isDownloadable,
+        Integer productPrice) {
+        if (coupon.getPercentage() != null) {
+            int calculatedPercentValue = calculatePercentage.apply(
+                productPrice, coupon.getPercentage());
+            int calculatedStaticValue = calculateStaticPrice.apply(productPrice,
+                coupon.getMaxDiscount());
+            return new CouponProductResponseDto(
+                coupon.getId(),
+                coupon.getCategoryId(),
+                coupon.getGrade(),
+                coupon.getProductId(),
+                coupon.getName(),
+                coupon.getPriceRule(),
+                coupon.getRegisteredAt(),
+                coupon.getStartedAt(),
+                coupon.getExpiredAt(),
+                coupon.getPercentage(),
+                coupon.getMaxDiscount(),
+                coupon.getMinOrderPrice(),
+                isDownloadable, Math.max(calculatedPercentValue, calculatedStaticValue));
+        }
         return new CouponProductResponseDto(
             coupon.getId(),
             coupon.getCategoryId(),
@@ -51,10 +87,9 @@ public class CouponProductResponseDto {
             coupon.getPercentage(),
             coupon.getMaxDiscount(),
             coupon.getMinOrderPrice(),
-            isDownloadable, 0);
+            isDownloadable, calculateStaticPrice.apply(productPrice,
+            coupon.getMaxDiscount()));
     }
 
-    public void saveDiscountedPrice(Integer discountedPrice) {
-        this.discountedPrice = discountedPrice;
-    }
+
 }

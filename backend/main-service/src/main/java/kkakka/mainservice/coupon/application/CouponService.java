@@ -199,65 +199,58 @@ public class CouponService {
         Long memberId) {
 
         Product product = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
-        List<Coupon> coupons = saveProductCouponByProductId(productId);
+        List<Coupon> coupons = findProductCouponsByProductId(productId);
 
-        saveCategoryCouponByCategoryId(coupons, product);
+        if (product.getCategory() != null) {
+            coupons.addAll(findCategoryCouponsByCategoryId(productId));
+        }
 
-        List<CouponProductResponseDto> couponProductResponseDtos = checkDownloadedCouponsByMemberId(
-            coupons, memberId);
+        int productPrice = product.getPrice() - product.getDiscount();
+        List<CouponProductResponseDto> couponProductResponseDtos = new ArrayList<>();
+        for (Coupon coupon : coupons) {
+            if (isDownloadableCoupon(coupon.getId(), memberId)) {
+                couponProductResponseDtos.add(
+                    CouponProductResponseDto.create(coupon, true, productPrice));
+                continue;
+            }
+            couponProductResponseDtos.add(
+                CouponProductResponseDto.create(coupon, false, productPrice));
+        }
 
-        checkUnusedGradeCouponByMemberId(memberId, couponProductResponseDtos);
-
-        return sortWithMaximumDiscountAmount.sort(couponProductResponseDtos, product);
-    }
-
-    private void checkUnusedGradeCouponByMemberId(Long memberId,
-        List<CouponProductResponseDto> couponProductResponseDtos) {
         List<MemberCoupon> memberCoupons = memberCouponRepository.findGradeCouponByMemberId(
             memberId);
         if (!memberCoupons.isEmpty()) {
             for (MemberCoupon memberCoupon : memberCoupons) {
                 couponProductResponseDtos.add(
-                    CouponProductResponseDto.create(memberCoupon.getCoupon(), false));
+                    CouponProductResponseDto.create(memberCoupon.getCoupon(), false, productPrice));
             }
         }
+
+        return sortWithMaximumDiscountAmount.sort(couponProductResponseDtos);
     }
 
-    private List<CouponProductResponseDto> checkDownloadedCouponsByMemberId(List<Coupon> coupons,
-        Long memberId) {
-        List<CouponProductResponseDto> couponProductResponseDtos = new ArrayList<>();
-        for (Coupon coupon : coupons) {
-            Long count = memberCouponRepository.countByCouponIdAndMemberId(coupon.getId(),
-                memberId);
-            if (count == 0) {
-                couponProductResponseDtos.add(CouponProductResponseDto.create(coupon, true));
-                continue;
-            }
-            couponProductResponseDtos.add(CouponProductResponseDto.create(coupon, false));
-        }
-        return couponProductResponseDtos;
+    private boolean isDownloadableCoupon(Long couponId, Long memberId) {
+        Long count = memberCouponRepository.countByCouponIdAndMemberId(couponId, memberId);
+        return count == 0;
     }
 
-    private void saveCategoryCouponByCategoryId(List<Coupon> coupons, Product product) {
-        if (product.getCategory() != null) {
-            coupons.addAll(couponRepository.findCouponsByCategoryIdAndNotDeleted(
-                product.getCategory().getId()));
-        }
+    private List<Coupon> findCategoryCouponsByCategoryId(Long productId) {
+        return couponRepository.findCouponsByCategoryIdAndNotDeleted(productId);
     }
 
-    private List<Coupon> saveProductCouponByProductId(Long productId) {
+    private List<Coupon> findProductCouponsByProductId(Long productId) {
         return couponRepository.findCouponsByProductIdAndNotDeleted(productId);
-
     }
 
     public List<CouponProductResponseDto> showCouponsByProductId(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
         List<Coupon> coupons = couponRepository.findCouponsByProductIdAndNotDeleted(productId);
         List<CouponProductResponseDto> couponProductResponseDtos = coupons.stream()
-            .map(coupon -> CouponProductResponseDto.create(coupon, true))
+            .map(coupon -> CouponProductResponseDto.create(coupon, true,
+                product.getPrice() - product.getDiscount()))
             .collect(Collectors.toList());
 
-        return sortWithMaximumDiscountAmount.sort(couponProductResponseDtos, product);
+        return sortWithMaximumDiscountAmount.sort(couponProductResponseDtos);
 
     }
 }
