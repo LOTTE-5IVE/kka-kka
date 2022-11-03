@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class SortWithMaximumDiscountAmount {
 
-    BiFunction<Integer, Integer, Integer> calculateStaticPrice = new BiFunction<Integer, Integer, Integer>() {
+    final BiFunction<Integer, Integer, Integer> calculateStaticPrice = new BiFunction<Integer, Integer, Integer>() {
         @Override
         public Integer apply(Integer productPrice, Integer couponDiscount) {
             return productPrice - couponDiscount;
         }
     };
 
-    BiFunction<Integer, Integer, Integer> calculatePercentage = new BiFunction<Integer, Integer, Integer>() {
+    final BiFunction<Integer, Integer, Integer> calculatePercentage = new BiFunction<Integer, Integer, Integer>() {
         @Override
         public Integer apply(Integer productPrice, Integer couponPercentage) {
             return (int) Math.ceil(productPrice * (1 - (couponPercentage * 0.01)));
@@ -29,9 +29,12 @@ public class SortWithMaximumDiscountAmount {
         List<CouponProductResponseDto> couponProductResponseDtos, Product product) {
         for (CouponProductResponseDto couponProductResponseDto : couponProductResponseDtos) {
             if (couponProductResponseDto.getPercentage() != null) {
-                couponProductResponseDto.saveDiscountedPrice(
-                    calculatePercentage.apply(product.getPrice() - product.getDiscount(),
-                        couponProductResponseDto.getPercentage()));
+                int calculatedPercentValue = calculatePercentage.apply(
+                    product.getPrice() - product.getDiscount(),
+                    couponProductResponseDto.getPercentage());
+                int calculatedStaticValue =  calculateStaticPrice.apply(product.getPrice() - product.getDiscount(),
+                    couponProductResponseDto.getMaxDiscount());
+                couponProductResponseDto.saveDiscountedPrice(Math.max(calculatedPercentValue, calculatedStaticValue));
                 continue;
             }
             couponProductResponseDto.saveDiscountedPrice(
