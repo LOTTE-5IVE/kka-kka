@@ -210,7 +210,7 @@ public class CouponServiceTest extends TestContext {
 
     @DisplayName("상품 다운 가능한 쿠폰 조회 - 성공")
     @Test
-    void 상품_다운가능한_쿠폰_조회() {
+    void showDownloadableCoupons() {
         // given
         Member member = new Member();
         Product product = new Product(null, null, "test", 1000, 20,
