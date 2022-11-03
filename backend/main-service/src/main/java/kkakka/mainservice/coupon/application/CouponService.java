@@ -36,8 +36,6 @@ public class CouponService {
     private final MemberRepository memberRepository;
     private final SortWithMaximumDiscountAmount sortWithMaximumDiscountAmount;
 
-    // TODO : return 값 관리
-
     /* 관리자 쿠폰 등록 */
     @Transactional
     public Long createCoupon(CouponRequestDto couponRequestDto) {
@@ -199,12 +197,34 @@ public class CouponService {
     /* 상품에 대해 적용 가능한 쿠폰 조회 */
     public List<CouponProductResponseDto> showCouponsByProductIdAndMemberId(Long productId,
         Long memberId) {
+
         Product product = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
-        List<Coupon> coupons = couponRepository.findCouponsByProductIdAndNotDeleted(productId);
-        if (product.getCategory() != null) {
-            coupons.addAll(couponRepository.findCouponsByCategoryIdAndNotDeleted(
-                product.getCategory().getId()));
+        List<Coupon> coupons = saveProductCouponByProductId(productId);
+
+        saveCategoryCouponByCategoryId(coupons, product);
+
+        List<CouponProductResponseDto> couponProductResponseDtos = checkDownloadedCouponsByMemberId(
+            coupons, memberId);
+
+        checkUnusedGradeCouponByMemberId(memberId, couponProductResponseDtos);
+
+        return sortWithMaximumDiscountAmount.sort(couponProductResponseDtos, product);
+    }
+
+    private void checkUnusedGradeCouponByMemberId(Long memberId,
+        List<CouponProductResponseDto> couponProductResponseDtos) {
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findGradeCouponByMemberId(
+            memberId);
+        if (!memberCoupons.isEmpty()) {
+            for (MemberCoupon memberCoupon : memberCoupons) {
+                couponProductResponseDtos.add(
+                    CouponProductResponseDto.create(memberCoupon.getCoupon(), false));
+            }
         }
+    }
+
+    private List<CouponProductResponseDto> checkDownloadedCouponsByMemberId(List<Coupon> coupons,
+        Long memberId) {
         List<CouponProductResponseDto> couponProductResponseDtos = new ArrayList<>();
         for (Coupon coupon : coupons) {
             Long count = memberCouponRepository.countByCouponIdAndMemberId(coupon.getId(),
@@ -215,16 +235,19 @@ public class CouponService {
             }
             couponProductResponseDtos.add(CouponProductResponseDto.create(coupon, false));
         }
-        List<MemberCoupon> memberCoupons = memberCouponRepository.findGradeCouponByMemberId(
-            memberId);
-        if (!memberCoupons.isEmpty()) {
-            for (MemberCoupon memberCoupon : memberCoupons) {
-                couponProductResponseDtos.add(
-                    CouponProductResponseDto.create(memberCoupon.getCoupon(), false));
-            }
-        }
+        return couponProductResponseDtos;
+    }
 
-        return sortWithMaximumDiscountAmount.sort(couponProductResponseDtos, product);
+    private void saveCategoryCouponByCategoryId(List<Coupon> coupons, Product product) {
+        if (product.getCategory() != null) {
+            coupons.addAll(couponRepository.findCouponsByCategoryIdAndNotDeleted(
+                product.getCategory().getId()));
+        }
+    }
+
+    private List<Coupon> saveProductCouponByProductId(Long productId) {
+        return couponRepository.findCouponsByProductIdAndNotDeleted(productId);
+
     }
 
     public List<CouponProductResponseDto> showCouponsByProductId(Long productId) {
