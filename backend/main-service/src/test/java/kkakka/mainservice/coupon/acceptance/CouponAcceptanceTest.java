@@ -278,7 +278,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
             .filter(document("show-product-coupon-by-productId-and-memberId"))
             .header("Authorization", "Bearer " + accessToken)
             .when()
-            .get("/api/coupons/" + PRODUCT_1.getId())
+            .get("/api/coupons/me/products/" + PRODUCT_1.getId())
             .then().log().all().extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -298,7 +298,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
             .given(spec).log().all()
             .filter(document("show-product-coupon-by-productId"))
             .when()
-            .get("/api/coupons/product/" + PRODUCT_1.getId())
+            .get("/api/coupons/products/" + PRODUCT_1.getId())
             .then().log().all().extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());

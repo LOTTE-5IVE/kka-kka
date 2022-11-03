@@ -31,8 +31,6 @@ public class CouponController {
     private final CouponService couponService;
     private final DiscountService discountService;
 
-    /* TODO : return 값 */
-
     /* 쿠폰 등록 */
     @PostMapping
     public ResponseEntity<Void> createCoupon(@RequestBody CouponRequestDto couponRequestDto) {
@@ -104,7 +102,7 @@ public class CouponController {
     }
 
     /* 상품, 멤버에 대해 적용 가능한 쿠폰 조회 */
-    @GetMapping("/{productId}")
+    @GetMapping("/me/products/{productId}")
     public ResponseEntity<List<CouponProductResponseDto>> showCouponsByProductIdAndMemberId(
         @PathVariable Long productId, @AuthenticationPrincipal LoginMember loginMember) {
         List<CouponProductResponseDto> couponResponseDtos = couponService.showCouponsByProductIdAndMemberId(
@@ -113,7 +111,7 @@ public class CouponController {
     }
 
     /* 상품에 대해 적용 가능한 쿠폰 조회 */
-    @GetMapping("/product/{productId}")
+    @GetMapping("/products/{productId}")
     public ResponseEntity<List<CouponProductResponseDto>> showCouponsByProductId(
         @PathVariable Long productId) {
         List<CouponProductResponseDto> couponResponseDtos = couponService.showCouponsByProductId(
