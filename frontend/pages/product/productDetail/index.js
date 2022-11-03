@@ -178,6 +178,7 @@ export default function ProductDetail() {
               <div className="delivery">
                 <p>배송비</p> <p style={{ color: `${NGray}` }}>무료</p>
               </div>
+
               <div className="coupon">
                 <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
                 <div
@@ -190,11 +191,12 @@ export default function ProductDetail() {
                 {modal && (
                   <CouponModal>
                     <div>
-                      <CouponDown handleModal={handleModal} />
+                      <CouponDown handleModal={handleModal} product={product} />
                     </div>
                   </CouponModal>
                 )}
               </div>
+
               <div className="totalProducts">
                 <table>
                   <colgroup>
@@ -398,7 +400,7 @@ export default function ProductDetail() {
                   .headingDescription {
                     font-size: 32px;
                     margin: 28px 0 0;
-                    height: 140px;
+                    height: 150px;
                     padding-bottom: 30px;
                     border-bottom: 1px solid ${NLightGray};
 
@@ -636,7 +638,7 @@ export default function ProductDetail() {
                     border-bottom: 1px solid ${NLightGray};
 
                     p {
-                      margin: 0;
+                      margin: 2vw 0 0 0;
 
                       span {
                         font-size: 1.26vw;
@@ -822,7 +824,7 @@ export default function ProductDetail() {
           }
 
           .mt-3 {
-            margin-top: 3vw;
+            margin-top: 2vw;
             width: fit-content;
           }
         }
@@ -872,7 +874,7 @@ export default function ProductDetail() {
                     border-bottom: 1px solid ${NLightGray};
 
                     p {
-                      margin: 0;
+                      margin: 15px 0 0;
 
                       span {
                         font-size: 24px;

@@ -6,12 +6,12 @@ import { useGetToken } from "../../hooks/useGetToken";
 import { useMoney } from "../../hooks/useMoney";
 import { NGray } from "../../typings/NormalColor";
 
-export function CouponDown({ handleModal, product }) {
+export function CouponApply({ handleModal, product }) {
   const [token, setToken] = useState("");
   const [coupons, setCoupons] = useState();
 
   const getProductCoupon = async () => {
-    await GetHApi(`/api/coupons/${product.id}`, token).then((res) => {
+    await GetHApi(`/api/coupons/${product.productId}`, token).then((res) => {
       console.log(res);
 
       setCoupons(res);
@@ -58,28 +58,31 @@ export function CouponDown({ handleModal, product }) {
             <tbody>
               <tr style={{ height: "71px", borderBottom: "1px solid #dedede" }}>
                 <td>
-                  <img width="64px" src={product.image_url} />
+                  <img width="64px" src={product.imageUrl} />
                 </td>
-                <td style={{ textAlign: "left" }}>{product.name}</td>
+                <td style={{ textAlign: "left" }}>{product.productName}</td>
                 <td>
-                  {product.discount ? (
+                  {product.productDiscount ? (
                     <>
                       <p style={{ marginBottom: "0" }}>
                         {useMoney(
                           Math.ceil(
-                            product.price * (1 - 0.01 * product.discount),
-                          ),
+                            product.price *
+                              (1 - 0.01 * product.productDiscount),
+                          ) * product.quantity,
                         )}
                         원
                       </p>
                       <p style={{ marginBottom: "0" }}>
-                        <span>{useMoney(product.price)}원</span>
+                        <span>
+                          {useMoney(product.price * product.quantity)}원
+                        </span>
                       </p>
                     </>
                   ) : (
                     <>
                       <p style={{ marginBottom: "0" }}>
-                        {useMoney(product.price)}원
+                        {useMoney(product.price * product.quantity)}원
                       </p>
                     </>
                   )}
@@ -88,8 +91,8 @@ export function CouponDown({ handleModal, product }) {
             </tbody>
           </table>
         </div>
-        <div className="maxDisContainer" style={{ textAlign: "left" }}>
-          <p>최대 할인 쿠폰</p>
+        <div className="ownContainer" style={{ textAlign: "left" }}>
+          <p>보유한 쿠폰</p>
           <table>
             <colgroup>
               <col style={{ width: "30%" }} />
@@ -125,11 +128,12 @@ export function CouponDown({ handleModal, product }) {
                         Math.ceil(
                           Number(
                             Math.ceil(
-                              product.price * (1 - 0.01 * product.discount),
+                              product.price *
+                                (1 - 0.01 * product.productDiscount),
                             ),
                           ) *
                             (1 - 0.01 * coupon.percentage),
-                        ),
+                        ) * product.quantity,
                       )}
                       원
                     </td>
@@ -150,7 +154,7 @@ export function CouponDown({ handleModal, product }) {
           </table>
         </div>
         <div className="totalContainer" style={{ textAlign: "left" }}>
-          <p>적용 가능한 쿠폰</p>
+          <p>다운로드 가능한 쿠폰</p>
           <table>
             <colgroup>
               <col style={{ width: "30%" }} />
@@ -186,11 +190,12 @@ export function CouponDown({ handleModal, product }) {
                         Math.ceil(
                           Number(
                             Math.ceil(
-                              product.price * (1 - 0.01 * product.discount),
+                              product.price *
+                                (1 - 0.01 * product.productDiscount),
                             ),
                           ) *
                             (1 - 0.01 * coupon.percentage),
-                        ),
+                        ) * product.quantity,
                       )}
                       원
                     </td>
@@ -246,9 +251,10 @@ export function CouponDown({ handleModal, product }) {
               }
             }
 
-            .maxDisContainer,
+            .ownContainer,
             .totalContainer {
               margin-top: 30px;
+
               p {
                 font-size: 18px;
                 width: 90%;
@@ -276,19 +282,13 @@ export function CouponDown({ handleModal, product }) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .wrapper {
             width: 80vw;
-
+            min-height: 90vw;
             margin-top: 1vw;
             .container {
               p {
                 width: 90%;
                 margin: 0 auto 3vw;
                 font-weight: bold;
-
-                span {
-                  font-size: 2vw;
-                  color: ${NGray};
-                  text-decoration: line-through;
-                }
               }
 
               table {
@@ -305,10 +305,9 @@ export function CouponDown({ handleModal, product }) {
               }
             }
 
-            .maxDisContainer,
+            .ownContainer,
             .totalContainer {
               margin-top: 3vw;
-
               p {
                 font-size: 2.5vw;
                 width: 90%;
@@ -336,7 +335,7 @@ export function CouponDown({ handleModal, product }) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
           .wrapper {
             width: 380px;
-
+            min-height: 500px;
             margin-top: 5px;
             .container {
               p {
@@ -361,7 +360,7 @@ export function CouponDown({ handleModal, product }) {
               }
             }
 
-            .maxDisContainer,
+            .ownContainer,
             .totalContainer {
               margin-top: 20px;
               p {
