@@ -178,7 +178,6 @@ export default function ProductDetail() {
               <div className="delivery">
                 <p>배송비</p> <p style={{ color: `${NGray}` }}>무료</p>
               </div>
-
               <div className="coupon">
                 <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
                 <div
@@ -196,7 +195,6 @@ export default function ProductDetail() {
                   </CouponModal>
                 )}
               </div>
-
               <div className="totalProducts">
                 <table>
                   <colgroup>

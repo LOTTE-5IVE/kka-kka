@@ -4,10 +4,7 @@ import Title from "../../components/common/Title";
 import Sidebar from "../../components/product/Sidebar";
 import ProductRecCard from "../../components/product/ProductRecCard";
 import Pagination from "../../components/product/Pagination";
-import { Suspense } from "react";
-import { fetchData } from "../../apis/ProductApi";
-import ProductSkeleton from "../../components/product/ProductSkeleton";
-import SearchFilter from "../../components/product/SearchFilter";
+import axios from "axios";
 
 export default function ProductList() {
   const cat_name = {
@@ -27,114 +24,35 @@ export default function ProductList() {
   const search = router.query.search;
 
   const [page, setPage] = useState(1);
-  const [resource, setResource] = useState();
   const [lastPage, setLastPage] = useState();
+  const [data, setData] = useState();
+
+  const getProduct = async () => {
+    await axios
+      .get(`/api/products?category=${cat_id}&page=${page}`)
+      .then((res) => {
+        setData(res);
+        setPage(res.data.pageInfo.currentPage);
+        setLastPage(res.data.pageInfo.lastPage);
+      });
+  };
+
+  const getProductc = async () => {
+    await axios.get(`/api/products?category=${cat_id}&page=1`).then((res) => {
+      setData(res);
+      setPage(res.data.pageInfo.currentPage);
+      setLastPage(res.data.pageInfo.lastPage);
+    });
+  };
 
   useEffect(() => {
-    setResource(fetchData(cat_id, page));
+    getProduct();
   }, [page]);
 
   useEffect(() => {
     setPage(1);
-    setResource(fetchData(cat_id, 1));
+    getProductc();
   }, [cat_id]);
-
-  const ProductLists = () => {
-    if (!resource) return;
-
-    const data = resource.productList.read();
-
-    useEffect(() => {
-      setLastPage(data?.pageInfo?.lastPage);
-    }, []);
-
-    return (
-      <>
-        <ul className="productList">
-          {data?.data?.map((product) => {
-            return (
-              <li className="productInner" key={product.id}>
-                <div className="productBox">
-                  <ProductRecCard
-                    id={product.id}
-                    imgsrc={product.image_url}
-                    name={product.name}
-                    price={product.price}
-                    discount={product.discount}
-                  />
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-
-        <style jsx>{`
-          @media screen and (min-width: 769px) {
-            /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
-            .productList {
-              display: table;
-              width: 1035px;
-              height: 1566px;
-
-              .productInner {
-                display: inline-block;
-                width: 33.3%;
-                margin-bottom: 69px;
-
-                .productBox {
-                  width: 298px;
-                  margin: 0 auto;
-                }
-              }
-            }
-          }
-
-          @media screen and (max-width: 768px) {
-            /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
-
-            .productList {
-              display: table;
-              width: 60vw;
-              height: 82.42vw;
-
-              .productInner {
-                display: inline-block;
-                width: 33.3%;
-                margin-bottom: 3vw;
-
-                .productBox {
-                  width: 15.68vw;
-                  margin: 0 auto;
-                }
-              }
-            }
-          }
-
-          @media screen and (max-width: 480px) {
-            /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
-
-            .productList {
-              display: table;
-              width: 480px;
-              height: 750px;
-              padding: 0;
-
-              .productInner {
-                display: inline-block;
-                width: 33.3%;
-                margin-bottom: 20px;
-
-                .productBox {
-                  width: 150px;
-                  margin: 0 auto;
-                }
-              }
-            }
-          }
-        `}</style>
-      </>
-    );
-  };
 
   return (
     <>
@@ -145,31 +63,35 @@ export default function ProductList() {
         </div>
 
         <div className="productWrapper">
-          {search && (
-            <div className="title">
+          <div className="title">
+            {search ? (
               <div className="searchBar">
                 <img src="/product/mg.png" />
                 <p>
                   <input type="text" size="12" value={search} />
                 </p>
               </div>
-            </div>
-          )}
-
-          <SearchFilter />
-          <div className="title">
-            {!search && <p className="category">{cat_name[cat_id]}</p>}
+            ) : (
+              <p className="category">{cat_name[cat_id]}</p>
+            )}
           </div>
-          <Suspense
-            fallback={
-              <div>
-                <ProductSkeleton />
-              </div>
-            }
-          >
-            <ProductLists />
-          </Suspense>
-
+          <ul className="productList">
+            {data?.data.data?.map((product) => {
+              return (
+                <li className="productInner" key={product.id}>
+                  <div className="productBox">
+                    <ProductRecCard
+                      id={product.id}
+                      imgsrc={product.image_url}
+                      name={product.name}
+                      price={product.price}
+                      discount={product.discount}
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
           <div className="pagination">
             <Pagination page={page} setPage={setPage} lastPage={lastPage} />
           </div>
@@ -182,6 +104,7 @@ export default function ProductList() {
           .ProductLContents {
             margin: 57px auto 0;
             width: 1330px;
+            height: 1786px;
             display: flex;
 
             .sidebar {
@@ -210,7 +133,6 @@ export default function ProductList() {
                 width: 100%;
                 display: flex;
                 align-items: flex-start;
-                margin-bottom: 20px;
 
                 p {
                   width: 30%;
@@ -256,6 +178,7 @@ export default function ProductList() {
           .ProductLContents {
             margin: 28.5px auto 0;
             width: 80vw;
+            height: 120vw;
             display: flex;
 
             .sidebar {
@@ -329,6 +252,7 @@ export default function ProductList() {
           .ProductLContents {
             margin: 0;
             width: 480px;
+            height: 910px;
             display: flex;
 
             .sidebar {

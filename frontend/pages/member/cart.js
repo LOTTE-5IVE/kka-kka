@@ -44,6 +44,36 @@ export default function cart() {
     );
   };
 
+  const selectQuery = () => {
+    if (checkItems.length === 0) {
+      alert("상품을 선택해주세요!");
+      return;
+    }
+
+    router.push(
+      {
+        pathname: `/payment`,
+        query: { orderItems: JSON.stringify(checkItems) },
+      },
+      `/payment`,
+    );
+  };
+
+  const selectAllQuery = () => {
+    if (cartItems.length === 0) {
+      alert("상품이 없습니다!");
+      return;
+    }
+
+    router.push(
+      {
+        pathname: `/payment`,
+        query: { orderItems: JSON.stringify(cartItems) },
+      },
+      `/payment`,
+    );
+  };
+
   const handleSingleCheck = (checked, product) => {
     if (checked) {
       setCheckItems((prev) => [...prev, product]);
