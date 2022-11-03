@@ -86,7 +86,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("쿠폰 조회 - 성공")
     @Test
     void findAllCoupons() {
-        일반_쿠폰_생성함();
+        쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", null, 1000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -102,13 +102,13 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("일반쿠폰 삭제 - 성공")
     @Test
     void deleteCouponByAdmin() {
-        String coupon = 일반_쿠폰_생성함();
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 12, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
             .filter(document("delete-coupon"))
             .when()
-            .put("/api/coupons/" + coupon)
+            .put("/api/coupons/" + couponId)
             .then().log().all().extract();
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -134,7 +134,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void downloadableCoupons() {
         String accessToken = 액세스_토큰_가져옴();
-        일반_쿠폰_생성함();
+        쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 15, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -166,86 +166,24 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         assertThat(response.body()).isNotNull();
     }
 
-    private String 일반_쿠폰_생성함() {
+    private String 쿠폰_생성함(String grade, Long productId, String priceRule, Integer percentage,
+        Integer maxDiscount) {
+        if (grade != null) {
+            grade = "\"" + grade + "\"";
+        }
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("{\n"
                 + "  \"categoryId\": null,\n"
-                + "  \"grade\": null,\n"
-                + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
+                + "  \"grade\": " + grade + ",\n"
+                + "  \"productId\": " + productId + ",\n"
                 + "  \"name\": \"test\",\n"
-                + "  \"priceRule\": \"COUPON\",\n"
+                + "  \"priceRule\": \"" + priceRule + "\",\n"
                 + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
                 + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
-                + "  \"percentage\": 10,\n"
-                + "  \"maxDiscount\": 2000,\n"
-                + "  \"minOrderPrice\": 20000\n"
-                + "}")
-            .when()
-            .post("/api/coupons")
-            .then().log().all().extract();
-        return response.header("Location");
-    }
-
-    private String 일반_쿠폰_생성함2() {
-        final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body("{\n"
-                + "  \"categoryId\": null,\n"
-                + "  \"grade\": null,\n"
-                + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
-                + "  \"name\": \"test\",\n"
-                + "  \"priceRule\": \"COUPON\",\n"
-                + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
-                + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
-                + "  \"percentage\": 15,\n"
-                + "  \"maxDiscount\": 2000,\n"
-                + "  \"minOrderPrice\": 20000\n"
-                + "}")
-            .when()
-            .post("/api/coupons")
-            .then().log().all().extract();
-        return response.header("Location");
-    }
-
-    private String 일반_쿠폰_생성함3() {
-        final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body("{\n"
-                + "  \"categoryId\": null,\n"
-                + "  \"grade\": null,\n"
-                + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
-                + "  \"name\": \"test\",\n"
-                + "  \"priceRule\": \"COUPON\",\n"
-                + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
-                + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
-                + "  \"percentage\": 13,\n"
-                + "  \"maxDiscount\": 2000,\n"
-                + "  \"minOrderPrice\": 20000\n"
-                + "}")
-            .when()
-            .post("/api/coupons")
-            .then().log().all().extract();
-        return response.header("Location");
-    }
-
-    private String 등급_쿠폰_생성함() {
-        final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body("{\n"
-                + "  \"categoryId\": null,\n"
-                + "  \"grade\": \"GOLD\",\n"
-                + "  \"productId\": null,\n"
-                + "  \"name\": \"test\",\n"
-                + "  \"priceRule\": \"GRADE_COUPON\",\n"
-                + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
-                + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
-                + "  \"percentage\": null,\n"
-                + "  \"maxDiscount\": 2000,\n"
+                + "  \"percentage\": " + percentage + ",\n"
+                + "  \"maxDiscount\": " + maxDiscount + ",\n"
                 + "  \"minOrderPrice\": 20000\n"
                 + "}")
             .when()
@@ -258,7 +196,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void downloadCoupon() {
         String accessToken = 액세스_토큰_가져옴();
-        String couponId = 일반_쿠폰_생성함();
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -288,7 +226,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     }
 
     private String 쿠폰_다운로드(String accessToken) {
-        String couponId = 일반_쿠폰_생성함();
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
@@ -301,7 +239,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     }
 
     private String 쿠폰_다운로드2(String accessToken) {
-        String couponId = 일반_쿠폰_생성함2();
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 25, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
@@ -313,8 +251,8 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         return couponId;
     }
 
-    private String 쿠폰_다운로드4(String accessToken) {
-        String couponId = 등급_쿠폰_생성함();
+    private String 쿠폰_다운로드3(String accessToken) {
+        String couponId = 쿠폰_생성함("GOLD", null, "GRADE_COUPON", 50, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
@@ -332,8 +270,8 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         String accessToken = 액세스_토큰_가져옴();
         쿠폰_다운로드(accessToken);
         쿠폰_다운로드2(accessToken);
-        일반_쿠폰_생성함3();
-        쿠폰_다운로드4(accessToken);
+        쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 14, 2000);
+        쿠폰_다운로드3(accessToken);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -353,8 +291,8 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         String accessToken = 액세스_토큰_가져옴();
         쿠폰_다운로드(accessToken);
         쿠폰_다운로드2(accessToken);
-        일반_쿠폰_생성함3();
-        쿠폰_다운로드4(accessToken);
+        쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 14, 2000);
+        쿠폰_다운로드3(accessToken);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
