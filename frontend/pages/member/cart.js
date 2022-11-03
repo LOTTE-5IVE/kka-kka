@@ -4,6 +4,7 @@ import { DeleteHApi, GetHApi, PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
 import Title from "../../components/common/Title";
+import { CouponApply } from "../../components/coupon/CouponApply";
 import { CouponDown } from "../../components/coupon/CouponDown";
 import { CouponModal } from "../../components/coupon/CouponModal";
 import { useGetToken } from "../../hooks/useGetToken";
@@ -19,13 +20,11 @@ export default function cart() {
   const [checkItems, setCheckItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [discountPrice, setDiscountPrice] = useState(0);
+  const [totalUnValid, setTotalUnValid] = useState(true);
+  const [selectUnValid, setSelectUnValid] = useState(true);
+  const [couponProduct, setCouponProduct] = useState();
 
   const selectQuery = () => {
-    if (checkItems.length === 0) {
-      alert("상품을 선택해주세요!");
-      return;
-    }
-
     router.push(
       {
         pathname: `/payment`,
@@ -36,11 +35,6 @@ export default function cart() {
   };
 
   const selectAllQuery = () => {
-    if (cartItems.length === 0) {
-      alert("상품이 없습니다!");
-      return;
-    }
-
     router.push(
       {
         pathname: `/payment`,
@@ -132,12 +126,15 @@ export default function cart() {
   };
 
   const editCartItem = async (id, quantity) => {
-    if (quantity > 1) {
+    if (quantity > 0) {
       PostHApi("/api/carts", { productId: id, quantity: quantity }, token).then(
-        (res) => {},
+        (res) => {
+          getCartItem();
+        },
       );
     }
   };
+
   const removeCartItem = async (id) => {
     DeleteHApi(`/api/carts/${id}`, token).then((res) => {
       getCartItem();
@@ -151,6 +148,24 @@ export default function cart() {
       getCartItem();
     }
   }, [token]);
+
+  useEffect(() => {
+    if (checkItems.length > 0) {
+      setSelectUnValid(false);
+      return;
+    } else {
+      setSelectUnValid(true);
+    }
+  }, [checkItems]);
+
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      setTotalUnValid(false);
+      return;
+    } else {
+      setTotalUnValid(true);
+    }
+  }, [cartItems]);
 
   return (
     <>
@@ -243,6 +258,7 @@ export default function cart() {
                             <div
                               onClick={() => {
                                 setModal(true);
+                                setCouponProduct(product);
                               }}
                             >
                               <AdminButton
@@ -254,7 +270,10 @@ export default function cart() {
                             {modal && (
                               <CouponModal>
                                 <div>
-                                  <CouponDown handleModal={handleModal} />
+                                  <CouponApply
+                                    handleModal={handleModal}
+                                    product={couponProduct}
+                                  />
                                 </div>
                               </CouponModal>
                             )}
@@ -359,6 +378,7 @@ export default function cart() {
                         <img
                           className="cancelBtn"
                           src="/common/cancelred.png"
+                          style={{ cursor: "pointer" }}
                         />
                       </td>
                     </tr>
@@ -404,11 +424,11 @@ export default function cart() {
         </div>
         <div className="orderBtn">
           <div onClick={selectAllQuery}>
-            <ButtonComp context="전체상품 주문" />
+            <ButtonComp context="전체상품 주문" unvalid={totalUnValid} />
           </div>
 
           <div onClick={selectQuery}>
-            <ButtonComp context="선택상품 주문" />
+            <ButtonComp context="선택상품 주문" unvalid={selectUnValid} />
           </div>
         </div>
       </div>
@@ -438,6 +458,11 @@ export default function cart() {
                   width: 1235px;
                   border-collapse: collapse;
                   border-bottom: 1px solid #dfdfdf;
+
+                  input[type="checkbox"] {
+                    width: 20px;
+                    height: 20px;
+                  }
                 }
                 th {
                   border: 0;
@@ -716,6 +741,7 @@ export default function cart() {
 
           .CartContents {
             text-align: center;
+            width: 480px;
 
             .orderTables {
               display: flex;
@@ -784,7 +810,7 @@ export default function cart() {
                     }
 
                     input[type="text"] {
-                      width: 100px;
+                      width: 20px;
                     }
 
                     input[type="button"] {
@@ -814,7 +840,7 @@ export default function cart() {
                       margin: 0;
 
                       span {
-                        font-size: 14px;
+                        font-size: 10px;
                         color: ${NGray};
                         text-decoration: line-through;
                       }
@@ -826,8 +852,10 @@ export default function cart() {
 
             .orderSummary {
               margin-top: 30px;
+              width: 480px;
 
               table {
+                margin: 0 auto;
                 width: 450px;
                 border-collapse: collapse;
                 border-bottom: 1px solid #dfdfdf;

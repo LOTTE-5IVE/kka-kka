@@ -36,14 +36,19 @@ export default function Header() {
     <div>
       <div className="HeaderWrapper">
         <div className="logo">
-          <div
+          {/* <div
             onClick={() => {
               document.location.href = "/";
             }}
             style={{ cursor: "pointer" }}
           >
             <img src="/main/logo.png" />
-          </div>
+          </div> */}
+          <Link href="/">
+            <a>
+              <img src="/main/logo.png" />
+            </a>
+          </Link>
         </div>
         <div className="search">
           <input
