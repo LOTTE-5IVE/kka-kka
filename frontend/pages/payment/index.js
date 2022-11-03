@@ -4,9 +4,11 @@ import { PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
 import Title from "../../components/common/Title";
+import { CouponApply } from "../../components/coupon/CouponApply";
 import { CouponDown } from "../../components/coupon/CouponDown";
 import { CouponModal } from "../../components/coupon/CouponModal";
 import DaumPost from "../../components/payment/DaumPost";
+import { useEngCheck } from "../../hooks/useEngCheck";
 import { useGetToken } from "../../hooks/useGetToken";
 import { useLangCheck } from "../../hooks/useLangCheck";
 import { useMemberInfo } from "../../hooks/useMemberInfo";
@@ -32,6 +34,13 @@ export default function payment() {
   const [buyItem, setBuyItem] = useState();
   const [buyQuantity, setBuyQuantity] = useState();
   const [check, setCheck] = useState(false);
+  const [nameValid, setNameValid] = useState(false);
+  const [phoneValid1, setPhoneValid1] = useState(false);
+  const [phoneValid2, setPhoneValid2] = useState(false);
+  const [phoneValid3, setPhoneValid3] = useState(false);
+  const [addressValid1, setAddressValid1] = useState(false);
+  const [addressValid2, setAddressValid2] = useState(false);
+  const [unvalid, setUnValid] = useState(true);
 
   const router = useRouter();
 
@@ -41,8 +50,12 @@ export default function payment() {
     }
     setToken(useGetToken());
 
+    if (!router.query.orderItems && !router.query.buyItem) {
+      alert("주문/결제가 취소되었습니다.");
+      history.back();
+    }
+
     if (router.query.orderItems) {
-      console.log("orderItems");
       setOrderItems(JSON.parse(router.query.orderItems));
     }
 
@@ -60,6 +73,7 @@ export default function payment() {
         if (res) {
           console.log(res);
           setName(res.name);
+          setNameValid(true);
 
           if (res.email) {
             let [e1, e2] = res.email.split("@");
@@ -75,16 +89,43 @@ export default function payment() {
               setPhone1(p1);
               setPhone2(p2);
               setPhone3(p3);
+              setPhoneValid1(true);
+              setPhoneValid2(true);
+              setPhoneValid3(true);
             }
           }
 
           if (res.address) {
             setAddr1(res.address);
+            setAddressValid1(true);
+            setAddressValid2(true);
           }
         }
       });
     }
   }, [check]);
+
+  useEffect(() => {
+    if (
+      nameValid &&
+      phoneValid1 &&
+      phoneValid2 &&
+      phoneValid3 &&
+      addressValid1 &&
+      addressValid2
+    ) {
+      setUnValid(false);
+    } else {
+      setUnValid(true);
+    }
+  }, [
+    nameValid,
+    phoneValid1,
+    phoneValid2,
+    phoneValid3,
+    addressValid1,
+    addressValid2,
+  ]);
 
   const orderItem = async () => {
     const arr = [];
@@ -133,6 +174,12 @@ export default function payment() {
 
   function addr1Handler(addr1) {
     setAddr1(addr1);
+
+    if (addr1) {
+      setAddressValid1(true);
+    } else {
+      setAddressValid1(false);
+    }
   }
 
   const handleCheck = (e) => {
@@ -181,7 +228,10 @@ export default function payment() {
                       {modal && (
                         <CouponModal>
                           <div>
-                            <CouponDown handleModal={handleModal} />
+                            <CouponApply
+                              handleModal={handleModal}
+                              product={buyItem}
+                            />
                           </div>
                         </CouponModal>
                       )}
@@ -238,7 +288,10 @@ export default function payment() {
                         {modal && (
                           <CouponModal>
                             <div>
-                              <CouponDown handleModal={handleModal} />
+                              <CouponApply
+                                handleModal={handleModal}
+                                product={product}
+                              />
                             </div>
                           </CouponModal>
                         )}
@@ -267,7 +320,9 @@ export default function payment() {
               </colgroup>
               <tbody>
                 <tr>
-                  <th scope="row">수령인</th>
+                  <th scope="row">
+                    <span style={{ color: "red" }}>*</span>수령인
+                  </th>
                   <td>
                     <input
                       required
@@ -280,15 +335,88 @@ export default function payment() {
 
                         if (useLangCheck(e.target.value)) {
                           setName(e.target.value);
+                          setNameValid(true);
                         } else {
                           alert("한글 혹은 영문만 입력할 수 있습니다.");
+                          setNameValid(false);
                           e.target.value = "";
                         }
                       }}
                     />
                   </td>
                 </tr>
+
                 <tr>
+                  <th scope="row">
+                    <span style={{ color: "red" }}>*</span>휴대전화
+                  </th>
+                  <td>
+                    <input
+                      maxLength="3"
+                      size="3"
+                      defaultValue={phone1}
+                      type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (useNumberCheck(e.target.value)) {
+                          setPhone1(e.target.value);
+                          if (e.target.value.length == 3) setPhoneValid1(true);
+                          else {
+                            setPhoneValid1(false);
+                          }
+                        } else {
+                          alert("숫자만 입력할 수 있습니다.");
+                          setPhoneValid1(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                    -
+                    <input
+                      maxLength="4"
+                      size="4"
+                      defaultValue={phone2}
+                      type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (useNumberCheck(e.target.value)) {
+                          setPhone2(e.target.value);
+                          if (e.target.value.length == 4) setPhoneValid2(true);
+                          else {
+                            setPhoneValid2(false);
+                          }
+                        } else {
+                          alert("숫자만 입력할 수 있습니다.");
+                          setPhoneValid2(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                    -
+                    <input
+                      maxLength="4"
+                      size="4"
+                      defaultValue={phone3}
+                      type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (useNumberCheck(e.target.value)) {
+                          setPhone3(e.target.value);
+                          if (e.target.value.length == 4) setPhoneValid3(true);
+                          else {
+                            setPhoneValid3(false);
+                          }
+                        } else {
+                          alert("숫자만 입력할 수 있습니다.");
+                          setPhoneValid3(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                  </td>
+                </tr>
+
+                {/* <tr>
                   <th scope="row">이메일</th>
                   <td>
                     <input
@@ -296,10 +424,10 @@ export default function payment() {
                       type="text"
                       onChange={(e) => {
                         setCheck(false);
-                        if (useTextCheck(e.target.value)) {
+                        if (useEngCheck(e.target.value)) {
                           setEmail1(e.target.value);
                         } else {
-                          alert("특수문자는 입력할 수 없습니다.");
+                          alert("영어만 입력할 수 있습니다.");
                           e.target.value = "";
                         }
                       }}
@@ -313,10 +441,10 @@ export default function payment() {
                           type="text"
                           onChange={(e) => {
                             setCheck(false);
-                            if (useTextCheck(e.target.value)) {
+                            if (useEngCheck(e.target.value)) {
                               setEmail2(e.target.value);
                             } else {
-                              alert("특수문자는 입력할 수 없습니다.");
+                              alert("영어만 입력할 수 있습니다.");
                               e.target.value = "";
                             }
                           }}
@@ -345,62 +473,10 @@ export default function payment() {
                       </select>
                     </span>
                   </td>
-                </tr>
-                <tr>
-                  <th scope="row">휴대전화</th>
-                  <td>
-                    <input
-                      maxLength="3"
-                      size="3"
-                      defaultValue={phone1}
-                      type="text"
-                      onChange={(e) => {
-                        setCheck(false);
-                        if (useNumberCheck(e.target.value)) {
-                          setPhone1(e.target.value);
-                        } else {
-                          alert("숫자만 입력할 수 있습니다.");
-                          e.target.value = "";
-                        }
-                      }}
-                    />
-                    -
-                    <input
-                      maxLength="4"
-                      size="4"
-                      defaultValue={phone2}
-                      type="text"
-                      onChange={(e) => {
-                        setCheck(false);
-                        if (useNumberCheck(e.target.value)) {
-                          setPhone2(e.target.value);
-                        } else {
-                          alert("숫자만 입력할 수 있습니다.");
-                          e.target.value = "";
-                        }
-                      }}
-                    />
-                    -
-                    <input
-                      maxLength="4"
-                      size="4"
-                      defaultValue={phone3}
-                      type="text"
-                      onChange={(e) => {
-                        setCheck(false);
-                        if (useNumberCheck(e.target.value)) {
-                          setPhone3(e.target.value);
-                        } else {
-                          alert("숫자만 입력할 수 있습니다.");
-                          e.target.value = "";
-                        }
-                      }}
-                    />
-                  </td>
-                </tr>
+                </tr> */}
                 <tr>
                   <th scope="row" rowSpan="3">
-                    주소
+                    <span style={{ color: "red" }}>*</span> 주소
                   </th>
                   <td>
                     <div className="address_search">
@@ -438,6 +514,8 @@ export default function payment() {
                       defaultValue={addr1 ? addr1 : ""}
                       onChange={(e) => {
                         setAddr1(e.target.value);
+                        if (e.target.value.length > 0) setAddressValid1(true);
+                        else setAddressValid1(false);
                       }}
                     />
                   </td>
@@ -452,6 +530,8 @@ export default function payment() {
                       defaultValue={addr2 ? addr2 : ""}
                       onChange={(e) => {
                         setAddr2(e.target.value);
+                        if (e.target.value.length > 0) setAddressValid2(true);
+                        else setAddressValid2(false);
                       }}
                     />
                   </td>
@@ -462,7 +542,7 @@ export default function payment() {
         </div>
 
         <div>
-          <div className="tableTitle cpTitle">쿠폰/포인트</div>
+          <div className="tableTitle cpTitle">쿠폰</div>
           <div className="tableContents cp">
             <table>
               <colgroup>
@@ -505,7 +585,7 @@ export default function payment() {
                   </td>
                 </tr>
                 <tr>
-                  <th scope="row">할인/부가결제</th>
+                  <th scope="row">할인</th>
                   <td>
                     -{" "}
                     {useMoney(
@@ -563,7 +643,7 @@ export default function payment() {
           }}
           style={{ cursor: "pointer" }}
         >
-          <ButtonComp context="결제하기" />
+          <ButtonComp context="결제하기" unvalid={unvalid} />
         </div>
       </div>
 
@@ -612,6 +692,7 @@ export default function payment() {
 
                   img {
                     width: 96px;
+                    height: 96px;
                   }
                 }
               }
@@ -688,6 +769,7 @@ export default function payment() {
                 border-radius: 8px;
                 font-size: 16px;
                 border: 1px solid #000;
+                cursor: pointer;
               }
             }
 
@@ -762,6 +844,7 @@ export default function payment() {
 
                   img {
                     width: 96px;
+                    height: 96px;
                   }
                 }
               }
@@ -838,6 +921,7 @@ export default function payment() {
                 border-radius: 8px;
                 font-size: 2vw;
                 border: 1px solid #000;
+                cursor: pointer;
               }
             }
 
@@ -915,6 +999,7 @@ export default function payment() {
 
                   img {
                     width: 64px;
+                    height: 64px;
                   }
                 }
               }
@@ -997,6 +1082,7 @@ export default function payment() {
                 font-size: 10px;
                 font-weight: bold;
                 border: 1px solid #000;
+                cursor: pointer;
               }
             }
 

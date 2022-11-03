@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { PatchHApi } from "../../apis/Apis";
 import ButtonComp from "../../components/common/Button/ButtonComp";
+import { useEngCheck } from "../../hooks/useEngCheck";
 import { useGetToken } from "../../hooks/useGetToken";
 import { useLangCheck } from "../../hooks/useLangCheck";
 import { useMemberInfo } from "../../hooks/useMemberInfo";
 import { useNumberCheck } from "../../hooks/useNumberCheck";
 import { useTextCheck } from "../../hooks/useTextCheck";
 import Title from "../common/Title";
+import DaumPost from "../payment/DaumPost";
 
 export default function MyInfoEdit() {
   const [token, setToken] = useState();
@@ -17,6 +19,27 @@ export default function MyInfoEdit() {
   const [phone1, setPhone1] = useState();
   const [phone2, setPhone2] = useState();
   const [phone3, setPhone3] = useState();
+  const [addr1, setAddr1] = useState("");
+  const [addr2, setAddr2] = useState("");
+  const [zipcode, setZipcode] = useState("");
+  const [popup, setPopup] = useState(false);
+  const [nameValid, setNameValid] = useState(false);
+  const [phoneValid1, setPhoneValid1] = useState(false);
+  const [phoneValid2, setPhoneValid2] = useState(false);
+  const [phoneValid3, setPhoneValid3] = useState(false);
+  const [unvalid, setUnValid] = useState(true);
+
+  function addr1Handler(addr1) {
+    setAddr1(addr1);
+  }
+
+  function popupHandler() {
+    setPopup(!popup);
+  }
+
+  function zipcodeHandler(zipcode) {
+    setZipcode(zipcode);
+  }
 
   useEffect(() => {
     setToken(useGetToken());
@@ -29,6 +52,14 @@ export default function MyInfoEdit() {
       });
     }
   }, [token]);
+
+  useEffect(() => {
+    if (nameValid && phoneValid1 && phoneValid2 && phoneValid3) {
+      setUnValid(false);
+    } else {
+      setUnValid(true);
+    }
+  }, [nameValid, phoneValid1, phoneValid2, phoneValid3]);
 
   const editMemberInfo = async () => {
     PatchHApi("/api/members/me", { name: name }, token);
@@ -66,13 +97,14 @@ export default function MyInfoEdit() {
                     <th scope="row">이름</th>
                     <td>{data.name}</td>
                   </tr>
-                  <tr>
-                    <th scope="row">이메일</th>
-                    <td>{data.email}</td>
-                  </tr>
+
                   <tr>
                     <th scope="row">휴대전화</th>
                     <td>{data.phone}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">이메일</th>
+                    <td>{data.email}</td>
                   </tr>
                   <tr>
                     <th scope="row">기본주소</th>
@@ -88,7 +120,9 @@ export default function MyInfoEdit() {
           </div>
 
           <div>
-            <div className="tableTitle editTable">수정할 정보</div>
+            <div className="tableTitle editTitle">
+              수정할 정보 <span style={{ color: "red" }}>* 필수항목</span>
+            </div>
             <div className="tableContents editTable">
               <table>
                 <colgroup>
@@ -97,7 +131,9 @@ export default function MyInfoEdit() {
                 </colgroup>
                 <tbody>
                   <tr>
-                    <th scope="row">이름</th>
+                    <th scope="row">
+                      <span style={{ color: "red" }}>*</span>이름
+                    </th>
                     <td>
                       <input
                         placeholder=""
@@ -107,8 +143,80 @@ export default function MyInfoEdit() {
                         onChange={(e) => {
                           if (useLangCheck(e.target.value)) {
                             setName(e.target.value);
+                            setNameValid(true);
                           } else {
                             alert("한글 혹은 영문만 입력할 수 있습니다.");
+                            setNameValid(false);
+                            e.target.value = "";
+                          }
+                        }}
+                      />
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th scope="row">
+                      <span style={{ color: "red" }}>*</span>휴대전화
+                    </th>
+                    <td>
+                      <input
+                        maxLength="3"
+                        size="3"
+                        defaultValue={phone1}
+                        type="text"
+                        onChange={(e) => {
+                          if (useNumberCheck(e.target.value)) {
+                            setPhone1(e.target.value);
+                            if (e.target.value.length == 3)
+                              setPhoneValid1(true);
+                            else {
+                              setPhoneValid1(false);
+                            }
+                          } else {
+                            alert("숫자만 입력할 수 있습니다.");
+                            setPhoneValid1(false);
+                            e.target.value = "";
+                          }
+                        }}
+                      />
+                      -
+                      <input
+                        maxLength="4"
+                        size="4"
+                        defaultValue={phone2}
+                        type="text"
+                        onChange={(e) => {
+                          if (useNumberCheck(e.target.value)) {
+                            setPhone2(e.target.value);
+                            if (e.target.value.length == 4)
+                              setPhoneValid2(true);
+                            else {
+                              setPhoneValid2(false);
+                            }
+                          } else {
+                            alert("숫자만 입력할 수 있습니다.");
+                            setPhoneValid2(false);
+                            e.target.value = "";
+                          }
+                        }}
+                      />
+                      -
+                      <input
+                        maxLength="4"
+                        size="4"
+                        defaultValue={phone3}
+                        type="text"
+                        onChange={(e) => {
+                          if (useNumberCheck(e.target.value)) {
+                            setPhone3(e.target.value);
+                            if (e.target.value.length == 4)
+                              setPhoneValid3(true);
+                            else {
+                              setPhoneValid3(false);
+                            }
+                          } else {
+                            alert("숫자만 입력할 수 있습니다.");
+                            setPhoneValid3(false);
                             e.target.value = "";
                           }
                         }}
@@ -122,10 +230,10 @@ export default function MyInfoEdit() {
                         defaultValue={email1}
                         type="text"
                         onChange={(e) => {
-                          if (useTextCheck(e.target.value)) {
+                          if (useEngCheck(e.target.value)) {
                             setEmail1(e.target.value);
                           } else {
-                            alert("특수문자는 입력할 수 없습니다.");
+                            alert("영어만 입력할 수 없습니다.");
                             e.target.value = "";
                           }
                         }}
@@ -171,50 +279,59 @@ export default function MyInfoEdit() {
                     </td>
                   </tr>
                   <tr>
-                    <th scope="row">휴대전화</th>
+                    <th scope="row" rowSpan="3">
+                      주소
+                    </th>
+                    <td>
+                      <div className="address_search">
+                        <input
+                          placeholder="우편번호"
+                          type="text"
+                          maxLength="14"
+                          readOnly
+                          defaultValue={zipcode ? zipcode : ""}
+                        />
+                        <button
+                          onClick={() => {
+                            popupHandler();
+                          }}
+                        >
+                          우편번호 찾기
+                        </button>
+                        {popup && (
+                          <DaumPost
+                            zipcodeHandler={zipcodeHandler}
+                            addrHandler={addr1Handler}
+                          />
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
                     <td>
                       <input
-                        maxLength="3"
-                        size="3"
-                        defaultValue={phone1}
+                        placeholder="기본주소"
                         type="text"
+                        size="45"
+                        maxLength="100"
+                        readOnly
+                        defaultValue={addr1 ? addr1 : ""}
                         onChange={(e) => {
-                          if (useNumberCheck(e.target.value)) {
-                            setPhone1(e.target.value);
-                          } else {
-                            alert("숫자만 입력할 수 있습니다.");
-                            e.target.value = "";
-                          }
+                          setAddr1(e.target.value);
                         }}
                       />
-                      -
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
                       <input
-                        maxLength="4"
-                        size="4"
-                        defaultValue={phone2}
+                        placeholder="상세주소"
                         type="text"
+                        size="45"
+                        maxLength="100"
+                        defaultValue={addr2 ? addr2 : ""}
                         onChange={(e) => {
-                          if (useNumberCheck(e.target.value)) {
-                            setPhone2(e.target.value);
-                          } else {
-                            alert("숫자만 입력할 수 있습니다.");
-                            e.target.value = "";
-                          }
-                        }}
-                      />
-                      -
-                      <input
-                        maxLength="4"
-                        size="4"
-                        defaultValue={phone3}
-                        type="text"
-                        onChange={(e) => {
-                          if (useNumberCheck(e.target.value)) {
-                            setPhone3(e.target.value);
-                          } else {
-                            alert("숫자만 입력할 수 있습니다.");
-                            e.target.value = "";
-                          }
+                          setAddr2(e.target.value);
                         }}
                       />
                     </td>
@@ -231,7 +348,7 @@ export default function MyInfoEdit() {
             }}
             style={{ cursor: "pointer" }}
           >
-            <ButtonComp context="수정하기" />
+            <ButtonComp context="수정하기" unvalid={unvalid} />
           </div>
         </div>
       )}
@@ -264,6 +381,12 @@ export default function MyInfoEdit() {
               }
             }
 
+            .editTitle {
+              span {
+                font-size: 14px;
+              }
+            }
+
             .editTable {
               font-size: 20px;
 
@@ -287,6 +410,18 @@ export default function MyInfoEdit() {
                 color: #3a3a3a;
                 padding: 0 0px 0 13px;
                 border: 1px solid #000;
+              }
+
+              button {
+                margin: 0 10px;
+                line-height: 40px;
+                padding: 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 1px solid #000;
+                cursor: pointer;
               }
             }
 
@@ -317,7 +452,7 @@ export default function MyInfoEdit() {
                 border-collapse: collapse;
                 margin: 0 auto;
                 width: 65vw;
-                font-size: 3vw;
+                font-size: 2vw;
 
                 tr {
                   height: 7vw;
@@ -326,18 +461,24 @@ export default function MyInfoEdit() {
               }
             }
 
+            .editTitle {
+              span {
+                font-size: 10px;
+              }
+            }
+
             .editTable {
-              font-size: 20px;
+              font-size: 2vw;
 
               input {
-                margin: 0 10px;
-                line-height: 5vw;
-                padding: 0 0 0 13px;
+                margin: 0 0.53vw;
+                line-height: 30px;
+                padding: 0 0 0 0.7vw;
                 border: 0 none;
                 color: #3a3a3a;
                 background: #fff;
                 border-radius: 8px;
-                font-size: 16px;
+                font-size: 1.5vw;
                 border: 1px solid #000;
               }
 
@@ -349,6 +490,18 @@ export default function MyInfoEdit() {
                 margin-left: 10px;
                 padding-left: 10px;
                 border: 1px solid #000;
+              }
+
+              button {
+                margin: 0 0.53vw;
+                line-height: 30px;
+                padding: 0 0.7vw;
+                border: 0 none;
+                color: #3a3a3a;
+                border-radius: 8px;
+                font-size: 2vw;
+                border: 1px solid #000;
+                cursor: pointer;
               }
             }
 
@@ -388,6 +541,12 @@ export default function MyInfoEdit() {
               }
             }
 
+            .editTitle {
+              span {
+                font-size: 14px;
+              }
+            }
+
             .editTable {
               font-size: 15px;
 
@@ -401,7 +560,7 @@ export default function MyInfoEdit() {
                 color: #3a3a3a;
                 background: #fff;
                 border-radius: 8px;
-                font-size: 16px;
+                font-size: 12px;
                 border: 1px solid #000;
               }
 
@@ -410,10 +569,25 @@ export default function MyInfoEdit() {
                 width: 100px;
                 height: 25px;
                 border-radius: 8px;
-                font-size: 16px;
+                font-size: 12px;
                 color: #3a3a3a;
                 padding: 0 10px 0 13px;
                 border: 1px solid #000;
+              }
+
+              button {
+                margin: 0 10px;
+                width: 100px;
+                height: 30px;
+                line-height: 30px;
+                padding: 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                border-radius: 8px;
+                font-size: 10px;
+                font-weight: bold;
+                border: 1px solid #000;
+                cursor: pointer;
               }
             }
 
