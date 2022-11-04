@@ -1,8 +1,19 @@
-package kkakka.mainservice.cart.ui;
+package kkakka.mainservice.cart.acceptance;
+
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
+import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
@@ -15,18 +26,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
-import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
-import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 class CartAcceptanceTest extends DocumentConfiguration {
 
@@ -103,7 +102,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
         final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
         퍼센트_쿠폰_생성();
-        장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getId(),1L,accessToken);
+        장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getId(), 1L, accessToken);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
