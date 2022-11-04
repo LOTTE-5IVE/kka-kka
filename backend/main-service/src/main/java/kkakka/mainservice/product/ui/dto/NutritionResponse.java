@@ -16,9 +16,7 @@ public class NutritionResponse {
     private String sugar;
     private String protein;
     private String fat;
-    @JsonProperty(value = "saturated_fat")
     private String saturatedFat;
-    @JsonProperty(value = "trans_fat")
     private String transFat;
     private String cholesterol;
     private String sodium;
