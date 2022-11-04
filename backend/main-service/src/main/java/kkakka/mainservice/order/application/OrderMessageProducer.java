@@ -11,9 +11,14 @@ import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.product.domain.Product;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +28,29 @@ public class OrderMessageProducer {
     private String ORDER_TOPIC_NAME;
     @Value("${spring.kafka.template-key}")
     public String TEMPLATE_KEY;
+
+    private static final Logger log = LoggerFactory.getLogger(OrderMessageProducer.class);
+
     private final KafkaTemplate<String, OrderMessage> kafkaTemplate;
 
     public void sendMessage(Order order) {
         final OrderMessage orderMessage = convertToMessage(order);
-        kafkaTemplate.send(ORDER_TOPIC_NAME, TEMPLATE_KEY, orderMessage);
+        final ListenableFuture<SendResult<String, OrderMessage>> future = kafkaTemplate.send(
+                ORDER_TOPIC_NAME, TEMPLATE_KEY, orderMessage);
+
+        future.addCallback(new ListenableFutureCallback<SendResult<String, OrderMessage>>() {
+            @Override
+            public void onFailure(Throwable ex) {
+                log.warn("-------- KafkaError start ---------");
+                log.warn("OrderMessageProducer: {}", ex.getMessage());
+                log.warn("-------- KafkaError end ---------");
+            }
+
+            @Override
+            public void onSuccess(SendResult<String, OrderMessage> result) {
+                log.debug("OrderMessageProducer message produced");
+            }
+        });
     }
 
     private OrderMessage convertToMessage(Order order) {
