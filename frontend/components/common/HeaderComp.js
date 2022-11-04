@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { useContext } from "react";
 import { useEffect, useState } from "react";
+import { TokenContext } from "../../context/TokenContext";
 import { isLogin } from "../../hooks/isLogin";
 import { useGetToken } from "../../hooks/useGetToken";
 import { useMemberInfo } from "../../hooks/useMemberInfo";
@@ -9,6 +11,13 @@ export default function Header() {
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
   const [login, setLogin] = useState(false);
+  const { token, setToken } = useContext(TokenContext);
+
+  const getMemberInfo = async () => {
+    await useMemberInfo(useGetToken()).then((res) => {
+      setName(res.name);
+    });
+  };
 
   function search(event) {
     if (event.key === "Enter") {
@@ -23,12 +32,10 @@ export default function Header() {
   }
 
   useEffect(() => {
-    if (!login && isLogin()) {
+    if (isLogin()) {
+      setToken(useGetToken());
       setLogin(true);
-
-      useMemberInfo(useGetToken()).then((res) => {
-        setName(res.name);
-      });
+      getMemberInfo();
     }
   }, [isLogin()]);
 
@@ -36,14 +43,6 @@ export default function Header() {
     <div>
       <div className="HeaderWrapper">
         <div className="logo">
-          {/* <div
-            onClick={() => {
-              document.location.href = "/";
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            <img src="/main/logo.png" />
-          </div> */}
           <Link href="/">
             <a>
               <img src="/main/logo.png" />
@@ -54,6 +53,7 @@ export default function Header() {
           <input
             type="text"
             size="30"
+            defaultValue={value}
             placeholder="검색어를 입력해주세요"
             onChange={(e) => {
               if (useTextCheck(e.currentTarget.value)) {
@@ -136,21 +136,75 @@ export default function Header() {
           </div>
         </div>
         <style jsx>{`
+          .HeaderWrapper {
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .logo {
+              position: absolute;
+              transform: translate(-50%, -50%);
+            }
+          }
+
+          .search {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            border: 2px solid #ed1b23;
+
+            input[type="text"] {
+              border: none;
+              padding: 0;
+              box-sizing: border-box;
+              color: #c5c9cd;
+              font-weight: 600;
+            }
+
+            input[type="text"]:focus {
+              outline: none;
+              color: #000;
+            }
+
+            img {
+              position: relative;
+            }
+          }
+
+          .icons {
+            position: absolute;
+            transform: translate(-50%, -50%);
+
+            .top {
+              font-weight: 700;
+              display: flex;
+              justify-content: space-between;
+              position: relative;
+
+              .topLeft {
+                text-align: right;
+              }
+
+              .topRight {
+                cursor: pointer;
+              }
+            }
+
+            .bottom {
+              display: flex;
+              justify-content: right;
+            }
+          }
+
           @media screen and (min-width: 769px) {
             /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
             .HeaderWrapper {
               width: 1280px;
               height: 120px;
-              margin: 0 auto;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
 
               .logo {
-                position: absolute;
                 left: 27%;
                 top: 35%;
-                transform: translate(-50%, -50%);
 
                 img {
                   height: 95px;
@@ -159,72 +213,47 @@ export default function Header() {
             }
 
             .search {
-              position: absolute;
               left: 45%;
               top: 35%;
-              transform: translate(-50%, -50%);
-              border: 2px solid #ed1b23;
               border-radius: 40px;
               padding: 0 17px;
 
               input[type="text"] {
-                border: none;
                 border-radius: 40px;
                 width: 317px;
                 height: 45px;
                 line-height: 45px;
-                padding: 0;
-                box-sizing: border-box;
-                color: #c5c9cd;
                 font-size: 1em;
-                font-weight: 600;
-              }
-
-              input[type="text"]:focus {
-                outline: none;
-                color: #000;
               }
 
               img {
                 width: 24px;
                 height: 24px;
-                position: relative;
                 top: 5px;
               }
             }
 
             .icons {
-              position: absolute;
               right: 17%;
               top: 35%;
-              transform: translate(-50%, -50%);
               height: 80px;
               width: 180px;
 
               .top {
                 line-height: 40px;
-                font-weight: 700;
                 font-size: 12px;
-                display: flex;
-                justify-content: space-between;
-                position: relative;
                 top: -15px;
 
                 .topLeft {
                   width: 100px;
-                  text-align: right;
                 }
 
                 .topRight {
                   width: 60px;
-                  cursor: pointer;
                 }
               }
 
               .bottom {
-                display: flex;
-                justify-content: right;
-
                 img {
                   width: 29px;
                   height: 29px;
@@ -238,16 +267,10 @@ export default function Header() {
             .HeaderWrapper {
               width: 67.5vw;
               height: 6.3vw;
-              margin: 0 auto;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
 
               .logo {
-                position: absolute;
                 left: 20vw;
                 top: 3.5vw;
-                transform: translate(-50%, -50%);
 
                 img {
                   height: 5vw;
@@ -256,75 +279,50 @@ export default function Header() {
             }
 
             .search {
-              position: absolute;
               left: 45vw;
               top: 3.5vw;
-              transform: translate(-50%, -50%);
-              border: 2px solid #ed1b23;
               border-radius: 2vw;
               padding: 0 0.9vw;
 
               input[type="text"] {
-                border: none;
                 border-radius: 2vw;
                 width: 17vw;
                 height: 2.4vw;
                 line-height: 2.4vw;
-                padding: 0;
-                box-sizing: border-box;
-                color: #c5c9cd;
                 font-size: 1vw;
-                font-weight: 600;
-              }
-
-              input[type="text"]:focus {
-                outline: none;
-                color: #000;
               }
 
               img {
                 width: 1.3vw;
                 min-width: 9px;
                 /* height: 1.3vw; */
-                position: relative;
                 top: 0;
               }
             }
 
             .icons {
-              position: absolute;
               right: 10vw;
               top: 3.5vw;
-              transform: translate(-50%, -50%);
               height: 4.2vw;
               width: 9.5vw;
               min-width: 110px;
 
               .top {
                 line-height: 2.1vw;
-                font-weight: 700;
                 font-size: 0.6vw;
-                display: flex;
-                justify-content: space-between;
-                position: relative;
                 top: -0.79vw;
                 text-align: right;
 
                 .topLeft {
                   width: 55%;
-                  text-align: right;
                 }
 
                 .topRight {
                   width: 40%;
-                  cursor: pointer;
                 }
               }
 
               .bottom {
-                display: flex;
-                justify-content: right;
-
                 img {
                   width: 1.53vw;
                   margin: 0 0.79vw;
@@ -338,16 +336,10 @@ export default function Header() {
             .HeaderWrapper {
               width: 480px;
               height: 70px;
-              margin: 0 auto;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
 
               .logo {
-                position: absolute;
                 left: 10%;
                 top: 30%;
-                transform: translate(-50%, -50%);
 
                 img {
                   height: 60px;
@@ -355,72 +347,47 @@ export default function Header() {
               }
 
               .search {
-                position: absolute;
                 left: 45%;
                 top: 25%;
-                transform: translate(-50%, -50%);
-                border: 2px solid #ed1b23;
                 border-radius: 40px;
                 padding: 0 17px;
 
                 input[type="text"] {
-                  border: none;
                   border-radius: 40px;
                   width: 120px;
                   height: 15px;
-                  padding: 0;
-                  box-sizing: border-box;
-                  color: #c5c9cd;
                   font-size: 0.5em;
-                  font-weight: 600;
-                }
-
-                input[type="text"]:focus {
-                  outline: none;
-                  color: #000;
                 }
 
                 img {
                   width: 16px;
                   height: 16px;
-                  position: relative;
                   top: 2px;
                 }
               }
 
               .icons {
-                position: absolute;
                 right: -18%;
                 top: 30%;
-                transform: translate(-50%, -50%);
                 height: 80px;
                 width: 180px;
 
                 .top {
                   line-height: 40px;
-                  font-weight: 700;
                   font-size: 12px;
-                  display: flex;
-                  justify-content: space-between;
-                  position: relative;
                   top: 0px;
 
                   .topLeft {
                     width: 100px;
-                    text-align: right;
                   }
 
                   .topRight {
                     width: 60px;
-                    cursor: pointer;
                     text-align: left;
                   }
                 }
 
                 .bottom {
-                  display: flex;
-                  justify-content: right;
-
                   img {
                     width: 25px;
                     height: 25px;

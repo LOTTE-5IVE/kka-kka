@@ -4,6 +4,11 @@ import { gsap } from "gsap";
 export default function Visual() {
   const fadeEls = useRef([]);
 
+  if (!fadeEls) {
+    // You can show some kind of placeholder UI here
+    return null;
+  }
+
   useLayoutEffect(() => {
     fadeEls.current.map((fadeEl, index) => {
       gsap.to(fadeEl, 1, {
