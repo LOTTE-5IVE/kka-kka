@@ -10,10 +10,10 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CartItemDto {
 
-    private Long id;
-    private Long productId;
-    private String productName;
-    private Integer productDiscount;
+    private Long cartItemId;
+    private Long id;  // product id
+    private String name;  // product name
+    private Integer discount;  // product discount
     private String imageUrl;
     private Integer quantity;
     private Integer price;
