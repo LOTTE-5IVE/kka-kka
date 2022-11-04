@@ -253,4 +253,8 @@ public class CouponService {
         return sortWithMaximumDiscountAmount.sort(couponProductResponseDtos);
 
     }
+
+    public int showMemberCouponCount(Long memberId) {
+        return memberCouponRepository.countAllByMemberIdAndIsUsedFalse(memberId);
+    }
 }
