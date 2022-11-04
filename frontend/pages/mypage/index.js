@@ -5,12 +5,19 @@ import MyInfoCard from "../../components/mypage/MyInfoCard";
 import Mysidebar from "../../components/mypage/Mysidebar";
 import MyOrderTemp from "../../components/mypage/MyOrderTemp";
 import MyInfoEdit from "../../components/mypage/MyInfoEdit";
+import MyOrderDetail from "../../components/mypage/MyOrderDetail";
 
 export default function MyPage() {
   const [tab, setTab] = useState("order");
+  const [detail, setDetail] = useState(false);
+  const [orderDetail, setOrderDetail] = useState();
 
   function handleTab(menu) {
     setTab(menu);
+  }
+
+  function handleDetail(bool) {
+    setDetail(bool);
   }
 
   return (
@@ -19,20 +26,27 @@ export default function MyPage() {
       <div>
         <div className="MyPageLContents">
           <div className="sidebar">
-            <Mysidebar handleTab={handleTab} />
+            <Mysidebar handleTab={handleTab} handleDetail={handleDetail} />
           </div>
           <div className="wrapper">
-            <div>
-              <MyInfoCard />
-            </div>
+            {!detail && (
+              <div>
+                <MyInfoCard />
+              </div>
+            )}
 
             <div className="mypageMenu">
               {tab == "info" ? (
                 <MyInfoEdit />
-              ) : tab == "order" ? (
-                <MyOrderTemp />
-              ) : (
+              ) : tab == "coupon" ? (
                 <MyCoupon />
+              ) : tab == "order" && !detail ? (
+                <MyOrderTemp
+                  handleDetail={handleDetail}
+                  setOrderDetail={setOrderDetail}
+                />
+              ) : (
+                <MyOrderDetail orderDetail={orderDetail} />
               )}
             </div>
           </div>

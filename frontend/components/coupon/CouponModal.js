@@ -17,7 +17,7 @@ export function CouponModal({ children }) {
             left: 0;
             width: 1903px;
             height: 929px;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.3);
 
             .wrapper {
               position: absolute;
@@ -28,7 +28,7 @@ export function CouponModal({ children }) {
               .container {
                 margin: 40px auto 0;
                 background-color: white;
-                width: 400px;
+                width: 600px;
 
                 border: 1px solid #dedede;
                 box-shadow: 4px 5px 3px #595959;
@@ -45,8 +45,8 @@ export function CouponModal({ children }) {
             top: 0;
             left: 0;
             width: 100vw;
-            height: 150vw;
-            background-color: rgba(0, 0, 0, 0.5);
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
 
             .wrapper {
               position: absolute;
@@ -75,7 +75,7 @@ export function CouponModal({ children }) {
             left: 0;
             width: 480px;
             height: 1100px;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.3);
 
             .wrapper {
               position: absolute;
