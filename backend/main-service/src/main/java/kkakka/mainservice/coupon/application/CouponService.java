@@ -255,6 +255,6 @@ public class CouponService {
     }
 
     public int showMemberCouponCount(Long memberId) {
-        return memberCouponRepository.countByMemberId(memberId).intValue();
+        return memberCouponRepository.countAllByMemberIdAndIsUsedFalse(memberId);
     }
 }
