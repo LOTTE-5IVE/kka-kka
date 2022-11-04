@@ -14,6 +14,7 @@ import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.PriceRule;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
+import kkakka.mainservice.coupon.ui.dto.CouponProductResponseDto;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
 import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.member.member.domain.Grade;
@@ -62,7 +63,8 @@ public class CouponServiceTest extends TestContext {
         // when
         couponService.downloadCoupon(coupon.getId(), member.getId());
         couponService.useCouponByMember(coupon.getId(), member.getId());
-        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllMemberCouponByCouponId(coupon.getId());
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllMemberCouponByCouponId(
+            coupon.getId());
 
         // then
         assertThat(memberCoupons.get(0).getIsUsed()).isEqualTo(true);
@@ -206,6 +208,38 @@ public class CouponServiceTest extends TestContext {
         assertThat(coupons.size()).isEqualTo(1);
     }
 
+    @DisplayName("상품 다운 가능한 쿠폰 조회 - 성공")
+    @Test
+    void showDownloadableCoupons() {
+        // given
+        Member member = new Member();
+        Product product = new Product(null, null, "test", 1000, 20,
+            "", "", "", null);
+        Coupon coupon1 = Coupon.create(
+            null, product, "testCoupon", PriceRule.COUPON,
+            LocalDateTime.of(2022, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            15, 1000, 2000
+        );
+        Coupon coupon2 = Coupon.create(
+            null, product, "testCoupon", PriceRule.COUPON,
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            15, 1000, 2000
+        );
+        memberRepository.save(member);
+        productRepository.save(product);
+        couponRepository.save(coupon1);
+        couponRepository.save(coupon2);
+
+        // when
+        List<CouponProductResponseDto> couponProductResponseDtos = couponService.showCouponsByProductIdAndMemberId(
+            product.getId(), member.getId());
+
+        // then
+        assertThat(couponProductResponseDtos.size()).isEqualTo(2);
+    }
+
     @DisplayName("등급쿠폰 금액할인 생성 테스트 - 성공")
     @Test
     void createMoneyGradeCoupon_success() {
@@ -239,5 +273,62 @@ public class CouponServiceTest extends TestContext {
 
         // then
         assertThat(couponRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @DisplayName("상품 적용 가능한 쿠폰 조회 - 성공")
+    @Test
+    void showProductCouponsByProductId() {
+        // given
+        Product product = new Product(null, null, "product",
+            1000, 20, "", "", "", null);
+        productRepository.save(product);
+        couponService.createCoupon(new CouponRequestDto(
+            null, null, product.getId(),
+            "test", "COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+
+        // when
+        List<CouponProductResponseDto> couponProductResponseDtos = couponService.showCouponsByProductId(
+            product.getId());
+
+        // then
+        assertThat(couponProductResponseDtos.size()).isEqualTo(1);
+    }
+
+    @DisplayName("총 쿠폰 수 확인 - 성공")
+    @Test
+    void findMemberCouponCount_success() {
+        // given
+        Product product = new Product(null, null, "product",
+            1000, 20, "", "", "", null);
+        Member member = new Member();
+        productRepository.save(product);
+        memberRepository.save(member);
+        Long coupon1 = couponService.createCoupon(new CouponRequestDto(
+            null, null, product.getId(),
+            "test", "COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+        Long coupon2 = couponService.createCoupon(new CouponRequestDto(
+            null, null, product.getId(),
+            "test", "COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+        couponService.downloadCoupon(coupon1, member.getId());
+        couponService.downloadCoupon(coupon2, member.getId());
+        couponService.useCouponByMember(coupon1, member.getId());
+
+        // when
+        int count = couponService.showMemberCouponCount(member.getId());
+
+        // then
+        assertThat(count).isEqualTo(1);
     }
 }

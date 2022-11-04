@@ -1,9 +1,12 @@
 package kkakka.mainservice.member.member.ui;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import kkakka.mainservice.common.dto.NoOffsetPageInfo;
 import kkakka.mainservice.common.dto.PageableNoOffsetResponse;
+import kkakka.mainservice.coupon.application.CouponService;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.auth.ui.MemberOnly;
@@ -33,6 +36,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final OrderService orderService;
+    private final CouponService couponService;
 
     @GetMapping("/health_check")
     public String status() {
@@ -84,5 +88,13 @@ public class MemberController {
                                 .map(MemberOrderDto::toResponseDto)
                                 .collect(Collectors.toList()), pageInfo)
         );
+    }
+
+    @GetMapping("me/coupons/all")
+    public ResponseEntity<Map<String, Integer>> showCouponCount(@AuthenticationPrincipal LoginMember loginMember) {
+        final int couponCount = couponService.showMemberCouponCount(loginMember.getId());
+        final Map<String, Integer> result = new HashMap<>();
+        result.put("couponCount", couponCount);
+        return ResponseEntity.ok().body(result);
     }
 }
