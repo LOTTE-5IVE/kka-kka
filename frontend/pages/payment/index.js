@@ -3,24 +3,44 @@ import { useEffect, useState } from "react";
 import { PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
+import Title from "../../components/common/Title";
+import { CouponApply } from "../../components/coupon/CouponApply";
 import { CouponDown } from "../../components/coupon/CouponDown";
 import { CouponModal } from "../../components/coupon/CouponModal";
 import DaumPost from "../../components/payment/DaumPost";
+import { useEngCheck } from "../../hooks/useEngCheck";
 import { useGetToken } from "../../hooks/useGetToken";
+import { useLangCheck } from "../../hooks/useLangCheck";
+import { useMemberInfo } from "../../hooks/useMemberInfo";
 import { useMoney } from "../../hooks/useMoney";
+import { useNumberCheck } from "../../hooks/useNumberCheck";
+import { useTextCheck } from "../../hooks/useTextCheck";
 import { NGray } from "../../typings/NormalColor";
 
 export default function payment() {
   const [token, setToken] = useState("");
   const [zipcode, setZipcode] = useState("");
+  const [name, setName] = useState();
+  const [email1, setEmail1] = useState();
+  const [email2, setEmail2] = useState();
+  const [phone1, setPhone1] = useState();
+  const [phone2, setPhone2] = useState();
+  const [phone3, setPhone3] = useState();
   const [addr1, setAddr1] = useState("");
   const [addr2, setAddr2] = useState("");
   const [popup, setPopup] = useState(false);
-  const [Selected, setSelected] = useState("");
   const [modal, setModal] = useState(false);
   const [orderItems, setOrderItems] = useState([]);
   const [buyItem, setBuyItem] = useState();
   const [buyQuantity, setBuyQuantity] = useState();
+  const [check, setCheck] = useState(false);
+  const [nameValid, setNameValid] = useState(false);
+  const [phoneValid1, setPhoneValid1] = useState(false);
+  const [phoneValid2, setPhoneValid2] = useState(false);
+  const [phoneValid3, setPhoneValid3] = useState(false);
+  const [addressValid1, setAddressValid1] = useState(false);
+  const [addressValid2, setAddressValid2] = useState(false);
+  const [unvalid, setUnValid] = useState(true);
 
   const router = useRouter();
 
@@ -30,8 +50,12 @@ export default function payment() {
     }
     setToken(useGetToken());
 
+    if (!router.query.orderItems && !router.query.buyItem) {
+      alert("주문/결제가 취소되었습니다.");
+      history.back();
+    }
+
     if (router.query.orderItems) {
-      console.log("orderItems");
       setOrderItems(JSON.parse(router.query.orderItems));
     }
 
@@ -40,6 +64,68 @@ export default function payment() {
       setBuyQuantity(router.query.quantity);
     }
   }, [router.isReady]);
+
+  useEffect(() => {
+    if (!check) return;
+
+    if (token !== "") {
+      useMemberInfo(token).then((res) => {
+        if (res) {
+          console.log(res);
+          setName(res.name);
+          setNameValid(true);
+
+          if (res.email) {
+            let [e1, e2] = res.email.split("@");
+            if (e1 && e2) {
+              setEmail1(e1);
+              setEmail2(e2);
+            }
+          }
+
+          if (res.phone) {
+            let [p1, p2, p3] = res.phone?.split("-");
+            if (p1 && p2 && p3) {
+              setPhone1(p1);
+              setPhone2(p2);
+              setPhone3(p3);
+              setPhoneValid1(true);
+              setPhoneValid2(true);
+              setPhoneValid3(true);
+            }
+          }
+
+          if (res.address) {
+            setAddr1(res.address);
+            setAddressValid1(true);
+            setAddressValid2(true);
+          }
+        }
+      });
+    }
+  }, [check]);
+
+  useEffect(() => {
+    if (
+      nameValid &&
+      phoneValid1 &&
+      phoneValid2 &&
+      phoneValid3 &&
+      addressValid1 &&
+      addressValid2
+    ) {
+      setUnValid(false);
+    } else {
+      setUnValid(true);
+    }
+  }, [
+    nameValid,
+    phoneValid1,
+    phoneValid2,
+    phoneValid3,
+    addressValid1,
+    addressValid2,
+  ]);
 
   const orderItem = async () => {
     const arr = [];
@@ -55,7 +141,19 @@ export default function payment() {
       arr.push({ productId: buyItem.id, quantity: Number(buyQuantity) });
     }
 
-    PostHApi("/api/orders", { productOrders: arr }, token).then((res) => {});
+    PostHApi(
+      "/api/orders",
+      {
+        productOrders: arr,
+        recipient: {
+          name: name,
+          email: email1 + "@" + email2,
+          phone: phone1 + "-" + phone2 + "-" + phone3,
+          address: addr1 + " " + addr2,
+        },
+      },
+      token,
+    ).then((res) => {});
 
     alert("결제되었습니다.");
 
@@ -76,15 +174,22 @@ export default function payment() {
 
   function addr1Handler(addr1) {
     setAddr1(addr1);
+
+    if (addr1) {
+      setAddressValid1(true);
+    } else {
+      setAddressValid1(false);
+    }
   }
 
-  const handleSelect = (e) => {
-    setSelected(e.target.value);
+  const handleCheck = (e) => {
+    setCheck(e.target.checked);
   };
 
   return (
     <>
-      <div className="wrapper">
+      <Title title="주문/결제" />
+      <div className="PaymentWrapper">
         <div className="title">
           <h2>주문/결제</h2>
         </div>
@@ -93,17 +198,17 @@ export default function payment() {
           <div className="orderList">
             <table>
               <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "30%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "40%" }} />
                 <col style={{ width: "15%" }} />
                 <col style={{ width: "20%" }} />
-                <col style={{ width: "5%" }} />
+                <col style={{ width: "10%" }} />
               </colgroup>
               <tbody>
                 {buyItem && (
                   <tr>
                     <td>
-                      <img width="96px" src={buyItem.image_url} />
+                      <img src={buyItem.image_url} />
                     </td>
                     <td>{buyItem.name}</td>
                     <td>x{buyQuantity}</td>
@@ -123,7 +228,10 @@ export default function payment() {
                       {modal && (
                         <CouponModal>
                           <div>
-                            <CouponDown handleModal={handleModal} />
+                            <CouponApply
+                              handleModal={handleModal}
+                              product={buyItem}
+                            />
                           </div>
                         </CouponModal>
                       )}
@@ -135,7 +243,7 @@ export default function payment() {
                   return (
                     <tr key={index}>
                       <td>
-                        <img width="96px" src={product.imageUrl} />
+                        <img src={product.imageUrl} />
                       </td>
                       <td>{product.productName}</td>
                       <td>x{product.quantity}</td>
@@ -180,7 +288,10 @@ export default function payment() {
                         {modal && (
                           <CouponModal>
                             <div>
-                              <CouponDown handleModal={handleModal} />
+                              <CouponApply
+                                handleModal={handleModal}
+                                product={product}
+                              />
                             </div>
                           </CouponModal>
                         )}
@@ -194,50 +305,156 @@ export default function payment() {
         </div>
 
         <div>
-          <div className="tableTitle orderInfoTitle">주문자정보</div>
+          <div className="tableTitle orderInfoTitle">
+            배송정보{" "}
+            <p>
+              <input type="checkbox" checked={check} onChange={handleCheck} />{" "}
+              <span>회원정보와 동일</span>
+            </p>
+          </div>
           <div className="tableContents orderInfo">
             <table>
               <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "80%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "85%" }} />
               </colgroup>
               <tbody>
                 <tr>
-                  <th scope="row">주문자</th>
+                  <th scope="row">
+                    <span style={{ color: "red" }}>*</span>수령인
+                  </th>
                   <td>
                     <input
-                      id="oname"
-                      className="inputTypeText"
+                      required
                       placeholder=""
                       size="15"
-                      defaultValue=""
+                      defaultValue={name}
                       type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+
+                        if (useLangCheck(e.target.value)) {
+                          setName(e.target.value);
+                          setNameValid(true);
+                        } else {
+                          alert("한글 혹은 영문만 입력할 수 있습니다.");
+                          setNameValid(false);
+                          e.target.value = "";
+                        }
+                      }}
                     />
                   </td>
                 </tr>
+
                 <tr>
-                  {/* https://choiiis.github.io/web/toy-project-sign-up-and-in-page-2/ */}
+                  <th scope="row">
+                    <span style={{ color: "red" }}>*</span>휴대전화
+                  </th>
+                  <td>
+                    <input
+                      maxLength="3"
+                      size="3"
+                      defaultValue={phone1}
+                      type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (useNumberCheck(e.target.value)) {
+                          setPhone1(e.target.value);
+                          if (e.target.value.length == 3) setPhoneValid1(true);
+                          else {
+                            setPhoneValid1(false);
+                          }
+                        } else {
+                          alert("숫자만 입력할 수 있습니다.");
+                          setPhoneValid1(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                    -
+                    <input
+                      maxLength="4"
+                      size="4"
+                      defaultValue={phone2}
+                      type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (useNumberCheck(e.target.value)) {
+                          setPhone2(e.target.value);
+                          if (e.target.value.length == 4) setPhoneValid2(true);
+                          else {
+                            setPhoneValid2(false);
+                          }
+                        } else {
+                          alert("숫자만 입력할 수 있습니다.");
+                          setPhoneValid2(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                    -
+                    <input
+                      maxLength="4"
+                      size="4"
+                      defaultValue={phone3}
+                      type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (useNumberCheck(e.target.value)) {
+                          setPhone3(e.target.value);
+                          if (e.target.value.length == 4) setPhoneValid3(true);
+                          else {
+                            setPhoneValid3(false);
+                          }
+                        } else {
+                          alert("숫자만 입력할 수 있습니다.");
+                          setPhoneValid3(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                  </td>
+                </tr>
+
+                {/* <tr>
                   <th scope="row">이메일</th>
                   <td>
                     <input
-                      id="oemail1"
-                      className="mailId"
-                      defaultValue=""
+                      defaultValue={email1}
                       type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (useEngCheck(e.target.value)) {
+                          setEmail1(e.target.value);
+                        } else {
+                          alert("영어만 입력할 수 있습니다.");
+                          e.target.value = "";
+                        }
+                      }}
                     />
                     @{" "}
                     <span className="mailAddress">
                       <span className="directInput ec-compact-etc">
                         <input
-                          id="oemail2"
                           placeholder="직접입력"
-                          defaultValue={Selected}
+                          defaultValue={email2}
                           type="text"
+                          onChange={(e) => {
+                            setCheck(false);
+                            if (useEngCheck(e.target.value)) {
+                              setEmail2(e.target.value);
+                            } else {
+                              alert("영어만 입력할 수 있습니다.");
+                              e.target.value = "";
+                            }
+                          }}
                         />
                       </span>
                       <select
-                        id="oemail3"
-                        onChange={handleSelect}
+                        onChange={(e) => {
+                          setCheck(false);
+                          setEmail2(e.target.value);
+                        }}
                         defaultValue={"DEFAULT"}
                       >
                         <option value="DEFAULT" disabled>
@@ -256,65 +473,15 @@ export default function payment() {
                       </select>
                     </span>
                   </td>
-                </tr>
-                <tr>
-                  <th scope="row">휴대전화</th>
-                  <td>
-                    <select id="ophone1_1" defaultValue={"010"}>
-                      <option value="02">02</option>
-                      <option value="031">031</option>
-                      <option value="032">032</option>
-                      <option value="033">033</option>
-                      <option value="041">041</option>
-                      <option value="042">042</option>
-                      <option value="043">043</option>
-                      <option value="044">044</option>
-                      <option value="051">051</option>
-                      <option value="052">052</option>
-                      <option value="053">053</option>
-                      <option value="054">054</option>
-                      <option value="055">055</option>
-                      <option value="061">061</option>
-                      <option value="062">062</option>
-                      <option value="063">063</option>
-                      <option value="064">064</option>
-                      <option value="070">070</option>
-                      <option value="010">010</option>
-                      <option value="011">011</option>
-                      <option value="016">016</option>
-                      <option value="017">017</option>
-                      <option value="018">018</option>
-                      <option value="019">019</option>
-                    </select>
-                    -
-                    <input
-                      id="ophone1_2"
-                      maxLength="4"
-                      size="4"
-                      defaultValue=""
-                      type="text"
-                    />
-                    -
-                    <input
-                      id="ophone1_3"
-                      maxLength="4"
-                      size="4"
-                      defaultValue=""
-                      type="text"
-                    />
-                  </td>
-                </tr>
+                </tr> */}
                 <tr>
                   <th scope="row" rowSpan="3">
-                    주소
+                    <span style={{ color: "red" }}>*</span> 주소
                   </th>
                   <td>
                     <div className="address_search">
                       <input
-                        id="ozipcode1"
-                        name="ozipcode1"
                         placeholder="우편번호"
-                        className="inputTypeText"
                         type="text"
                         maxLength="14"
                         readOnly
@@ -339,30 +506,33 @@ export default function payment() {
                 <tr>
                   <td>
                     <input
-                      id="oaddr1"
-                      name="oaddr1"
                       placeholder="기본주소"
-                      className="inputTypeText"
                       type="text"
                       size="60"
                       maxLength="100"
                       readOnly
                       defaultValue={addr1 ? addr1 : ""}
+                      onChange={(e) => {
+                        setAddr1(e.target.value);
+                        if (e.target.value.length > 0) setAddressValid1(true);
+                        else setAddressValid1(false);
+                      }}
                     />
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <input
-                      id="oaddr1"
-                      name="oaddr1"
                       placeholder="상세주소"
-                      className="inputTypeText"
                       type="text"
                       size="60"
                       maxLength="100"
-                      readOnly
-                      value={addr2}
+                      defaultValue={addr2 ? addr2 : ""}
+                      onChange={(e) => {
+                        setAddr2(e.target.value);
+                        if (e.target.value.length > 0) setAddressValid2(true);
+                        else setAddressValid2(false);
+                      }}
                     />
                   </td>
                 </tr>
@@ -372,12 +542,12 @@ export default function payment() {
         </div>
 
         <div>
-          <div className="tableTitle cpTitle">쿠폰/포인트</div>
+          <div className="tableTitle cpTitle">쿠폰</div>
           <div className="tableContents cp">
             <table>
               <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "80%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "85%" }} />
               </colgroup>
               <tbody>
                 <tr>
@@ -398,8 +568,8 @@ export default function payment() {
           <div className="tableContents payInfo">
             <table>
               <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "80%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "85%" }} />
               </colgroup>
               <tbody>
                 <tr>
@@ -415,7 +585,7 @@ export default function payment() {
                   </td>
                 </tr>
                 <tr>
-                  <th scope="row">할인/부가결제</th>
+                  <th scope="row">할인</th>
                   <td>
                     -{" "}
                     {useMoney(
@@ -473,99 +643,475 @@ export default function payment() {
           }}
           style={{ cursor: "pointer" }}
         >
-          <ButtonComp context="결제하기" />
+          <ButtonComp context="결제하기" unvalid={unvalid} />
         </div>
       </div>
 
       <style jsx>{`
-        .wrapper {
-          width: 70%;
-          margin: 0 auto;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .PaymentWrapper {
+            width: 1332px;
+            margin: 0 auto;
 
-          .title {
-            text-align: center;
+            .title {
+              text-align: center;
 
-            h2 {
-              padding: 0;
-              color: #3a3a3a;
-              font-size: 36px;
-              font-weight: 700;
-              line-height: 1;
-            }
-          }
-
-          .orderList {
-            margin-bottom: 10%;
-            border-bottom: 2px solid;
-            table {
-              border-collapse: collapse;
-              margin: 0 auto;
-              width: 98%;
-
-              tr:not(:last-child) {
-                height: 2vw;
-                border-bottom: 1.5px solid #d0cfcf;
+              h2 {
+                padding: 0;
+                color: #3a3a3a;
+                font-size: 36px;
+                font-weight: 700;
+                line-height: 1;
               }
+            }
 
-              td {
-                p {
-                  margin: 0;
+            .orderList {
+              margin-bottom: 133px;
+              border-bottom: 2px solid;
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 1305px;
 
-                  span {
-                    font-size: 14px;
-                    color: ${NGray};
-                    text-decoration: line-through;
+                tr:not(:last-child) {
+                  height: 103px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
+
+                td {
+                  p {
+                    margin: 0;
+
+                    span {
+                      font-size: 14px;
+                      color: ${NGray};
+                      text-decoration: line-through;
+                    }
+                  }
+
+                  img {
+                    width: 96px;
+                    height: 96px;
                   }
                 }
               }
             }
-          }
 
-          .tableTitle {
-            font-size: 20px;
-            font-weight: 500;
-            line-height: 2;
-            border-bottom: 2px solid;
-          }
+            .tableTitle {
+              font-size: 20px;
+              font-weight: 500;
+              line-height: 2;
+              border-bottom: 2px solid;
+            }
 
-          .tableContents {
-            margin-bottom: 10%;
+            .tableContents {
+              margin-bottom: 133px;
 
-            table {
-              border-collapse: collapse;
-              margin: 0 auto;
-              width: 98%;
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 1305px;
 
-              tr {
-                height: 5vw;
-                border-bottom: 1.5px solid #d0cfcf;
+                tr {
+                  height: 96px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
               }
             }
+
+            .orderInfoTitle {
+              display: flex;
+              align-items: center;
+              p {
+                margin: 0 0 0 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                span {
+                  font-size: 16px;
+                }
+              }
+            }
+
+            .orderInfo {
+              font-size: 20px;
+
+              input {
+                margin: 0 10px;
+                line-height: 40px;
+                padding: 0 0 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                background: #fff;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 1px solid #000;
+              }
+
+              select {
+                margin: 0 10px;
+                height: 40px;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #3a3a3a;
+                padding: 0 10px 0 13px;
+                border: 1px solid #000;
+              }
+
+              button {
+                margin: 0 10px;
+                line-height: 40px;
+                padding: 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 1px solid #000;
+                cursor: pointer;
+              }
+            }
+
+            .cp {
+              td {
+                text-align: right;
+              }
+
+              tr:last-child {
+                background-color: #f8f8f8;
+              }
+            }
+
+            .payInfo {
+              td {
+                text-align: right;
+              }
+
+              tr:last-child {
+                background-color: #f8f8f8;
+              }
+            }
+
+            .payBtn {
+              width: 200px;
+              margin: 0 auto 50px;
+            }
           }
+        }
 
-          .cp {
-            td {
-              text-align: right;
+        @media screen and (max-width: 768px) {
+          /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
+          .PaymentWrapper {
+            width: 100vw;
+            margin: 0 auto;
+
+            .title {
+              text-align: center;
+
+              h2 {
+                padding: 0;
+                color: #3a3a3a;
+                font-size: 5vw;
+                font-weight: 700;
+                line-height: 1;
+              }
             }
 
-            tr:last-child {
-              background-color: #f8f8f8;
+            .orderList {
+              margin-bottom: 7vw;
+              border-bottom: 2px solid;
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 95vw;
+
+                tr:not(:last-child) {
+                  height: 5.53vw;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
+
+                td {
+                  p {
+                    margin: 0;
+
+                    span {
+                      font-size: 1.5vw;
+                      color: ${NGray};
+                      text-decoration: line-through;
+                    }
+                  }
+
+                  img {
+                    width: 96px;
+                    height: 96px;
+                  }
+                }
+              }
+            }
+
+            .tableTitle {
+              font-size: 3vw;
+              font-weight: 500;
+              line-height: 2;
+              border-bottom: 2px solid;
+            }
+
+            .tableContents {
+              margin-bottom: 7vw;
+
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 95vw;
+
+                tr {
+                  height: 96px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
+              }
+            }
+
+            .orderInfoTitle {
+              display: flex;
+              align-items: center;
+              p {
+                margin: 0 0 0 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                span {
+                  font-size: 12px;
+                }
+              }
+            }
+
+            .orderInfo {
+              font-size: 2vw;
+
+              input {
+                margin: 0 0.53vw;
+                line-height: 30px;
+                padding: 0 0 0 0.7vw;
+                border: 0 none;
+                color: #3a3a3a;
+                background: #fff;
+                border-radius: 8px;
+                font-size: 1.5vw;
+                border: 1px solid #000;
+              }
+
+              select {
+                margin: 0 0.53vw;
+                height: 30px;
+                border-radius: 8px;
+                font-size: 2vw;
+                color: #3a3a3a;
+                padding: 0 0.53vw 0 0.7vw;
+                border: 1px solid #000;
+              }
+
+              button {
+                margin: 0 0.53vw;
+                line-height: 30px;
+                padding: 0 0.7vw;
+                border: 0 none;
+                color: #3a3a3a;
+                border-radius: 8px;
+                font-size: 2vw;
+                border: 1px solid #000;
+                cursor: pointer;
+              }
+            }
+
+            .cp {
+              td {
+                text-align: right;
+              }
+
+              tr:last-child {
+                background-color: #f8f8f8;
+              }
+            }
+
+            .payInfo {
+              td {
+                text-align: right;
+              }
+
+              tr:last-child {
+                background-color: #f8f8f8;
+              }
+            }
+
+            .payBtn {
+              width: 25vw;
+              height: 10vw;
+              margin: 0 auto 50px;
             }
           }
+        }
 
-          .payInfo {
-            td {
-              text-align: right;
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .PaymentWrapper {
+            width: 460px;
+            margin: 0 auto;
+
+            .title {
+              text-align: center;
+
+              h2 {
+                padding: 0;
+                color: #3a3a3a;
+                font-size: 36px;
+                font-weight: 700;
+                line-height: 1;
+              }
             }
 
-            tr:last-child {
-              background-color: #f8f8f8;
-            }
-          }
+            .orderList {
+              margin-bottom: 60px;
+              border-bottom: 2px solid;
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 450px;
 
-          .payBtn {
-            width: 20%;
-            margin: 0 auto 50px;
+                tr:not(:last-child) {
+                  height: 70px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
+
+                td {
+                  font-size: 12px;
+
+                  p {
+                    margin: 0;
+
+                    span {
+                      font-size: 14px;
+                      color: ${NGray};
+                      text-decoration: line-through;
+                    }
+                  }
+
+                  img {
+                    width: 64px;
+                    height: 64px;
+                  }
+                }
+              }
+            }
+
+            .tableTitle {
+              font-size: 20px;
+              font-weight: 500;
+              line-height: 2;
+              border-bottom: 2px solid;
+            }
+
+            .tableContents {
+              margin-bottom: 60px;
+
+              table {
+                border-collapse: collapse;
+                margin: 0 auto;
+                width: 450px;
+
+                tr {
+                  height: 80px;
+                  border-bottom: 1.5px solid #d0cfcf;
+                }
+              }
+            }
+
+            .orderInfoTitle {
+              display: flex;
+              align-items: center;
+              p {
+                margin: 0 0 0 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                span {
+                  font-size: 12px;
+                }
+              }
+            }
+
+            .orderInfo {
+              font-size: 15px;
+
+              input {
+                max-width: 300px;
+                height: 30px;
+                margin: 5px 10px;
+                line-height: 40px;
+                padding: 0 0 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                background: #fff;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 1px solid #000;
+              }
+
+              select {
+                margin: 0 10px;
+                width: 100px;
+                height: 30px;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #3a3a3a;
+                padding: 0 10px 0 13px;
+                border: 1px solid #000;
+              }
+
+              button {
+                margin: 0 10px;
+                width: 100px;
+                height: 30px;
+                line-height: 30px;
+                padding: 0 13px;
+                border: 0 none;
+                color: #3a3a3a;
+                border-radius: 8px;
+                font-size: 10px;
+                font-weight: bold;
+                border: 1px solid #000;
+                cursor: pointer;
+              }
+            }
+
+            .cp {
+              font-size: 15px;
+              td {
+                text-align: right;
+              }
+
+              tr:last-child {
+                background-color: #f8f8f8;
+              }
+            }
+
+            .payInfo {
+              font-size: 15px;
+              td {
+                text-align: right;
+              }
+
+              tr:last-child {
+                background-color: #f8f8f8;
+              }
+            }
+
+            .payBtn {
+              width: 200px;
+              margin: 0 auto 50px;
+            }
           }
         }
       `}</style>

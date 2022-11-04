@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: auth-service
+  profiles:
+    group:
+      "default": "console-logging, file-logging, performance-logging"
+      "prod": "file-logging"
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    root: INFO
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG

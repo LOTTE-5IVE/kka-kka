@@ -8,7 +8,7 @@ import kkakka.mainservice.TestContext;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.common.exception.InvalidArgumentException;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.product.domain.Nutrition;
@@ -26,7 +26,7 @@ public class ReviewTest extends TestContext {
     @BeforeAll
     static void beforeAll() {
         member = Member.create(
-                Provider.create(TEST_MEMBER_01.getProviderId(), MemberProviderName.TEST),
+                Provider.create(TEST_MEMBER_01.getProviderId(), ProviderName.TEST),
                 TEST_MEMBER_01.getName(),
                 TEST_MEMBER_01.getEmail(),
                 TEST_MEMBER_01.getPhone(),

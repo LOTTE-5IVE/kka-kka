@@ -1,5 +1,6 @@
 package kkakka.mainservice.member.acceptance;
 
+import static kkakka.mainservice.fixture.TestDataLoader.MEMBER;
 import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -9,7 +10,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class MemberAcceptanceTest extends DocumentConfiguration {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat((String) response.path("name")).isEqualTo(TEST_MEMBER_01.getName());
+        assertThat((String) response.path("name")).isEqualTo(MEMBER.getName());
     }
 
     @DisplayName("회원 정보 조회 - 실패(토큰 없음)")
@@ -139,7 +140,7 @@ public class MemberAcceptanceTest extends DocumentConfiguration {
 
     private String 액세스_토큰_가져옴() {
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-                TEST_MEMBER_01.getCode(), MemberProviderName.TEST);
+                TEST_MEMBER_01.getCode(), ProviderName.TEST);
 
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()

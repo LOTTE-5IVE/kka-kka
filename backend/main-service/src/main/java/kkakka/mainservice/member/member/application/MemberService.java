@@ -20,7 +20,7 @@ public class MemberService {
     @Transactional
     public Member findOrCreateMember(UserProfile userProfile) {
         return memberRepository
-            .findByProviderId(userProfile.getProviderId())
+            .findByProviderId(userProfile.getProvider().getProviderId())
             .orElseGet(() -> createMember(userProfile));
     }
 
