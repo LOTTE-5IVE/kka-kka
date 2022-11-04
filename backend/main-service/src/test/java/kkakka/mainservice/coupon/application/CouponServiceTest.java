@@ -297,4 +297,38 @@ public class CouponServiceTest extends TestContext {
         // then
         assertThat(couponProductResponseDtos.size()).isEqualTo(1);
     }
+
+    @DisplayName("총 쿠폰 수 확인 - 성공")
+    @Test
+    void findMemberCouponCount_success() {
+        // given
+        Product product = new Product(null, null, "product",
+            1000, 20, "", "", "", null);
+        Member member = new Member();
+        productRepository.save(product);
+        memberRepository.save(member);
+        Long coupon1 = couponService.createCoupon(new CouponRequestDto(
+            null, null, product.getId(),
+            "test", "COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+        Long coupon2 = couponService.createCoupon(new CouponRequestDto(
+            null, null, product.getId(),
+            "test", "COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+        couponService.downloadCoupon(coupon1, member.getId());
+        couponService.downloadCoupon(coupon2, member.getId());
+        couponService.useCouponByMember(coupon1, member.getId());
+
+        // when
+        int count = couponService.showMemberCouponCount(member.getId());
+
+        // then
+        assertThat(count).isEqualTo(1);
+    }
 }

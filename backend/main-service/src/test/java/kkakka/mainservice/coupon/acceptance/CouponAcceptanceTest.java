@@ -1,6 +1,7 @@
 package kkakka.mainservice.coupon.acceptance;
 
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
 import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -332,5 +333,28 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         // then
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         Assertions.assertThat(response.header("Location")).isNotNull();
+    }
+
+    @DisplayName("총 쿠폰 수 확인 - 성공")
+    @Test
+    void findMemberCouponCount_success() {
+        // given
+        String accessToken = 액세스_토큰_가져옴();
+        쿠폰_다운로드(accessToken);
+        쿠폰_다운로드2(accessToken);
+        쿠폰_생성함(null, PRODUCT_2.getId(), "COUPON", 14, 2000);
+        쿠폰_다운로드3(accessToken);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .filter(document("show-member-coupons-success"))
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .get("/api/members/me/coupons/all")
+            .then().log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }

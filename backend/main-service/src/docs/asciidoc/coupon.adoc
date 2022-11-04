@@ -154,4 +154,14 @@ include::{snippets}/show-product-coupon-by-productId-and-memberId/http-request.a
 
 include::{snippets}/show-product-coupon-by-productId-and-memberId/http-response.adoc[]
 
+=== 회원별 쿠폰 총 수 조회
+
+- Request
+
+include::{snippets}/show-member-coupons-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/show-member-coupons-success/http-response.adoc[]
+
 
