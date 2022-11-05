@@ -7,5 +7,4 @@ import org.springframework.data.domain.Pageable;
 public interface SearchHelper {
 
     ProductsSearchResult searchProductIds(SearchParamDto searchParamDto, Pageable pageable);
-
 }

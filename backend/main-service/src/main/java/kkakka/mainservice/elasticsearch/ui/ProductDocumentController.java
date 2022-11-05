@@ -25,11 +25,11 @@ public class ProductDocumentController {
         @ModelAttribute SearchParamRequest searchParamRequest,
         @PageableDefault(size = 9) Pageable pageable) {
 
-        SearchResultResponse response = productDocumentService.findByKeyword(
+        SearchResultResponse result = productDocumentService.findByKeyword(
             searchParamRequest.toDto(),
             pageable
         );
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

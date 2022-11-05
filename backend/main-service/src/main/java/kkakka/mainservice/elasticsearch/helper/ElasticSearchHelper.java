@@ -13,7 +13,6 @@ import kkakka.mainservice.elasticsearch.domain.repository.ProductDocumentQueryBu
 import kkakka.mainservice.elasticsearch.domain.repository.ProductSearchRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
-import kkakka.mainservice.product.domain.repository.ProductRepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +33,6 @@ public class ElasticSearchHelper implements SearchHelper {
     private final ProductRepository productRepository;
     private final ProductDocumentQueryBuilder productDocumentQueryBuilder;
     private final ElasticsearchRestTemplate elasticsearchRestTemplate;
-    private final ProductRepositorySupport productRepositorySupport;
 
     @Override
     public ProductsSearchResult searchProductIds(SearchParamDto searchParamDto, Pageable pageable) {
@@ -42,14 +40,13 @@ public class ElasticSearchHelper implements SearchHelper {
 
         SearchHits<ProductDocument> searchHits = elasticsearchRestTemplate.search(query,
             ProductDocument.class, IndexCoordinates.of(Indices.PRDUCT_INDEX));
-
-//        if(!searchHits.hasSearchHits()) {
-//            return new ProductsSearchResult(
-//                new ArrayList<>(),
-//                pageable,
-//                searchHits.getTotalHits()
-//            );
-//        }
+        if (!searchHits.hasSearchHits()) {
+            return new ProductsSearchResult(
+                new ArrayList<>(),
+                new PageInfo(),
+                searchHits.getTotalHits()
+            );
+        }
 
         SearchPage<ProductDocument> searchPages = SearchHitSupport.searchPageFor(searchHits,
             query.getPageable());
@@ -62,12 +59,12 @@ public class ElasticSearchHelper implements SearchHelper {
 
         return new ProductsSearchResult(
             sortProductBySearchHit(productIds, products),
-            paging(searchPages),
+            createPageInfo(searchPages),
             searchHits.getTotalHits()
         );
     }
 
-    private PageInfo paging(SearchPage<ProductDocument> searchPages) {
+    private PageInfo createPageInfo(SearchPage<ProductDocument> searchPages) {
         return PageInfo.from(
             searchPages.getPageable().getPageNumber(),
             searchPages.getTotalPages(),
@@ -79,7 +76,7 @@ public class ElasticSearchHelper implements SearchHelper {
     private List<Product> sortProductBySearchHit(List<Long> productIds, List<Product> products) {
         List<Product> sortedProducts = new ArrayList<>();
 
-        for(Long id : productIds) {
+        for (Long id : productIds) {
             sortedProducts.add(
                 products.stream()
                     .filter(product -> id.equals(product.getId()))

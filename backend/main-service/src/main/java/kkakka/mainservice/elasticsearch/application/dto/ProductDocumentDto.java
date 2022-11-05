@@ -31,6 +31,5 @@ public class ProductDocumentDto {
             product.getDiscount(),
             product.getRatingAvg()
         );
-
     }
 }

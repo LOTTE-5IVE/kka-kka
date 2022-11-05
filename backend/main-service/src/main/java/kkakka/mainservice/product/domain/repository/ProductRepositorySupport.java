@@ -40,19 +40,6 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
         return new PageImpl<>(result, pageable, result.size());
     }
 
-    public List<Product> findByIds(List<Long> ids) {
-        return queryFactory.selectFrom(QProduct.product)
-            .where(
-                QProduct.product.id.in(ids)
-            )
-            .orderBy(accuacyByIds(ids))
-            .fetch();
-    }
-
-    private OrderSpecifier<?> accuacyByIds(List<Long> ids) {
-        return Expressions.stringTemplate("FIELD({0}, {1})",QProduct.product.id, ids).asc();
-    }
-
     private BooleanBuilder categoryNameEq(SearchWords searchWords) {
         final BooleanBuilder builder = new BooleanBuilder();
         if (searchWords.hasSearchWords()) {

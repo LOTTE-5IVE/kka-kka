@@ -3,13 +3,14 @@ package kkakka.mainservice.elasticsearch.application.dto;
 import java.util.List;
 import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.elasticsearch.ui.dto.SearchResultResponse;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SearchResultDto {
 
     private Long totalHits;
