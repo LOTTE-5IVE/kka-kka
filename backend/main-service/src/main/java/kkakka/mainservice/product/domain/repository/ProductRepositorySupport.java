@@ -1,6 +1,8 @@
 package kkakka.mainservice.product.domain.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import kkakka.mainservice.category.domain.QCategory;
@@ -36,6 +38,19 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
                 .fetch();
 
         return new PageImpl<>(result, pageable, result.size());
+    }
+
+    public List<Product> findByIds(List<Long> ids) {
+        return queryFactory.selectFrom(QProduct.product)
+            .where(
+                QProduct.product.id.in(ids)
+            )
+            .orderBy(accuacyByIds(ids))
+            .fetch();
+    }
+
+    private OrderSpecifier<?> accuacyByIds(List<Long> ids) {
+        return Expressions.stringTemplate("FIELD({0}, {1})",QProduct.product.id, ids).asc();
     }
 
     private BooleanBuilder categoryNameEq(SearchWords searchWords) {
