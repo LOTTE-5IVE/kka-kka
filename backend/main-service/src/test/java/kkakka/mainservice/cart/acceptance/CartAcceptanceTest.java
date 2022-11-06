@@ -102,7 +102,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
         final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
         퍼센트_쿠폰_생성();
-        장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getId(), 1L, accessToken);
+        장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getCartItemId(), 1L, accessToken);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
@@ -146,7 +146,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         final CartResponseDto cartResponseDto = 장바구니에서_찾아옴(accessToken);
         assertThat(
                 cartResponseDto.getCartItemDtos().stream()
-                        .filter(cartItemDto -> cartItemDto.getProductId().equals(PRODUCT_1.getId()))
+                        .filter(cartItemDto -> cartItemDto.getId().equals(PRODUCT_1.getId()))
                         .findAny().orElseThrow()
                         .getQuantity()
         ).isEqualTo(3);
@@ -168,7 +168,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/api/carts/" + cart.getCartItemDtos().get(0).getId())
+                .delete("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId())
                 .then()
                 .log().all().extract();
 
@@ -191,7 +191,8 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .filter(document("applyCartItemCoupon-success"))
                 .header("Authorization", "Bearer " + accessToken)
                 .when()
-                .post("/api/carts/" + cart.getCartItemDtos().get(0).getId() + "/" + couponId)
+                .post("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId() + "/"
+                        + couponId)
                 .then().log().all().extract();
 
         //then

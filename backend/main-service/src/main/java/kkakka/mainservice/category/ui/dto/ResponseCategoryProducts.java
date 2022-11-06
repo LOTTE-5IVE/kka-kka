@@ -14,7 +14,6 @@ public class ResponseCategoryProducts {
     private Long id;
     private String name;
     private Integer price;
-    @JsonProperty("image_url")
     private String imageUrl;
     private Integer discount;
     private Date registeredAt;
