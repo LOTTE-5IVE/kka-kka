@@ -64,6 +64,16 @@ include::{snippets}/showDetailProduct-fail/http-request.adoc[]
 
 include::{snippets}/showDetailProduct-fail/http-response.adoc[]
 
+=== 상품에 대한 추천
+
+- Request
+
+include::{snippets}/show-recommend-product-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/show-recommend-product-success/http-response.adoc[]
+
 === 검색
 
 - Request
