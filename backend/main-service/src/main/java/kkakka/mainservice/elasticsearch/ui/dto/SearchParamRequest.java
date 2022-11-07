@@ -1,9 +1,11 @@
 package kkakka.mainservice.elasticsearch.ui.dto;
 
+import java.net.URI;
 import java.util.List;
 import kkakka.mainservice.elasticsearch.application.dto.SearchParamDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -20,9 +22,8 @@ public class SearchParamRequest {
     private int maxcalorie;
 
     public SearchParamRequest() {
-        this.sort = "accuracy";
+        this.sort="accuracy";
     }
-
 
     public SearchParamDto toDto() {
         return SearchParamDto.create(keyword,
