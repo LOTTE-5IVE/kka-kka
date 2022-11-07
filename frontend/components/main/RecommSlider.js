@@ -22,7 +22,7 @@ export default function RecommSlider({tab, handleTab}) {
   const [recommendProducts, setRecommendProducts] = useState([]);
   const [reviewProducts, setReviewProducts] = useState([]);
 
-  const slideSize = 5;
+  const SLIDE_SIZE = 5;
 
   function handleRecToggle() {
     if (tab === "맞춤" && recommToggle) {
@@ -41,7 +41,7 @@ export default function RecommSlider({tab, handleTab}) {
   }
 
   const getRecommendProducts = async () => {
-    await axios.get(`/api/products/recommend?size=${slideSize}`, {
+    await axios.get(`/api/products/recommend?size=${SLIDE_SIZE}`, {
       headers: {
         Authorization: `Bearer ${useGetToken()}`,
       },
@@ -58,7 +58,7 @@ export default function RecommSlider({tab, handleTab}) {
 
   const getReviewProducts = async () => {
     await axios
-    .get(`/api/products?sortBy=BEST&size=${slideSize}`)
+    .get(`/api/products?sortBy=BEST&size=${SLIDE_SIZE}`)
     .then((res) => {
       setReviewProducts(res.data.data)
     });
@@ -111,7 +111,7 @@ export default function RecommSlider({tab, handleTab}) {
                   loop={true}
                   spaceBetween={10}
                   centeredSlides={true}
-                  slidesPerView={slideSize}
+                  slidesPerView={SLIDE_SIZE}
                   cssMode={true}
                   navigation={{
                     prevEl: navigationPrevRef.current,
