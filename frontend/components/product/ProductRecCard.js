@@ -1,10 +1,10 @@
 import ProductInfo from "./ProductInfo";
 import ProductRec from "./ProductRec";
 
-export default function ProductRecCard({ id, imgsrc, name, price, discount }) {
+export default function ProductRecCard({ id, imgsrc, name, price, discount, imgSize }) {
   return (
     <>
-      <ProductRec id={id} imgsrc={imgsrc} />
+      <ProductRec id={id} imgsrc={imgsrc} imgSize={imgSize} />
       <ProductInfo id={id} name={name} price={price} discount={discount} />
     </>
   );
@@ -15,5 +15,6 @@ ProductRecCard.defaultProps = {
   imgsrc: "/sample.png",
   name: "test",
   price: 10000,
-  rate: 10,
+  discount: 10,
+  imgSize: "300px",
 };

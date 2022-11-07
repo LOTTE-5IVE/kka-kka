@@ -58,6 +58,7 @@ export default function ProductList() {
                     name={product.name}
                     price={product.price}
                     discount={product.discount}
+                    imgSize={'300px'}
                   />
                 </div>
               </li>
