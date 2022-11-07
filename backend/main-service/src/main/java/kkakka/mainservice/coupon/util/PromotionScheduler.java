@@ -32,7 +32,7 @@ public class PromotionScheduler {
     public void checkDiscountExpiredDateSchedule() {
         List<Discount> discounts = discountRepository.findAll();
         for (Discount discount : discounts) {
-            if (LocalDateTime.now().isBefore(discount.getExpiredAt())) {
+            if (LocalDateTime.now().isAfter(discount.getExpiredAt())) {
                 discountService.deleteDiscount(discount.getId());
             }
         }
