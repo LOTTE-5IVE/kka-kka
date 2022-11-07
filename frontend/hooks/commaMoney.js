@@ -1,3 +1,3 @@
-export const useMoney = (money) => {
+export const commaMoney = (money) => {
   if (money) return money.toLocaleString("ko-KR");
 };

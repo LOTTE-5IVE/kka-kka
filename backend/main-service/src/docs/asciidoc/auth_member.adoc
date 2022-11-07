@@ -78,3 +78,14 @@ include::{snippets}/orders-info-member-not-last-success/http-request.adoc[]
 - Response
 
 include::{snippets}/orders-info-member-not-last-success/http-response.adoc[]
+
+
+=== 회원 총 주문 수 조회
+
+- Request
+
+include::{snippets}/orders-info-member-count-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/orders-info-member-count-success/http-response.adoc[]
