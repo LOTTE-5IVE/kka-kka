@@ -32,35 +32,23 @@ export default function Header() {
     }
   }, [isLogin()]);
 
-  // useEffect(() => {
-  //   setToken(useGetToken());
-
-  //   if (!isLogin) {
-  //     console.log("memberinfo", useMemberInfo());
-  //   }
-
-  //   if (token !== "") {
-  //     useMemberInfo(token).then((res) => {
-  //       if (res) {
-  //         setName(res.name);
-  //         setGrade(res.grade);
-  //       }
-  //     });
-  //   }
-  // }, [token]);
-
   return (
     <div>
       <div className="HeaderWrapper">
         <div className="logo">
-          <div
+          {/* <div
             onClick={() => {
               document.location.href = "/";
             }}
             style={{ cursor: "pointer" }}
           >
             <img src="/main/logo.png" />
-          </div>
+          </div> */}
+          <Link href="/">
+            <a>
+              <img src="/main/logo.png" />
+            </a>
+          </Link>
         </div>
         <div className="search">
           <input
@@ -425,6 +413,7 @@ export default function Header() {
                   .topRight {
                     width: 60px;
                     cursor: pointer;
+                    text-align: left;
                   }
                 }
 

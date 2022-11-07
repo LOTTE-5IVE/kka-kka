@@ -1,6 +1,30 @@
 import DownloadIcon from "@mui/icons-material/Download";
+import { useState } from "react";
+import { useEffect } from "react";
+import { GetHApi } from "../../apis/Apis";
+import { useGetToken } from "../../hooks/useGetToken";
+import { useMoney } from "../../hooks/useMoney";
+import { NGray } from "../../typings/NormalColor";
 
-export function CouponDown({ handleModal }) {
+export function CouponDown({ handleModal, product }) {
+  const [token, setToken] = useState("");
+  const [coupons, setCoupons] = useState();
+
+  const getProductCoupon = async () => {
+    await GetHApi(`/api/coupons/${product.id}`, token).then((res) => {
+      console.log(res);
+
+      setCoupons(res);
+    });
+  };
+
+  useEffect(() => {
+    setToken(useGetToken());
+    if (token !== "") {
+      getProductCoupon();
+    }
+  }, [token]);
+
   return (
     <>
       <div className="wrapper">
@@ -17,7 +41,7 @@ export function CouponDown({ handleModal }) {
         >
           <img width="24px" src="/common/cancel.png" />
         </div>
-        <div className="container">
+        <div className="container" style={{ textAlign: "left" }}>
           <p>상품 구매 시 사용 가능한 할인쿠폰입니다.</p>
           <table>
             <colgroup>
@@ -34,16 +58,38 @@ export function CouponDown({ handleModal }) {
             <tbody>
               <tr style={{ height: "71px", borderBottom: "1px solid #dedede" }}>
                 <td>
-                  <img width="64px" src="/sample.png" />
+                  <img width="64px" src={product.image_url} />
                 </td>
-                <td style={{ textAlign: "left" }}>ABC 초콜릿</td>
-                <td>2,500원</td>
+                <td style={{ textAlign: "left" }}>{product.name}</td>
+                <td>
+                  {product.discount ? (
+                    <>
+                      <p style={{ marginBottom: "0" }}>
+                        {useMoney(
+                          Math.ceil(
+                            product.price * (1 - 0.01 * product.discount),
+                          ),
+                        )}
+                        원
+                      </p>
+                      <p style={{ marginBottom: "0" }}>
+                        <span>{useMoney(product.price)}원</span>
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p style={{ marginBottom: "0" }}>
+                        {useMoney(product.price)}원
+                      </p>
+                    </>
+                  )}
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div className="totalContainer">
-          <p>전체 쿠폰</p>
+        <div className="maxDisContainer" style={{ textAlign: "left" }}>
+          <p>최대 할인 쿠폰</p>
           <table>
             <colgroup>
               <col style={{ width: "30%" }} />
@@ -62,22 +108,105 @@ export function CouponDown({ handleModal }) {
               </tr>
             </thead>
             <tbody>
-              <tr style={{ height: "59px", borderBottom: "1px solid #dedede" }}>
-                <td>스페셜 쿠폰 </td>
-                <td>15%</td>
-                <td>2022.09.15까지</td>
-                <td>40,000원</td>
-                <td
-                  style={{
-                    height: "59px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <DownloadIcon />
-                </td>
+              {coupons?.map((coupon, idx) => {
+                return (
+                  <tr
+                    key={idx}
+                    style={{
+                      height: "59px",
+                      borderBottom: "1px solid #dedede",
+                    }}
+                  >
+                    <td>{coupon.name}</td>
+                    <td>{coupon.percentage}%</td>
+                    <td>{coupon.expiredAt.slice(0, 10)}</td>
+                    <td>
+                      {useMoney(
+                        Math.ceil(
+                          Number(
+                            Math.ceil(
+                              product.price * (1 - 0.01 * product.discount),
+                            ),
+                          ) *
+                            (1 - 0.01 * coupon.percentage),
+                        ),
+                      )}
+                      원
+                    </td>
+                    <td
+                      style={{
+                        height: "59px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <DownloadIcon />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="totalContainer" style={{ textAlign: "left" }}>
+          <p>적용 가능한 쿠폰</p>
+          <table>
+            <colgroup>
+              <col style={{ width: "30%" }} />
+              <col style={{ width: "8%" }} />
+              <col style={{ width: "35%" }} />
+              <col style={{ width: "20%" }} />
+              <col style={{ width: "7%" }} />
+            </colgroup>
+            <thead style={{ height: "59px" }}>
+              <tr>
+                <th>쿠폰명</th>
+                <th>할인</th>
+                <th>사용기한</th>
+                <th>쿠폰 적용가</th>
+                <th></th>
               </tr>
+            </thead>
+            <tbody>
+              {coupons?.map((coupon, idx) => {
+                return (
+                  <tr
+                    key={idx}
+                    style={{
+                      height: "59px",
+                      borderBottom: "1px solid #dedede",
+                    }}
+                  >
+                    <td>{coupon.name}</td>
+                    <td>{coupon.percentage}%</td>
+                    <td>{coupon.expiredAt.slice(0, 10)}</td>
+                    <td>
+                      {useMoney(
+                        Math.ceil(
+                          Number(
+                            Math.ceil(
+                              product.price * (1 - 0.01 * product.discount),
+                            ),
+                          ) *
+                            (1 - 0.01 * coupon.percentage),
+                        ),
+                      )}
+                      원
+                    </td>
+                    <td
+                      style={{
+                        height: "59px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <DownloadIcon />
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -91,12 +220,16 @@ export function CouponDown({ handleModal }) {
             height: 660px;
             margin-top: 5px;
             .container {
-              margin-bottom: 90px;
-
               p {
                 width: 90%;
                 margin: 0 auto 10px;
                 font-weight: bold;
+
+                span {
+                  font-size: 14px;
+                  color: ${NGray};
+                  text-decoration: line-through;
+                }
               }
 
               table {
@@ -113,7 +246,9 @@ export function CouponDown({ handleModal }) {
               }
             }
 
+            .maxDisContainer,
             .totalContainer {
+              margin-top: 30px;
               p {
                 font-size: 18px;
                 width: 90%;
@@ -140,16 +275,20 @@ export function CouponDown({ handleModal }) {
         @media screen and (max-width: 768px) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .wrapper {
-            width: 600px;
-            height: 660px;
-            margin-top: 5px;
-            .container {
-              margin-bottom: 90px;
+            width: 80vw;
 
+            margin-top: 1vw;
+            .container {
               p {
                 width: 90%;
-                margin: 0 auto 10px;
+                margin: 0 auto 3vw;
                 font-weight: bold;
+
+                span {
+                  font-size: 2vw;
+                  color: ${NGray};
+                  text-decoration: line-through;
+                }
               }
 
               table {
@@ -166,11 +305,14 @@ export function CouponDown({ handleModal }) {
               }
             }
 
+            .maxDisContainer,
             .totalContainer {
+              margin-top: 3vw;
+
               p {
-                font-size: 18px;
+                font-size: 2.5vw;
                 width: 90%;
-                margin: 0 auto 15px;
+                margin: 0 auto 2vw;
                 font-weight: bold;
               }
 
@@ -194,11 +336,9 @@ export function CouponDown({ handleModal }) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
           .wrapper {
             width: 380px;
-            height: 500px;
+
             margin-top: 5px;
             .container {
-              margin-bottom: 30px;
-
               p {
                 width: 90%;
                 margin: 0 auto 10px;
@@ -221,7 +361,9 @@ export function CouponDown({ handleModal }) {
               }
             }
 
+            .maxDisContainer,
             .totalContainer {
+              margin-top: 20px;
               p {
                 font-size: 12px;
                 width: 90%;

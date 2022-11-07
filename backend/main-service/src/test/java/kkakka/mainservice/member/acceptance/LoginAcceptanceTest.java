@@ -9,7 +9,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class LoginAcceptanceTest extends DocumentConfiguration {
     void joinSuccess() {
         // given
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-                TEST_MEMBER_01.getCode(), MemberProviderName.TEST);
+                TEST_MEMBER_01.getCode(), ProviderName.TEST);
 
         // when
         final ExtractableResponse<Response> response = RestAssured
@@ -43,7 +43,7 @@ public class LoginAcceptanceTest extends DocumentConfiguration {
     void loginSuccess() {
         // given
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-                TEST_MEMBER_01.getCode(), MemberProviderName.TEST);
+                TEST_MEMBER_01.getCode(), ProviderName.TEST);
         회원가입_요청(request);
 
         // when
@@ -59,6 +59,26 @@ public class LoginAcceptanceTest extends DocumentConfiguration {
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.body()).isNotNull();
+    }
+
+    @DisplayName("회원가입 - 실패(auth-service 오류)")
+    @Test
+    void login_fail_auth() {
+        // given
+        final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
+                "wrong-value", ProviderName.TEST);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("join-fail"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/api/login/token")
+                .then().log().all().extract();
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     private void 회원가입_요청(SocialProviderCodeRequest request) {

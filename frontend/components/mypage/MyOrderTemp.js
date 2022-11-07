@@ -3,36 +3,41 @@ import { useEffect, useState } from "react";
 import { GetHApi } from "../../apis/Apis";
 import { useGetToken } from "../../hooks/useGetToken";
 import { useMoney } from "../../hooks/useMoney";
-import MyProductOrder from "./MyProductOrder";
 
-export default function MyOrderTemp() {
+export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
   const [token, setToken] = useState("");
   const [orderList, setOrderList] = useState([]);
   const [moreToggle, setMoreToggle] = useState(true);
+  const [lastId, setLastId] = useState();
 
   const getOrders = async () => {
     GetHApi(`/api/members/me/orders?pageSize=3`, token).then((res) => {
       if (res) {
-        setOrderList(res);
+        console.log("order", res.data);
+
+        setOrderList(res.data);
+        setLastId(res.pageInfo.lastId);
+
+        if (res.pageInfo.lastPage) {
+          setMoreToggle(false);
+        }
       }
     });
   };
 
   const getMoreOrders = async () => {
-    GetHApi(
-      `/api/members/me/orders?pageSize=3&orderId=${
-        orderList[orderList.length - 1].id
-      }`,
-      token,
-    ).then((res) => {
-      if (res.length > 0) {
-        setOrderList(orderList.concat(res));
-      }
+    GetHApi(`/api/members/me/orders?pageSize=3&orderId=${lastId}`, token).then(
+      (res) => {
+        if (res.length > 0) {
+          setOrderList(orderList.concat(res.data));
+          setLastId(res.pageInfo.lastId);
+        }
 
-      if (res.length < 3) {
-        setMoreToggle(false);
-      }
-    });
+        if (res.pageInfo.lastPage) {
+          setMoreToggle(false);
+        }
+      },
+    );
   };
 
   useEffect(() => {
@@ -49,7 +54,7 @@ export default function MyOrderTemp() {
         <div className="wrapper">
           <div className="myorder">
             <div className="myorderTitle">주문내역</div>
-            {orderList.map((order, idx) => {
+            {orderList?.map((order, idx) => {
               return (
                 <div key={idx}>
                   <div className="d-flex flex-column">
@@ -66,20 +71,30 @@ export default function MyOrderTemp() {
                         <span className="title-content">{order.orderedAt}</span>
                       </div>
                     </div>
-                    {order.productOrders.map((productOrder, idx) => {
-                      return (
-                        <div key={idx}>
-                          <MyProductOrder
-                            productOrder={productOrder}
-                            key={idx}
-                          />
-                          {order.productOrders.length >= 1 &&
-                            idx !== order.productOrders.length - 1 && (
-                              <p className="po-divider"></p>
-                            )}
-                        </div>
-                      );
-                    })}
+                    <div
+                      className="detail"
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <p>
+                        {order.productOrders[0].product.name}
+                        {order.productOrders.length - 1 > 0 && (
+                          <span>외 {order.productOrders.length - 1}건</span>
+                        )}
+                      </p>
+                      <p
+                        className="detailBtn"
+                        onClick={() => {
+                          setOrderDetail(orderList[idx]);
+                          handleDetail(true);
+                        }}
+                      >
+                        주문상세 내역보기
+                      </p>
+                    </div>
                   </div>
                   {orderList.length >= 1 && idx !== orderList.length - 1 && (
                     <p className="order-divider"></p>
@@ -133,6 +148,16 @@ export default function MyOrderTemp() {
               margin-right: 0.2rem;
             }
 
+            .detail {
+              font-size: 16px;
+              .detailBtn {
+                border: 1px solid #cfcfcf;
+                padding: 10px 16px;
+                color: #666;
+                font-size: 14px;
+                cursor: pointer;
+              }
+            }
             .moreBtn {
               margin-bottom: 2rem;
               padding: 1rem;
@@ -220,6 +245,17 @@ export default function MyOrderTemp() {
               margin-right: 0.2rem;
             }
 
+            .detail {
+              font-size: 12px;
+              .detailBtn {
+                border: 1px solid #cfcfcf;
+                padding: 8px 14px;
+                color: #666;
+                font-size: 10px;
+                cursor: pointer;
+              }
+            }
+
             .moreBtn {
               margin-bottom: 2rem;
               padding: 1rem;
@@ -305,6 +341,17 @@ export default function MyOrderTemp() {
 
             .mr-2 {
               margin-right: 0.2rem;
+            }
+
+            .detail {
+              font-size: 12px;
+              .detailBtn {
+                border: 1px solid #cfcfcf;
+                padding: 8px 14px;
+                color: #666;
+                font-size: 10px;
+                cursor: pointer;
+              }
             }
 
             .moreBtn {

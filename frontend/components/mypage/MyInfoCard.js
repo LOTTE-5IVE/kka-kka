@@ -1,10 +1,34 @@
-const gradeColor = {
-  GOLD: "#ffd700",
-  SILVER: "#C0C0C0",
-  BRONZE: "#b08d57",
-};
+import { useEffect } from "react";
+import { useState } from "react";
+import { useGetToken } from "../../hooks/useGetToken";
+import { useMemberInfo } from "../../hooks/useMemberInfo";
 
-export default function MyInfoCard({ name, grade }) {
+export default function MyInfoCard() {
+  const [token, setToken] = useState("");
+  const [name, setName] = useState("");
+  const [grade, setGrade] = useState("");
+
+  const gradeColor = {
+    GOLD: "#ffd700",
+    SILVER: "#C0C0C0",
+    BRONZE: "#b08d57",
+  };
+
+  useEffect(() => {
+    setToken(useGetToken());
+
+    if (token !== "") {
+      useMemberInfo(token).then((res) => {
+        if (res) {
+          setName(res.name);
+          setGrade(res.grade);
+        }
+      });
+    }
+  }, [token, grade]);
+
+  useEffect(() => {});
+
   return (
     <>
       <div className="MyInfoCard">
@@ -14,7 +38,10 @@ export default function MyInfoCard({ name, grade }) {
           </div>
           <div className="grade">
             <span>
-              <span className="gradeMedal"></span>
+              <span
+                className="gradeMedal"
+                style={{ backgroundColor: `${gradeColor[grade]}` }}
+              ></span>
               {grade}
             </span>
             {/* <span className="gradeBtn">등급 혜택</span> */}
@@ -62,7 +89,6 @@ export default function MyInfoCard({ name, grade }) {
                   width: 15px;
                   height: 15px;
                   border-radius: 50%;
-                  background-color: ${gradeColor[grade]};
                 }
               }
 

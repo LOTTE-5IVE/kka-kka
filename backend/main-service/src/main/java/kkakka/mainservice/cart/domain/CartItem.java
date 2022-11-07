@@ -1,20 +1,14 @@
 package kkakka.mainservice.cart.domain;
 
-import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.product.domain.Product;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "cart_item")
@@ -35,7 +29,9 @@ public class CartItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private Integer coupon_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id")
+    private Coupon coupon;
 
     @Column(nullable = false)
     private Integer quantity;
@@ -55,6 +51,14 @@ public class CartItem {
 
     public void toCart(Cart cart) {
         this.cart = cart;
+    }
+
+    public void applyCoupon(Coupon coupon) {
+        this.coupon = coupon;
+    }
+
+    public Integer getDiscountedPrice(Coupon coupon) {
+        return product.getPrice() - product.getMaxDiscount(coupon);
     }
 
     @Override

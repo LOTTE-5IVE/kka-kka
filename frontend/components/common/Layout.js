@@ -25,7 +25,7 @@ export default function Layout({ children }) {
             .LayoutTop {
               /* position: fixed; */
               position: absolute;
-              height: 175px;
+              height: 177px;
               width: 1903px;
               left: 0;
               right: 0;
@@ -40,7 +40,7 @@ export default function Layout({ children }) {
 
               .empty {
                 width: 1903px;
-                height: 175px;
+                height: 177px;
               }
             }
 

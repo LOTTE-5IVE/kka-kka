@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-export default function Mysidebar({ mypageCallback }) {
+export default function Mysidebar({ handleTab, handleDetail }) {
   const [tab, setTab] = useState("order");
 
   useEffect(() => {
-    mypageCallback(tab);
-  });
+    handleTab(tab);
+  }, [tab]);
 
   return (
     <>
@@ -14,13 +14,28 @@ export default function Mysidebar({ mypageCallback }) {
           <p>마이페이지</p>
         </div>
         <ul>
-          <li onClick={() => setTab("info")}>
+          <li
+            onClick={() => {
+              setTab("info");
+              handleDetail(false);
+            }}
+          >
             <a className={`${tab === "info" ? "active" : ""}`}>내 정보 수정</a>
           </li>
-          <li onClick={() => setTab("order")}>
+          <li
+            onClick={() => {
+              setTab("order");
+              handleDetail(false);
+            }}
+          >
             <a className={`${tab === "order" ? "active" : ""}`}>주문내역</a>
           </li>
-          <li onClick={() => setTab("coupon")}>
+          <li
+            onClick={() => {
+              setTab("coupon");
+              handleDetail(false);
+            }}
+          >
             <a className={`${tab === "coupon" ? "active" : ""}`}>쿠폰함</a>
           </li>
         </ul>

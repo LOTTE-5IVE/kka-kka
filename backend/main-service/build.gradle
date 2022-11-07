@@ -39,11 +39,11 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'com.google.code.gson:gson:2.9.0'
 
-    /* Model mapper */
-    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
-
     /* Spring Cloud */
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+    /* Spring OpenFeign */
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
     /* Spring Cloud Config */
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config'
@@ -68,6 +68,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+    implementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
 
     /* Log */
     implementation 'dev.akkinoc.spring.boot:logback-access-spring-boot-starter:3.4.0'
@@ -79,6 +80,9 @@ dependencies {
 
     /* micrometer */
     implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.9.3'
+
+    /* elasticsearch */
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch:2.6.8'
 }
 
 dependencyManagement {

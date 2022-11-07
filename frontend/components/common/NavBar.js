@@ -110,6 +110,18 @@ export default function NavBar() {
             a {
               cursor: pointer;
             }
+
+            a:hover:after {
+              transform: scaleX(1);
+            }
+            a:after {
+              display: block;
+              content: "";
+              border-bottom: solid 3px #ea2129;
+              transform: scaleX(0);
+              transition: transform 250ms ease-in-out;
+              transform-origin: 0% 50%;
+            }
           }
         }
 

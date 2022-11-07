@@ -1,9 +1,9 @@
 export const useGetToken = () => {
+  if (typeof window === "undefined") return;
+
   const objString = localStorage.getItem("accessToken");
   const obj = JSON.parse(objString);
   let token;
-
-  console.log("useGetToken");
 
   if (obj && new Date().getTime() > obj.expire) {
     localStorage.removeItem("accessToken");
@@ -12,7 +12,7 @@ export const useGetToken = () => {
   } else if (obj) {
     token = obj.value;
   }
-  console.log(token);
+  console.log("useGetToken", token);
 
   return token;
 };
