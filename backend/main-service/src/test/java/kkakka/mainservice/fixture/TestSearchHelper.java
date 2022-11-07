@@ -25,7 +25,6 @@ public class TestSearchHelper implements SearchHelper {
     public ProductsSearchResult searchProductIds(SearchParamDto searchParamDto, Pageable pageable) {
         Page<Product> products = productRepository.findByKeyword(searchParamDto.getKeyword(),
             pageable);
-        System.out.println("products.getTotalElements() = " + products.getTotalElements());
         PageInfo pageInfo = PageInfo.from(
             products.getPageable().getPageNumber(),
             products.getTotalPages(),
