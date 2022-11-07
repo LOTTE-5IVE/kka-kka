@@ -1,10 +1,18 @@
-export default function ButtonComp({ context }) {
+export default function ButtonComp({ context, unvalid }) {
   return (
     <>
-      <div className="btn">{context}</div>
+      <button className="btn" disabled={unvalid}>
+        {context}
+      </button>
 
       <style jsx>
         {`
+          .btn:disabled {
+            background: #dadada;
+            color: white;
+            border: none;
+          }
+
           @media screen and (min-width: 769px) {
             /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
             .btn {
@@ -18,6 +26,7 @@ export default function ButtonComp({ context }) {
               border-radius: 8px;
               border: 1px solid #ff3d44;
               text-align: center;
+              cursor: pointer;
             }
           }
 
@@ -34,6 +43,7 @@ export default function ButtonComp({ context }) {
               border-radius: 8px;
               border: 1px solid #ff3d44;
               text-align: center;
+              cursor: pointer;
             }
           }
 
@@ -50,6 +60,7 @@ export default function ButtonComp({ context }) {
               border-radius: 8px;
               border: 1px solid #ff3d44;
               text-align: center;
+              cursor: pointer;
             }
           }
         `}
@@ -57,3 +68,7 @@ export default function ButtonComp({ context }) {
     </>
   );
 }
+
+ButtonComp.defaultProps = {
+  unvalid: false,
+};

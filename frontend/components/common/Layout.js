@@ -21,17 +21,19 @@ export default function Layout({ children }) {
 
       <style jsx>
         {`
+          .LayoutTop {
+            position: absolute;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border-bottom: 1px solid #d8d8d8;
+            z-index: 999;
+          }
+
           @media screen and (min-width: 769px) {
             .LayoutTop {
-              /* position: fixed; */
-              position: absolute;
-              height: 175px;
+              height: 177px;
               width: 1903px;
-              left: 0;
-              right: 0;
-              background-color: #fff;
-              border-bottom: 1px solid #d8d8d8;
-              z-index: 999;
             }
 
             .content {
@@ -40,7 +42,7 @@ export default function Layout({ children }) {
 
               .empty {
                 width: 1903px;
-                height: 175px;
+                height: 177px;
               }
             }
 
@@ -52,15 +54,8 @@ export default function Layout({ children }) {
 
           @media screen and (max-width: 768px) {
             .LayoutTop {
-              position: absolute;
               width: 100vw;
               height: 12vw;
-
-              left: 0;
-              right: 0;
-              background-color: #fff;
-              border-bottom: 1px solid #d8d8d8;
-              z-index: 999;
             }
 
             .content {
@@ -83,15 +78,8 @@ export default function Layout({ children }) {
           @media screen and (max-width: 480px) {
             /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
             .LayoutTop {
-              /* position: fixed; */
-              position: absolute;
               width: 480px;
               height: 130px;
-              left: 0;
-              right: 0;
-              background-color: #fff;
-              border-bottom: 1px solid #d8d8d8;
-              z-index: 999;
             }
 
             .content {

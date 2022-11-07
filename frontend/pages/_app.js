@@ -1,21 +1,25 @@
 import Layout from "../components/common/Layout";
 import "../styles/globals.scss";
 import { QueryClientProvider, QueryClient } from "react-query";
-import { Suspense } from "react";
-import Header from "../components/common/HeaderComp";
+import { TokenContext } from "../context/TokenContext";
+import { useState } from "react";
 
 const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }) {
+  const [token, setToken] = useState();
+
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        {Component.name == "admin" || Component.name == "NotFound" ? (
+        {Component.name == "Admin" || Component.name == "NotFound" ? (
           <Component {...pageProps} />
         ) : (
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <TokenContext.Provider value={{ token, setToken }}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </TokenContext.Provider>
         )}
       </QueryClientProvider>
     </>

@@ -80,35 +80,54 @@ export default function NavBar() {
       </div>
 
       <style jsx>{`
+        .NavBarWrapper {
+          margin: 0 auto;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        ul {
+          list-style: none;
+          margin: 0 auto;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        li {
+          font-weight: 600;
+
+          a {
+            cursor: pointer;
+          }
+        }
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
           .NavBarWrapper {
             width: 1300px;
             height: 55px;
-
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
           }
 
           ul {
             width: 1040px;
             height: 55px;
-            list-style: none;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
           }
 
           li {
             font-size: 17px;
-            font-weight: 600;
             line-height: 55px;
 
-            a {
-              cursor: pointer;
+            a:hover:after {
+              transform: scaleX(1);
+            }
+            a:after {
+              display: block;
+              content: "";
+              border-bottom: solid 3px #ea2129;
+              transform: scaleX(0);
+              transition: transform 250ms ease-in-out;
+              transform-origin: 0% 50%;
             }
           }
         }
@@ -117,22 +136,13 @@ export default function NavBar() {
           .NavBarWrapper {
             width: 75vw;
             height: 6vw;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
           }
 
           ul {
             width: 75vw;
             height: 6vw;
-            list-style: none;
             padding: 0;
-            margin: 0 auto;
-            display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
           }
 
           li {
@@ -141,12 +151,7 @@ export default function NavBar() {
             justify-content: center;
             width: 15vw;
             font-size: 0.89vw;
-            font-weight: 600;
             line-height: 2.89vw;
-
-            a {
-              cursor: pointer;
-            }
           }
         }
 
@@ -155,22 +160,13 @@ export default function NavBar() {
           .NavBarWrapper {
             width: 480px;
             height: 60px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
           }
 
           ul {
             width: 400px;
             height: 60px;
-            list-style: none;
             padding: 0;
-            margin: 0 auto;
-            display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
           }
 
           li {
@@ -180,12 +176,7 @@ export default function NavBar() {
             width: 80px;
             height: 30px;
             font-size: 10px;
-            font-weight: 600;
             line-height: 20px;
-
-            a {
-              cursor: pointer;
-            }
           }
         }
       `}</style>

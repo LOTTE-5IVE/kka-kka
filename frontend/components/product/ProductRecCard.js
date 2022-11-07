@@ -1,4 +1,3 @@
-import Link from "next/link";
 import ProductInfo from "./ProductInfo";
 import ProductRec from "./ProductRec";
 

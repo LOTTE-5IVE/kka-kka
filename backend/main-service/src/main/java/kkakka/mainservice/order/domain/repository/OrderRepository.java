@@ -23,4 +23,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             + "where o.member.id = :memberId "
             + "order by o.orderedAt desc")
     List<Order> findAllByMemberId(@Param(value = "memberId") Long memberId, Pageable pageable);
+
+    int countAllByMemberId(Long memberId);
 }

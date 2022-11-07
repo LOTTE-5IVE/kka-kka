@@ -16,11 +16,8 @@ public class ProductDetailResponse {
     private String name;
     private Integer price;
     private Integer stock;
-    @JsonProperty("image_url")
     private String imageUrl;
-    @JsonProperty("detailImage_url")
     private String detailImageUrl;
-    @JsonProperty("nutritionInfo_url")
     private String nutritionInfoUrl;
     private int discount;
     @JsonProperty("nutrition")

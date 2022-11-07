@@ -39,13 +39,17 @@ public class DataLoader {
     private final ReviewRepository reviewRepository;
     private final NutritionRepository nutritionRepository;
 
-    public static final Map<String, Category> categories = new LinkedHashMap<>();
-    private static Product testProduct;
-    private static Member testMember;
+    private final Map<String, Category> categories = new LinkedHashMap<>();
+    private boolean categoryFlag = false;
+    private Product testProduct;
+    private Member testMember;
 
     @Transactional
     public void saveData(List<String[]> data) {
         saveCategory();
+        if (categoryFlag) {
+            return;
+        }
 
         List<Product> products = new ArrayList<>();
         for (String[] datum : data) {
@@ -170,6 +174,14 @@ public class DataLoader {
     }
 
     public void saveCategory() {
+        final List<Category> savedCategories = categoryRepository.findAll();
+        savedCategories.forEach((category -> categories.put(category.getName(), category)));
+
+        if (categories.size() > 0) {
+            categoryFlag = true;
+            return;
+        }
+
         Category category1 = categoryRepository.save(new Category("비스킷/샌드"));
         Category category2 = categoryRepository.save(new Category("스낵/봉지과자"));
         Category category3 = categoryRepository.save(new Category("박스과자"));

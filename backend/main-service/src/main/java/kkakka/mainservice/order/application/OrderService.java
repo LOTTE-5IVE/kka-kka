@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
@@ -44,7 +45,8 @@ public class OrderService {
     public Long order(OrderDto orderDto) {
         Long memberId = orderDto.getMemberId();
         List<ProductOrderDto> productOrderDtos = orderDto.getProductOrders();
-        Member member = memberRepository.findById(memberId).orElseThrow();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(NotFoundMemberException::new);
         Recipient recipient = Recipient.from(orderDto.getRecipientDto());
 
         List<ProductOrder> productOrders = new ArrayList<>();
@@ -111,6 +113,12 @@ public class OrderService {
                 productOrderRepository.save(productOrder);
             }
         });
+    }
+
+    public int showMemberOrderCount(Long id) {
+        final Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
+        return orderRepository.countAllByMemberId(member.getId());
     }
 
     @NotNull

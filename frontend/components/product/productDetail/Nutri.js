@@ -47,74 +47,35 @@ export default function Nutri({ nutrition }) {
         </tbody>
       </table>
       <style jsx>{`
+        table {
+          border: 1px solid #acacac;
+          border-collapse: collapse;
+          text-align: center;
+          margin: 0 auto 3rem;
+          font-color: #101010;
+        }
+        th,
+        td {
+          border: 1px solid #acacac;
+          padding: 0.5rem;
+        }
+        td {
+          font-size: 0.9rem;
+        }
+        th {
+          background-color: #dfdfdf;
+        }
+
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
-          table {
-            border: 1px solid #acacac;
-            border-collapse: collapse;
-            text-align: center;
-            margin: 0 auto 3rem;
-            font-color: #101010;
-          }
-          th,
-          td {
-            border: 1px solid #acacac;
-            padding: 0.5rem;
-          }
-          td {
-            font-size: 0.9rem;
-          }
-          th {
-            background-color: #dfdfdf;
-          }
         }
 
         @media screen and (max-width: 768px) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
-          table {
-            width: 100%;
-            border: 1px solid #acacac;
-            border-collapse: collapse;
-            text-align: center;
-            margin: 0 auto 3rem;
-            font-color: #101010;
-          }
-          th,
-          td {
-            border: 1px solid #acacac;
-            padding: 0.5rem;
-          }
-          td {
-            font-size: 0.5rem;
-          }
-          th {
-            font-size: 0.5rem;
-            background-color: #dfdfdf;
-          }
         }
 
         @media screen and (max-width: 480px) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
-          table {
-            width: 450px;
-            border: 1px solid #acacac;
-            border-collapse: collapse;
-            text-align: center;
-            margin: 0 auto 3rem;
-            font-color: #101010;
-          }
-          th,
-          td {
-            border: 1px solid #acacac;
-            padding: 0.5rem;
-          }
-          td {
-            font-size: 0.5rem;
-          }
-          th {
-            font-size: 0.5rem;
-            background-color: #dfdfdf;
-          }
         }
       `}</style>
     </>

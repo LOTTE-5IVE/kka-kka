@@ -114,7 +114,7 @@ class OrderServiceTest extends TestContext {
     @DisplayName("상품주문 - 실패(재고수량초과)")
     public void productOrder_fail_inventoryExceeded() {
         //given
-        ProductOrderDto productOrderDto1 = new ProductOrderDto(PRODUCT_1.getId(), 11);
+        ProductOrderDto productOrderDto1 = new ProductOrderDto(PRODUCT_1.getId(), Integer.MAX_VALUE);
         List<ProductOrderDto> productOrderDtos = new ArrayList<>();
         productOrderDtos.add(productOrderDto1);
 
