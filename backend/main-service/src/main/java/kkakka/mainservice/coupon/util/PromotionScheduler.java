@@ -15,11 +15,12 @@ import kkakka.mainservice.order.domain.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class PromotionScheduler {
 
     private final DiscountRepository discountRepository;
@@ -28,6 +29,7 @@ public class PromotionScheduler {
     private final OrderRepository orderRepository;
     private final CouponService couponService;
 
+    @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void checkDiscountExpiredDateSchedule() {
         List<Discount> discounts = discountRepository.findAll();
@@ -38,12 +40,23 @@ public class PromotionScheduler {
         }
     }
 
+    @Transactional
     @Scheduled(cron = "0 0 0 1 * *")
     public void updateGradeSchedule() {
-        updateGradeByTotalPrice(findMembersByGrade(Grade.BRONZE), 10000, Grade.SILVER);
+        updateGradeByTotalPriceToAllMembers();
+        createGradeCouponToAllMembers();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateGradeByTotalPriceToAllMembers() {
+        updateGradeByTotalPrice(findMembersByGrade(Grade.BRONZE), 10000,  Grade.SILVER);
         updateGradeByTotalPrice(findMembersByGrade(Grade.SILVER), 20000, Grade.GOLD);
         updateGradeByTotalPrice(findMembersByGrade(Grade.GOLD), 30000, Grade.VIP);
         updateGradeByTotalPrice(findMembersByGrade(Grade.VIP), 40000, Grade.VIP);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void createGradeCouponToAllMembers() {
         createGradeCoupon(Grade.BRONZE, 10, 1000, 10000);
         createGradeCoupon(Grade.SILVER, 20, 2000, 10000);
         createGradeCoupon(Grade.GOLD, 30, 3000, 10000);
