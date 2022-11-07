@@ -1,19 +1,18 @@
 import { router } from "next/router";
+import { useContext } from "react";
 import { useEffect, useState } from "react";
 import { DeleteHApi, GetHApi, PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
 import Title from "../../components/common/Title";
 import { CouponApply } from "../../components/coupon/CouponApply";
-import { CouponDown } from "../../components/coupon/CouponDown";
 import { CouponModal } from "../../components/coupon/CouponModal";
-import { useGetToken } from "../../hooks/useGetToken";
-import { useMoney } from "../../hooks/useMoney";
-import { useNumberCheck } from "../../hooks/useNumberCheck";
+import { TokenContext } from "../../context/TokenContext";
+import { commaMoney } from "../../hooks/commaMoney";
+import { isNumber } from "../../hooks/isNumber";
 import { NGray } from "../../typings/NormalColor";
 
-export default function cart() {
-  const [token, setToken] = useState("");
+export default function Cart() {
   const [modal, setModal] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [checkItemsIdx, setCheckItemsIdx] = useState([]);
@@ -23,6 +22,7 @@ export default function cart() {
   const [totalUnValid, setTotalUnValid] = useState(true);
   const [selectUnValid, setSelectUnValid] = useState(true);
   const [couponProduct, setCouponProduct] = useState();
+  const { token, setToken } = useContext(TokenContext);
 
   const selectQuery = () => {
     router.push(
@@ -47,10 +47,10 @@ export default function cart() {
   const handleSingleCheck = (checked, product) => {
     if (checked) {
       setCheckItems((prev) => [...prev, product]);
-      setCheckItemsIdx((prev) => [...prev, product.id]);
+      setCheckItemsIdx((prev) => [...prev, product.cartItemId]);
     } else {
       setCheckItems(checkItems.filter((el) => el !== product));
-      setCheckItemsIdx(checkItemsIdx.filter((el) => el !== product.id));
+      setCheckItemsIdx(checkItemsIdx.filter((el) => el !== product.cartItemId));
     }
   };
 
@@ -59,7 +59,7 @@ export default function cart() {
       const idArray = [];
       const itemArry = [];
       cartItems.forEach((el) => {
-        idArray.push(el.id);
+        idArray.push(el.cartItemId);
         itemArry.push(el);
       });
 
@@ -78,7 +78,7 @@ export default function cart() {
   const handlePlus = (id) => {
     setCartItems(
       cartItems.map((product) =>
-        product.productId === id
+        product.id === id
           ? { ...product, quantity: product.quantity + 1 }
           : product,
       ),
@@ -88,7 +88,7 @@ export default function cart() {
   const handleMinus = (id) => {
     setCartItems(
       cartItems.map((product) =>
-        product.productId === id && product.quantity > 1
+        product.id === id && product.quantity > 1
           ? { ...product, quantity: product.quantity - 1 }
           : product,
       ),
@@ -98,7 +98,7 @@ export default function cart() {
   const handleQuantity = (id, quantity) => {
     setCartItems(
       cartItems.map((product) =>
-        product.productId === id ? { ...product, quantity: quantity } : product,
+        product.id === id ? { ...product, quantity: quantity } : product,
       ),
     );
   };
@@ -106,6 +106,8 @@ export default function cart() {
   const getCartItem = async () => {
     GetHApi("/api/carts", token).then((res) => {
       if (res) {
+        console.log(res.cartItems);
+
         setCartItems(res.cartItems);
         setTotalPrice(
           res.cartItems.reduce(
@@ -116,8 +118,7 @@ export default function cart() {
         setDiscountPrice(
           res.cartItems.reduce(
             (prev, cur) =>
-              prev +
-              Math.ceil(cur.price * 0.01 * cur.productDiscount * cur.quantity),
+              prev + Math.floor(cur.price * 0.01 * cur.discount * cur.quantity),
             0,
           ),
         );
@@ -142,12 +143,8 @@ export default function cart() {
   };
 
   useEffect(() => {
-    setToken(useGetToken());
-
-    if (token !== "") {
-      getCartItem();
-    }
-  }, [token]);
+    getCartItem();
+  }, []);
 
   useEffect(() => {
     if (checkItems.length > 0) {
@@ -226,16 +223,17 @@ export default function cart() {
 
                 {cartItems?.map((product, index) => {
                   return (
-                    <tr key={product.productId}>
+                    <tr key={index}>
                       <td>
                         <input
                           type="checkbox"
-                          name={`select-${product.id}`}
                           onChange={(e) =>
                             handleSingleCheck(e.target.checked, product)
                           }
                           checked={
-                            checkItemsIdx.includes(product.id) ? true : false
+                            checkItemsIdx.includes(product.cartItemId)
+                              ? true
+                              : false
                           }
                         />
                       </td>
@@ -243,7 +241,7 @@ export default function cart() {
                         <img className="thumnail" src={product.imageUrl} />
                       </td>
                       <td>
-                        <div>{product.productName}</div>
+                        <div>{product.name}</div>
                         <div className="couponWrapper">
                           <div className="couponContents">
                             <span>coupon</span>{" "}
@@ -286,11 +284,8 @@ export default function cart() {
                             className="minusBtn"
                             type="button"
                             onClick={() => {
-                              editCartItem(
-                                product.productId,
-                                product.quantity - 1,
-                              );
-                              handleMinus(product.productId);
+                              editCartItem(product.id, product.quantity - 1);
+                              handleMinus(product.id);
                             }}
                             value="-"
                           />
@@ -298,31 +293,25 @@ export default function cart() {
                           <input
                             type="text"
                             onChange={(e) => {
-                              if (!useNumberCheck(e.target.value)) {
+                              if (!isNumber(e.target.value)) {
                                 alert("숫자만 입력하세요.");
-                                handleQuantity(
-                                  product.productId,
-                                  product.quantity,
-                                );
+                                handleQuantity(product.id, product.quantity);
                                 return;
                               }
 
                               if (Number(e.target.value) > product.stock) {
                                 alert("수량 한도를 초과했습니다.");
                               } else {
-                                handleQuantity(
-                                  product.productId,
-                                  e.target.value,
-                                );
+                                handleQuantity(product.id, e.target.value);
 
-                                editCartItem(product.productId, e.target.value);
+                                editCartItem(product.id, e.target.value);
                               }
                             }}
                             onBlur={(e) => {
                               if (Number(e.target.value) < 1) {
                                 alert("최소 수량은 1개입니다.");
-                                handleQuantity(product.productId, 1);
-                                editCartItem(product.productId, 1);
+                                handleQuantity(product.id, 1);
+                                editCartItem(product.id, 1);
                               }
                             }}
                             size="1"
@@ -333,11 +322,8 @@ export default function cart() {
                             className="plusBtn"
                             type="button"
                             onClick={() => {
-                              editCartItem(
-                                product.productId,
-                                product.quantity + 1,
-                              );
-                              handlePlus(product.productId);
+                              editCartItem(product.id, product.quantity + 1);
+                              handlePlus(product.id);
                             }}
                             value="+"
                           />
@@ -345,34 +331,33 @@ export default function cart() {
                       </td>
                       <td>무료</td>
                       <td>
-                        {product.productDiscount ? (
+                        {product.discount ? (
                           <>
                             <p>
-                              {useMoney(
+                              {commaMoney(
                                 Math.ceil(
-                                  product.price *
-                                    (1 - 0.01 * product.productDiscount),
+                                  product.price * (1 - 0.01 * product.discount),
                                 ) * product.quantity,
                               )}
                               원
                             </p>
                             <p>
                               <span>
-                                {useMoney(product.price * product.quantity)}원
+                                {commaMoney(product.price * product.quantity)}원
                               </span>
                             </p>
                           </>
                         ) : (
                           <>
                             <p>
-                              {useMoney(product.price * product.quantity)}원
+                              {commaMoney(product.price * product.quantity)}원
                             </p>
                           </>
                         )}
                       </td>
                       <td
                         onClick={() => {
-                          removeCartItem(product.id);
+                          removeCartItem(product.cartItemId);
                         }}
                       >
                         <img
@@ -409,14 +394,14 @@ export default function cart() {
               <tbody>
                 <tr>
                   <td>
-                    <span>{useMoney(totalPrice) || 0}</span>
+                    <span>{commaMoney(totalPrice) || 0}</span>
                   </td>
                   <td>-</td>
                   <td>
-                    <span>{useMoney(discountPrice) || 0}</span>
+                    <span>{commaMoney(discountPrice) || 0}</span>
                   </td>
                   <td>=</td>
-                  <td>{useMoney(totalPrice - discountPrice) || 0}</td>
+                  <td>{commaMoney(totalPrice - discountPrice) || 0}</td>
                 </tr>
               </tbody>
             </table>
@@ -433,128 +418,26 @@ export default function cart() {
         </div>
       </div>
       <style jsx>{`
-        @media screen and (min-width: 769px) {
-          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
-          .CartTitle {
-            margin-top: 96px;
-            text-align: center;
-            padding: 0;
-            color: #3a3a3a;
-            font-size: 30px;
-            font-weight: 700;
-            line-height: 1;
-          }
+        .CartTitle {
+          text-align: center;
+          padding: 0;
+          color: #3a3a3a;
+          font-weight: 700;
+        }
 
-          .CartContents {
-            text-align: center;
+        .CartContents {
+          text-align: center;
+          margin: 0 auto;
 
-            .orderTables {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
+          .orderTables {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
 
-              .orderList {
-                table {
-                  width: 1235px;
-                  border-collapse: collapse;
-                  border-bottom: 1px solid #dfdfdf;
-
-                  input[type="checkbox"] {
-                    width: 20px;
-                    height: 20px;
-                  }
-                }
-                th {
-                  border: 0;
-                  margin: 0;
-                  padding: 0;
-
-                  border-spacing: 0;
-                  border-top: 2px solid #1a1a1a;
-                  border-bottom: 1px solid #dfdfdf;
-                }
-
-                tr {
-                  height: 115px;
-                }
-
-                td {
-                  .cartEmptyImg {
-                    margin: 70px auto 30px;
-                    width: 70px;
-                  }
-                  .cartEmptyComment {
-                    margin-bottom: 70px;
-                    color: #9a9a9a;
-                    font-size: 18px;
-                    line-height: 1;
-                  }
-
-                  .thumnail {
-                    width: 70px;
-                  }
-
-                  .couponWrapper {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin-top: 10px;
-
-                    .couponContents {
-                      display: flex;
-                      line-height: 15px;
-                      margin-right: 10px;
-
-                      span {
-                        background-color: #05c7f2;
-                        color: #fff;
-                      }
-                    }
-                  }
-
-                  input[type="button"] {
-                    background-color: #fff;
-                    border: 1px solid #c8c8c8;
-                    border-radius: 50%;
-                  }
-
-                  .minusBtn {
-                    margin-right: 15px;
-                  }
-                  .plusBtn {
-                    margin-left: 15px;
-                  }
-
-                  p {
-                    margin: 0;
-
-                    span {
-                      font-size: 14px;
-                      color: ${NGray};
-                      text-decoration: line-through;
-                    }
-                  }
-
-                  .cancelBtn {
-                    width: 20px;
-                  }
-                }
-              }
-            }
-
-            .orderSummary {
-              margin-top: 96px;
-
+            .orderList {
               table {
-                width: 1235px;
                 border-collapse: collapse;
                 border-bottom: 1px solid #dfdfdf;
-
-                tbody {
-                  tr {
-                    height: 134px;
-                  }
-                }
               }
               th {
                 border: 0;
@@ -565,13 +448,146 @@ export default function cart() {
                 border-top: 2px solid #1a1a1a;
                 border-bottom: 1px solid #dfdfdf;
               }
+
+              td {
+                .cartEmptyComment {
+                  color: #9a9a9a;
+                }
+
+                .couponWrapper {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+
+                  .couponContents {
+                    display: flex;
+
+                    span {
+                      background-color: #05c7f2;
+                      color: #fff;
+                    }
+                  }
+                }
+
+                input[type="button"] {
+                  background-color: #fff;
+                  border: 1px solid #c8c8c8;
+                  border-radius: 50%;
+                }
+
+                p {
+                  margin: 0;
+
+                  span {
+                    color: ${NGray};
+                    text-decoration: line-through;
+                  }
+                }
+              }
+            }
+          }
+
+          .orderSummary {
+            table {
+              border-collapse: collapse;
+              border-bottom: 1px solid #dfdfdf;
+              th {
+                border: 0;
+                margin: 0;
+                padding: 0;
+
+                border-spacing: 0;
+                border-top: 2px solid #1a1a1a;
+                border-bottom: 1px solid #dfdfdf;
+              }
+            }
+          }
+
+          .orderBtn {
+            display: flex;
+            justify-content: space-around;
+          }
+        }
+
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .CartTitle {
+            margin-top: 96px;
+            font-size: 30px;
+            line-height: 1;
+          }
+
+          .CartContents {
+            .orderTables {
+              .orderList {
+                table {
+                  width: 1235px;
+
+                  input[type="checkbox"] {
+                    width: 20px;
+                    height: 20px;
+                  }
+
+                  tr {
+                    height: 115px;
+                  }
+
+                  td {
+                    .cartEmptyImg {
+                      margin: 70px auto 30px;
+                      width: 70px;
+                    }
+                    .cartEmptyComment {
+                      margin-bottom: 70px;
+                      font-size: 18px;
+                      line-height: 1;
+                    }
+
+                    .thumnail {
+                      width: 70px;
+                    }
+
+                    .couponWrapper {
+                      margin-top: 10px;
+
+                      .couponContents {
+                        line-height: 15px;
+                        margin-right: 10px;
+                      }
+                    }
+
+                    .minusBtn {
+                      margin-right: 15px;
+                    }
+                    .plusBtn {
+                      margin-left: 15px;
+                    }
+
+                    .cancelBtn {
+                      width: 20px;
+                    }
+                  }
+                }
+              }
+            }
+
+            .orderSummary {
+              margin-top: 96px;
+
+              table {
+                width: 1235px;
+
+                tbody {
+                  tr {
+                    height: 134px;
+                  }
+                }
+              }
             }
 
             .orderBtn {
               margin: 38px auto 58px;
               width: 571px;
-              display: flex;
-              justify-content: space-around;
             }
           }
         }
@@ -579,115 +595,83 @@ export default function cart() {
         @media screen and (max-width: 768px) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .CartTitle {
-            text-align: center;
-            padding: 0;
-            color: #3a3a3a;
             font-size: 3vw;
             font-weight: 700;
             line-height: 1;
           }
 
           .CartContents {
-            text-align: center;
             width: 95vw;
-            margin: 0 auto;
 
             .orderTables {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-
               .orderList {
                 table {
                   width: 95vw;
-                  border-collapse: collapse;
-                  border-bottom: 1px solid #dfdfdf;
-                }
-                th {
-                  border: 0;
-                  margin: 0;
-                  padding: 0;
-                  font-size: 2vw;
-                  border-spacing: 0;
-                  border-top: 2px solid #1a1a1a;
-                  border-bottom: 1px solid #dfdfdf;
-                }
 
-                tr {
-                  height: 14vw;
-                }
-
-                td {
-                  font-size: 2vw;
-
-                  .thumnail {
-                    width: 8vw;
-                  }
-                  img {
-                    width: 8vw;
+                  th {
+                    font-size: 2vw;
                   }
 
-                  .couponWrapper {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin-top: 10px;
+                  tr {
+                    height: 14vw;
+                  }
 
-                    .couponContents {
-                      display: flex;
-                      line-height: 15px;
-                      margin-right: 10px;
+                  td {
+                    font-size: 2vw;
 
+                    .thumnail {
+                      width: 8vw;
+                    }
+                    img {
+                      width: 8vw;
+                    }
+
+                    .couponWrapper {
+                      margin-top: 10px;
+
+                      .couponContents {
+                        line-height: 15px;
+                        margin-right: 10px;
+
+                        input[type="text"] {
+                          width: 15vw;
+                        }
+                      }
+                    }
+
+                    input[type="text"] {
+                      width: 5vw;
+                    }
+
+                    input[type="button"] {
+                      padding: 0;
+                    }
+
+                    .minusBtn {
+                      margin: 0;
+                      position: relative;
+                      width: 3vw;
+                      height: 3vw;
+                      left: 1.5vw;
+                      top: 5vw;
+                    }
+                    .plusBtn {
+                      margin: 0;
+                      position: relative;
+                      width: 3vw;
+                      height: 3vw;
+                      left: -1vw;
+                      top: 5vw;
+                    }
+                    p {
                       span {
-                        background-color: #05c7f2;
-                        color: #fff;
-                      }
-
-                      input[type="text"] {
-                        width: 15vw;
+                        font-size: 1vw;
                       }
                     }
-                  }
 
-                  input[type="text"] {
-                    width: 5vw;
-                  }
-
-                  input[type="button"] {
-                    padding: 0;
-                    background-color: #fff;
-                    border: 1px solid #c8c8c8;
-                    border-radius: 50%;
-                  }
-
-                  .minusBtn {
-                    margin: 0;
-                    position: relative;
-                    width: 3vw;
-                    height: 3vw;
-                    left: 1.5vw;
-                    top: 5vw;
-                  }
-                  .plusBtn {
-                    margin: 0;
-                    position: relative;
-                    width: 3vw;
-                    height: 3vw;
-                    left: -1vw;
-                    top: 5vw;
-                  }
-                  p {
-                    margin: 0;
-
-                    span {
-                      font-size: 14px;
-                      color: ${NGray};
-                      text-decoration: line-through;
+                    .cancelBtn {
+                      width: 15px;
                     }
-                  }
-
-                  .cancelBtn {
-                    width: 15px;
                   }
                 }
               }
@@ -699,8 +683,6 @@ export default function cart() {
 
               table {
                 width: 95vw;
-                border-collapse: collapse;
-                border-bottom: 1px solid #dfdfdf;
 
                 tbody {
                   tr {
@@ -708,22 +690,11 @@ export default function cart() {
                   }
                 }
               }
-              th {
-                border: 0;
-                margin: 0;
-                padding: 0;
-
-                border-spacing: 0;
-                border-top: 2px solid #1a1a1a;
-                border-bottom: 1px solid #dfdfdf;
-              }
             }
 
             .orderBtn {
               margin: 38px auto 58px;
               width: 70vw;
-              display: flex;
-              justify-content: space-around;
             }
           }
         }
@@ -731,39 +702,18 @@ export default function cart() {
         @media screen and (max-width: 480px) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
           .CartTitle {
-            text-align: center;
-            padding: 0;
-            color: #3a3a3a;
             font-size: 20px;
-            font-weight: 700;
             line-height: 1;
           }
 
           .CartContents {
-            text-align: center;
             width: 480px;
 
             .orderTables {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-
               .orderList {
                 table {
                   width: 450px;
                   font-size: 12px;
-                  border-collapse: collapse;
-                  border-bottom: 1px solid #dfdfdf;
-
-                  th {
-                    border: 0;
-                    margin: 0;
-                    padding: 0;
-
-                    border-spacing: 0;
-                    border-top: 2px solid #1a1a1a;
-                    border-bottom: 1px solid #dfdfdf;
-                  }
 
                   tr {
                     height: 75px;
@@ -778,7 +728,6 @@ export default function cart() {
                     }
                     .cartEmptyComment {
                       margin-bottom: 30px;
-                      color: #9a9a9a;
                       font-size: 10px;
                       line-height: 1;
                     }
@@ -791,32 +740,20 @@ export default function cart() {
                     }
 
                     .couponWrapper {
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
                       margin-top: 10px;
 
                       .couponContents {
-                        display: flex;
                         line-height: 15px;
                         margin-right: 10px;
 
                         span {
                           font-size: 10px;
-                          background-color: #05c7f2;
-                          color: #fff;
                         }
                       }
                     }
 
                     input[type="text"] {
                       width: 20px;
-                    }
-
-                    input[type="button"] {
-                      background-color: #fff;
-                      border: 1px solid #c8c8c8;
-                      border-radius: 50%;
                     }
 
                     .minusBtn {
@@ -837,12 +774,8 @@ export default function cart() {
                     }
 
                     p {
-                      margin: 0;
-
                       span {
                         font-size: 10px;
-                        color: ${NGray};
-                        text-decoration: line-through;
                       }
                     }
                   }
@@ -857,25 +790,12 @@ export default function cart() {
               table {
                 margin: 0 auto;
                 width: 450px;
-                border-collapse: collapse;
-                border-bottom: 1px solid #dfdfdf;
-              }
-              th {
-                border: 0;
-                margin: 0;
-                padding: 0;
-
-                border-spacing: 0;
-                border-top: 2px solid #1a1a1a;
-                border-bottom: 1px solid #dfdfdf;
               }
             }
 
             .orderBtn {
               margin: 38px auto 58px;
               width: 480px;
-              display: flex;
-              justify-content: space-around;
             }
           }
         }
