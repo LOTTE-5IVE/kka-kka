@@ -15,7 +15,7 @@ public class AnonymousRecommendStrategy implements ProductRecommender {
     private final ProductRepository productRepository;
 
     @Override
-    public Page<Product> recommend(Optional<Long> memberId, Pageable pageable) {
+    public Page<Product> recommend(Optional<Long> recommendPivotId, Pageable pageable) {
         return productRepository.findAllOrderByRatingAvg(pageable);
     }
 }

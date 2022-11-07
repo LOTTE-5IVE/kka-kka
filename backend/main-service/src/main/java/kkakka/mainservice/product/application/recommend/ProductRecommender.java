@@ -7,5 +7,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface ProductRecommender {
 
-    Page<Product> recommend(Optional<Long> memberId, Pageable pageable);
+    Page<Product> recommend(Optional<Long> recommendPivotId, Pageable pageable);
 }

@@ -55,8 +55,8 @@ public class MemberRecommendStrategy implements ProductRecommender {
     private final ProductRepository productRepository;
 
     @Override
-    public Page<Product> recommend(Optional<Long> memberId, Pageable pageable) {
-        final Member member = validateMember(memberId);
+    public Page<Product> recommend(Optional<Long> recommendPivotId, Pageable pageable) {
+        final Member member = validateMember(recommendPivotId);
 
         final List<Review> highRatedReviews = reviewRepository.findTopRatingReviewByMemberId(
                 member.getId(), Pageable.ofSize(5));
