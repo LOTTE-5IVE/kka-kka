@@ -13,18 +13,24 @@ import org.springframework.stereotype.Component;
 @Profile("!test")
 public class RecommendStrategyFactory implements RecommenderFactory {
 
-    private static final Map<Authority, ProductRecommender> recommenderFactory = new HashMap<>();
+    private static final Map<RecommendStrategy, ProductRecommender> recommenderFactory = new HashMap<>();
 
     private final MemberRecommendStrategy memberRecommendStrategy;
     private final AnonymousRecommendStrategy anonymousRecommendStrategy;
+    private final ProductRecommendStrategy productRecommendStrategy;
 
     @PostConstruct
     public void init() {
-        recommenderFactory.put(Authority.MEMBER, memberRecommendStrategy);
-        recommenderFactory.put(Authority.ANONYMOUS, anonymousRecommendStrategy);
+        recommenderFactory.put(RecommendStrategy.MEMBER, memberRecommendStrategy);
+        recommenderFactory.put(RecommendStrategy.ANONYMOUS, anonymousRecommendStrategy);
+        recommenderFactory.put(RecommendStrategy.PRODUCT, productRecommendStrategy);
     }
 
     public ProductRecommender get(Authority authority) {
-        return recommenderFactory.get(authority);
+        return recommenderFactory.get(RecommendStrategy.valueOf(authority.name()));
+    }
+
+    public ProductRecommender get(RecommendStrategy strategy) {
+        return recommenderFactory.get(strategy);
     }
 }
