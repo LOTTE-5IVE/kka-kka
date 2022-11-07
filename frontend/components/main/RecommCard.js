@@ -4,8 +4,8 @@ import RecommRec from "./RecommRec";
 export default function RecommCard({ id, imgsrc, name, price, discount }) {
   return (
     <>
-      <RecommRec />
-      <RecommInfo />
+      <RecommRec id={id} imgsrc={imgsrc}/>
+      <RecommInfo id={id} name={name} price={price} discount={15}/>
     </>
   );
 }
@@ -15,5 +15,5 @@ RecommCard.defaultProps = {
   imgsrc: "/sample.png",
   name: "test",
   price: 10000,
-  rate: 10,
+  discount: 10,
 };
