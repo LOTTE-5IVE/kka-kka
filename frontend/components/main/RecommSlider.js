@@ -94,7 +94,7 @@ export default function RecommSlider({tab, handleTab}) {
                 handleRevToggle();
               }}
             >
-              <h2>리뷰 추천</h2>
+              <h2>별점 추천</h2>
               <div className="toggle-promotion">
                 <ArrowDropDownIcon />
               </div>
