@@ -1,5 +1,4 @@
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { PostHApi } from "../../../apis/Apis";
@@ -12,6 +11,8 @@ import { CouponModal } from "../../../components/coupon/CouponModal";
 import Info from "../../../components/product/productDetail/Info";
 import Nutri from "../../../components/product/productDetail/Nutri";
 import Review from "../../../components/product/productDetail/Review";
+import RecommendList
+  from "../../../components/product/productDetail/RecommendList";
 import { commaMoney } from "../../../hooks/commaMoney";
 import { NBlack, NGray, NLightGray } from "../../../typings/NormalColor";
 import {
@@ -303,6 +304,7 @@ export default function ProductDetail() {
               </div>
             </div>
           </div>
+          <RecommendList />
           <div className="detailBottom">
             <div className="tabMenu">
               <ul>
