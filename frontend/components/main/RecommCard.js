@@ -5,7 +5,7 @@ export default function RecommCard({ id, imgsrc, name, price, discount }) {
   return (
     <>
       <RecommRec id={id} imgsrc={imgsrc}/>
-      <RecommInfo id={id} name={name} price={price} discount={15}/>
+      <RecommInfo id={id} name={name} price={price} discount={discount}/>
     </>
   );
 }
