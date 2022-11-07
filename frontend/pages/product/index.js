@@ -43,10 +43,7 @@ export default function ProductList() {
     if (!resource) return;
 
     const data = resource.productList.read();
-
-    useEffect(() => {
-      setLastPage(data?.pageInfo?.lastPage);
-    }, []);
+    setLastPage(data.pageInfo.lastPage);
 
     return (
       <>

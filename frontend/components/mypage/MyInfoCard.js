@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { useGetToken } from "../../hooks/useGetToken";
-import { useMemberInfo } from "../../hooks/useMemberInfo";
+import { getToken } from "../../hooks/getToken";
+import { memberInfo } from "../../hooks/memberInfo";
 
 export default function MyInfoCard() {
   const [token, setToken] = useState("");
@@ -15,10 +15,10 @@ export default function MyInfoCard() {
   };
 
   useEffect(() => {
-    setToken(useGetToken());
+    setToken(getToken());
 
     if (token !== "") {
-      useMemberInfo(token).then((res) => {
+      memberInfo(token).then((res) => {
         if (res) {
           setName(res.name);
           setGrade(res.grade);

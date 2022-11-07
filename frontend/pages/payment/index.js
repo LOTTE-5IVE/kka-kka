@@ -9,13 +9,13 @@ import { CouponApply } from "../../components/coupon/CouponApply";
 import { CouponModal } from "../../components/coupon/CouponModal";
 import DaumPost from "../../components/payment/DaumPost";
 import { TokenContext } from "../../context/TokenContext";
-import { useLangCheck } from "../../hooks/useLangCheck";
-import { useMemberInfo } from "../../hooks/useMemberInfo";
-import { useMoney } from "../../hooks/useMoney";
-import { useNumberCheck } from "../../hooks/useNumberCheck";
+import { isLang } from "../../hooks/isLang";
+import { memberInfo } from "../../hooks/memberInfo";
+import { commaMoney } from "../../hooks/commaMoney";
+import { isNumber } from "../../hooks/isNumber";
 import { NGray } from "../../typings/NormalColor";
 
-export default function payment() {
+export default function Payment() {
   const [zipcode, setZipcode] = useState("");
   const [name, setName] = useState();
   const [email1, setEmail1] = useState();
@@ -60,7 +60,7 @@ export default function payment() {
   useEffect(() => {
     if (!check) return;
 
-    useMemberInfo(token).then((res) => {
+    memberInfo(token).then((res) => {
       if (res) {
         console.log(res);
         setName(res.name);
@@ -203,7 +203,7 @@ export default function payment() {
                         {product.discount ? (
                           <>
                             <p>
-                              {useMoney(
+                              {commaMoney(
                                 Math.ceil(
                                   product.price * (1 - 0.01 * product.discount),
                                 ) * product.quantity,
@@ -212,14 +212,14 @@ export default function payment() {
                             </p>
                             <p>
                               <span>
-                                {useMoney(product.price * product.quantity)}원
+                                {commaMoney(product.price * product.quantity)}원
                               </span>
                             </p>
                           </>
                         ) : (
                           <>
                             <p>
-                              {useMoney(product.price * product.quantity)}원
+                              {commaMoney(product.price * product.quantity)}원
                             </p>
                           </>
                         )}
@@ -284,7 +284,7 @@ export default function payment() {
                       onChange={(e) => {
                         setCheck(false);
 
-                        if (useLangCheck(e.target.value)) {
+                        if (isLang(e.target.value)) {
                           setName(e.target.value);
                           setNameValid(true);
                         } else {
@@ -309,7 +309,7 @@ export default function payment() {
                       type="text"
                       onChange={(e) => {
                         setCheck(false);
-                        if (useNumberCheck(e.target.value)) {
+                        if (isNumber(e.target.value)) {
                           setPhone1(e.target.value);
                           if (e.target.value.length == 3) setPhoneValid1(true);
                           else {
@@ -330,7 +330,7 @@ export default function payment() {
                       type="text"
                       onChange={(e) => {
                         setCheck(false);
-                        if (useNumberCheck(e.target.value)) {
+                        if (isNumber(e.target.value)) {
                           setPhone2(e.target.value);
                           if (e.target.value.length == 4) setPhoneValid2(true);
                           else {
@@ -351,7 +351,7 @@ export default function payment() {
                       type="text"
                       onChange={(e) => {
                         setCheck(false);
-                        if (useNumberCheck(e.target.value)) {
+                        if (isNumber(e.target.value)) {
                           setPhone3(e.target.value);
                           if (e.target.value.length == 4) setPhoneValid3(true);
                           else {
@@ -468,7 +468,7 @@ export default function payment() {
                 <tr>
                   <th scope="row">주문상품</th>
                   <td>
-                    {useMoney(
+                    {commaMoney(
                       orderItems.reduce(
                         (prev, cur) => prev + cur.price * cur.quantity,
                         0,
@@ -481,7 +481,7 @@ export default function payment() {
                   <th scope="row">할인</th>
                   <td>
                     -{" "}
-                    {useMoney(
+                    {commaMoney(
                       orderItems.reduce(
                         (prev, cur) =>
                           prev +
@@ -504,7 +504,7 @@ export default function payment() {
                 <tr>
                   <th scope="row">결제금액</th>
                   <td>
-                    {useMoney(
+                    {commaMoney(
                       orderItems.reduce(
                         (prev, cur) => prev + cur.price * cur.quantity,
                         0,

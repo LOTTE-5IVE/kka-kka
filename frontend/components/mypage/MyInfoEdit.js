@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { PatchHApi } from "../../apis/Apis";
 import ButtonComp from "../../components/common/Button/ButtonComp";
-import { useEngCheck } from "../../hooks/useEngCheck";
-import { useGetToken } from "../../hooks/useGetToken";
-import { useLangCheck } from "../../hooks/useLangCheck";
-import { useMemberInfo } from "../../hooks/useMemberInfo";
-import { useNumberCheck } from "../../hooks/useNumberCheck";
-import { useTextCheck } from "../../hooks/useTextCheck";
+import { isEng } from "../../hooks/isEng";
+import { getToken } from "../../hooks/getToken";
+import { isLang } from "../../hooks/isLang";
+import { memberInfo } from "../../hooks/memberInfo";
+import { isNumber } from "../../hooks/isNumber";
+import { isText } from "../../hooks/isText";
 import Title from "../common/Title";
 import DaumPost from "../payment/DaumPost";
 
@@ -42,10 +42,10 @@ export default function MyInfoEdit() {
   }
 
   useEffect(() => {
-    setToken(useGetToken());
+    setToken(getToken());
 
     if (token !== "") {
-      useMemberInfo(token).then((res) => {
+      memberInfo(token).then((res) => {
         if (res) {
           setData(res);
         }
@@ -72,7 +72,7 @@ export default function MyInfoEdit() {
       token,
     );
 
-    useMemberInfo(token).then((res) => {
+    memberInfo(token).then((res) => {
       if (res) {
         setData(res);
       }
@@ -141,7 +141,7 @@ export default function MyInfoEdit() {
                         defaultValue={name}
                         type="text"
                         onChange={(e) => {
-                          if (useLangCheck(e.target.value)) {
+                          if (isLang(e.target.value)) {
                             setName(e.target.value);
                             setNameValid(true);
                           } else {
@@ -165,7 +165,7 @@ export default function MyInfoEdit() {
                         defaultValue={phone1}
                         type="text"
                         onChange={(e) => {
-                          if (useNumberCheck(e.target.value)) {
+                          if (isNumber(e.target.value)) {
                             setPhone1(e.target.value);
                             if (e.target.value.length == 3)
                               setPhoneValid1(true);
@@ -186,7 +186,7 @@ export default function MyInfoEdit() {
                         defaultValue={phone2}
                         type="text"
                         onChange={(e) => {
-                          if (useNumberCheck(e.target.value)) {
+                          if (isNumber(e.target.value)) {
                             setPhone2(e.target.value);
                             if (e.target.value.length == 4)
                               setPhoneValid2(true);
@@ -207,7 +207,7 @@ export default function MyInfoEdit() {
                         defaultValue={phone3}
                         type="text"
                         onChange={(e) => {
-                          if (useNumberCheck(e.target.value)) {
+                          if (isNumber(e.target.value)) {
                             setPhone3(e.target.value);
                             if (e.target.value.length == 4)
                               setPhoneValid3(true);
@@ -230,7 +230,7 @@ export default function MyInfoEdit() {
                         defaultValue={email1}
                         type="text"
                         onChange={(e) => {
-                          if (useEngCheck(e.target.value)) {
+                          if (isEng(e.target.value)) {
                             setEmail1(e.target.value);
                           } else {
                             alert("영어만 입력할 수 없습니다.");
@@ -246,7 +246,7 @@ export default function MyInfoEdit() {
                             defaultValue={email2}
                             type="text"
                             onChange={(e) => {
-                              if (useTextCheck(e.target.value)) {
+                              if (isText(e.target.value)) {
                                 setEmail2(e.target.value);
                               } else {
                                 alert("특수문자는 입력할 수 없습니다.");

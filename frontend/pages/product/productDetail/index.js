@@ -12,7 +12,7 @@ import { CouponModal } from "../../../components/coupon/CouponModal";
 import Info from "../../../components/product/productDetail/Info";
 import Nutri from "../../../components/product/productDetail/Nutri";
 import Review from "../../../components/product/productDetail/Review";
-import { useMoney } from "../../../hooks/useMoney";
+import { commaMoney } from "../../../hooks/commaMoney";
 import { NBlack, NGray, NLightGray } from "../../../typings/NormalColor";
 import {
   ThemeBlue,
@@ -21,7 +21,7 @@ import {
   ThemeRed,
 } from "../../../typings/ThemeColor";
 import RangeWithIcons from "../../../components/mypage/review/RangeWithIcons";
-import { useNumberCheck } from "../../../hooks/useNumberCheck";
+import { isNumber } from "../../../hooks/isNumber";
 import { useContext } from "react";
 import { TokenContext } from "../../../context/TokenContext";
 
@@ -131,17 +131,17 @@ export default function ProductDetail() {
                         {product.discount}%
                       </p>
                       <p>
-                        {useMoney(
+                        {commaMoney(
                           Math.ceil(
                             product.price * (1 - 0.01 * product.discount),
                           ),
                         )}
-                        원 <span>{useMoney(product.price)}원</span>
+                        원 <span>{commaMoney(product.price)}원</span>
                       </p>
                     </>
                   ) : (
                     <>
-                      <p>{useMoney(product.price)}원</p>
+                      <p>{commaMoney(product.price)}원</p>
                     </>
                   )}
                   <div className="mt-3">
@@ -203,7 +203,7 @@ export default function ProductDetail() {
                           <input
                             type="text"
                             onChange={(e) => {
-                              if (!useNumberCheck(e.target.value)) {
+                              if (!isNumber(e.target.value)) {
                                 alert("숫자만 입력하세요.");
                                 setQuantity(1);
                                 return;
@@ -233,7 +233,7 @@ export default function ProductDetail() {
                         </span>
                       </td>
                       <td style={{ textAlign: "right" }}>
-                        {useMoney(
+                        {commaMoney(
                           Math.ceil(
                             product.price *
                               (1 - 0.01 * product.discount) *
@@ -252,7 +252,7 @@ export default function ProductDetail() {
                 </p>
                 <p>
                   <span>
-                    {useMoney(
+                    {commaMoney(
                       Math.ceil(
                         product.price *
                           (1 - 0.01 * product.discount) *

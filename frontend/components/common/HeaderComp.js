@@ -3,9 +3,9 @@ import { useContext } from "react";
 import { useEffect, useState } from "react";
 import { TokenContext } from "../../context/TokenContext";
 import { isLogin } from "../../hooks/isLogin";
-import { useGetToken } from "../../hooks/useGetToken";
-import { useMemberInfo } from "../../hooks/useMemberInfo";
-import { useTextCheck } from "../../hooks/useTextCheck";
+import { getToken } from "../../hooks/getToken";
+import { memberInfo } from "../../hooks/memberInfo";
+import { isText } from "../../hooks/isText";
 
 export default function Header() {
   const [value, setValue] = useState("");
@@ -14,7 +14,7 @@ export default function Header() {
   const { token, setToken } = useContext(TokenContext);
 
   const getMemberInfo = async () => {
-    await useMemberInfo(useGetToken()).then((res) => {
+    await memberInfo(getToken()).then((res) => {
       setName(res.name);
     });
   };
@@ -33,7 +33,7 @@ export default function Header() {
 
   useEffect(() => {
     if (isLogin()) {
-      setToken(useGetToken());
+      setToken(getToken());
       setLogin(true);
       getMemberInfo();
     }
@@ -56,7 +56,7 @@ export default function Header() {
             defaultValue={value}
             placeholder="검색어를 입력해주세요"
             onChange={(e) => {
-              if (useTextCheck(e.currentTarget.value)) {
+              if (isText(e.currentTarget.value)) {
                 setValue(e.currentTarget.value);
               } else {
                 alert("특수문자는 입력할 수 없습니다.");

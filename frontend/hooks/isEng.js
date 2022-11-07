@@ -1,5 +1,5 @@
-export const useLangCheck = (text) => {
-  const pattern = /[^a-z|ㄱ-ㅎ|가-힣]/gi;
+export const isEng = (text) => {
+  const pattern = /[^a-z]/gi;
 
   for (let i = 0; i < text.length; i++) {
     if (pattern.test(text.charAt(i))) {

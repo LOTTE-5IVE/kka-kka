@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import RangeWithIcons from "./RangeWithIcons";
 import useNoticeToInputPreference from "./useInputRating";
 import { PostHApi } from "../../../apis/Apis";
-import { useGetToken } from "../../../hooks/useGetToken";
+import { getToken } from "../../../hooks/getToken";
 
 export default function Review({ productOrderId, setReviewed }) {
   const [token, setToken] = useState("");
@@ -45,7 +45,7 @@ export default function Review({ productOrderId, setReviewed }) {
   };
 
   useEffect(() => {
-    setToken(useGetToken());
+    setToken(getToken());
   }, [token]);
 
   return (

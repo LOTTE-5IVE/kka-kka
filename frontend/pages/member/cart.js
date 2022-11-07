@@ -8,8 +8,8 @@ import Title from "../../components/common/Title";
 import { CouponApply } from "../../components/coupon/CouponApply";
 import { CouponModal } from "../../components/coupon/CouponModal";
 import { TokenContext } from "../../context/TokenContext";
-import { useMoney } from "../../hooks/useMoney";
-import { useNumberCheck } from "../../hooks/useNumberCheck";
+import { commaMoney } from "../../hooks/commaMoney";
+import { isNumber } from "../../hooks/isNumber";
 import { NGray } from "../../typings/NormalColor";
 
 export default function Cart() {
@@ -143,7 +143,6 @@ export default function Cart() {
   };
 
   useEffect(() => {
-    console.log("cart rendered!!");
     getCartItem();
   }, []);
 
@@ -294,7 +293,7 @@ export default function Cart() {
                           <input
                             type="text"
                             onChange={(e) => {
-                              if (!useNumberCheck(e.target.value)) {
+                              if (!isNumber(e.target.value)) {
                                 alert("숫자만 입력하세요.");
                                 handleQuantity(product.id, product.quantity);
                                 return;
@@ -335,7 +334,7 @@ export default function Cart() {
                         {product.discount ? (
                           <>
                             <p>
-                              {useMoney(
+                              {commaMoney(
                                 Math.ceil(
                                   product.price * (1 - 0.01 * product.discount),
                                 ) * product.quantity,
@@ -344,14 +343,14 @@ export default function Cart() {
                             </p>
                             <p>
                               <span>
-                                {useMoney(product.price * product.quantity)}원
+                                {commaMoney(product.price * product.quantity)}원
                               </span>
                             </p>
                           </>
                         ) : (
                           <>
                             <p>
-                              {useMoney(product.price * product.quantity)}원
+                              {commaMoney(product.price * product.quantity)}원
                             </p>
                           </>
                         )}
@@ -395,14 +394,14 @@ export default function Cart() {
               <tbody>
                 <tr>
                   <td>
-                    <span>{useMoney(totalPrice) || 0}</span>
+                    <span>{commaMoney(totalPrice) || 0}</span>
                   </td>
                   <td>-</td>
                   <td>
-                    <span>{useMoney(discountPrice) || 0}</span>
+                    <span>{commaMoney(discountPrice) || 0}</span>
                   </td>
                   <td>=</td>
-                  <td>{useMoney(totalPrice - discountPrice) || 0}</td>
+                  <td>{commaMoney(totalPrice - discountPrice) || 0}</td>
                 </tr>
               </tbody>
             </table>
