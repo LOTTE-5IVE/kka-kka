@@ -9,7 +9,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import RecommCard from "./RecommCard";
-import { useGetToken } from "../../hooks/useGetToken";
+import { getToken } from "../../hooks/getToken";
 import axios from "axios";
 
 export default function RecommSlider({tab, handleTab}) {
@@ -43,7 +43,7 @@ export default function RecommSlider({tab, handleTab}) {
   const getRecommendProducts = async () => {
     await axios.get(`/api/products/recommend?size=${SLIDE_SIZE}`, {
       headers: {
-        Authorization: `Bearer ${useGetToken()}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     })
     .then((res) => {

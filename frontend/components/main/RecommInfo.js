@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {NBlack} from "../../typings/NormalColor";
 import {ThemeRed} from "../../typings/ThemeColor";
-import {useMoney} from "../../hooks/useMoney";
+import {commaMoney} from "../../hooks/commaMoney";
 
 export default function RecommInfo({id, name, price, discount}) {
   return (
@@ -30,9 +30,9 @@ export default function RecommInfo({id, name, price, discount}) {
                           flexDirection: "column",
                           alignItems: "flex-start"
                         }}>
-                          <span className="discount">{useMoney(price)}원</span>
+                          <span className="discount">{commaMoney(price)}원</span>
                           <span>
-                        {useMoney(Math.ceil(price * (1 - discount * 0.01)))}원
+                        {commaMoney(Math.ceil(price * (1 - discount * 0.01)))}원
                           </span>
                         </div>
                         <span style={{color: `${ThemeRed}`}}>{discount}%</span>
@@ -54,7 +54,7 @@ export default function RecommInfo({id, name, price, discount}) {
                           alignItems: "flex-start"
                         }}>
                           <span className="blank"></span>
-                          <span>{useMoney(price)}원</span>
+                          <span>{commaMoney(price)}원</span>
                         </div>
                       </div>
                     </>
