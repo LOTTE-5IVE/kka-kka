@@ -152,7 +152,7 @@ export default function CouponEnrollTable() {
                       setDiscount(e.target.value);
                     }}
                   />
-                  %
+                  {" "}%
                 </div>
 
                 <div style={{ width: "25%" }}>
@@ -193,7 +193,7 @@ export default function CouponEnrollTable() {
               </td>
             </tr>
 
-            <tr style={{ height: "6vw" }}>
+            <tr style={{ height: "5vw" }}>
               <th scope="row">유효 기간</th>
               <td>
                 <div style={{ display: "flex", marginBottom: "15px" }}>
@@ -227,7 +227,7 @@ export default function CouponEnrollTable() {
                 )}
               </td>
             </tr>
-            <tr style={{ height: "20vw", position: "relative" }}>
+            <tr style={{ height: "15vw", position: "relative" }}>
               <th scope="row">적용 대상 지정</th>
               <td style={{ position: "absolute", top: "5%" }}>
                 <div style={{ display: "flex", marginBottom: "15px" }}>
@@ -279,7 +279,7 @@ export default function CouponEnrollTable() {
                 makeCoupon();
               }}
             >
-              <Button context="혜택 등록하기" color="#F21D2F" tcolor="#fff" />
+              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff" />
             </div>
           ) : target == "상품" ? (
             <div
@@ -288,7 +288,7 @@ export default function CouponEnrollTable() {
                 makeCouponProduct();
               }}
             >
-              <Button context="혜택 등록하기" color="#F21D2F" tcolor="#fff" />
+              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff" />
             </div>
           ) : (
             <div
@@ -297,7 +297,7 @@ export default function CouponEnrollTable() {
                 makeCouponGrade();
               }}
             >
-              <Button context="혜택 등록하기" color="#F21D2F" tcolor="#fff" />
+              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff" />
             </div>
           )}
         </div>
@@ -325,6 +325,7 @@ export default function CouponEnrollTable() {
               border: 1px solid;
               padding: 7px 25px;
               border-radius: 1em;
+              margin-right: 15px;
             }
 
             .active {

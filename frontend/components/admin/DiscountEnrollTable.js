@@ -62,7 +62,7 @@ export default function DiscountEnrollTable() {
           </colgroup>
 
           <tbody>
-            <tr style={{ height: "5vw" }}>
+            <tr style={{ height: "4vw" }}>
               <th scope="row">혜택 이름</th>
               <td
                 style={{
@@ -106,7 +106,7 @@ export default function DiscountEnrollTable() {
                       setDiscount(e.target.value);
                     }}
                   />
-                  %
+                  {" "}%
                 </div>
               </td>
             </tr>
@@ -218,6 +218,7 @@ export default function DiscountEnrollTable() {
               border: 1px solid;
               padding: 7px 25px;
               border-radius: 1em;
+              margin-right: 15px;
             }
 
             .active {

@@ -48,6 +48,7 @@ export default function ProductSearch() {
             border: 1px solid;
             padding: 7px 25px;
             border-radius: 1em;
+            margin-right: 15px;
           }
 
           .active {
