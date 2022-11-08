@@ -33,8 +33,8 @@ const StarIcon = ({
           <stop offset="35%" stopColor="transparent" stopOpacity="1" />
         </linearGradient>
         <linearGradient id="big_half_grad">
-          <stop offset="65%" stopColor={color} />
-          <stop offset="65%" stopColor="transparent" stopOpacity="1" />
+          <stop offset="68%" stopColor={color} />
+          <stop offset="68%" stopColor="transparent" stopOpacity="1" />
         </linearGradient>
       </defs>
       <path
