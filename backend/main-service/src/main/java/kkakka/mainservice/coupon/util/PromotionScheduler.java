@@ -49,7 +49,7 @@ public class PromotionScheduler {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateGradeByTotalPriceToAllMembers() {
-        updateGradeByTotalPrice(findMembersByGrade(Grade.BRONZE), 10000,  Grade.SILVER);
+        updateGradeByTotalPrice(findMembersByGrade(Grade.BRONZE), 10000, Grade.SILVER);
         updateGradeByTotalPrice(findMembersByGrade(Grade.SILVER), 20000, Grade.GOLD);
         updateGradeByTotalPrice(findMembersByGrade(Grade.GOLD), 30000, Grade.VIP);
         updateGradeByTotalPrice(findMembersByGrade(Grade.VIP), 40000, Grade.VIP);

@@ -119,7 +119,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void deleteMemberCouponByAdmin() {
         String accessToken = 액세스_토큰_가져옴();
-        String coupon = 쿠폰_다운로드(accessToken);
+        String coupon = 상품_쿠폰_다운로드(accessToken);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -153,7 +153,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void usableCoupons() {
         String accessToken = 액세스_토큰_가져옴();
-        쿠폰_다운로드(accessToken);
+        상품_쿠폰_다운로드(accessToken);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -226,7 +226,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         return response.body().jsonPath().get("accessToken");
     }
 
-    private String 쿠폰_다운로드(String accessToken) {
+    private String 상품_쿠폰_다운로드(String accessToken) {
         String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
@@ -239,20 +239,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         return couponId;
     }
 
-    private String 쿠폰_다운로드2(String accessToken) {
-        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 25, 2000);
-
-        final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
-            .header("Authorization", "Bearer " + accessToken)
-            .when()
-            .post("/api/coupons/download/" + couponId)
-            .then().log().all().extract();
-
-        return couponId;
-    }
-
-    private String 쿠폰_다운로드3(String accessToken) {
+    private String 등급_쿠폰_다운로드(String accessToken) {
         String couponId = 쿠폰_생성함("GOLD", null, "GRADE_COUPON", 50, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
@@ -269,10 +256,9 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void showProductCouponsByProductIdAndMemberId() {
         String accessToken = 액세스_토큰_가져옴();
-        쿠폰_다운로드(accessToken);
-        쿠폰_다운로드2(accessToken);
+        상품_쿠폰_다운로드(accessToken);
+        등급_쿠폰_다운로드(accessToken);
         쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 14, 2000);
-        쿠폰_다운로드3(accessToken);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -290,10 +276,9 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void showProductCouponsByProductId() {
         String accessToken = 액세스_토큰_가져옴();
-        쿠폰_다운로드(accessToken);
-        쿠폰_다운로드2(accessToken);
+        상품_쿠폰_다운로드(accessToken);
+        등급_쿠폰_다운로드(accessToken);
         쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 14, 2000);
-        쿠폰_다운로드3(accessToken);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -340,10 +325,9 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     void findMemberCouponCount_success() {
         // given
         String accessToken = 액세스_토큰_가져옴();
-        쿠폰_다운로드(accessToken);
-        쿠폰_다운로드2(accessToken);
+        상품_쿠폰_다운로드(accessToken);
+        등급_쿠폰_다운로드(accessToken);
         쿠폰_생성함(null, PRODUCT_2.getId(), "COUPON", 14, 2000);
-        쿠폰_다운로드3(accessToken);
 
         // when
         final ExtractableResponse<Response> response = RestAssured

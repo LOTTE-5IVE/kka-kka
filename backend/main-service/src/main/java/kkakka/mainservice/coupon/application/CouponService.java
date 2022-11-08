@@ -37,6 +37,20 @@ public class CouponService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
 
+    final BiFunction<Integer, Integer, Integer> calculateStaticPrice = new BiFunction<Integer, Integer, Integer>() {
+        @Override
+        public Integer apply(Integer productPrice, Integer couponDiscount) {
+            return productPrice - couponDiscount;
+        }
+    };
+
+    final BiFunction<Integer, Integer, Integer> calculatePercentage = new BiFunction<Integer, Integer, Integer>() {
+        @Override
+        public Integer apply(Integer productPrice, Integer couponPercentage) {
+            return (int) Math.ceil(productPrice * (1 - (couponPercentage * 0.01)));
+        }
+    };
+
     /* 관리자 쿠폰 등록 */
     @Transactional
     public Long createCoupon(CouponRequestDto couponRequestDto) {
@@ -230,20 +244,6 @@ public class CouponService {
             .collect(Collectors.toList());
     }
 
-    final BiFunction<Integer, Integer, Integer> calculateStaticPrice = new BiFunction<Integer, Integer, Integer>() {
-        @Override
-        public Integer apply(Integer productPrice, Integer couponDiscount) {
-            return productPrice - couponDiscount;
-        }
-    };
-
-    final BiFunction<Integer, Integer, Integer> calculatePercentage = new BiFunction<Integer, Integer, Integer>() {
-        @Override
-        public Integer apply(Integer productPrice, Integer couponPercentage) {
-            return (int) Math.ceil(productPrice * (1 - (couponPercentage * 0.01)));
-        }
-    };
-
     private List<CouponProductResponseDto> sortWithMaximumDiscountAmount(
         List<CouponProductResponseDto> couponProductResponseDtos, Product product) {
         for (CouponProductResponseDto couponProductResponseDto : couponProductResponseDtos) {
@@ -290,7 +290,6 @@ public class CouponService {
             .stream()
             .sorted(Comparator.comparing(CouponProductResponseDto::getDiscountedPrice))
             .collect(Collectors.toList());
-
     }
 
     public int showMemberCouponCount(Long memberId) {
