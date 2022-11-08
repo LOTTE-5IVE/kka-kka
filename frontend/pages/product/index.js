@@ -46,7 +46,8 @@ export default function ProductList() {
   useEffect(() => {
     if(search) {
       setKeyword(search);
-      setResource(fetchSearchData("", page, search, "", 0, 0, 0, 0));
+      console.log("서치: ",search);
+      setResource(fetchSearchData("accuracy", page, search, "", 0, 0, 0, 0));
     }
   },[search]);
 
