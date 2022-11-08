@@ -32,6 +32,7 @@ export default function ProductDetail() {
   const [tab, setTab] = useState("info");
   const [modal, setModal] = useState(false);
   const [product, setProduct] = useState({});
+  const [reviewCount, setReviewCount] = useState(0);
   const { token, setToken } = useContext(TokenContext);
 
   const buyQuery = () => {
@@ -106,236 +107,251 @@ export default function ProductDetail() {
     }
   };
 
+  const getReviewCount = async () => {
+    if (productId) {
+      await axios.get(`/api/reviews/${productId}/all`)
+      .then((res) => {
+        setReviewCount(res.data.reviewCount);
+      });
+    }
+  }
+
   useEffect(() => {
     getItem();
+    getReviewCount();
   }, [productId]);
 
   return (
-    <>
-      <Title title="상품상세" />
-      {product && (
-        <div className="ProductDetailLWrapper" key={product.id}>
-          <div className="detailTop">
-            <div className="detailImg">
-              <img src={`${product.imageUrl}`} />
-            </div>
+      <>
+        <Title title="상품상세"/>
+        {product && (
+            <div className="ProductDetailLWrapper" key={product.id}>
+              <div className="detailTop">
+                <div className="detailImg">
+                  <img src={`${product.imageUrl}`}/>
+                </div>
 
-            <div className="detailEtc" key={product.id}>
-              <div className="headingArea">
-                <div className="headingAreaName">{product.name}</div>
+                <div className="detailEtc" key={product.id}>
+                  <div className="headingArea">
+                    <div className="headingAreaName">{product.name}</div>
 
-                <div className="headingDescription">
-                  {product.discount !== 0 ? (
-                    <>
-                      <p style={{ color: `${ThemeRed}` }}>
-                        {product.discount}%
-                      </p>
-                      <p>
-                        {commaMoney(
-                          Math.ceil(
-                            product.price * (1 - 0.01 * product.discount),
-                          ),
-                        )}
-                        원 <span>{commaMoney(product.price)}원</span>
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <p>{commaMoney(product.price)}원</p>
-                    </>
-                  )}
-                  <div className="mt-3">
-                    <div className="d-flex align-start">
-                      <RangeWithIcons
-                        value={product.ratingAvg}
-                        max={5}
-                        min={0.5}
-                        step={0.1}
-                        borderColor={"#ffd151"}
-                        color={"#ffd151"}
-                        starWidth={"40px"}
-                      />
+                    <div className="headingDescription">
+                      {product.discount !== 0 ? (
+                          <>
+                            <p style={{color: `${ThemeRed}`}}>
+                              {product.discount}%
+                            </p>
+                            <p>
+                              {commaMoney(
+                                  Math.ceil(
+                                      product.price * (1 - 0.01
+                                          * product.discount),
+                                  ),
+                              )}
+                              원 <span>{commaMoney(product.price)}원</span>
+                            </p>
+                          </>
+                      ) : (
+                          <>
+                            <p>{commaMoney(product.price)}원</p>
+                          </>
+                      )}
+                      <div className="mt-3">
+                        <div className="review-box d-flex align-start">
+                          <RangeWithIcons
+                              value={product.ratingAvg}
+                              max={5}
+                              min={0.5}
+                              step={0.1}
+                              borderColor={"#ffd151"}
+                              color={"#ffd151"}
+                              starWidth={"40px"}
+                          />
+                          <div className="reviewCnt">
+                            ({product.ratingAvg}, {commaMoney(reviewCount)}개)
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className="delivery">
-                <p>배송비</p> <p style={{ color: `${NGray}` }}>무료</p>
-              </div>
-              <div className="coupon">
-                <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
-                <div
-                  onClick={() => {
-                    handleModal(true);
-                  }}
-                >
-                  <AdminButton context="쿠폰받기" color="red" width="70px" />
-                </div>
-                {modal && (
-                  <CouponModal>
-                    <div>
-                      <CouponDown handleModal={handleModal} product={product} />
+                  <div className="delivery">
+                    <p>배송비</p> <p style={{color: `${NGray}`}}>무료</p>
+                  </div>
+                  <div className="coupon">
+                    <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
+                    <div
+                        onClick={() => {
+                          handleModal(true);
+                        }}
+                    >
+                      <AdminButton context="쿠폰받기" color="red" width="70px"/>
                     </div>
-                  </CouponModal>
-                )}
-              </div>
-              <div className="totalProducts">
-                <table>
-                  <colgroup>
-                    <col style={{ width: "384px" }} />
-                    <col style={{ width: "134px" }} />
-                  </colgroup>
+                    {modal && (
+                        <CouponModal>
+                          <div>
+                            <CouponDown handleModal={handleModal}
+                                        product={product}/>
+                          </div>
+                        </CouponModal>
+                    )}
+                  </div>
+                  <div className="totalProducts">
+                    <table>
+                      <colgroup>
+                        <col style={{width: "384px"}}/>
+                        <col style={{width: "134px"}}/>
+                      </colgroup>
 
-                  <tbody>
-                    <tr>
-                      <td colSpan="2">{product.name}</td>
-                    </tr>
-                    <tr style={{ height: "57px" }}>
-                      <td>
+                      <tbody>
+                      <tr>
+                        <td colSpan="2">{product.name}</td>
+                      </tr>
+                      <tr style={{height: "57px"}}>
+                        <td>
                         <span>
                           <input
-                            type="button"
-                            onClick={() => handleQuantity("minus")}
-                            value="-"
-                            style={{ marginRight: "15px" }}
+                              type="button"
+                              onClick={() => handleQuantity("minus")}
+                              value="-"
+                              style={{marginRight: "15px"}}
                           />
 
                           <input
-                            type="text"
-                            onChange={(e) => {
-                              if (!isNumber(e.target.value)) {
-                                alert("숫자만 입력하세요.");
-                                setQuantity(1);
-                                return;
-                              }
+                              type="text"
+                              onChange={(e) => {
+                                if (!isNumber(e.target.value)) {
+                                  alert("숫자만 입력하세요.");
+                                  setQuantity(1);
+                                  return;
+                                }
 
-                              Number(e.target.value) > product.stock
-                                ? alert("수량 한도를 초과했습니다.")
-                                : setQuantity(Number(e.target.value));
-                            }}
-                            onBlur={(e) => {
-                              if (Number(e.target.value) < 1) {
-                                alert("최소 수량은 1개입니다.");
-                                setQuantity(1);
-                              }
-                            }}
-                            size="1"
-                            value={quantity}
-                            style={{ textAlign: "center" }}
+                                Number(e.target.value) > product.stock
+                                    ? alert("수량 한도를 초과했습니다.")
+                                    : setQuantity(Number(e.target.value));
+                              }}
+                              onBlur={(e) => {
+                                if (Number(e.target.value) < 1) {
+                                  alert("최소 수량은 1개입니다.");
+                                  setQuantity(1);
+                                }
+                              }}
+                              size="1"
+                              value={quantity}
+                              style={{textAlign: "center"}}
                           />
 
                           <input
-                            type="button"
-                            onClick={() => handleQuantity("plus")}
-                            value="+"
-                            style={{ marginLeft: "15px" }}
+                              type="button"
+                              onClick={() => handleQuantity("plus")}
+                              value="+"
+                              style={{marginLeft: "15px"}}
                           />
                         </span>
-                      </td>
-                      <td style={{ textAlign: "right" }}>
-                        {commaMoney(
-                          Math.ceil(
-                            product.price *
-                              (1 - 0.01 * product.discount) *
-                              quantity,
-                          ),
-                        )}
-                        원
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="totalPrice">
-                <p>
-                  <strong>TOTAL</strong>
-                </p>
-                <p>
+                        </td>
+                        <td style={{textAlign: "right"}}>
+                          {commaMoney(
+                              Math.ceil(
+                                  product.price *
+                                  (1 - 0.01 * product.discount) *
+                                  quantity,
+                              ),
+                          )}
+                          원
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="totalPrice">
+                    <p>
+                      <strong>TOTAL</strong>
+                    </p>
+                    <p>
                   <span>
                     {commaMoney(
-                      Math.ceil(
-                        product.price *
-                          (1 - 0.01 * product.discount) *
-                          quantity,
-                      ),
+                        Math.ceil(
+                            product.price *
+                            (1 - 0.01 * product.discount) *
+                            quantity,
+                        ),
                     )}
                     원
                   </span>
-                  ({quantity}
-                  개)
-                </p>
-              </div>
-              <div className="btn">
-                <div
-                  className="cartBtn"
-                  onClick={() => {
-                    addCartItem(product, quantity);
-                  }}
-                >
-                  장바구니
-                </div>
-                {isLogin() ? (
-                  <div className="buyBtn" onClick={buyQuery}>
-                    바로 구매
+                      ({quantity}
+                      개)
+                    </p>
                   </div>
-                ) : (
-                  // <div
-                  //   className="buyBtn"
-                  //   onClick={() => {
-                  //     console.log("productDetailbefore: ", product);
-                  //     product.quantity = quantity;
+                  <div className="btn">
+                    <div
+                        className="cartBtn"
+                        onClick={() => {
+                          addCartItem(product, quantity);
+                        }}
+                    >
+                      장바구니
+                    </div>
+                    {isLogin() ? (
+                        <div className="buyBtn" onClick={buyQuery}>
+                          바로 구매
+                        </div>
+                    ) : (
+                        // <div
+                        //   className="buyBtn"
+                        //   onClick={() => {
+                        //     console.log("productDetailbefore: ", product);
+                        //     product.quantity = quantity;
 
-                  //     console.log("productDetail: ", product);
-                  //   }}
-                  // >
-                  //   바로 구매
-                  // </div>
-                  <div
-                    className="buyBtn"
-                    onClick={() => {
-                      alert("로그인이 필요한 서비스입니다.");
-                      document.location.href = "/member/login";
-                    }}
-                  >
-                    바로 구매
+                        //     console.log("productDetail: ", product);
+                        //   }}
+                        // >
+                        //   바로 구매
+                        // </div>
+                        <div
+                            className="buyBtn"
+                            onClick={() => {
+                              alert("로그인이 필요한 서비스입니다.");
+                              document.location.href = "/member/login";
+                            }}
+                        >
+                          바로 구매
+                        </div>
+                    )}
                   </div>
-                )}
+                </div>
+              </div>
+              <div className="detailBottom">
+                <div className="tabMenu">
+                  <ul>
+                    <li onClick={() => handleTab("info")}>
+                      <a className={`${tab === "info" ? "active" : ""}`}>
+                        상품정보
+                      </a>
+                    </li>
+                    <li onClick={() => handleTab("nutri")}>
+                      <a className={`${tab === "nutri" ? "active" : ""}`}>
+                        영양정보
+                      </a>
+                    </li>
+                    <li onClick={() => handleTab("review")}>
+                      <a className={`${tab === "review" ? "active" : ""}`}>
+                        상품후기
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="descriptions">
+                  {tab == "info" ? (
+                      <Info detailImageUrl={product.detailImageUrl}/>
+                  ) : tab == "nutri" ? (
+                      <Nutri nutrition={product.nutrition}/>
+                  ) : (
+                      <Review productId={productId}/>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="detailBottom">
-            <div className="tabMenu">
-              <ul>
-                <li onClick={() => handleTab("info")}>
-                  <a className={`${tab === "info" ? "active" : ""}`}>
-                    상품정보
-                  </a>
-                </li>
-                <li onClick={() => handleTab("nutri")}>
-                  <a className={`${tab === "nutri" ? "active" : ""}`}>
-                    영양정보
-                  </a>
-                </li>
-                <li onClick={() => handleTab("review")}>
-                  <a className={`${tab === "review" ? "active" : ""}`}>
-                    상품후기
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="descriptions">
-              {tab == "info" ? (
-                <Info detailImageUrl={product.detailImageUrl} />
-              ) : tab == "nutri" ? (
-                <Nutri nutrition={product.nutrition} />
-              ) : (
-                <Review productId={productId} />
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-      <style jsx>{`
+        )}
+        <style jsx>{`
         .ProductDetailLWrapper {
           .detailTop {
             display: flex;
@@ -445,6 +461,18 @@ export default function ProductDetail() {
                   color: ${ThemeBlue};
                   transition: 0.7s;
                 }
+              }
+              
+              .review-box {
+                align-items: flex-end;
+              }
+              
+              .reviewCnt {
+                font-size: 1rem;
+                font-weight: 400;
+                color: ${NGray};
+                width: 100%;
+                margin-left: 0.6rem;
               }
             }
           }
@@ -739,6 +767,11 @@ export default function ProductDetail() {
                     font-size: 3vw;
                   }
                 }
+                
+                .reviewCnt {
+                  font-size: 1vw;
+                  margin-left: 0.2rem;
+                }
               }
             }
 
@@ -930,7 +963,7 @@ export default function ProductDetail() {
           }
         }
       `}</style>
-    </>
+      </>
   );
 }
 
