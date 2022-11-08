@@ -1,8 +1,8 @@
 import Title from "../common/Title";
 import { useEffect, useState } from "react";
 import { GetHApi } from "../../apis/Apis";
-import { useGetToken } from "../../hooks/useGetToken";
-import { useMoney } from "../../hooks/useMoney";
+import { getToken } from "../../hooks/getToken";
+import { commaMoney } from "../../hooks/commaMoney";
 
 export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
   const [token, setToken] = useState("");
@@ -41,7 +41,7 @@ export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
   };
 
   useEffect(() => {
-    setToken(useGetToken());
+    setToken(getToken());
     if (token !== "") {
       getOrders();
     }
@@ -65,7 +65,7 @@ export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
                       </div>
                       <div>
                         <span className="title-content">
-                          총 결제금액: <b>{useMoney(order.totalPrice)}</b>원
+                          총 결제금액: <b>{commaMoney(order.totalPrice)}</b>원
                         </span>
                         <span className="title-divider">|</span>
                         <span className="title-content">{order.orderedAt}</span>

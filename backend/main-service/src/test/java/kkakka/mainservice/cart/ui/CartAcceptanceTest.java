@@ -3,6 +3,7 @@ package kkakka.mainservice.cart.ui;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
@@ -103,7 +104,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
         final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
         퍼센트_쿠폰_생성();
-        장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getId(),1L,accessToken);
+        장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getCartItemId(),1L,accessToken);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
@@ -147,7 +148,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         final CartResponseDto cartResponseDto = 장바구니에서_찾아옴(accessToken);
         assertThat(
                 cartResponseDto.getCartItemDtos().stream()
-                        .filter(cartItemDto -> cartItemDto.getProductId().equals(PRODUCT_1.getId()))
+                        .filter(cartItemDto -> cartItemDto.getId().equals(PRODUCT_1.getId()))
                         .findAny().orElseThrow()
                         .getQuantity()
         ).isEqualTo(3);
@@ -169,7 +170,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/api/carts/" + cart.getCartItemDtos().get(0).getId())
+                .delete("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId())
                 .then()
                 .log().all().extract();
 
@@ -193,11 +194,36 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/api/carts/" + cart.getCartItemDtos().get(0).getId() + "/" + couponId)
+                .post("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId() + "/" + couponId)
                 .then().log().all().extract();
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("총 장바구니 아이템 수 조회 - 성공")
+    @Test
+    void findMemberCartItemCount_success(){
+        // given
+        final String accessToken = 액세스_토큰_가져옴();
+        final Long cart1 = 장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
+        final Long cart2 = 장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
+        int count = List.of(cart1, cart2).size();
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("cart-item-count-success"))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/members/me/carts/all")
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().path("cartCount").toString()).isEqualTo(String.valueOf(count));
     }
 
     private CartResponseDto 장바구니에서_찾아옴(String accessToken) {
@@ -211,14 +237,17 @@ class CartAcceptanceTest extends DocumentConfiguration {
         return response.body().as(CartResponseDto.class);
     }
 
-    private void 장바구니_추가함(String accessToken, long productId, int quantity) {
-        RestAssured.given().log().all()
+    private Long 장바구니_추가함(String accessToken, long productId, int quantity) {
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new CartRequestDto(productId, quantity))
                 .when()
                 .post("/api/carts")
-                .then().log().all();
+                .then().log().all()
+                .extract();
+
+        return Long.valueOf(response.header("Location"));
     }
 
     private String 액세스_토큰_가져옴() {

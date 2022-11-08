@@ -1,4 +1,4 @@
-export const useGetToken = () => {
+export const getToken = () => {
   if (typeof window === "undefined") return;
 
   const objString = localStorage.getItem("accessToken");
@@ -12,7 +12,7 @@ export const useGetToken = () => {
   } else if (obj) {
     token = obj.value;
   }
-  console.log("useGetToken", token);
+  console.log("getToken", token);
 
   return token;
 };

@@ -29,19 +29,43 @@ export default function EnrollLayout({ title, context }) {
         </div>
       </div>
       <style jsx>{`
+        .EnrollLContents {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 0 auto;
+
+          .loginArea {
+            display: block;
+            text-align: center;
+          }
+
+          .loginTitle {
+            margin: 0px;
+
+            p {
+              padding: 0;
+              color: #3a3a3a;
+              font-weight: 700;
+            }
+          }
+
+          .loginSubtitle {
+            color: #999999;
+          }
+
+          .loginButton {
+            display: flex;
+            justify-content: space-between;
+          }
+        }
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
           .EnrollLContents {
             width: 1330px;
-            display: flex;
             height: 660px;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
 
             .loginArea {
-              display: block;
-              text-align: center;
               height: 550px;
             }
 
@@ -49,19 +73,14 @@ export default function EnrollLayout({ title, context }) {
               min-height: 30px;
               padding: 34px 0 20px;
               line-height: 1;
-              margin: 0px;
 
               p {
-                padding: 0;
-                color: #3a3a3a;
                 font-size: 36px;
-                font-weight: 700;
                 line-height: 1;
               }
             }
 
             .loginSubtitle {
-              color: #999999;
               font-size: 16px;
               line-height: 26px;
             }
@@ -70,8 +89,6 @@ export default function EnrollLayout({ title, context }) {
               margin: 38px auto;
               width: 665px;
               height: 385px;
-              display: flex;
-              justify-content: space-between;
             }
           }
         }
@@ -80,15 +97,9 @@ export default function EnrollLayout({ title, context }) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
           .EnrollLContents {
             width: 70vw;
-            display: flex;
             height: 100vw;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
 
             .loginArea {
-              display: block;
-              text-align: center;
               height: 70vw;
             }
 
@@ -96,20 +107,15 @@ export default function EnrollLayout({ title, context }) {
               min-height: 1.58vw;
               padding: 1.79vw 0 1.05vw;
               line-height: 1;
-              margin: 0vw;
 
               p {
-                padding: 0;
-                color: #3a3a3a;
                 font-size: 5vw;
-                font-weight: 700;
                 line-height: 1;
               }
             }
 
             .loginSubtitle {
               height: 21.05vw;
-              color: #999999;
               font-size: 3.37vw;
               line-height: 6.32vw;
             }
@@ -118,8 +124,6 @@ export default function EnrollLayout({ title, context }) {
               margin: 2vw auto;
               width: 52vw;
               height: 800px;
-              display: flex;
-              justify-content: space-between;
             }
           }
         }
@@ -128,15 +132,9 @@ export default function EnrollLayout({ title, context }) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
           .EnrollLContents {
             width: 480px;
-            display: flex;
             height: 550px;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
 
             .loginArea {
-              display: block;
-              text-align: center;
               height: 500px;
             }
 
@@ -144,20 +142,15 @@ export default function EnrollLayout({ title, context }) {
               min-height: 30px;
               padding: 0 0 20px;
               line-height: 1;
-              margin: 0px;
 
               p {
-                padding: 0;
-                color: #3a3a3a;
                 font-size: 36px;
-                font-weight: 700;
                 line-height: 1;
               }
             }
 
             .loginSubtitle {
               height: 70px;
-              color: #999999;
               font-size: 16px;
               line-height: 26px;
             }
@@ -166,9 +159,7 @@ export default function EnrollLayout({ title, context }) {
               margin: 38px auto;
               width: 480px;
               height: 200px;
-              display: flex;
               flex-direction: row;
-              justify-content: space-between;
             }
           }
         }
