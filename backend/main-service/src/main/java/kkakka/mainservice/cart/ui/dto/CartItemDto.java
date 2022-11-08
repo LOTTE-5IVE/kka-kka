@@ -23,24 +23,21 @@ public class CartItemDto {
     private CouponDto couponDto;
 
     public static CartItemDto from(CartItem c) {
+        return new CartItemDto(
+                c.getId(),
+                c.getProduct().getId(),
+                c.getProduct().getName(),
+                c.getProduct().getDiscount(),
+                c.getProduct().getImageUrl(),
+                c.getQuantity(),
+                c.getProduct().getPrice(),
+                c.getPrice(),
+                0,
+                0,
+                null);
+    }
 
-        Coupon coupon = c.getCoupon();
-        if (coupon == null) {
-            return new CartItemDto(
-                    c.getId(),
-                    c.getProduct().getId(),
-                    c.getProduct().getName(),
-                    c.getProduct().getDiscount(),
-                    c.getProduct().getImageUrl(),
-                    c.getQuantity(),
-                    c.getProduct().getPrice(),
-                    c.getPrice(),
-                    0,
-                    0,
-                    null);
-        }
-
-        Integer discountedPrice = c.getDiscountedPrice(coupon);
+    public static CartItemDto applyCouponDto(CartItem c, Integer discountedPrice, Coupon coupon) {
         return new CartItemDto(
                 c.getId(),
                 c.getProduct().getId(),
@@ -53,21 +50,6 @@ public class CartItemDto {
                 discountedPrice * c.getQuantity(),
                 c.getPrice() - (discountedPrice * c.getQuantity()),
                 CouponDto.toDto(coupon));
-    }
-
-    public static CartItemDto applyCouponDto(CartItem c, Integer discountedPrice, CouponDto couponDto) {
-        return new CartItemDto(
-                c.getId(),
-                c.getProduct().getId(),
-                c.getProduct().getName(),
-                c.getProduct().getDiscount(),
-                c.getProduct().getImageUrl(),
-                c.getQuantity(),
-                c.getProduct().getPrice(),
-                c.getPrice(),
-                discountedPrice * c.getQuantity(),
-                c.getPrice() - (discountedPrice * c.getQuantity()),
-                couponDto);
     }
 
 }

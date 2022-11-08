@@ -7,7 +7,6 @@ import kkakka.mainservice.cart.domain.repository.CartRepository;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
-import kkakka.mainservice.cart.ui.dto.CouponDto;
 import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
@@ -22,8 +21,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -58,11 +60,28 @@ public class CartService {
                 .orElseThrow(KkaKkaException::new);
 
         Cart cart = findOrCreateCart(member);
-        final List<CartItemDto> cartItemDtos = cart.getCartItems().stream()
-                .map(CartItemDto::from)
+        List<CartItem> cartItems = cart.getCartItems();
+
+        Stream<CartItemDto> couponIsPresent = cartItems.stream()
+                .filter(cartItem -> isCouponApplied(cartItem))
+                .map(cartItem -> CartItemDto.applyCouponDto(cartItem,
+                        cartItem.getDiscountedPrice(cartItem.getCoupon()),
+                        cartItem.getCoupon())
+                );
+        Stream<CartItemDto> couponIsNotPresent = cartItems.stream()
+                .filter(cartItem -> !isCouponApplied(cartItem))
+                .map(CartItemDto::from);
+
+        final List<CartItemDto> cartItemDtos = Stream.concat(couponIsPresent, couponIsNotPresent)
+                .sorted(Comparator.comparing(CartItemDto::getCartItemId))
                 .collect(Collectors.toList());
 
         return new CartResponseDto(cart.getId(), cartItemDtos);
+    }
+
+    private boolean isCouponApplied(CartItem cartItem) {
+        Coupon coupon = cartItem.getCoupon();
+        return coupon != null && coupon.isNotExpired();
     }
 
     private CartItem findOrCreateCartItem(Product product, Cart cart) {
@@ -94,7 +113,7 @@ public class CartService {
         cartItem.applyCoupon(coupon);
         Integer discountedPrice = cartItem.getDiscountedPrice(coupon);
 
-        return CartItemDto.applyCouponDto(cartItem, discountedPrice, CouponDto.toDto(coupon));
+        return CartItemDto.applyCouponDto(cartItem, discountedPrice, coupon);
     }
 
     private Cart findOrCreateCart(Member member) {
