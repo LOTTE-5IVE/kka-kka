@@ -65,4 +65,8 @@ public class ReviewService {
                 .orElse(0.0);
         product.updateRatingAvg(ratingAvg);
     }
+
+    public int countReviews(Long productId) {
+        return reviewRepository.countAllByProductId(productId);
+    }
 }
