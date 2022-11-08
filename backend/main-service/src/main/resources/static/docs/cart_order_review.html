@@ -453,6 +453,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_장바구니_수량_변경_성공">장바구니 수량 변경 성공</a></li>
 <li><a href="#_장바구니_조회_실패">장바구니 조회 실패</a></li>
 <li><a href="#_장바구니_삭제_성공">장바구니 삭제 성공</a></li>
+<li><a href="#_장바구니_쿠폰_적용_성공">장바구니 쿠폰 적용 성공</a></li>
 </ul>
 </li>
 <li><a href="#_order">Order</a>
@@ -490,13 +491,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/carts HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjY2MjQ4OTU4LCJleHAiOjE2NjYyNTAxNjd9.514a7fSpTla-t7ra1q1-ZjeZJcHgRnv2fbUHAlSYYTY
-Content-Type: application/json
-Host: localhost:9000</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/showMemberCartItems-success/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -505,42 +501,8 @@ Host: localhost:9000</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 20 Oct 2022 06:55:57 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 665
-
-{
-  "cartId" : 2,
-  "cartItems" : [ {
-    "id" : 3,
-    "productId" : 1,
-    "productName" : "롯데 제로 초콜릿칩 쿠키 168g",
-    "imageUrl" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-    "coupon_id" : null,
-    "quantity" : 1,
-    "price" : 4480,
-    "totalPrice" : 4480
-  }, {
-    "id" : 4,
-    "productId" : 2,
-    "productName" : "롯데 마가렛트 오리지널 176g",
-    "imageUrl" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-    "coupon_id" : null,
-    "quantity" : 1,
-    "price" : 4480,
-    "totalPrice" : 4480
-  } ]
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/showMemberCartItems-success/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -552,19 +514,8 @@ Content-Length: 665
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/carts HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjY2MjQ4OTU4LCJleHAiOjE2NjYyNTAxNjd9.514a7fSpTla-t7ra1q1-ZjeZJcHgRnv2fbUHAlSYYTY
-Content-Type: application/json
-Host: localhost:9000
-Content-Length: 39
-
-{
-  "productId" : 1,
-  "quantity" : 1
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/saveCartItem-success/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -573,17 +524,8 @@ Content-Length: 39
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Location: 4
-Date: Thu, 20 Oct 2022 06:55:57 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/saveCartItem-success/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -595,19 +537,8 @@ Connection: keep-alive</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/carts HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjY2MjQ4OTU4LCJleHAiOjE2NjYyNTAxNjd9.514a7fSpTla-t7ra1q1-ZjeZJcHgRnv2fbUHAlSYYTY
-Content-Type: application/json
-Host: localhost:9000
-Content-Length: 39
-
-{
-  "productId" : 1,
-  "quantity" : 3
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/cart-item-change-success/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -616,17 +547,8 @@ Content-Length: 39
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Location: 3
-Date: Thu, 20 Oct 2022 06:55:57 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/cart-item-change-success/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -638,19 +560,8 @@ Connection: keep-alive</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/carts HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjY2MjQ4OTU3LCJleHAiOjE2NjYyNTAxNjd9.bKw_xACFBppuP21_8MW0FT_DsIH7zbNN7ycUq8FDjG8
-Content-Type: application/json
-Host: localhost:9000
-Content-Length: 41
-
-{
-  "productId" : 999,
-  "quantity" : 1
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/saveCartItem-Fail/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -659,15 +570,8 @@ Content-Length: 41
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Date: Thu, 20 Oct 2022 06:55:57 GMT
-Connection: close</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/saveCartItem-Fail/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -679,13 +583,8 @@ Connection: close</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /api/carts/1 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjY2MjQ4OTU4LCJleHAiOjE2NjYyNTAxNjd9.514a7fSpTla-t7ra1q1-ZjeZJcHgRnv2fbUHAlSYYTY
-Content-Type: application/json
-Host: localhost:9000</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/removeCartItem-success/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -694,16 +593,31 @@ Host: localhost:9000</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Date: Thu, 20 Oct 2022 06:55:57 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive</code></pre>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/removeCartItem-success/http-response.adoc[]</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_장바구니_쿠폰_적용_성공"><a class="link" href="#_장바구니_쿠폰_적용_성공">장바구니 쿠폰 적용 성공</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Request</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/applyCartItemCoupon-success/http-request.adoc[]</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Response</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/applyCartItemCoupon-success/http-response.adoc[]</p>
 </div>
 </div>
 </div>
@@ -722,24 +636,8 @@ Connection: keep-alive</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/orders HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjY2MjQ4OTk1LCJleHAiOjE2NjYyNTAyMDR9.TjbtlG11QH5ydpGOTRgb2jJDecWMnj1gKoyBPzRwCY4
-Content-Type: application/json
-Host: localhost:9000
-Content-Length: 120
-
-{
-  "productOrders" : [ {
-    "productId" : 1,
-    "quantity" : 2
-  }, {
-    "productId" : 2,
-    "quantity" : 1
-  } ]
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/product-order-success/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -748,17 +646,8 @@ Content-Length: 120
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Location: 2
-Date: Thu, 20 Oct 2022 06:56:35 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/product-order-success/http-response.adoc[]</p>
 </div>
 </div>
 </div>
@@ -776,11 +665,8 @@ Connection: keep-alive</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/reviews?product=1&amp;page=1&amp;size=6 HTTP/1.1
-Host: localhost:9000</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/review-show/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -789,69 +675,8 @@ Host: localhost:9000</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 20 Oct 2022 06:56:48 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 931
-
-{
-  "pageInfo" : {
-    "currentPage" : 1,
-    "lastPage" : 1,
-    "countPerPage" : 6,
-    "totalSize" : 5
-  },
-  "data" : [ {
-    "id" : 5,
-    "contents" : "review_05",
-    "rating" : 5.0,
-    "createdAt" : "2022-10-20 15:56:48",
-    "member" : {
-      "name" : "member05"
-    }
-  }, {
-    "id" : 4,
-    "contents" : "review_04",
-    "rating" : 5.0,
-    "createdAt" : "2022-10-20 15:56:48",
-    "member" : {
-      "name" : "member04"
-    }
-  }, {
-    "id" : 3,
-    "contents" : "review_03",
-    "rating" : 5.0,
-    "createdAt" : "2022-10-20 15:56:48",
-    "member" : {
-      "name" : "member03"
-    }
-  }, {
-    "id" : 2,
-    "contents" : "review_02",
-    "rating" : 5.0,
-    "createdAt" : "2022-10-20 15:56:48",
-    "member" : {
-      "name" : "member02"
-    }
-  }, {
-    "id" : 1,
-    "contents" : "review_01",
-    "rating" : 5.0,
-    "createdAt" : "2022-10-20 15:56:48",
-    "member" : {
-      "name" : "member01"
-    }
-  } ]
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/review-show/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -863,19 +688,8 @@ Content-Length: 931
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/reviews?productOrder=1 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjY2MjQ5MDA4LCJleHAiOjE2NjYyNTAyMTh9.lKLbYxSTqri-OSR77jhVFeIb-NHUohXPJFiI9JfpfJY
-Content-Type: application/json
-Host: localhost:9000
-Content-Length: 50
-
-{
-  "contents" : "review test",
-  "rating" : 5.0
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/review-write/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -884,17 +698,8 @@ Content-Length: 50
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Location: 6
-Date: Thu, 20 Oct 2022 06:56:48 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/review-write/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -906,19 +711,8 @@ Connection: keep-alive</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/reviews?productOrder=1 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjY2MjQ5MDA4LCJleHAiOjE2NjYyNTAyMTh9.lKLbYxSTqri-OSR77jhVFeIb-NHUohXPJFiI9JfpfJY
-Content-Type: application/json
-Host: localhost:9000
-Content-Length: 55
-
-{
-  "contents" : "review product_1",
-  "rating" : 5.0
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/review-write-fail-already-written/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -927,15 +721,8 @@ Content-Length: 55
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Date: Thu, 20 Oct 2022 06:56:48 GMT
-Connection: close</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in cart_order_review.adoc - include::./build/generated-snippets/review-write-fail-already-written/http-response.adoc[]</p>
 </div>
 </div>
 </div>

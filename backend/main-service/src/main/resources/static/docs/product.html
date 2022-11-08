@@ -478,11 +478,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/products HTTP/1.1
-Host: localhost:9000</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in product.adoc - include::./build/generated-snippets/products-show-all-success/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -491,99 +488,8 @@ Host: localhost:9000</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 20 Oct 2022 06:56:42 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 2215
-
-{
-  "pageInfo" : {
-    "currentPage" : 1,
-    "lastPage" : 1,
-    "countPerPage" : 9,
-    "totalSize" : 5
-  },
-  "data" : [ {
-    "id" : 1,
-    "name" : "롯데 제로 초콜릿칩 쿠키 168g",
-    "price" : 4480,
-    "stock" : 10,
-    "discount" : 0,
-    "ratingAvg" : 0.0,
-    "category" : {
-      "id" : 1,
-      "name" : "test-category-01"
-    },
-    "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-    "detailImage_url" : "상세URL",
-    "nutritionInfo_url" : ""
-  }, {
-    "id" : 2,
-    "name" : "롯데 마가렛트 오리지널 176g",
-    "price" : 4480,
-    "stock" : 10,
-    "discount" : 0,
-    "ratingAvg" : 0.0,
-    "category" : {
-      "id" : 1,
-      "name" : "test-category-01"
-    },
-    "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-    "detailImage_url" : "상세URL",
-    "nutritionInfo_url" : ""
-  }, {
-    "id" : 3,
-    "name" : "롯데 웨하스 바닐라맛 50g",
-    "price" : 4480,
-    "stock" : 10,
-    "discount" : 0,
-    "ratingAvg" : 0.0,
-    "category" : {
-      "id" : 1,
-      "name" : "test-category-01"
-    },
-    "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-    "detailImage_url" : "상세URL",
-    "nutritionInfo_url" : ""
-  }, {
-    "id" : 4,
-    "name" : "롯데 웨하스 딸기맛 50g",
-    "price" : 4480,
-    "stock" : 10,
-    "discount" : 0,
-    "ratingAvg" : 0.0,
-    "category" : {
-      "id" : 2,
-      "name" : "test-category-02"
-    },
-    "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-    "detailImage_url" : "상세URL",
-    "nutritionInfo_url" : ""
-  }, {
-    "id" : 5,
-    "name" : "롯데 롯샌 파인애플 105g",
-    "price" : 4480,
-    "stock" : 10,
-    "discount" : 0,
-    "ratingAvg" : 0.0,
-    "category" : {
-      "id" : 2,
-      "name" : "test-category-02"
-    },
-    "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-    "detailImage_url" : "상세URL",
-    "nutritionInfo_url" : ""
-  } ]
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in product.adoc - include::./build/generated-snippets/products-show-all-success/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -595,11 +501,8 @@ Content-Length: 2215
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/products?category=1 HTTP/1.1
-Host: localhost:9000</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in product.adoc - include::./build/generated-snippets/showCategoryProducts-success/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -608,71 +511,8 @@ Host: localhost:9000</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 20 Oct 2022 06:56:42 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 1386
-
-{
-  "pageInfo" : {
-    "currentPage" : 1,
-    "lastPage" : 1,
-    "countPerPage" : 9,
-    "totalSize" : 3
-  },
-  "data" : [ {
-    "id" : 1,
-    "name" : "롯데 제로 초콜릿칩 쿠키 168g",
-    "price" : 4480,
-    "stock" : 10,
-    "discount" : 0,
-    "ratingAvg" : 0.0,
-    "category" : {
-      "id" : 1,
-      "name" : "test-category-01"
-    },
-    "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-    "detailImage_url" : "상세URL",
-    "nutritionInfo_url" : ""
-  }, {
-    "id" : 2,
-    "name" : "롯데 마가렛트 오리지널 176g",
-    "price" : 4480,
-    "stock" : 10,
-    "discount" : 0,
-    "ratingAvg" : 0.0,
-    "category" : {
-      "id" : 1,
-      "name" : "test-category-01"
-    },
-    "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-    "detailImage_url" : "상세URL",
-    "nutritionInfo_url" : ""
-  }, {
-    "id" : 3,
-    "name" : "롯데 웨하스 바닐라맛 50g",
-    "price" : 4480,
-    "stock" : 10,
-    "discount" : 0,
-    "ratingAvg" : 0.0,
-    "category" : {
-      "id" : 1,
-      "name" : "test-category-01"
-    },
-    "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-    "detailImage_url" : "상세URL",
-    "nutritionInfo_url" : ""
-  } ]
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in product.adoc - include::./build/generated-snippets/showCategoryProducts-success/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -684,11 +524,8 @@ Content-Length: 1386
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/products/1 HTTP/1.1
-Host: localhost:9000</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in product.adoc - include::./build/generated-snippets/showDetailProduct-success/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -697,48 +534,8 @@ Host: localhost:9000</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 20 Oct 2022 06:56:42 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 658
-
-{
-  "id" : 1,
-  "name" : "롯데 제로 초콜릿칩 쿠키 168g",
-  "price" : 4480,
-  "stock" : 10,
-  "discount" : 0,
-  "ratingAvg" : 0.0,
-  "category" : {
-    "id" : 1,
-    "name" : "test-category-01"
-  },
-  "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-  "detailImage_url" : "상세URL",
-  "nutritionInfo_url" : "",
-  "nutrition" : {
-    "id" : 1,
-    "calorie" : "398",
-    "carbohydrate" : "51",
-    "sugar" : "0",
-    "protein" : "7",
-    "fat" : "22",
-    "cholesterol" : "35",
-    "sodium" : "370",
-    "calcium" : "0",
-    "saturated_fat" : "12",
-    "trans_fat" : "0.5"
-  }
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in product.adoc - include::./build/generated-snippets/showDetailProduct-success/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -750,11 +547,8 @@ Content-Length: 658
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/products/999 HTTP/1.1
-Host: localhost:9000</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in product.adoc - include::./build/generated-snippets/showDetailProduct-fail/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -763,15 +557,8 @@ Host: localhost:9000</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Date: Thu, 20 Oct 2022 06:56:42 GMT
-Connection: close</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in product.adoc - include::./build/generated-snippets/showDetailProduct-fail/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -783,12 +570,8 @@ Connection: close</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/products/search?keyword=%EC%A0%9C%EB%A1%9C%20%EC%BF%A0%ED%82%A4 HTTP/1.1
-Content-Type: application/json
-Host: localhost:9000</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in product.adoc - include::./build/generated-snippets/products-show-search/http-request.adoc[]</p>
 </div>
 <div class="ulist">
 <ul>
@@ -797,43 +580,8 @@ Host: localhost:9000</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Thu, 20 Oct 2022 06:56:42 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 548
-
-{
-  "pageInfo" : {
-    "currentPage" : 1,
-    "lastPage" : 1,
-    "countPerPage" : 9,
-    "totalSize" : 1
-  },
-  "data" : [ {
-    "id" : 1,
-    "name" : "롯데 제로 초콜릿칩 쿠키 168g",
-    "price" : 4480,
-    "stock" : 10,
-    "discount" : 0,
-    "ratingAvg" : 0.0,
-    "category" : {
-      "id" : 1,
-      "name" : "test-category-01"
-    },
-    "image_url" : "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
-    "detailImage_url" : "상세URL",
-    "nutritionInfo_url" : ""
-  } ]
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Unresolved directive in product.adoc - include::./build/generated-snippets/products-show-search/http-response.adoc[]</p>
 </div>
 </div>
 </div>
