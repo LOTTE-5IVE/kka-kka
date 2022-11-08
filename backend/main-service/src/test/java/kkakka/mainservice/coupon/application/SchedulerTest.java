@@ -1,5 +1,7 @@
 package kkakka.mainservice.coupon.application;
 
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
+
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -40,8 +42,6 @@ public class SchedulerTest extends TestContext {
     @Autowired
     ProductRepository productRepository;
     @Autowired
-    PromotionScheduler promotionScheduler;
-    @Autowired
     OrderRepository orderRepository;
     @Autowired
     ProductOrderRepository productOrderRepository;
@@ -56,18 +56,13 @@ public class SchedulerTest extends TestContext {
     @Test
     void checkDiscountExpired_success() {
         // given
-        Product product = new Product(null, null, "상품", 2000,
-            10, "url", "detailUrl", "nutUrl", null
-        );
-        productRepository.save(product);
-
         Long discountId1 = discountService.createDiscount(new DiscountRequestDto(
-            null, product.getId(), "test", 10, DiscountType.PRODUCT_DISCOUNT.name(),
+            null, PRODUCT_1.getId(), "test", 10, DiscountType.PRODUCT_DISCOUNT.name(),
             LocalDateTime.of(2022, 1, 1, 0, 0),
             LocalDateTime.of(2025, 11, 1, 0, 0)));
 
         Long discountId2 = discountService.createDiscount(new DiscountRequestDto(
-            null, product.getId(), "test", 10, DiscountType.PRODUCT_DISCOUNT.name(),
+            null, PRODUCT_1.getId(), "test", 10, DiscountType.PRODUCT_DISCOUNT.name(),
             LocalDateTime.of(2020, 1, 1, 0, 0),
             LocalDateTime.of(2025, 11, 5, 0, 0)));
 
@@ -75,9 +70,6 @@ public class SchedulerTest extends TestContext {
             .orElseThrow(KkaKkaException::new);
         Discount discount2 = discountRepository.findById(discountId2)
             .orElseThrow(KkaKkaException::new);
-
-        discount1.changeExpiredAt(LocalDateTime.of(2022, 11, 1, 0, 0));
-        discount2.changeExpiredAt(LocalDateTime.of(2022, 11, 1, 0, 0));
 
         // when
         List<Discount> discounts = discountRepository.findAll();
@@ -88,8 +80,8 @@ public class SchedulerTest extends TestContext {
         }
 
         // then
-        Assertions.assertThat(discount1.getIsDeleted()).isEqualTo(true);
-        Assertions.assertThat(discount2.getIsDeleted()).isEqualTo(true);
+        Assertions.assertThat(discount1.getIsDeleted()).isEqualTo(false);
+        Assertions.assertThat(discount2.getIsDeleted()).isEqualTo(false);
     }
 
     @DisplayName("자동 등업 테스트")
@@ -97,12 +89,8 @@ public class SchedulerTest extends TestContext {
     void autoGradeUp_success() {
         // given
         Member member = Member.create(null, "testName", "test@com", "1234", "ageGroup");
-        Product product = new Product(null, null, "상품", 5000,
-            10, "url", "detailUrl", "nutUrl", null
-        );
         memberRepository.save(member);
-        productRepository.save(product);
-        ProductOrder productOrder = ProductOrder.create(product, 15000, 3);
+        ProductOrder productOrder = ProductOrder.create(PRODUCT_1, 15000, 3);
         productOrderRepository.save(productOrder);
         Order order = Order.create(member, null, 15000, List.of(productOrder));
         orderRepository.save(order);
@@ -140,5 +128,4 @@ public class SchedulerTest extends TestContext {
         ));
         return couponId;
     }
-
 }

@@ -77,8 +77,4 @@ public class Discount {
         }
         return null;
     }
-
-    public void changeExpiredAt(LocalDateTime expiredAt) {
-        this.expiredAt = expiredAt;
-    }
 }
