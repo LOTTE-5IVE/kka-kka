@@ -1,11 +1,17 @@
+import axios from "axios";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { fetchSearchData } from "../../apis/SearchApi";
 
-export default function SearchFilter() {
+export default function SearchFilter({setResource, search, page}) {
   const [category, setCategory] = useState([]);
-  const [sort, setSort] = useState();
+  const [sort, setSort] = useState("");
   const [toggle, setToggle] = useState(false);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [minCalorie, setMinCalorie] = useState(0);
+  const [maxCalorie, setMaxCalorie] = useState(0);
 
   const handleSingleCheck = (checked, product) => {
     if (checked) {
@@ -15,9 +21,17 @@ export default function SearchFilter() {
     }
   };
 
+  const searchFilter = async () => {
+    setResource (fetchSearchData(sort, page, search, category, minPrice, maxPrice, minCalorie, maxCalorie));
+  }
+
   useEffect(() => {
     console.log(category);
   }, [category]);
+
+  useEffect(() => {
+    searchFilter();
+  },[page]);
 
   return (
     <div className="SFWrapper">
@@ -50,11 +64,11 @@ export default function SearchFilter() {
           onChange={(e) => {
             setSort(e.target.value);
           }}
-          defaultValue={"DEFAULT"}
+          defaultValue={""}
         >
-          <option value="DEFAULT">정확도순</option>
-          <option value="최저가순">최저가순</option>
-          <option value="최고가순">최고가순</option>
+          <option value="">정확도순</option>
+          <option value="asc">최저가순</option>
+          <option value="desc">최고가순</option>
         </select>{" "}
       </div>
       {toggle && (
@@ -145,16 +159,19 @@ export default function SearchFilter() {
               <tr>
                 <th>가격</th>
                 <td>
-                  <input type="text" size="3" />원 ~{" "}
-                  <input type="text" size="3" />원
+                <input type="text" size="3"  onChange={(e) => {setMinPrice(e.target.value);
+                  console.log(minPrice);}} />원 ~{" "}
+                  <input type="text" size="3" onChange={(e) => {setMaxPrice(e.target.value);
+                  console.log(maxPrice);}}/>원
                 </td>
               </tr>
               <tr>
                 <th>칼로리</th>
                 <td>
-                  <input type="text" size="3" />
-                  kcal ~ <input type="text" size="3" />
-                  kcal
+                <input type="text" size="3" onChange={(e) => {setMinCalorie(e.target.value);
+                  console.log(minCalorie);}}/>
+                  kcal ~ <input type="text" size="3" onChange={(e) => {setMaxCalorie(e.target.value);
+                  console.log(maxCalorie);}}/>
                 </td>
               </tr>
               <tr>
@@ -162,6 +179,7 @@ export default function SearchFilter() {
                   <button
                     onClick={() => {
                       console.log("click");
+                      searchFilter();
                     }}
                   >
                     검색
@@ -174,107 +192,141 @@ export default function SearchFilter() {
       )}
 
       <style jsx>{`
+        .SFWrapper {
+          width: 100%;
+
+          .menu {
+            display: flex;
+            justify-content: space-between;
+
+            .filter {
+              display: flex;
+              align-items: center;
+              border: 1px solid #e5e5e5;
+              color: #3a3a3a;
+
+              .filterBtn {
+                display: flex;
+                align-items: center;
+              }
+            }
+
+            .toggle {
+              color: #ff3d45;
+              border: 1px solid #ff3d45;
+            }
+            select {
+              border: 1px solid #e5e5e5;
+              overflow: hidden;
+              background: #fff;
+            }
+          }
+
+          .searchFilter {
+            position: relative;
+            border-top: 1px solid #1a1a1a;
+
+            table {
+              width: 100%;
+              border: 0;
+              border-spacing: 0;
+              border-collapse: collapse;
+
+              th {
+                border-bottom: 1px solid #e5e5e5;
+              }
+
+              td {
+                border-bottom: 1px solid #e5e5e5;
+
+                button {
+                  margin: 0;
+                  border: 1px solid #ff3d44;
+                  background-color: #ff3d44;
+                  color: #fff;
+                  transition: 0.7s;
+                }
+
+                button:hover {
+                  background-color: #fff;
+                  color: #ff3d44;
+                }
+              }
+
+              ul {
+                list-style: none;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                align-items: center;
+                padding: 0;
+
+                li {
+                  display: flex;
+                  align-items: center;
+                  color: #707070;
+
+                  label {
+                    cursor: pointer;
+                  }
+                }
+              }
+            }
+          }
+        }
+
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
           .SFWrapper {
-            width: 100%;
-
             .menu {
-              display: flex;
-              justify-content: space-between;
-
               .filter {
-                display: flex;
-                align-items: center;
-                border: 1px solid #e5e5e5;
                 border-radius: 10px;
                 padding: 0 14px;
                 height: 38px;
                 font-size: 16px;
-                color: #3a3a3a;
 
                 .filterBtn {
-                  display: flex;
-                  align-items: center;
-
                   img {
                     margin-left: 5px;
                   }
                 }
               }
 
-              .toggle {
-                color: #ff3d45;
-                border: 1px solid #ff3d45;
-              }
               select {
-                border: 1px solid #e5e5e5;
                 border-radius: 10px;
                 width: 100px;
                 padding: 0 0 0 10px;
                 height: 40px;
-                overflow: hidden;
-                background: #fff;
               }
             }
 
             .searchFilter {
-              position: relative;
-              border-top: 1px solid #1a1a1a;
               margin: 30px 0 50px 0;
 
               table {
-                width: 100%;
-                border: 0;
-                border-spacing: 0;
-                border-collapse: collapse;
-
                 th {
                   padding: 20px 0px;
-                  border-bottom: 1px solid #e5e5e5;
                 }
 
                 td {
                   padding: 20px 0px;
-                  border-bottom: 1px solid #e5e5e5;
 
                   button {
                     width: 75px;
                     height: 30px;
                     line-height: 30px;
-                    margin: 0;
-                    border: 1px solid #ff3d44;
                     border-radius: 10px;
-                    background-color: #ff3d44;
-                    color: #fff;
-                    transition: 0.7s;
-                  }
-
-                  button:hover {
-                    background-color: #fff;
-                    color: #ff3d44;
                   }
                 }
 
                 ul {
-                  list-style: none;
-                  display: flex;
-                  flex-wrap: wrap;
-                  justify-content: flex-start;
-                  align-items: center;
-                  padding: 0;
-
                   li {
-                    display: flex;
-                    align-items: center;
                     width: 25%;
                     padding: 0 10px;
-                    color: #707070;
                     font-size: 16px;
 
                     label {
                       margin-left: 5px;
-                      cursor: pointer;
                     }
                   }
                 }
@@ -286,106 +338,57 @@ export default function SearchFilter() {
         @media screen and (max-width: 768px) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .SFWrapper {
-            width: 100%;
-
             .menu {
-              display: flex;
-              justify-content: space-between;
-
               .filter {
-                display: flex;
-                align-items: center;
-                border: 1px solid #e5e5e5;
                 border-radius: 10px;
                 padding: 0 14px;
                 height: 30px;
                 font-size: 10px;
-                color: #3a3a3a;
 
                 .filterBtn {
-                  display: flex;
-                  align-items: center;
-
                   img {
                     margin-left: 5px;
                   }
                 }
               }
 
-              .toggle {
-                color: #ff3d45;
-                border: 1px solid #ff3d45;
-              }
               select {
                 font-size: 10px;
-                border: 1px solid #e5e5e5;
                 border-radius: 10px;
                 width: 80px;
                 padding: 0 0 0 10px;
                 height: 30px;
-                overflow: hidden;
-                background: #fff;
               }
             }
 
             .searchFilter {
-              position: relative;
-              border-top: 1px solid #1a1a1a;
               margin: 20px 0 30px 0;
 
               table {
-                width: 100%;
-                border: 0;
-                border-spacing: 0;
-                border-collapse: collapse;
-
                 th {
                   font-size: 10px;
                   padding: 10px 0px;
-                  border-bottom: 1px solid #e5e5e5;
                 }
 
                 td {
                   padding: 10px 0px;
-                  border-bottom: 1px solid #e5e5e5;
 
                   button {
                     width: 75px;
                     height: 30px;
                     line-height: 30px;
-                    margin: 0;
-                    border: 1px solid #ff3d44;
                     border-radius: 10px;
-                    background-color: #ff3d44;
-                    color: #fff;
-                    transition: 0.7s;
-                  }
-
-                  button:hover {
-                    background-color: #fff;
-                    color: #ff3d44;
                   }
                 }
 
                 ul {
-                  list-style: none;
-                  display: flex;
-                  flex-wrap: wrap;
-                  justify-content: flex-start;
-                  align-items: center;
-                  padding: 0;
-
                   li {
-                    display: flex;
-                    align-items: center;
                     width: 50%;
                     padding: 0 5px;
-                    color: #707070;
                     font-size: 12px;
 
                     label {
                       margin-left: 3px;
-                      cursor: pointer;
                     }
                   }
                 }
@@ -397,105 +400,57 @@ export default function SearchFilter() {
         @media screen and (max-width: 480px) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
           .SFWrapper {
-            width: 100%;
             margin-top: 15px;
 
             .menu {
-              display: flex;
-              justify-content: space-between;
-
               .filter {
-                display: flex;
-                align-items: center;
-                border: 1px solid #e5e5e5;
                 border-radius: 10px;
                 padding: 0 14px;
                 height: 40px;
                 font-size: 16px;
-                color: #3a3a3a;
 
                 .filterBtn {
-                  display: flex;
-                  align-items: center;
-
                   img {
                     margin-left: 5px;
                   }
                 }
               }
 
-              .toggle {
-                color: #ff3d45;
-                border: 1px solid #ff3d45;
-              }
               select {
-                border: 1px solid #e5e5e5;
                 border-radius: 10px;
                 width: 100px;
                 padding: 0 0 0 10px;
                 height: 40px;
-                overflow: hidden;
-                background: #fff;
               }
             }
 
             .searchFilter {
-              position: relative;
-              border-top: 1px solid #1a1a1a;
               margin: 20px 0;
 
               table {
-                width: 100%;
-                border: 0;
-                border-spacing: 0;
-                border-collapse: collapse;
-
                 th {
                   padding: 20px 0px;
-                  border-bottom: 1px solid #e5e5e5;
                 }
 
                 td {
                   padding: 20px 0px;
-                  border-bottom: 1px solid #e5e5e5;
 
                   button {
                     width: 75px;
                     height: 30px;
                     line-height: 30px;
-                    margin: 0;
-                    border: 1px solid #ff3d44;
                     border-radius: 10px;
-                    background-color: #ff3d44;
-                    color: #fff;
-                    transition: 0.7s;
-                  }
-
-                  button:hover {
-                    background-color: #fff;
-                    color: #ff3d44;
                   }
                 }
 
                 ul {
-                  list-style: none;
-                  display: flex;
-                  flex-wrap: wrap;
-                  justify-content: flex-start;
-                  align-items: center;
-                  padding: 0;
-
                   li {
-                    display: flex;
-                    align-items: center;
                     width: 50%;
                     padding: 0 10px;
-                    color: #707070;
                     font-size: 16px;
 
                     label {
                       margin-left: 5px;
-                      cursor: pointer;
                     }
                   }
                 }

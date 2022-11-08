@@ -6,6 +6,7 @@ import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -25,8 +26,11 @@ import kkakka.mainservice.order.ui.dto.RecipientRequest;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
 import org.hibernate.Session;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -87,6 +91,8 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
     @DisplayName("주문내역 조회 - 성공")
     @Test
     void findMemberOrders_success() {
+        tearDown();
+
         //given
         String accessToken = 액세스_토큰_가져옴();
         주문_요청함(accessToken, PRODUCT_1.getId());
@@ -112,6 +118,8 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
     @DisplayName("주문 조회 마지막 페이지가 아닐 때 - 성공")
     @Test
     void findMemberOrdersWithPage_success() {
+        tearDown();
+
         //given
         String accessToken = 액세스_토큰_가져옴();
         주문_요청함(accessToken, PRODUCT_1.getId());
@@ -141,6 +149,36 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
                 .isEqualTo("false");
     }
 
+    @DisplayName("총 주문 수 조회 - 성공")
+    @Test
+    void findMemberOrderCount_success() {
+        tearDown();
+
+        //given
+        String accessToken = 액세스_토큰_가져옴();
+        Long order1 = 주문_요청함(accessToken, PRODUCT_1.getId());
+        Long order2 = 주문_요청함(accessToken, PRODUCT_1.getId());
+        Long order3 = 주문_요청함(accessToken, PRODUCT_1.getId());
+        Long order4 = 주문_요청함(accessToken, PRODUCT_1.getId());
+        Long order5 = 주문_요청함(accessToken, PRODUCT_1.getId());
+        int count = List.of(order1, order2, order3, order4, order5).size();
+
+        //when
+        final ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("orders-info-member-count-success"))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/members/me/orders/all")
+                .then().log().all()
+                .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().path("orderCount").toString()).isEqualTo(String.valueOf(count));
+    }
+
     private void 후기_작성함(String accessToken, String contents, Double rating) {
         final ReviewRequest reviewRequest = new ReviewRequest(contents, rating);
         final ExtractableResponse<Response> orderResponse = RestAssured
@@ -163,7 +201,7 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
                 .then().log().all();
     }
 
-    private void 주문_요청함(String accessToken, Long productId) {
+    private Long 주문_요청함(String accessToken, Long productId) {
         OrderRequest orderRequest = new OrderRequest(
                 new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(), TEST_MEMBER_01.getAddress()),
@@ -171,7 +209,7 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         );
 
         //when
-        RestAssured
+        final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -180,6 +218,8 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
                 .post("/api/orders")
                 .then().log().all()
                 .extract();
+
+        return Long.valueOf(response.header("Location"));
     }
 
     private String 액세스_토큰_가져옴() {

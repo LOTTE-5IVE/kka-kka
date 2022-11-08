@@ -82,6 +82,11 @@ export default function Sidebar({ menu }) {
       </div>
 
       <style jsx>{`
+        a:hover {
+          transition: 0.7s;
+          color: #3a3a3a;
+        }
+
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
           .contents {

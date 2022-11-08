@@ -6,8 +6,10 @@ import ProductRecCard from "../../components/product/ProductRecCard";
 import Pagination from "../../components/product/Pagination";
 import { Suspense } from "react";
 import { fetchData } from "../../apis/ProductApi";
+import { fetchSearchData } from "../../apis/SearchApi";
 import ProductSkeleton from "../../components/product/ProductSkeleton";
 import SearchFilter from "../../components/product/SearchFilter";
+import NoSearch from "../../components/product/NoSearch";
 
 export default function ProductList() {
   const cat_name = {
@@ -29,35 +31,46 @@ export default function ProductList() {
   const [page, setPage] = useState(1);
   const [resource, setResource] = useState();
   const [lastPage, setLastPage] = useState();
+  const [keyword, setKeyword] = useState();
+  const [totalHits, setTotalHits] = useState(0);
 
   useEffect(() => {
-    setResource(fetchData(cat_id, page));
+    if (!search && cat_id) setResource(fetchData(cat_id, page));
   }, [page]);
 
   useEffect(() => {
-    setPage(1);
-    setResource(fetchData(cat_id, 1));
+    if (page !== 1) setPage(1);
+    if (!search && cat_id) setResource(fetchData(cat_id, 1));
   }, [cat_id]);
+
+  useEffect(() => {
+    if(search) {
+      setKeyword(search);
+      setResource(fetchSearchData("", page, search, "", 0, 0, 0, 0));
+    }
+  },[search]);
+
+  useEffect(() => {
+
+  },[keyword]);
 
   const ProductLists = () => {
     if (!resource) return;
 
     const data = resource.productList.read();
-
-    useEffect(() => {
-      setLastPage(data?.pageInfo?.lastPage);
-    }, []);
+    setLastPage(data.pageInfo.lastPage);
 
     return (
       <>
-        <ul className="productList">
+        {data.data.length > 0 ? <ul className="productList">
+        {setTotalHits(data.totalHits)}
           {data?.data?.map((product) => {
             return (
               <li className="productInner" key={product.id}>
                 <div className="productBox">
                   <ProductRecCard
                     id={product.id}
-                    imgsrc={product.image_url}
+                    imgsrc={product.imageUrl}
                     name={product.name}
                     price={product.price}
                     discount={product.discount}
@@ -66,7 +79,7 @@ export default function ProductList() {
               </li>
             );
           })}
-        </ul>
+        </ul>:<NoSearch />}
 
         <style jsx>{`
           @media screen and (min-width: 769px) {
@@ -145,20 +158,22 @@ export default function ProductList() {
         </div>
 
         <div className="productWrapper">
-          {search && (
+          {/* {search && (
             <div className="title">
               <div className="searchBar">
                 <img src="/product/mg.png" />
                 <p>
-                  <input type="text" size="12" value={search} />
+                <input type="text" size="12" defaultValue={keyword} onChange={(e) => {setKeyword(e.target.value);
+                  console.log("테스트: ",e.target.value);}} />
                 </p>
               </div>
             </div>
-          )}
+          )} */}
 
-          <SearchFilter />
+          <SearchFilter setResource={setResource} search={keyword} page={page}/>
           <div className="title">
             {!search && <p className="category">{cat_name[cat_id]}</p>}
+            {search && totalHits > 0 && <p className="totalHits">등록 상품: {totalHits}</p>}
           </div>
           <Suspense
             fallback={
@@ -177,15 +192,64 @@ export default function ProductList() {
       </div>
 
       <style jsx>{`
+        .ProductLContents {
+          display: flex;
+
+          .sidebar {
+            display: inline-block;
+          }
+
+          .productWrapper {
+            .title {
+              .category {
+                font-weight: 700;
+              }
+            }
+
+            .searchBar {
+              width: 100%;
+              display: flex;
+              align-items: flex-start;
+
+              p {
+                width: 30%;
+                margin-left: 3%;
+                padding-left: 3%;
+                border-bottom: 3px solid red;
+
+                input[type="text"] {
+                  border: 0;
+                  font-weight: 600;
+                }
+
+                input[type="text"]:focus {
+                  outline: none;
+                }
+              }
+            }
+
+            .productList {
+              display: table;
+
+              .productInner {
+                display: inline-block;
+                width: 33.3%;
+
+                .productBox {
+                  margin: 0 auto;
+                }
+              }
+            }
+          }
+        }
+
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
           .ProductLContents {
             margin: 57px auto 0;
             width: 1330px;
-            display: flex;
 
             .sidebar {
-              display: inline-block;
               width: 236px;
               margin-right: 67px;
             }
@@ -202,48 +266,30 @@ export default function ProductList() {
 
                 .category {
                   font-size: 24px;
-                  font-weight: 700;
                 }
               }
 
               .searchBar {
-                width: 100%;
-                display: flex;
-                align-items: flex-start;
                 margin-bottom: 20px;
 
                 p {
-                  width: 30%;
-                  margin-left: 3%;
-                  padding-left: 3%;
                   line-height: 35px;
-                  border-bottom: 3px solid red;
 
                   input[type="text"] {
-                    border: 0;
                     font-size: 17px;
-                    font-weight: 600;
-                  }
-
-                  input[type="text"]:focus {
-                    outline: none;
                   }
                 }
               }
 
               .productList {
-                display: table;
                 width: 1035px;
                 height: 1566px;
 
                 .productInner {
-                  display: inline-block;
-                  width: 33.3%;
                   margin-bottom: 69px;
 
                   .productBox {
                     width: 298px;
-                    margin: 0 auto;
                   }
                 }
               }
@@ -256,10 +302,8 @@ export default function ProductList() {
           .ProductLContents {
             margin: 28.5px auto 0;
             width: 80vw;
-            display: flex;
 
             .sidebar {
-              display: inline-block;
               width: 12.42vw;
               margin-right: 3.53vw;
             }
@@ -276,47 +320,31 @@ export default function ProductList() {
 
                 .category {
                   font-size: 1.26vw;
-                  font-weight: 700;
                 }
               }
 
               .searchBar {
-                width: 100%;
-                display: flex;
                 align-items: center;
 
                 p {
-                  width: 30%;
-                  margin-left: 3%;
-                  padding-left: 3%;
                   line-height: 1.84vw;
                   border-bottom: 0.16vw solid red;
 
                   input[type="text"] {
-                    border: 0;
                     font-size: 0.89vw;
-                    font-weight: 600;
-                  }
-
-                  input[type="text"]:focus {
-                    outline: none;
                   }
                 }
               }
 
               .productList {
-                display: table;
                 width: 60vw;
                 height: 82.42vw;
 
                 .productInner {
-                  display: inline-block;
-                  width: 33.3%;
                   margin-bottom: 3vw;
 
                   .productBox {
                     width: 15.68vw;
-                    margin: 0 auto;
                   }
                 }
               }
@@ -329,7 +357,6 @@ export default function ProductList() {
           .ProductLContents {
             margin: 0;
             width: 480px;
-            display: flex;
 
             .sidebar {
               display: none;
@@ -345,48 +372,31 @@ export default function ProductList() {
 
                 .category {
                   font-size: 24px;
-                  font-weight: 700;
                 }
               }
 
               .searchBar {
-                width: 100%;
-                display: flex;
                 align-items: center;
 
                 p {
-                  width: 30%;
-                  margin-left: 3%;
-                  padding-left: 3%;
                   line-height: 35px;
-                  border-bottom: 3px solid red;
 
                   input[type="text"] {
-                    border: 0;
                     font-size: 17px;
-                    font-weight: 600;
-                  }
-
-                  input[type="text"]:focus {
-                    outline: none;
                   }
                 }
               }
 
               .productList {
-                display: table;
                 width: 480px;
                 height: 750px;
                 padding: 0;
 
                 .productInner {
-                  display: inline-block;
-                  width: 33.3%;
                   margin-bottom: 20px;
 
                   .productBox {
                     width: 150px;
-                    margin: 0 auto;
                   }
                 }
               }

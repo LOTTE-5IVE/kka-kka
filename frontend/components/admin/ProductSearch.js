@@ -1,7 +1,7 @@
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useMoney } from "../../hooks/useMoney";
+import { commaMoney } from "../../hooks/commaMoney";
 import { AdminButton } from "../common/Button/AdminButton";
 
 export default function ProductSearch() {
@@ -49,7 +49,7 @@ export default function ProductSearch() {
                   </td>
                   <td>{product.name}</td>
 
-                  <td>{useMoney(product.price)}원</td>
+                  <td>{commaMoney(product.price)}원</td>
                   <td>{product.stock}</td>
                   <td>{product.category.name}</td>
                   <td>

@@ -2,8 +2,8 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { useState } from "react";
 import { useEffect } from "react";
 import { GetHApi } from "../../apis/Apis";
-import { useGetToken } from "../../hooks/useGetToken";
-import { useMoney } from "../../hooks/useMoney";
+import { getToken } from "../../hooks/getToken";
+import { commaMoney } from "../../hooks/commaMoney";
 import { NGray } from "../../typings/NormalColor";
 
 export function CouponApply({ handleModal, product }) {
@@ -19,7 +19,7 @@ export function CouponApply({ handleModal, product }) {
   };
 
   useEffect(() => {
-    setToken(useGetToken());
+    setToken(getToken());
     if (token !== "") {
       getProductCoupon();
     }
@@ -65,7 +65,7 @@ export function CouponApply({ handleModal, product }) {
                   {product.productDiscount ? (
                     <>
                       <p style={{ marginBottom: "0" }}>
-                        {useMoney(
+                        {commaMoney(
                           Math.ceil(
                             product.price *
                               (1 - 0.01 * product.productDiscount),
@@ -75,14 +75,14 @@ export function CouponApply({ handleModal, product }) {
                       </p>
                       <p style={{ marginBottom: "0" }}>
                         <span>
-                          {useMoney(product.price * product.quantity)}원
+                          {commaMoney(product.price * product.quantity)}원
                         </span>
                       </p>
                     </>
                   ) : (
                     <>
                       <p style={{ marginBottom: "0" }}>
-                        {useMoney(product.price * product.quantity)}원
+                        {commaMoney(product.price * product.quantity)}원
                       </p>
                     </>
                   )}
@@ -124,7 +124,7 @@ export function CouponApply({ handleModal, product }) {
                     <td>{coupon.percentage}%</td>
                     <td>{coupon.expiredAt.slice(0, 10)}</td>
                     <td>
-                      {useMoney(
+                      {commaMoney(
                         Math.ceil(
                           Number(
                             Math.ceil(
@@ -186,7 +186,7 @@ export function CouponApply({ handleModal, product }) {
                     <td>{coupon.percentage}%</td>
                     <td>{coupon.expiredAt.slice(0, 10)}</td>
                     <td>
-                      {useMoney(
+                      {commaMoney(
                         Math.ceil(
                           Number(
                             Math.ceil(
