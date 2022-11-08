@@ -32,7 +32,7 @@ public class PromotionScheduler {
     @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void checkDiscountExpiredDateSchedule() {
-        List<Discount> discounts = discountRepository.findAll();
+        List<Discount> discounts = discountRepository.findAllDiscountsNotDeleted();
         for (Discount discount : discounts) {
             if (LocalDateTime.now().isAfter(discount.getExpiredAt())) {
                 discountService.deleteDiscount(discount.getId());
