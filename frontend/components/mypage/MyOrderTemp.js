@@ -26,7 +26,7 @@ export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
   const getMoreOrders = async () => {
     GetHApi(`/api/members/me/orders?pageSize=3&orderId=${lastId}`, token).then(
       (res) => {
-        if (res.length > 0) {
+        if (res.data.length > 0) {
           setOrderList(orderList.concat(res.data));
           setLastId(res.pageInfo.lastId);
         }
