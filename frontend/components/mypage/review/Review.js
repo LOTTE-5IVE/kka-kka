@@ -64,6 +64,7 @@ export default function Review({ productOrderId, setReviewed }) {
             onStart={onRatingStart}
             borderColor={"#ffd151"}
             starWidth={"25px"}
+            length={5}
           />
           <textarea
             value={contents}

@@ -1,6 +1,8 @@
 const FILL = {
   EMPTY: 'transparent',
+  SMALL_HALF: 'url(#small_half_grad)',
   HALF: 'url(#half_grad)',
+  BIG_HALF: 'url(#big_half_grad)',
   FULL: 'url(#full)',
 };
 
@@ -25,6 +27,14 @@ const StarIcon = ({
         <linearGradient id="half_grad">
           <stop offset="50%" stopColor={color} />
           <stop offset="50%" stopColor="transparent" stopOpacity="1" />
+        </linearGradient>
+        <linearGradient id="small_half_grad">
+          <stop offset="35%" stopColor={color} />
+          <stop offset="35%" stopColor="transparent" stopOpacity="1" />
+        </linearGradient>
+        <linearGradient id="big_half_grad">
+          <stop offset="65%" stopColor={color} />
+          <stop offset="65%" stopColor="transparent" stopOpacity="1" />
         </linearGradient>
       </defs>
       <path
