@@ -67,3 +67,36 @@ include::{snippets}/orders-info-member-success/http-request.adoc[]
 - Response
 
 include::{snippets}/orders-info-member-success/http-response.adoc[]
+
+
+==== 회원 주문내역 조회 (페이지가 더 있을 때)
+
+- Request
+
+include::{snippets}/orders-info-member-not-last-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/orders-info-member-not-last-success/http-response.adoc[]
+
+
+=== 회원 총 주문 수 조회
+
+- Request
+
+include::{snippets}/orders-info-member-count-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/orders-info-member-count-success/http-response.adoc[]
+
+
+=== 회원 총 장바구니 아이템 수 조회
+
+- Request
+
+include::{snippets}/cart-item-count-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/cart-item-count-success/http-response.adoc[]

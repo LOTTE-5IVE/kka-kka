@@ -73,6 +73,21 @@ public class Coupon {
     }
 
     public static Coupon create(
+        Category category,
+        Product product,
+        String name,
+        PriceRule priceRule,
+        LocalDateTime startedAt,
+        LocalDateTime expiredAt,
+        int maxDiscount,
+        int minOrderPrice
+    ) {
+        return new Coupon(null, category, null, product, name, priceRule,
+            LocalDateTime.now(),
+            startedAt, expiredAt, null, maxDiscount, minOrderPrice, false);
+    }
+
+    public static Coupon create(
         Grade grade,
         String name,
         PriceRule priceRule,
@@ -84,6 +99,19 @@ public class Coupon {
     ) {
         return new Coupon(null, null, grade, null, name, priceRule, LocalDateTime.now(),
             startedAt, expiredAt, percentage, maxDiscount, minOrderPrice, false);
+    }
+
+    public static Coupon create(
+        Grade grade,
+        String name,
+        PriceRule priceRule,
+        LocalDateTime startedAt,
+        LocalDateTime expiredAt,
+        int maxDiscount,
+        int minOrderPrice
+    ) {
+        return new Coupon(null, null, grade, null, name, priceRule, LocalDateTime.now(),
+            startedAt, expiredAt, null, maxDiscount, minOrderPrice, false);
     }
 
     public boolean isNotExpired() {
@@ -105,11 +133,22 @@ public class Coupon {
         return null;
     }
 
+    public Integer getPercentage() {
+        if (percentage != null) {
+            return percentage;
+        }
+        return null;
+    }
+
     public void deleteCoupon() {
         this.isDeleted = true;
     }
 
     public boolean isDeleted() {
         return this.isDeleted;
+    }
+
+    public boolean isPercentageCoupon() {
+        return this.percentage != null && this.percentage > 0 ? true : false;
     }
 }

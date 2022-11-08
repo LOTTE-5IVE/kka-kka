@@ -20,10 +20,10 @@ public class Provider {
     private String providerId;
     @Column
     @Enumerated(EnumType.STRING)
-    private MemberProviderName memberProviderName;
+    private ProviderName providerName;
 
-    public static Provider create(String providerId, MemberProviderName memberProviderName) {
-        return new Provider(providerId, memberProviderName);
+    public static Provider create(String providerId, ProviderName providerName) {
+        return new Provider(providerId, providerName);
     }
 
     @Override
@@ -36,11 +36,11 @@ public class Provider {
         }
         Provider provider = (Provider) o;
         return Objects.equals(providerId, provider.providerId)
-            && memberProviderName == provider.memberProviderName;
+            && providerName == provider.providerName;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(providerId, memberProviderName);
+        return Objects.hash(providerId, providerName);
     }
 }

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useMoney } from "../../hooks/useMoney";
+import { commaMoney } from "../../hooks/commaMoney";
 
 export default function ApplyProduct({ productId, setProductId }) {
   const [products, setProducts] = useState();
@@ -36,9 +36,9 @@ export default function ApplyProduct({ productId, setProductId }) {
           <p style={{ width: "100px" }}>가격</p>
         </div>
       </div>
-      {products?.map((product) => {
+      {products?.map((product, idx) => {
         return (
-          <div className="outter">
+          <div className="outter" key={idx}>
             <div className="check">
               <ul style={{ width: "90px" }}>
                 <li>
@@ -72,7 +72,7 @@ export default function ApplyProduct({ productId, setProductId }) {
             </div>
             <div>
               <ul style={{ width: "100px" }}>
-                <li>{useMoney(product.price)}원</li>
+                <li>{commaMoney(product.price)}원</li>
               </ul>
             </div>
           </div>
@@ -82,7 +82,7 @@ export default function ApplyProduct({ productId, setProductId }) {
       <style jsx>{`
         .wrapper {
           overflow: auto;
-          height: 23vw;
+          height: 16vw;
           .title {
             display: flex;
 

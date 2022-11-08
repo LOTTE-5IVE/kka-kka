@@ -1,7 +1,13 @@
 package kkakka.mainservice.member.member.ui;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import kkakka.mainservice.cart.application.CartService;
+import kkakka.mainservice.common.dto.NoOffsetPageInfo;
+import kkakka.mainservice.common.dto.PageableNoOffsetResponse;
+import kkakka.mainservice.coupon.application.CouponService;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.auth.ui.MemberOnly;
@@ -31,6 +37,8 @@ public class MemberController {
 
     private final MemberService memberService;
     private final OrderService orderService;
+    private final CartService cartService;
+    private final CouponService couponService;
 
     @GetMapping("/health_check")
     public String status() {
@@ -54,7 +62,7 @@ public class MemberController {
     }
 
     @GetMapping("/me/orders")
-    public ResponseEntity<List<OrderResponse>> findOrders(
+    public ResponseEntity<PageableNoOffsetResponse<List<OrderResponse>>> showMyOrders(
             @AuthenticationPrincipal LoginMember loginMember,
             @RequestParam(required = false) Long orderId,
             @RequestParam(defaultValue = "6") int pageSize
@@ -62,10 +70,51 @@ public class MemberController {
         final List<MemberOrderDto> memberOrderDtos = orderService.showMemberOrders(
                 loginMember.getId(),
                 orderId, pageSize);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                memberOrderDtos.stream()
-                        .map(MemberOrderDto::toResponseDto)
-                        .collect(Collectors.toList())
+        final Long lastOrderIdInList = memberOrderDtos.get(memberOrderDtos.size() - 1).getId();
+
+        final boolean isLastOrder = orderService.checkIsLastOrder(
+                loginMember.getId(),
+                lastOrderIdInList
         );
+
+        final NoOffsetPageInfo pageInfo = NoOffsetPageInfo.from(
+                lastOrderIdInList,
+                isLastOrder,
+                pageSize,
+                memberOrderDtos.size()
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                PageableNoOffsetResponse.from(
+                        memberOrderDtos.stream()
+                                .map(MemberOrderDto::toResponseDto)
+                                .collect(Collectors.toList()), pageInfo)
+        );
+    }
+
+    @GetMapping("/me/orders/all")
+    public ResponseEntity<Map<String, Integer>> showOrderCount(
+            @AuthenticationPrincipal LoginMember loginMember) {
+        final int orderCount = orderService.showMemberOrderCount(loginMember.getId());
+        final Map<String, Integer> result = new HashMap<>();
+        result.put("orderCount", orderCount);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/me/carts/all")
+    public ResponseEntity<Map<String, Integer>> showCartCount(
+            @AuthenticationPrincipal LoginMember loginMember) {
+        final int cartItemCount = cartService.showCartItemCount(loginMember.getId());
+        final Map<String, Integer> result = new HashMap<>();
+        result.put("cartCount", cartItemCount);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("me/coupons/all")
+    public ResponseEntity<Map<String, Integer>> showCouponCount(@AuthenticationPrincipal LoginMember loginMember) {
+        final int couponCount = couponService.showMemberCouponCount(loginMember.getId());
+        final Map<String, Integer> result = new HashMap<>();
+        result.put("couponCount", couponCount);
+        return ResponseEntity.ok().body(result);
     }
 }

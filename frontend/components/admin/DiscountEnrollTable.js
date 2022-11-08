@@ -86,7 +86,7 @@ export default function DiscountEnrollTable() {
                 </div>
               </td>
             </tr>
-            <tr style={{ height: "4vw" }}>
+            <tr style={{ height: "3vw" }}>
               <th scope="row">할인 설정</th>
               <td
                 style={{

@@ -4,11 +4,11 @@ spring:
       uri: http://127.0.0.1:8888
       name: main-service
   profiles:
-    active: local
+    active: dev
     group:
-      "local": "console-logging, error-file-logging"
-      "dev": "console-logging, file-logging, performance-logging, error-file-logging"
-      "prod": "file-logging, error-file-logging"
+      "local": "console-logging"
+      "dev": "console-logging, file-logging, performance-logging"
+      "prod": "file-logging"
 
 logging:
   config: classpath:logback-spring.xml
@@ -19,3 +19,4 @@ logging:
         web:
           filter:
             CommonsRequestLoggingFilter: DEBUG
+    kkakka.mainservice.member.auth.application: DEBUG

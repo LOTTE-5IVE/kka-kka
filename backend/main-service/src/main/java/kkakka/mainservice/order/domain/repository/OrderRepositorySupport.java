@@ -1,6 +1,6 @@
 package kkakka.mainservice.order.domain.repository;
 
-import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import kkakka.mainservice.order.domain.Order;
@@ -21,11 +21,6 @@ public class OrderRepositorySupport extends QuerydslRepositorySupport {
     }
 
     public List<Order> findByMemberId(Long memberId, Long lastId, int pageSize) {
-        BooleanBuilder dynamicLtId = new BooleanBuilder();
-        if (lastId != null) {
-            dynamicLtId.and(QOrder.order.id.lt(lastId));
-        }
-
         return jpaQueryFactory
                 .selectFrom(QOrder.order)
                 .leftJoin(QOrder.order.productOrders, QProductOrder.productOrder)
@@ -33,9 +28,28 @@ public class OrderRepositorySupport extends QuerydslRepositorySupport {
                 .leftJoin(QProductOrder.productOrder.product, QProduct.product)
                 .fetchJoin()
                 .where(QOrder.order.member.id.eq(memberId))
-                .where(dynamicLtId)
+                .where(
+                        ltOrderLastId(lastId)
+                )
                 .orderBy(QOrder.order.id.desc())
                 .limit(pageSize)
+                .fetch();
+    }
+
+    private BooleanExpression ltOrderLastId(Long lastId) {
+        if (lastId == null) {
+            return null;
+        }
+        return QOrder.order.id.lt(lastId);
+    }
+
+    public List<Order> isLastId(Long memberId, Long lastId) {
+        return jpaQueryFactory
+                .selectFrom(QOrder.order)
+                .where(QOrder.order.member.id.eq(memberId))
+                .where(QOrder.order.id.lt(lastId))
+                .orderBy(QOrder.order.id.desc())
+                .limit(1)
                 .fetch();
     }
 }

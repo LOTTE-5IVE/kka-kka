@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { GetHApi } from "../../apis/Apis";
-import { useGetToken } from "../../hooks/useGetToken";
-import { useMoney } from "../../hooks/useMoney";
+import { getToken } from "../../hooks/getToken";
+import { commaMoney } from "../../hooks/commaMoney";
 
 export default function MyCouponCard({ test }) {
   const [coupons, setCoupons] = useState();
 
   const getCoupon = async () => {
-    GetHApi("/api/coupons/me", useGetToken()).then((res) => {
+    GetHApi("/api/coupons/me", getToken()).then((res) => {
       if (res) {
         setCoupons(res);
       }
@@ -25,9 +25,9 @@ export default function MyCouponCard({ test }) {
           <tr style={{ height: "3vw" }} key={coupon.id}>
             <td>{coupon.name} </td>
             <td>
-              {coupon.percentage}% (최대 {useMoney(coupon.maxDiscount)}원){" "}
+              {coupon.percentage}% (최대 {commaMoney(coupon.maxDiscount)}원){" "}
             </td>
-            <td>{useMoney(coupon.minOrderPrice)}원 이상 구매시</td>
+            <td>{commaMoney(coupon.minOrderPrice)}원 이상 구매시</td>
             <td>
               {coupon.startedAt.slice(0, 10)} ~ {coupon.expiredAt.slice(0, 10)}
             </td>

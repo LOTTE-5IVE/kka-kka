@@ -22,15 +22,15 @@ export default function Sidebar({ menu }) {
     <>
       <div className="contents">
         <div className="title">
-          <h2>과자모음</h2>
+          <p>과자모음</p>
         </div>
         <ul>
-          <li onClick={() => setTab("1")}>
+          <li onClick={() => setTab("0")}>
             <Link
               href={{
                 pathname: "/product",
                 query: {
-                  cat_id: 1,
+                  cat_id: 0,
                 },
               }}
             >
@@ -82,37 +82,90 @@ export default function Sidebar({ menu }) {
       </div>
 
       <style jsx>{`
-        .contents {
-          width: 100%;
+        a:hover {
+          transition: 0.7s;
+          color: #3a3a3a;
+        }
 
-          .title {
-            border-bottom: 1px solid;
-            line-height: 1vw;
-          }
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .contents {
+            width: 100%;
 
-          ul {
-            padding: 0;
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            /* align-items: center; */
-          }
-
-          li {
-            font-size: 17px;
-            font-weight: 700;
-            line-height: 40px;
-            padding: 0;
-
-            color: #dedede;
-
-            a {
-              cursor: pointer;
+            .title {
+              border-bottom: 1px solid;
+              line-height: 1vw;
+              p {
+                font-size: 24px;
+                font-weight: 700;
+              }
             }
 
-            .active {
-              color: #3a3a3a;
+            ul {
+              padding: 0;
+              list-style: none;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+            }
+
+            li {
+              font-size: 17px;
+              font-weight: 700;
+              line-height: 40px;
+              padding: 0;
+
+              color: #dedede;
+
+              a {
+                cursor: pointer;
+              }
+
+              .active {
+                color: #3a3a3a;
+              }
+            }
+          }
+        }
+
+        @media screen and (max-width: 768px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .contents {
+            width: 100%;
+
+            .title {
+              border-bottom: 0.5px solid;
+              line-height: 1vw;
+
+              p {
+                font-size: 1.26vw;
+                font-weight: 700;
+              }
+            }
+
+            ul {
+              padding: 0;
+              list-style: none;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+            }
+
+            li {
+              font-size: 0.89vw;
+              font-weight: 700;
+              line-height: 4vw;
+              padding: 0;
+
+              color: #dedede;
+
+              a {
+                cursor: pointer;
+              }
+
+              .active {
+                color: #3a3a3a;
+              }
             }
           }
         }

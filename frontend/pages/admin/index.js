@@ -6,7 +6,7 @@ import PromotionSearch from "../../components/admin/PromotionSearch";
 
 import Title from "../../components/common/Title";
 
-export default function admin() {
+export default function Admin() {
   const [Lmenu, setLmenu] = useState("프로모션");
   const [Smenu, setSmenu] = useState("혜택 등록");
 
@@ -31,7 +31,7 @@ export default function admin() {
         <div className="promotions">
           <div className="title">
             <span>
-              {Lmenu} > {Smenu}
+              {Lmenu} &gt; {Smenu}
             </span>
           </div>
           <div className="contents">

@@ -1,24 +1,43 @@
 import { useRouter } from "next/router";
+import { useContext } from "react";
 import { useEffect, useState } from "react";
 import { PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
+import Title from "../../components/common/Title";
+import { CouponApply } from "../../components/coupon/CouponApply";
+import { CouponModal } from "../../components/coupon/CouponModal";
 import DaumPost from "../../components/payment/DaumPost";
-import { useGetToken } from "../../hooks/useGetToken";
-import { useMoney } from "../../hooks/useMoney";
+import { TokenContext } from "../../context/TokenContext";
+import { isLang } from "../../hooks/isLang";
+import { memberInfo } from "../../hooks/memberInfo";
+import { commaMoney } from "../../hooks/commaMoney";
+import { isNumber } from "../../hooks/isNumber";
 import { NGray } from "../../typings/NormalColor";
 
-export default function payment() {
-  const [token, setToken] = useState("");
+export default function Payment() {
   const [zipcode, setZipcode] = useState("");
+  const [name, setName] = useState();
+  const [email1, setEmail1] = useState();
+  const [email2, setEmail2] = useState();
+  const [phone1, setPhone1] = useState();
+  const [phone2, setPhone2] = useState();
+  const [phone3, setPhone3] = useState();
   const [addr1, setAddr1] = useState("");
   const [addr2, setAddr2] = useState("");
   const [popup, setPopup] = useState(false);
-  const [Selected, setSelected] = useState("");
   const [modal, setModal] = useState(false);
   const [orderItems, setOrderItems] = useState([]);
-  const [buyItem, setBuyItem] = useState();
-  const [buyQuantity, setBuyQuantity] = useState();
+  const [check, setCheck] = useState(false);
+  const [nameValid, setNameValid] = useState(false);
+  const [phoneValid1, setPhoneValid1] = useState(false);
+  const [phoneValid2, setPhoneValid2] = useState(false);
+  const [phoneValid3, setPhoneValid3] = useState(false);
+  const [addressValid1, setAddressValid1] = useState(false);
+  const [addressValid2, setAddressValid2] = useState(false);
+  const [unvalid, setUnValid] = useState(true);
+
+  const { token, setToken } = useContext(TokenContext);
 
   const router = useRouter();
 
@@ -26,18 +45,77 @@ export default function payment() {
     if (!router.isReady) {
       return;
     }
-    setToken(useGetToken());
+
+    if (!router.query.orderItems) {
+      // alert("주문/결제가 취소되었습니다.");
+      // history.back();
+    }
 
     if (router.query.orderItems) {
-      console.log("orderItems");
+      console.log(JSON.parse(router.query.orderItems));
       setOrderItems(JSON.parse(router.query.orderItems));
     }
-
-    if (router.query.buyItem) {
-      setBuyItem(JSON.parse(router.query.buyItem));
-      setBuyQuantity(router.query.quantity);
-    }
   }, [router.isReady]);
+
+  useEffect(() => {
+    if (!check) return;
+
+    memberInfo(token).then((res) => {
+      if (res) {
+        console.log(res);
+        setName(res.name);
+        setNameValid(true);
+
+        if (res.email) {
+          let [e1, e2] = res.email.split("@");
+          if (e1 && e2) {
+            setEmail1(e1);
+            setEmail2(e2);
+          }
+        }
+
+        if (res.phone) {
+          let [p1, p2, p3] = res.phone?.split("-");
+          if (p1 && p2 && p3) {
+            setPhone1(p1);
+            setPhone2(p2);
+            setPhone3(p3);
+            setPhoneValid1(true);
+            setPhoneValid2(true);
+            setPhoneValid3(true);
+          }
+        }
+
+        if (res.address) {
+          setAddr1(res.address);
+          setAddressValid1(true);
+          setAddressValid2(true);
+        }
+      }
+    });
+  }, [check]);
+
+  useEffect(() => {
+    if (
+      nameValid &&
+      phoneValid1 &&
+      phoneValid2 &&
+      phoneValid3 &&
+      addressValid1 &&
+      addressValid2
+    ) {
+      setUnValid(false);
+    } else {
+      setUnValid(true);
+    }
+  }, [
+    nameValid,
+    phoneValid1,
+    phoneValid2,
+    phoneValid3,
+    addressValid1,
+    addressValid2,
+  ]);
 
   const orderItem = async () => {
     const arr = [];
@@ -49,18 +127,26 @@ export default function payment() {
       });
     });
 
-    if (buyItem) {
-      arr.push({ productId: buyItem.id, quantity: Number(buyQuantity) });
-    }
-
-    PostHApi("/api/orders", { productOrders: arr }, token).then((res) => {});
+    PostHApi(
+      "/api/orders",
+      {
+        productOrders: arr,
+        recipient: {
+          name: name,
+          email: email1 + "@" + email2,
+          phone: phone1 + "-" + phone2 + "-" + phone3,
+          address: addr1 + " " + addr2,
+        },
+      },
+      token,
+    ).then((res) => {});
 
     alert("결제되었습니다.");
 
     document.location.href = "/";
   };
 
-  function modalHandler() {
+  function handleModal() {
     setModal(false);
   }
 
@@ -74,15 +160,22 @@ export default function payment() {
 
   function addr1Handler(addr1) {
     setAddr1(addr1);
+
+    if (addr1) {
+      setAddressValid1(true);
+    } else {
+      setAddressValid1(false);
+    }
   }
 
-  const handleSelect = (e) => {
-    setSelected(e.target.value);
+  const handleCheck = (e) => {
+    setCheck(e.target.checked);
   };
 
   return (
     <>
-      <div className="wrapper">
+      <Title title="주문/결제" />
+      <div className="PaymentWrapper">
         <div className="title">
           <h2>주문/결제</h2>
         </div>
@@ -91,74 +184,42 @@ export default function payment() {
           <div className="orderList">
             <table>
               <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "30%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "40%" }} />
                 <col style={{ width: "15%" }} />
                 <col style={{ width: "20%" }} />
-                <col style={{ width: "5%" }} />
+                <col style={{ width: "10%" }} />
               </colgroup>
               <tbody>
-                {buyItem && (
-                  <tr>
-                    <td>
-                      <img width="96px" src={buyItem.image_url} />
-                    </td>
-                    <td>{buyItem.name}</td>
-                    <td>x{buyQuantity}</td>
-                    <td>{useMoney(buyItem.price * buyQuantity)}원</td>
-                    <td>
-                      <div
-                        onClick={() => {
-                          setModal(true);
-                        }}
-                      >
-                        <AdminButton
-                          context="쿠폰적용"
-                          color="red"
-                          width="70px"
-                        />
-                      </div>
-                      {modal && (
-                        <CouponModal>
-                          <div>
-                            <CouponDown modalHandler={modalHandler} />
-                          </div>
-                        </CouponModal>
-                      )}
-                    </td>
-                  </tr>
-                )}
-
                 {orderItems?.map((product, index) => {
                   return (
                     <tr key={index}>
                       <td>
-                        <img width="96px" src={product.imageUrl} />
+                        <img src={product.imageUrl} />
                       </td>
-                      <td>{product.productName}</td>
+                      <td>{product.name}</td>
                       <td>x{product.quantity}</td>
                       <td>
-                        {product.productDiscount ? (
+                        {product.discount ? (
                           <>
                             <p>
-                              {useMoney(
+                              {commaMoney(
                                 Math.ceil(
-                                  product.price *
-                                    (1 - 0.01 * product.productDiscount),
+                                  product.price * (1 - 0.01 * product.discount),
                                 ) * product.quantity,
                               )}
                               원
                             </p>
                             <p>
                               <span>
-                                {useMoney(product.price * product.quantity)}원
+                                {commaMoney(product.price * product.quantity)}원
                               </span>
                             </p>
                           </>
                         ) : (
                           <>
                             <p>
-                              {useMoney(product.price * product.quantity)}원
+                              {commaMoney(product.price * product.quantity)}원
                             </p>
                           </>
                         )}
@@ -178,7 +239,10 @@ export default function payment() {
                         {modal && (
                           <CouponModal>
                             <div>
-                              <CouponDown modalHandler={modalHandler} />
+                              <CouponApply
+                                handleModal={handleModal}
+                                product={product}
+                              />
                             </div>
                           </CouponModal>
                         )}
@@ -192,127 +256,125 @@ export default function payment() {
         </div>
 
         <div>
-          <div className="tableTitle orderInfoTitle">주문자정보</div>
+          <div className="tableTitle orderInfoTitle">
+            배송정보{" "}
+            <p>
+              <input type="checkbox" checked={check} onChange={handleCheck} />{" "}
+              <span>회원정보와 동일</span>
+            </p>
+          </div>
           <div className="tableContents orderInfo">
             <table>
               <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "80%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "85%" }} />
               </colgroup>
               <tbody>
                 <tr>
-                  <th scope="row">주문자</th>
+                  <th scope="row">
+                    <span style={{ color: "red" }}>*</span>수령인
+                  </th>
                   <td>
                     <input
-                      id="oname"
-                      className="inputTypeText"
+                      required
                       placeholder=""
                       size="15"
-                      defaultValue=""
+                      defaultValue={name}
                       type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+
+                        if (isLang(e.target.value)) {
+                          setName(e.target.value);
+                          setNameValid(true);
+                        } else {
+                          alert("한글 혹은 영문만 입력할 수 있습니다.");
+                          setNameValid(false);
+                          e.target.value = "";
+                        }
+                      }}
                     />
                   </td>
                 </tr>
+
                 <tr>
-                  {/* https://choiiis.github.io/web/toy-project-sign-up-and-in-page-2/ */}
-                  <th scope="row">이메일</th>
+                  <th scope="row">
+                    <span style={{ color: "red" }}>*</span>휴대전화
+                  </th>
                   <td>
                     <input
-                      id="oemail1"
-                      className="mailId"
-                      defaultValue=""
+                      maxLength="3"
+                      size="3"
+                      defaultValue={phone1}
                       type="text"
-                    />
-                    @{" "}
-                    <span className="mailAddress">
-                      <span className="directInput ec-compact-etc">
-                        <input
-                          id="oemail2"
-                          placeholder="직접입력"
-                          defaultValue={Selected}
-                          type="text"
-                        />
-                      </span>
-                      <select
-                        id="oemail3"
-                        onChange={handleSelect}
-                        defaultValue={"DEFAULT"}
-                      >
-                        <option value="DEFAULT" disabled>
-                          -이메일 선택-
-                        </option>
-                        <option value="naver.com">naver.com</option>
-                        <option value="daum.net">daum.net</option>
-                        <option value="nate.com">nate.com</option>
-                        <option value="hotmail.com">hotmail.com</option>
-                        <option value="yahoo.com">yahoo.com</option>
-                        <option value="empas.com">empas.com</option>
-                        <option value="korea.com">korea.com</option>
-                        <option value="dreamwiz.com">dreamwiz.com</option>
-                        <option value="gmail.com">gmail.com</option>
-                        <option value="etc">직접입력</option>
-                      </select>
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">휴대전화</th>
-                  <td>
-                    <select id="ophone1_1" defaultValue={"010"}>
-                      <option value="02">02</option>
-                      <option value="031">031</option>
-                      <option value="032">032</option>
-                      <option value="033">033</option>
-                      <option value="041">041</option>
-                      <option value="042">042</option>
-                      <option value="043">043</option>
-                      <option value="044">044</option>
-                      <option value="051">051</option>
-                      <option value="052">052</option>
-                      <option value="053">053</option>
-                      <option value="054">054</option>
-                      <option value="055">055</option>
-                      <option value="061">061</option>
-                      <option value="062">062</option>
-                      <option value="063">063</option>
-                      <option value="064">064</option>
-                      <option value="070">070</option>
-                      <option value="010">010</option>
-                      <option value="011">011</option>
-                      <option value="016">016</option>
-                      <option value="017">017</option>
-                      <option value="018">018</option>
-                      <option value="019">019</option>
-                    </select>
-                    -
-                    <input
-                      id="ophone1_2"
-                      maxLength="4"
-                      size="4"
-                      defaultValue=""
-                      type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (isNumber(e.target.value)) {
+                          setPhone1(e.target.value);
+                          if (e.target.value.length == 3) setPhoneValid1(true);
+                          else {
+                            setPhoneValid1(false);
+                          }
+                        } else {
+                          alert("숫자만 입력할 수 있습니다.");
+                          setPhoneValid1(false);
+                          e.target.value = "";
+                        }
+                      }}
                     />
                     -
                     <input
-                      id="ophone1_3"
                       maxLength="4"
                       size="4"
-                      defaultValue=""
+                      defaultValue={phone2}
                       type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (isNumber(e.target.value)) {
+                          setPhone2(e.target.value);
+                          if (e.target.value.length == 4) setPhoneValid2(true);
+                          else {
+                            setPhoneValid2(false);
+                          }
+                        } else {
+                          alert("숫자만 입력할 수 있습니다.");
+                          setPhoneValid2(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                    -
+                    <input
+                      maxLength="4"
+                      size="4"
+                      defaultValue={phone3}
+                      type="text"
+                      onChange={(e) => {
+                        setCheck(false);
+                        if (isNumber(e.target.value)) {
+                          setPhone3(e.target.value);
+                          if (e.target.value.length == 4) setPhoneValid3(true);
+                          else {
+                            setPhoneValid3(false);
+                          }
+                        } else {
+                          alert("숫자만 입력할 수 있습니다.");
+                          setPhoneValid3(false);
+                          e.target.value = "";
+                        }
+                      }}
                     />
                   </td>
                 </tr>
+
                 <tr>
                   <th scope="row" rowSpan="3">
-                    주소
+                    <span style={{ color: "red" }}>*</span> 주소
                   </th>
                   <td>
                     <div className="address_search">
                       <input
-                        id="ozipcode1"
-                        name="ozipcode1"
                         placeholder="우편번호"
-                        className="inputTypeText"
                         type="text"
                         maxLength="14"
                         readOnly
@@ -337,30 +399,33 @@ export default function payment() {
                 <tr>
                   <td>
                     <input
-                      id="oaddr1"
-                      name="oaddr1"
                       placeholder="기본주소"
-                      className="inputTypeText"
                       type="text"
                       size="60"
                       maxLength="100"
                       readOnly
                       defaultValue={addr1 ? addr1 : ""}
+                      onChange={(e) => {
+                        setAddr1(e.target.value);
+                        if (e.target.value.length > 0) setAddressValid1(true);
+                        else setAddressValid1(false);
+                      }}
                     />
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <input
-                      id="oaddr1"
-                      name="oaddr1"
                       placeholder="상세주소"
-                      className="inputTypeText"
                       type="text"
                       size="60"
                       maxLength="100"
-                      readOnly
-                      value={addr2}
+                      defaultValue={addr2 ? addr2 : ""}
+                      onChange={(e) => {
+                        setAddr2(e.target.value);
+                        if (e.target.value.length > 0) setAddressValid2(true);
+                        else setAddressValid2(false);
+                      }}
                     />
                   </td>
                 </tr>
@@ -370,12 +435,12 @@ export default function payment() {
         </div>
 
         <div>
-          <div className="tableTitle cpTitle">쿠폰/포인트</div>
+          <div className="tableTitle cpTitle">쿠폰</div>
           <div className="tableContents cp">
             <table>
               <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "80%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "85%" }} />
               </colgroup>
               <tbody>
                 <tr>
@@ -396,25 +461,68 @@ export default function payment() {
           <div className="tableContents payInfo">
             <table>
               <colgroup>
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "80%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "85%" }} />
               </colgroup>
               <tbody>
                 <tr>
                   <th scope="row">주문상품</th>
-                  <td>48,900원</td>
+                  <td>
+                    {commaMoney(
+                      orderItems.reduce(
+                        (prev, cur) => prev + cur.price * cur.quantity,
+                        0,
+                      ),
+                    )}{" "}
+                    원
+                  </td>
                 </tr>
                 <tr>
-                  <th scope="row">할인/부가결제</th>
-                  <td>-3,000원</td>
+                  <th scope="row">할인</th>
+                  <td>
+                    -{" "}
+                    {commaMoney(
+                      orderItems.reduce(
+                        (prev, cur) =>
+                          prev +
+                          Math.ceil(
+                            cur.price *
+                              0.01 *
+                              cur.productDiscount *
+                              cur.quantity,
+                          ),
+                        0,
+                      ),
+                    ) || 0}{" "}
+                    원
+                  </td>
                 </tr>
                 <tr>
                   <th scope="row">배송비</th>
-                  <td>0원</td>
+                  <td>0 원</td>
                 </tr>
                 <tr>
                   <th scope="row">결제금액</th>
-                  <td>45,900원</td>
+                  <td>
+                    {commaMoney(
+                      orderItems.reduce(
+                        (prev, cur) => prev + cur.price * cur.quantity,
+                        0,
+                      ) -
+                        orderItems.reduce(
+                          (prev, cur) =>
+                            prev +
+                            Math.ceil(
+                              cur.price *
+                                0.01 *
+                                cur.productDiscount *
+                                cur.quantity,
+                            ),
+                          0,
+                        ),
+                    )}{" "}
+                    원
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -428,13 +536,12 @@ export default function payment() {
           }}
           style={{ cursor: "pointer" }}
         >
-          <ButtonComp context="결제하기" />
+          <ButtonComp context="결제하기" unvalid={unvalid} />
         </div>
       </div>
 
       <style jsx>{`
-        .wrapper {
-          width: 70%;
+        .PaymentWrapper {
           margin: 0 auto;
 
           .title {
@@ -443,22 +550,17 @@ export default function payment() {
             h2 {
               padding: 0;
               color: #3a3a3a;
-              font-size: 36px;
               font-weight: 700;
-              line-height: 1;
             }
           }
 
           .orderList {
-            margin-bottom: 10%;
             border-bottom: 2px solid;
             table {
               border-collapse: collapse;
               margin: 0 auto;
-              width: 98%;
 
               tr:not(:last-child) {
-                height: 2vw;
                 border-bottom: 1.5px solid #d0cfcf;
               }
 
@@ -467,7 +569,6 @@ export default function payment() {
                   margin: 0;
 
                   span {
-                    font-size: 14px;
                     color: ${NGray};
                     text-decoration: line-through;
                   }
@@ -477,37 +578,53 @@ export default function payment() {
           }
 
           .tableTitle {
-            font-size: 20px;
             font-weight: 500;
-            line-height: 2;
             border-bottom: 2px solid;
           }
 
           .tableContents {
-            margin-bottom: 10%;
-
             table {
               border-collapse: collapse;
               margin: 0 auto;
-              width: 98%;
 
               tr {
-                height: 5vw;
                 border-bottom: 1.5px solid #d0cfcf;
               }
             }
           }
 
-          .cp {
-            td {
-              text-align: right;
-            }
-
-            tr:last-child {
-              background-color: #f8f8f8;
+          .orderInfoTitle {
+            display: flex;
+            align-items: center;
+            p {
+              display: flex;
+              justify-content: center;
+              align-items: center;
             }
           }
 
+          .orderInfo {
+            input {
+              border: 0 none;
+              color: #3a3a3a;
+              background: #fff;
+              border: 1px solid #000;
+            }
+
+            select {
+              color: #3a3a3a;
+              border: 1px solid #000;
+            }
+
+            button {
+              border: 0 none;
+              color: #3a3a3a;
+              border: 1px solid #000;
+              cursor: pointer;
+            }
+          }
+
+          .cp,
           .payInfo {
             td {
               text-align: right;
@@ -517,10 +634,315 @@ export default function payment() {
               background-color: #f8f8f8;
             }
           }
+        }
 
-          .payBtn {
-            width: 20%;
-            margin: 0 auto 50px;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .PaymentWrapper {
+            width: 1332px;
+
+            .title {
+              h2 {
+                font-size: 36px;
+                line-height: 1;
+              }
+            }
+
+            .orderList {
+              margin-bottom: 133px;
+
+              table {
+                width: 1305px;
+
+                tr:not(:last-child) {
+                  height: 103px;
+                }
+
+                td {
+                  p {
+                    span {
+                      font-size: 14px;
+                    }
+                  }
+
+                  img {
+                    width: 96px;
+                    height: 96px;
+                  }
+                }
+              }
+            }
+
+            .tableTitle {
+              font-size: 20px;
+              line-height: 2;
+            }
+
+            .tableContents {
+              margin-bottom: 133px;
+
+              table {
+                width: 1305px;
+
+                tr {
+                  height: 96px;
+                }
+              }
+            }
+
+            .orderInfoTitle {
+              p {
+                margin: 0 0 0 30px;
+
+                span {
+                  font-size: 16px;
+                }
+              }
+            }
+
+            .orderInfo {
+              font-size: 20px;
+
+              input {
+                margin: 0 10px;
+                line-height: 40px;
+                padding: 0 0 0 13px;
+                border-radius: 8px;
+                font-size: 16px;
+              }
+
+              select {
+                margin: 0 10px;
+                height: 40px;
+                border-radius: 8px;
+                font-size: 16px;
+                padding: 0 10px 0 13px;
+              }
+
+              button {
+                margin: 0 10px;
+                line-height: 40px;
+                padding: 0 13px;
+                border-radius: 8px;
+                font-size: 16px;
+              }
+            }
+
+            .payBtn {
+              width: 200px;
+              margin: 0 auto 50px;
+            }
+          }
+        }
+
+        @media screen and (max-width: 768px) {
+          /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
+          .PaymentWrapper {
+            width: 100vw;
+
+            .title {
+              h2 {
+                font-size: 5vw;
+                line-height: 1;
+              }
+            }
+
+            .orderList {
+              margin-bottom: 7vw;
+
+              table {
+                width: 95vw;
+
+                tr:not(:last-child) {
+                  height: 5.53vw;
+                }
+
+                td {
+                  p {
+                    span {
+                      font-size: 1.5vw;
+                    }
+                  }
+
+                  img {
+                    width: 96px;
+                    height: 96px;
+                  }
+                }
+              }
+            }
+
+            .tableTitle {
+              font-size: 3vw;
+              line-height: 2;
+            }
+
+            .tableContents {
+              margin-bottom: 7vw;
+
+              table {
+                width: 95vw;
+
+                tr {
+                  height: 96px;
+                }
+              }
+            }
+
+            .orderInfoTitle {
+              p {
+                margin: 0 0 0 20px;
+
+                span {
+                  font-size: 12px;
+                }
+              }
+            }
+
+            .orderInfo {
+              font-size: 2vw;
+
+              input {
+                margin: 0 0.53vw;
+                line-height: 30px;
+                padding: 0 0 0 0.7vw;
+                border-radius: 8px;
+                font-size: 1.5vw;
+              }
+
+              select {
+                margin: 0 0.53vw;
+                height: 30px;
+                border-radius: 8px;
+                font-size: 2vw;
+                padding: 0 0.53vw 0 0.7vw;
+              }
+
+              button {
+                margin: 0 0.53vw;
+                line-height: 30px;
+                padding: 0 0.7vw;
+                border-radius: 8px;
+                font-size: 2vw;
+              }
+            }
+
+            .payBtn {
+              width: 25vw;
+              height: 10vw;
+              margin: 0 auto 50px;
+            }
+          }
+        }
+
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .PaymentWrapper {
+            width: 460px;
+
+            .title {
+              h2 {
+                font-size: 36px;
+                line-height: 1;
+              }
+            }
+
+            .orderList {
+              margin-bottom: 60px;
+              table {
+                width: 450px;
+
+                tr:not(:last-child) {
+                  height: 70px;
+                }
+
+                td {
+                  font-size: 12px;
+
+                  p {
+                    span {
+                      font-size: 14px;
+                    }
+                  }
+
+                  img {
+                    width: 64px;
+                    height: 64px;
+                  }
+                }
+              }
+            }
+
+            .tableTitle {
+              font-size: 20px;
+              line-height: 2;
+            }
+
+            .tableContents {
+              margin-bottom: 60px;
+
+              table {
+                width: 450px;
+
+                tr {
+                  height: 80px;
+                }
+              }
+            }
+
+            .orderInfoTitle {
+              p {
+                margin: 0 0 0 20px;
+
+                span {
+                  font-size: 12px;
+                }
+              }
+            }
+
+            .orderInfo {
+              font-size: 15px;
+
+              input {
+                max-width: 300px;
+                height: 30px;
+                margin: 5px 10px;
+                line-height: 40px;
+                padding: 0 0 0 13px;
+                border-radius: 8px;
+                font-size: 16px;
+              }
+
+              select {
+                margin: 0 10px;
+                width: 100px;
+                height: 30px;
+                border-radius: 8px;
+                font-size: 16px;
+                padding: 0 10px 0 13px;
+              }
+
+              button {
+                margin: 0 10px;
+                width: 100px;
+                height: 30px;
+                line-height: 30px;
+                padding: 0 13px;
+                border-radius: 8px;
+                font-size: 10px;
+                font-weight: bold;
+              }
+            }
+
+            .cp,
+            .payInfo {
+              font-size: 15px;
+            }
+
+            .payBtn {
+              width: 200px;
+              margin: 0 auto 50px;
+            }
           }
         }
       `}</style>

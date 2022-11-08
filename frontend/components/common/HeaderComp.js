@@ -1,57 +1,67 @@
 import Link from "next/link";
+import { useContext } from "react";
 import { useEffect, useState } from "react";
+import { TokenContext } from "../../context/TokenContext";
 import { isLogin } from "../../hooks/isLogin";
-import { useGetToken } from "../../hooks/useGetToken";
-import { useMemberInfo } from "../../hooks/useMemberInfo";
+import { getToken } from "../../hooks/getToken";
+import { memberInfo } from "../../hooks/memberInfo";
+import { isText } from "../../hooks/isText";
 
 export default function Header() {
   const [value, setValue] = useState("");
-  const [token, setToken] = useState("");
   const [name, setName] = useState("");
-  const [grade, setGrade] = useState("");
+  const [login, setLogin] = useState(false);
+  const { token, setToken } = useContext(TokenContext);
+
+  const getMemberInfo = async () => {
+    await memberInfo(getToken()).then((res) => {
+      setName(res.name);
+    });
+  };
 
   function search(event) {
     if (event.key === "Enter") {
+      if (value.length < 2 || value.length > 20) {
+        alert("두 글자 이상 스무 글자 이하로 입력하세요.");
+        return;
+      }
+
       window.location.href = `/product?search=${value}`;
       setValue("");
     }
   }
 
   useEffect(() => {
-    setToken(useGetToken());
-
-    if (token !== "") {
-      useMemberInfo(token).then((res) => {
-        if (res) {
-          console.log("headercomp");
-          console.log(res);
-          setName(res.name);
-          setGrade(res.grade);
-        }
-      });
+    if (isLogin()) {
+      setToken(getToken());
+      setLogin(true);
+      getMemberInfo();
     }
-  }, [token]);
+  }, [isLogin()]);
 
   return (
     <div>
-      <div className="wrapper">
+      <div className="HeaderWrapper">
         <div className="logo">
-          <div
-            onClick={() => {
-              document.location.href = "/";
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            <img height="95px" src="/main/logo.png" />
-          </div>
+          <Link href="/">
+            <a>
+              <img src="/main/logo.png" />
+            </a>
+          </Link>
         </div>
         <div className="search">
           <input
             type="text"
             size="30"
+            defaultValue={value}
             placeholder="검색어를 입력해주세요"
             onChange={(e) => {
-              setValue(e.currentTarget.value);
+              if (isText(e.currentTarget.value)) {
+                setValue(e.currentTarget.value);
+              } else {
+                alert("특수문자는 입력할 수 없습니다.");
+                e.currentTarget.value = "";
+              }
             }}
             onKeyUp={(event) => {
               search(event, value);
@@ -64,15 +74,15 @@ export default function Header() {
         </div>
         <div className="icons">
           <div className="top">
-            {token ? (
+            {login ? (
               <>
-                <div>{name}님</div>
+                <div className="topLeft">{name}님</div>
                 <div
+                  className="topRight"
                   onClick={() => {
                     localStorage.removeItem("accessToken");
                     document.location.href = "/";
                   }}
-                  style={{ cursor: "pointer" }}
                 >
                   <a>로그아웃</a>
                 </div>
@@ -80,17 +90,17 @@ export default function Header() {
             ) : (
               <>
                 <Link href="/member/join">
-                  <a>회원가입</a>
+                  <a className="topLeft">회원가입</a>
                 </Link>
 
                 <Link href="/member/login">
-                  <a>로그인</a>
+                  <a className="topRight">로그인</a>
                 </Link>
               </>
             )}
           </div>
           <div className="bottom">
-            {token ? (
+            {login ? (
               <>
                 <Link href="/mypage">
                   <img
@@ -126,86 +136,266 @@ export default function Header() {
           </div>
         </div>
         <style jsx>{`
-          .wrapper {
-            max-height: 120px;
-            height: 15vh;
+          .HeaderWrapper {
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .logo {
+              position: absolute;
+              transform: translate(-50%, -50%);
+            }
           }
-          @media screen and (min-width: 769px) {
-            /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
-            .wrapper {
-              max-width: 1280px;
-              margin: 0 auto;
+
+          .search {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            border: 2px solid #ed1b23;
+
+            input[type="text"] {
+              border: none;
+              padding: 0;
+              box-sizing: border-box;
+              color: #c5c9cd;
+              font-weight: 600;
+            }
+
+            input[type="text"]:focus {
+              outline: none;
+              color: #000;
+            }
+
+            img {
+              position: relative;
+            }
+          }
+
+          .icons {
+            position: absolute;
+            transform: translate(-50%, -50%);
+
+            .top {
+              font-weight: 700;
               display: flex;
               justify-content: space-between;
-              align-items: center;
+              position: relative;
+
+              .topLeft {
+                text-align: right;
+              }
+
+              .topRight {
+                cursor: pointer;
+              }
+            }
+
+            .bottom {
+              display: flex;
+              justify-content: right;
+            }
+          }
+
+          @media screen and (min-width: 769px) {
+            /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+            .HeaderWrapper {
+              width: 1280px;
+              height: 120px;
 
               .logo {
-                margin-left: 160px;
+                left: 27%;
+                top: 35%;
+
+                img {
+                  height: 95px;
+                }
               }
             }
 
             .search {
-              margin-left: -35%;
-              border: 2px solid #ed1b23;
+              left: 45%;
+              top: 35%;
               border-radius: 40px;
               padding: 0 17px;
 
               input[type="text"] {
-                border: none;
                 border-radius: 40px;
                 width: 317px;
                 height: 45px;
                 line-height: 45px;
-                padding: 0;
-                box-sizing: border-box;
-                color: #c5c9cd;
                 font-size: 1em;
-                font-weight: 600;
-              }
-
-              input[type="text"]:focus {
-                outline: none;
-                color: #000;
               }
 
               img {
                 width: 24px;
                 height: 24px;
-                position: relative;
                 top: 5px;
               }
             }
 
             .icons {
+              right: 17%;
+              top: 35%;
               height: 80px;
-              width: 100px;
-              margin: auto 0;
+              width: 180px;
 
               .top {
                 line-height: 40px;
-                font-weight: 700;
                 font-size: 12px;
-                display: flex;
-                justify-content: space-between;
-                position: relative;
                 top: -15px;
+
+                .topLeft {
+                  width: 100px;
+                }
+
+                .topRight {
+                  width: 60px;
+                }
               }
 
               .bottom {
-                display: flex;
-                justify-content: space-around;
+                img {
+                  width: 29px;
+                  height: 29px;
+                  margin: 0 15px;
+                }
               }
-            }
-          }
-
-          @media screen and (max-width: 900px) {
-            .search {
-              display: none;
             }
           }
 
           @media screen and (max-width: 768px) {
+            .HeaderWrapper {
+              width: 67.5vw;
+              height: 6.3vw;
+
+              .logo {
+                left: 20vw;
+                top: 3.5vw;
+
+                img {
+                  height: 5vw;
+                }
+              }
+            }
+
+            .search {
+              left: 45vw;
+              top: 3.5vw;
+              border-radius: 2vw;
+              padding: 0 0.9vw;
+
+              input[type="text"] {
+                border-radius: 2vw;
+                width: 17vw;
+                height: 2.4vw;
+                line-height: 2.4vw;
+                font-size: 1vw;
+              }
+
+              img {
+                width: 1.3vw;
+                min-width: 9px;
+                /* height: 1.3vw; */
+                top: 0;
+              }
+            }
+
+            .icons {
+              right: 10vw;
+              top: 3.5vw;
+              height: 4.2vw;
+              width: 9.5vw;
+              min-width: 110px;
+
+              .top {
+                line-height: 2.1vw;
+                font-size: 0.6vw;
+                top: -0.79vw;
+                text-align: right;
+
+                .topLeft {
+                  width: 55%;
+                }
+
+                .topRight {
+                  width: 40%;
+                }
+              }
+
+              .bottom {
+                img {
+                  width: 1.53vw;
+                  margin: 0 0.79vw;
+                }
+              }
+            }
+          }
+
+          @media screen and (max-width: 480px) {
             /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+            .HeaderWrapper {
+              width: 480px;
+              height: 70px;
+
+              .logo {
+                left: 10%;
+                top: 30%;
+
+                img {
+                  height: 60px;
+                }
+              }
+
+              .search {
+                left: 45%;
+                top: 25%;
+                border-radius: 40px;
+                padding: 0 17px;
+
+                input[type="text"] {
+                  border-radius: 40px;
+                  width: 120px;
+                  height: 15px;
+                  font-size: 0.5em;
+                }
+
+                img {
+                  width: 16px;
+                  height: 16px;
+                  top: 2px;
+                }
+              }
+
+              .icons {
+                right: -18%;
+                top: 30%;
+                height: 80px;
+                width: 180px;
+
+                .top {
+                  line-height: 40px;
+                  font-size: 12px;
+                  top: 0px;
+
+                  .topLeft {
+                    width: 100px;
+                  }
+
+                  .topRight {
+                    width: 60px;
+                    text-align: left;
+                  }
+                }
+
+                .bottom {
+                  img {
+                    width: 25px;
+                    height: 25px;
+                    margin: 0px 20px;
+                  }
+                }
+              }
+            }
           }
         `}</style>
       </div>

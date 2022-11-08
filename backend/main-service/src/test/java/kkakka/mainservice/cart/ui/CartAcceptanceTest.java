@@ -1,31 +1,33 @@
 package kkakka.mainservice.cart.ui;
 
-import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
-import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
-import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
-
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.List;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import org.hibernate.Session;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
+import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 class CartAcceptanceTest extends DocumentConfiguration {
 
@@ -100,6 +102,9 @@ class CartAcceptanceTest extends DocumentConfiguration {
         final String accessToken = 액세스_토큰_가져옴();
         장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
         장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
+        final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
+        퍼센트_쿠폰_생성();
+        장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getCartItemId(),1L,accessToken);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
@@ -143,7 +148,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         final CartResponseDto cartResponseDto = 장바구니에서_찾아옴(accessToken);
         assertThat(
                 cartResponseDto.getCartItemDtos().stream()
-                        .filter(cartItemDto -> cartItemDto.getProductId().equals(PRODUCT_1.getId()))
+                        .filter(cartItemDto -> cartItemDto.getId().equals(PRODUCT_1.getId()))
                         .findAny().orElseThrow()
                         .getQuantity()
         ).isEqualTo(3);
@@ -165,12 +170,60 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/api/carts/" + cart.getCartItemDtos().get(0).getId())
+                .delete("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId())
                 .then()
                 .log().all().extract();
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("장바구니 쿠폰 적용 - 성공")
+    void applyCouponCartItem_success() {
+        //given
+        final String accessToken = 액세스_토큰_가져옴();
+        장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
+        final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
+        퍼센트_쿠폰_생성();
+        String couponId = 사용가능_쿠폰_조회(PRODUCT_1.getId(), accessToken);
+
+        //when
+        ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
+                .filter(document("applyCartItemCoupon-success"))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId() + "/" + couponId)
+                .then().log().all().extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("총 장바구니 아이템 수 조회 - 성공")
+    @Test
+    void findMemberCartItemCount_success(){
+        // given
+        final String accessToken = 액세스_토큰_가져옴();
+        final Long cart1 = 장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
+        final Long cart2 = 장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
+        int count = List.of(cart1, cart2).size();
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("cart-item-count-success"))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/members/me/carts/all")
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().path("cartCount").toString()).isEqualTo(String.valueOf(count));
     }
 
     private CartResponseDto 장바구니에서_찾아옴(String accessToken) {
@@ -184,19 +237,22 @@ class CartAcceptanceTest extends DocumentConfiguration {
         return response.body().as(CartResponseDto.class);
     }
 
-    private void 장바구니_추가함(String accessToken, long productId, int quantity) {
-        RestAssured.given().log().all()
+    private Long 장바구니_추가함(String accessToken, long productId, int quantity) {
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new CartRequestDto(productId, quantity))
                 .when()
                 .post("/api/carts")
-                .then().log().all();
+                .then().log().all()
+                .extract();
+
+        return Long.valueOf(response.header("Location"));
     }
 
     private String 액세스_토큰_가져옴() {
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-                TEST_MEMBER_01.getCode(), MemberProviderName.TEST);
+                TEST_MEMBER_01.getCode(), ProviderName.TEST);
 
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
@@ -207,5 +263,46 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .then().log().all().extract();
 
         return response.body().jsonPath().get("accessToken");
+    }
+
+    private void 퍼센트_쿠폰_생성() {
+        RestAssured.given(spec).log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("{\n"
+                        + "  \"categoryId\": null,\n"
+                        + "  \"grade\": null,\n"
+                        + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
+                        + "  \"name\": \"test\",\n"
+                        + "  \"priceRule\": \"COUPON\",\n"
+                        + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
+                        + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
+                        + "  \"percentage\": 10,\n"
+                        + "  \"maxDiscount\": 2000,\n"
+                        + "  \"minOrderPrice\": 20000\n"
+                        + "}")
+                .when()
+                .post("/api/coupons")
+                .then().log().all().extract();
+    }
+
+    private String 사용가능_쿠폰_조회(Long productId, String accessToken) {
+
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/coupons/me/products/" + productId)
+                .then().log().all().extract();
+        return response.body().path("[0].id").toString();
+    }
+
+    private void 장바구니_쿠폰_적용(Long cartItemId, Long couponId, String accessToken) {
+        RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/carts/" + cartItemId + "/" + couponId)
+                .then().log().all();
     }
 }

@@ -3,13 +3,13 @@ import SNSButton from "../components/member/SNSButton";
 export default function EnrollLayout({ title, context }) {
   return (
     <>
-      <div className="contents">
-        <div className="login-area">
-          <div className="login-title">
-            <h2>{title}</h2>
+      <div className="EnrollLContents">
+        <div className="loginArea">
+          <div className="loginTitle">
+            <p>{title}</p>
           </div>
-          <div className="login-subtitle">{context}</div>
-          <div className="login-button">
+          <div className="loginSubtitle">{context}</div>
+          <div className="loginButton">
             <SNSButton
               imgsrc="/member/kakao.png"
               link={SNSUri.KAKAO.requestUri}
@@ -29,42 +29,138 @@ export default function EnrollLayout({ title, context }) {
         </div>
       </div>
       <style jsx>{`
-        .contents {
-          width: 70%;
+        .EnrollLContents {
+          display: flex;
+          justify-content: center;
+          align-items: center;
           margin: 0 auto;
 
-          .login-area {
+          .loginArea {
             display: block;
             text-align: center;
           }
 
-          .login-title {
-            min-height: 30px;
-            padding: 34px 0 20px;
-            line-height: 1;
+          .loginTitle {
             margin: 0px;
 
-            h2 {
+            p {
               padding: 0;
               color: #3a3a3a;
-              font-size: 36px;
               font-weight: 700;
-              line-height: 1;
             }
           }
 
-          .login-subtitle {
+          .loginSubtitle {
             color: #999999;
-            font-size: 16px;
-            line-height: 26px;
           }
 
-          .login-button {
-            margin: 2vw auto;
-            width: 50%;
+          .loginButton {
             display: flex;
-            height: 20vw;
             justify-content: space-between;
+          }
+        }
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .EnrollLContents {
+            width: 1330px;
+            height: 660px;
+
+            .loginArea {
+              height: 550px;
+            }
+
+            .loginTitle {
+              min-height: 30px;
+              padding: 34px 0 20px;
+              line-height: 1;
+
+              p {
+                font-size: 36px;
+                line-height: 1;
+              }
+            }
+
+            .loginSubtitle {
+              font-size: 16px;
+              line-height: 26px;
+            }
+
+            .loginButton {
+              margin: 38px auto;
+              width: 665px;
+              height: 385px;
+            }
+          }
+        }
+
+        @media screen and (max-width: 768px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .EnrollLContents {
+            width: 70vw;
+            height: 100vw;
+
+            .loginArea {
+              height: 70vw;
+            }
+
+            .loginTitle {
+              min-height: 1.58vw;
+              padding: 1.79vw 0 1.05vw;
+              line-height: 1;
+
+              p {
+                font-size: 5vw;
+                line-height: 1;
+              }
+            }
+
+            .loginSubtitle {
+              height: 21.05vw;
+              font-size: 3.37vw;
+              line-height: 6.32vw;
+            }
+
+            .loginButton {
+              margin: 2vw auto;
+              width: 52vw;
+              height: 800px;
+            }
+          }
+        }
+
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .EnrollLContents {
+            width: 480px;
+            height: 550px;
+
+            .loginArea {
+              height: 500px;
+            }
+
+            .loginTitle {
+              min-height: 30px;
+              padding: 0 0 20px;
+              line-height: 1;
+
+              p {
+                font-size: 36px;
+                line-height: 1;
+              }
+            }
+
+            .loginSubtitle {
+              height: 70px;
+              font-size: 16px;
+              line-height: 26px;
+            }
+
+            .loginButton {
+              margin: 38px auto;
+              width: 480px;
+              height: 200px;
+              flex-direction: row;
+            }
           }
         }
       `}</style>

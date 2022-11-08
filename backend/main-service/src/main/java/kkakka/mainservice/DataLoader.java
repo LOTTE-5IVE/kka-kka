@@ -8,11 +8,13 @@ import java.util.Map;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
+import kkakka.mainservice.order.application.dto.RecipientDto;
 import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
+import kkakka.mainservice.order.domain.Recipient;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
 import kkakka.mainservice.product.domain.Nutrition;
@@ -37,13 +39,17 @@ public class DataLoader {
     private final ReviewRepository reviewRepository;
     private final NutritionRepository nutritionRepository;
 
-    private static final Map<String, Category> categories = new LinkedHashMap<>();
-    private static Product testProduct;
-    private static Member testMember;
+    private final Map<String, Category> categories = new LinkedHashMap<>();
+    private boolean categoryFlag = false;
+    private Product testProduct;
+    private Member testMember;
 
     @Transactional
     public void saveData(List<String[]> data) {
         saveCategory();
+        if (categoryFlag) {
+            return;
+        }
 
         List<Product> products = new ArrayList<>();
         for (String[] datum : data) {
@@ -66,7 +72,13 @@ public class DataLoader {
                         ProductOrder.create(testProduct, testProduct.getPrice(), 1),
                         ProductOrder.create(testProduct, testProduct.getPrice(), 1)
                 ));
-        orderRepository.save(Order.create(testMember, testProduct.getPrice(), productOrders));
+
+        Recipient testRecipient = Recipient.from(RecipientDto.create(
+                testMember.getName(), testMember.getEmail(), testMember.getPhone(),
+                testMember.getAddress()
+        ));
+        orderRepository.save(
+                Order.create(testMember, testRecipient, testProduct.getPrice(), productOrders));
         reviewRepository.save(Review.create("test-review1", 5.0, testMember, productOrders.get(0)));
         reviewRepository.save(Review.create("test-review2", 3.5, testMember, productOrders.get(1)));
         reviewRepository.save(Review.create("test-review3", 4.5, testMember, productOrders.get(2)));
@@ -79,7 +91,7 @@ public class DataLoader {
     private void saveUser() {
         testMember = memberRepository.save(
                 Member.create(
-                        Provider.create("0001", MemberProviderName.TEST),
+                        Provider.create("0001", ProviderName.TEST),
                         "신우주",
                         "test@email.com",
                         "010-000-0000",
@@ -88,7 +100,7 @@ public class DataLoader {
         );
         memberRepository.save(
                 Member.create(
-                        Provider.create("0002", MemberProviderName.TEST),
+                        Provider.create("0002", ProviderName.TEST),
                         "서지훈",
                         "test@email.com",
                         "010-000-0000",
@@ -97,7 +109,7 @@ public class DataLoader {
         );
         memberRepository.save(
                 Member.create(
-                        Provider.create("0003", MemberProviderName.TEST),
+                        Provider.create("0003", ProviderName.TEST),
                         "김혜연",
                         "test@email.com",
                         "010-000-0000",
@@ -106,7 +118,7 @@ public class DataLoader {
         );
         memberRepository.save(
                 Member.create(
-                        Provider.create("0004", MemberProviderName.TEST),
+                        Provider.create("0004", ProviderName.TEST),
                         "오명주",
                         "test@email.com",
                         "010-000-0000",
@@ -115,7 +127,7 @@ public class DataLoader {
         );
         memberRepository.save(
                 Member.create(
-                        Provider.create("0005", MemberProviderName.TEST),
+                        Provider.create("0005", ProviderName.TEST),
                         "최솔지",
                         "test@email.com",
                         "010-000-0000",
@@ -162,6 +174,14 @@ public class DataLoader {
     }
 
     public void saveCategory() {
+        final List<Category> savedCategories = categoryRepository.findAll();
+        savedCategories.forEach((category -> categories.put(category.getName(), category)));
+
+        if (categories.size() > 0) {
+            categoryFlag = true;
+            return;
+        }
+
         Category category1 = categoryRepository.save(new Category("비스킷/샌드"));
         Category category2 = categoryRepository.save(new Category("스낵/봉지과자"));
         Category category3 = categoryRepository.save(new Category("박스과자"));

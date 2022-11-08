@@ -7,8 +7,12 @@ import kkakka.mainservice.cart.domain.repository.CartRepository;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
+import kkakka.mainservice.cart.ui.dto.CouponDto;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
+import kkakka.mainservice.coupon.domain.Coupon;
+import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
@@ -30,6 +34,7 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
+    private final CouponRepository couponRepository;
 
     @Transactional
     public Long addCartItem(CartRequestDto cartRequestDto, LoginMember loginMember) {
@@ -50,12 +55,12 @@ public class CartService {
     @Transactional
     public CartResponseDto showCartByMember(LoginMember loginMember) {
         Member member = memberRepository.findById(loginMember.getId())
-            .orElseThrow(KkaKkaException::new);
+                .orElseThrow(KkaKkaException::new);
 
         Cart cart = findOrCreateCart(member);
         final List<CartItemDto> cartItemDtos = cart.getCartItems().stream()
-            .map(CartItemDto::from)
-            .collect(Collectors.toList());
+                .map(CartItemDto::from)
+                .collect(Collectors.toList());
 
         return new CartResponseDto(cart.getId(), cartItemDtos);
     }
@@ -80,8 +85,26 @@ public class CartService {
         });
     }
 
+    @Transactional
+    public CartItemDto applyCouponCartItem(Long cartItemId, Long couponId, LoginMember loginMember) {
+        Long loginMemberId = loginMember.getId();
+
+        CartItem cartItem = cartItemRepository.findByIdandMemberId(cartItemId, loginMemberId).orElseThrow(KkaKkaException::new);
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
+        cartItem.applyCoupon(coupon);
+        Integer discountedPrice = cartItem.getDiscountedPrice(coupon);
+
+        return CartItemDto.applyCouponDto(cartItem, discountedPrice, CouponDto.toDto(coupon));
+    }
+
     private Cart findOrCreateCart(Member member) {
         return cartRepository.findByMemberId(member.getId())
                 .orElseGet(() -> cartRepository.save(new Cart(member)));
+    }
+
+    public int showCartItemCount(Long id) {
+        final Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
+        return cartItemRepository.countAllByMemberId(member.getId());
     }
 }

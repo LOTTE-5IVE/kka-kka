@@ -1,6 +1,7 @@
 package kkakka.mainservice.coupon.acceptance;
 
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
 import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -8,24 +9,17 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.LocalDateTime;
 import kkakka.mainservice.DocumentConfiguration;
-import kkakka.mainservice.coupon.domain.PriceRule;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
-import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
-import kkakka.mainservice.member.member.domain.Grade;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
-import kkakka.mainservice.product.domain.Product;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 public class CouponAcceptanceTest extends DocumentConfiguration {
 
     @Autowired
@@ -93,7 +87,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("쿠폰 조회 - 성공")
     @Test
     void findAllCoupons() {
-        일반_쿠폰_생성함();
+        쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", null, 1000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -109,13 +103,13 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("일반쿠폰 삭제 - 성공")
     @Test
     void deleteCouponByAdmin() {
-        String coupon = 일반_쿠폰_생성함();
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 12, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
             .filter(document("delete-coupon"))
             .when()
-            .put("/api/coupons/" + coupon)
+            .put("/api/coupons/" + couponId)
             .then().log().all().extract();
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -125,7 +119,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void deleteMemberCouponByAdmin() {
         String accessToken = 액세스_토큰_가져옴();
-        String coupon = 쿠폰_다운로드(accessToken);
+        String coupon = 상품_쿠폰_다운로드(accessToken);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -141,7 +135,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void downloadableCoupons() {
         String accessToken = 액세스_토큰_가져옴();
-        일반_쿠폰_생성함();
+        쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 15, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -155,11 +149,11 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         assertThat(response.body()).isNotNull();
     }
 
-    @DisplayName("사용 가능한 쿠폰 조회 - 성공")
+    @DisplayName("회원별 사용 가능한 쿠폰 조회 - 성공")
     @Test
     void usableCoupons() {
         String accessToken = 액세스_토큰_가져옴();
-        쿠폰_다운로드(accessToken);
+        상품_쿠폰_다운로드(accessToken);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -173,20 +167,24 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         assertThat(response.body()).isNotNull();
     }
 
-    private String 일반_쿠폰_생성함() {
+    private String 쿠폰_생성함(String grade, Long productId, String priceRule, Integer percentage,
+        Integer maxDiscount) {
+        if (grade != null) {
+            grade = "\"" + grade + "\"";
+        }
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("{\n"
                 + "  \"categoryId\": null,\n"
-                + "  \"grade\": null,\n"
-                + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
+                + "  \"grade\": " + grade + ",\n"
+                + "  \"productId\": " + productId + ",\n"
                 + "  \"name\": \"test\",\n"
-                + "  \"priceRule\": \"COUPON\",\n"
+                + "  \"priceRule\": \"" + priceRule + "\",\n"
                 + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
                 + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
-                + "  \"percentage\": 10,\n"
-                + "  \"maxDiscount\": 2000,\n"
+                + "  \"percentage\": " + percentage + ",\n"
+                + "  \"maxDiscount\": " + maxDiscount + ",\n"
                 + "  \"minOrderPrice\": 20000\n"
                 + "}")
             .when()
@@ -199,7 +197,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void downloadCoupon() {
         String accessToken = 액세스_토큰_가져옴();
-        String couponId = 일반_쿠폰_생성함();
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -215,7 +213,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
 
     private String 액세스_토큰_가져옴() {
         final SocialProviderCodeRequest request = SocialProviderCodeRequest.create(
-            TEST_MEMBER_01.getCode(), MemberProviderName.TEST);
+            TEST_MEMBER_01.getCode(), ProviderName.TEST);
 
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
@@ -228,8 +226,8 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         return response.body().jsonPath().get("accessToken");
     }
 
-    private String 쿠폰_다운로드(String accessToken) {
-        String couponId = 일반_쿠폰_생성함();
+    private String 상품_쿠폰_다운로드(String accessToken) {
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
@@ -239,5 +237,108 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
             .then().log().all().extract();
 
         return couponId;
+    }
+
+    private String 등급_쿠폰_다운로드(String accessToken) {
+        String couponId = 쿠폰_생성함("GOLD", null, "GRADE_COUPON", 50, 2000);
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .post("/api/coupons/download/" + couponId)
+            .then().log().all().extract();
+
+        return couponId;
+    }
+
+    @DisplayName("회원 - 상품 사용가능한 쿠폰 조회")
+    @Test
+    void showProductCouponsByProductIdAndMemberId() {
+        String accessToken = 액세스_토큰_가져옴();
+        상품_쿠폰_다운로드(accessToken);
+        등급_쿠폰_다운로드(accessToken);
+        쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 14, 2000);
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .filter(document("show-product-coupon-by-productId-and-memberId"))
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .get("/api/coupons/me/products/" + PRODUCT_1.getId())
+            .then().log().all().extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body()).isNotNull();
+    }
+
+    @DisplayName("비회원 - 상품 적용가능한 쿠폰 조회")
+    @Test
+    void showProductCouponsByProductId() {
+        String accessToken = 액세스_토큰_가져옴();
+        상품_쿠폰_다운로드(accessToken);
+        등급_쿠폰_다운로드(accessToken);
+        쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 14, 2000);
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .filter(document("show-product-coupon-by-productId"))
+            .when()
+            .get("/api/coupons/products/" + PRODUCT_1.getId())
+            .then().log().all().extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body()).isNotNull();
+    }
+
+    @DisplayName("금액할인 일반 쿠폰 생성 - 성공")
+    @Test
+    void createMoneyCoupon() {
+        // given
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body("{\n"
+                + "  \"categoryId\": null,\n"
+                + "  \"grade\": null,\n"
+                + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
+                + "  \"name\": \"test\",\n"
+                + "  \"priceRule\": \"COUPON\",\n"
+                + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
+                + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
+                + "  \"percentage\": null,\n"
+                + "  \"maxDiscount\": 2000,\n"
+                + "  \"minOrderPrice\": 20000\n"
+                + "}")
+            .when()
+            .post("/api/coupons")
+            .then().log().all().extract();
+
+        // then
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        Assertions.assertThat(response.header("Location")).isNotNull();
+    }
+
+    @DisplayName("총 쿠폰 수 확인 - 성공")
+    @Test
+    void findMemberCouponCount_success() {
+        // given
+        String accessToken = 액세스_토큰_가져옴();
+        상품_쿠폰_다운로드(accessToken);
+        등급_쿠폰_다운로드(accessToken);
+        쿠폰_생성함(null, PRODUCT_2.getId(), "COUPON", 14, 2000);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .filter(document("show-member-coupons-success"))
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .get("/api/members/me/coupons/all")
+            .then().log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }

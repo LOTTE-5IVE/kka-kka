@@ -1,15 +1,20 @@
 package kkakka.mainservice.coupon.application;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
+import kkakka.mainservice.common.exception.InvalidCouponRequestException;
 import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.PriceRule;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
+import kkakka.mainservice.coupon.ui.dto.CouponProductResponseDto;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
 import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.member.member.domain.Member;
@@ -32,15 +37,28 @@ public class CouponService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
 
-    // TODO : return 값 관리
+    final BiFunction<Integer, Integer, Integer> calculateStaticPrice = new BiFunction<Integer, Integer, Integer>() {
+        @Override
+        public Integer apply(Integer productPrice, Integer couponDiscount) {
+            return productPrice - couponDiscount;
+        }
+    };
+
+    final BiFunction<Integer, Integer, Integer> calculatePercentage = new BiFunction<Integer, Integer, Integer>() {
+        @Override
+        public Integer apply(Integer productPrice, Integer couponPercentage) {
+            return (int) Math.ceil(productPrice * (1 - (couponPercentage * 0.01)));
+        }
+    };
 
     /* 관리자 쿠폰 등록 */
     @Transactional
     public Long createCoupon(CouponRequestDto couponRequestDto) {
-        if (couponRequestDto.isValidPercentage() && couponRequestDto.isValidDate()) {
+        if (couponRequestDto.isValidDate()) {
             if (PriceRule.GRADE_COUPON.equals(couponRequestDto.getPriceRule())) {
                 Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
-                List<Member> members = memberRepository.findByGrade(couponRequestDto.getGrade());
+                List<Member> members = memberRepository.findByGrade(
+                    couponRequestDto.getGrade());
                 for (Member member : members) {
                     MemberCoupon memberCoupon = MemberCoupon.create(member, coupon);
                     memberCouponRepository.save(memberCoupon);
@@ -58,23 +76,46 @@ public class CouponService {
                 return coupon.getId();
             }
         }
-        throw new KkaKkaException();
+        throw new InvalidCouponRequestException();
     }
 
     private Coupon toCouponEntity(CouponRequestDto couponRequestDto) {
+        if (couponRequestDto.getPercentage() != null) {
+            return Coupon.create(
+                couponRequestDto.getGrade(),
+                couponRequestDto.getName(),
+                PriceRule.GRADE_COUPON,
+                couponRequestDto.getStartedAt(),
+                couponRequestDto.getExpiredAt(),
+                couponRequestDto.getPercentage(),
+                couponRequestDto.getMaxDiscount(),
+                couponRequestDto.getMinOrderPrice());
+        }
         return Coupon.create(
             couponRequestDto.getGrade(),
             couponRequestDto.getName(),
             PriceRule.GRADE_COUPON,
             couponRequestDto.getStartedAt(),
             couponRequestDto.getExpiredAt(),
-            couponRequestDto.getPercentage(),
             couponRequestDto.getMaxDiscount(),
             couponRequestDto.getMinOrderPrice());
     }
 
     private Coupon toCouponEntity(CouponRequestDto couponRequestDto, Category category,
         Product product) {
+        if (couponRequestDto.getPercentage() != null) {
+            return Coupon.create(
+                category,
+                product,
+                couponRequestDto.getName(),
+                PriceRule.COUPON,
+                couponRequestDto.getStartedAt(),
+                couponRequestDto.getExpiredAt(),
+                couponRequestDto.getPercentage(),
+                couponRequestDto.getMaxDiscount(),
+                couponRequestDto.getMinOrderPrice()
+            );
+        }
         return Coupon.create(
             category,
             product,
@@ -82,7 +123,6 @@ public class CouponService {
             PriceRule.COUPON,
             couponRequestDto.getStartedAt(),
             couponRequestDto.getExpiredAt(),
-            couponRequestDto.getPercentage(),
             couponRequestDto.getMaxDiscount(),
             couponRequestDto.getMinOrderPrice()
         );
@@ -169,11 +209,90 @@ public class CouponService {
             && !coupon.isDeleted();
     }
 
-    /* 상품에 대해 적용 가능한 쿠폰 조회 */
-    public List<CouponResponseDto> showCouponsByProductId(Long productId) {
-        List<Coupon> coupons = couponRepository.findCouponsByProductIdAndNotDeleted(productId);
-        return coupons.stream()
-            .map(coupon -> CouponResponseDto.create(coupon))
+    /* 회원 상품 쿠폰 조회 */
+    public List<CouponProductResponseDto> showCouponsByProductIdAndMemberId(Long productId,
+        Long memberId) {
+
+        Product product = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
+        List<Coupon> coupons = findProductCouponsByProductId(productId);
+
+        if (product.getCategory() != null) {
+            coupons.addAll(findCategoryCouponsByCategoryId(productId));
+        }
+
+        List<CouponProductResponseDto> couponProductResponseDtos = new ArrayList<>();
+        for (Coupon coupon : coupons) {
+            if (isDownloadableCoupon(coupon.getId(), memberId)) {
+                couponProductResponseDtos.add(CouponProductResponseDto.create(coupon, true));
+                continue;
+            }
+            couponProductResponseDtos.add(CouponProductResponseDto.create(coupon, false));
+        }
+
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findGradeCouponByMemberId(
+            memberId);
+        if (!memberCoupons.isEmpty()) {
+            for (MemberCoupon memberCoupon : memberCoupons) {
+                couponProductResponseDtos.add(
+                    CouponProductResponseDto.create(memberCoupon.getCoupon(), false));
+            }
+        }
+
+        return sortWithMaximumDiscountAmount(couponProductResponseDtos, product)
+            .stream()
+            .sorted(Comparator.comparing(CouponProductResponseDto::getDiscountedPrice))
             .collect(Collectors.toList());
+    }
+
+    private List<CouponProductResponseDto> sortWithMaximumDiscountAmount(
+        List<CouponProductResponseDto> couponProductResponseDtos, Product product) {
+        for (CouponProductResponseDto couponProductResponseDto : couponProductResponseDtos) {
+            if (couponProductResponseDto.getPercentage() != null) {
+                int calculatedPercentValue = calculatePercentage
+                    .apply(product.getPrice() - product.getDiscount(),
+                        couponProductResponseDto.getPercentage());
+                int calculatedStaticValue = calculateStaticPrice
+                    .apply(product.getPrice() - product.getDiscount(),
+                        couponProductResponseDto.getMaxDiscount());
+                couponProductResponseDto.saveDiscountedPrice(
+                    Math.max(calculatedPercentValue, calculatedStaticValue));
+                continue;
+            }
+            couponProductResponseDto.saveDiscountedPrice(
+                calculateStaticPrice.apply(product.getPrice() - product.getDiscount(),
+                    couponProductResponseDto.getMaxDiscount()));
+        }
+        return couponProductResponseDtos;
+    }
+
+    private boolean isDownloadableCoupon(Long couponId, Long memberId) {
+        Long count = memberCouponRepository.countByCouponIdAndMemberId(couponId, memberId);
+        return count == 0;
+    }
+
+    private List<Coupon> findCategoryCouponsByCategoryId(Long productId) {
+        return couponRepository.findCouponsByCategoryIdAndNotDeleted(productId);
+    }
+
+    private List<Coupon> findProductCouponsByProductId(Long productId) {
+        return couponRepository.findCouponsByProductIdAndNotDeleted(productId);
+    }
+
+    /* 비회원 상품 쿠폰 조회 */
+    public List<CouponProductResponseDto> showCouponsByProductId(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
+        List<Coupon> coupons = couponRepository.findCouponsByProductIdAndNotDeleted(productId);
+        List<CouponProductResponseDto> couponProductResponseDtos = coupons.stream()
+            .map(coupon -> CouponProductResponseDto.create(coupon, true))
+            .collect(Collectors.toList());
+
+        return sortWithMaximumDiscountAmount(couponProductResponseDtos, product)
+            .stream()
+            .sorted(Comparator.comparing(CouponProductResponseDto::getDiscountedPrice))
+            .collect(Collectors.toList());
+    }
+
+    public int showMemberCouponCount(Long memberId) {
+        return memberCouponRepository.countAllByMemberIdAndIsUsedFalse(memberId);
     }
 }

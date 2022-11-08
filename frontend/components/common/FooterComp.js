@@ -38,50 +38,128 @@ export default function Footer() {
 
       <style jsx>{`
         .footer {
-          width: 100%;
           border: 0;
           background-color: #f8f8f8;
-          font-size: 14px;
+
+          .top-wrapper {
+            border-bottom: 1px solid #e9e9e9;
+
+            .top {
+              margin: 0 auto;
+              display: flex;
+              justify-content: space-between;
+              color: #9a9a9a;
+
+              ul {
+                padding: 0;
+                display: flex;
+                list-style: none;
+                justify-content: center;
+                align-items: center;
+              }
+            }
+          }
+
+          .bottom {
+            margin: 0 auto;
+
+            .up {
+              color: #5a5a5a;
+            }
+            .down {
+              color: #9a9a9a;
+            }
+          }
+
+          .foot {
+            color: #9a9a9a;
+          }
         }
 
-        .top-wrapper {
-          height: 5vw;
-          width: 100%;
-          border-bottom: 1px solid #e9e9e9;
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .footer {
+            width: 1903px;
+            height: 334px;
+            font-size: 14px;
 
-          .top {
-            height: 5vw;
-            width: 75%;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            color: #9a9a9a;
+            .top-wrapper {
+              width: 1903px;
+              height: 96px;
 
-            ul {
-              padding: 0;
-              display: flex;
-              list-style: none;
-              justify-content: center;
-              align-items: center;
+              .top {
+                width: 1427.25px;
+                height: 96px;
+              }
+            }
+
+            .bottom {
+              width: 1427.25px;
+              height: 238px;
+              padding: 50px 0 50px;
+
+              .down {
+                margin: 22px 0 40px;
+              }
             }
           }
         }
 
-        .bottom {
-          width: 75%;
-          margin: 0 auto;
-          padding: 50px 0 50px;
-          .up {
-            color: #5a5a5a;
-          }
-          .down {
-            color: #9a9a9a;
-            margin: 22px 0 40px;
+        @media screen and (max-width: 768px) {
+          .footer {
+            width: 100vw;
+            height: 26vw;
+            font-size: 7px;
+
+            .top-wrapper {
+              width: 100vw;
+              height: 6vw;
+
+              .top {
+                width: 75.1vw;
+                height: 6vw;
+              }
+            }
+
+            .bottom {
+              width: 75.1vw;
+              height: 12.5vw;
+              padding: 2.6vw 0;
+
+              .down {
+                margin: 1.16vw 0 2.1vw;
+              }
+            }
           }
         }
 
-        .foot {
-          color: #9a9a9a;
+        @media screen and (max-width: 480px) {
+          /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          .footer {
+            width: 480px;
+            height: 334px;
+            font-size: 14px;
+
+            .top-wrapper {
+              width: 480px;
+              height: 96px;
+
+              .top {
+                width: 480px;
+                height: 96px;
+              }
+            }
+
+            .bottom {
+              width: 480px;
+              height: 238px;
+              padding: 50px 0 50px;
+
+              .down {
+                margin: 22px 0 40px;
+              }
+            }
+          }
         }
       `}</style>
     </>

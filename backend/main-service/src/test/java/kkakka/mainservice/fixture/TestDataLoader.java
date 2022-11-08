@@ -6,11 +6,13 @@ import java.util.List;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.MemberProviderName;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
+import kkakka.mainservice.order.application.dto.RecipientDto;
 import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
+import kkakka.mainservice.order.domain.Recipient;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
 import kkakka.mainservice.product.domain.Nutrition;
@@ -63,7 +65,7 @@ public class TestDataLoader implements CommandLineRunner {
     public void run(String... args) {
         MEMBER = memberRepository.save(
                 Member.create(
-                        Provider.create(TEST_MEMBER_00.getProviderId(), MemberProviderName.TEST),
+                        Provider.create(TEST_MEMBER_00.getProviderId(), ProviderName.TEST),
                         TEST_MEMBER_00.getName(),
                         TEST_MEMBER_00.getEmail(),
                         TEST_MEMBER_00.getPhone(),
@@ -90,19 +92,19 @@ public class TestDataLoader implements CommandLineRunner {
                 new Nutrition("270", "36", "15", "2.2", "13", "7", "0.5", "0", "150", "0")
         );
 
-        PRODUCT_1 = productRepository.save(new Product(CATEGORY_1, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 10,
+        PRODUCT_1 = productRepository.save(new Product(CATEGORY_1, "롯데 제로 초콜릿칩 쿠키 168g", 4480, 100,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
                 "상세URL", NUTRITION_1));
-        PRODUCT_2 = productRepository.save(new Product(CATEGORY_1, "롯데 마가렛트 오리지널 176g", 4480, 10,
+        PRODUCT_2 = productRepository.save(new Product(CATEGORY_1, "롯데 마가렛트 오리지널 176g", 4480, 100,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
                 "상세URL", NUTRITION_2));
-        PRODUCT_3 = productRepository.save(new Product(CATEGORY_1, "롯데 웨하스 바닐라맛 50g", 4480, 10,
+        PRODUCT_3 = productRepository.save(new Product(CATEGORY_1, "롯데 웨하스 바닐라맛 50g", 4480, 100,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
                 "상세URL", NUTRITION_3));
-        PRODUCT_4 = productRepository.save(new Product(CATEGORY_2, "롯데 웨하스 딸기맛 50g", 4480, 10,
+        PRODUCT_4 = productRepository.save(new Product(CATEGORY_2, "롯데 웨하스 딸기맛 50g", 4480, 100,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
                 "상세URL", NUTRITION_4));
-        PRODUCT_5 = productRepository.save(new Product(CATEGORY_2, "롯데 롯샌 파인애플 105g", 4480, 10,
+        PRODUCT_5 = productRepository.save(new Product(CATEGORY_2, "롯데 롯샌 파인애플 105g", 4480, 100,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
                 "상세URL", NUTRITION_5));
 
@@ -125,7 +127,10 @@ public class TestDataLoader implements CommandLineRunner {
         final List<ProductOrder> productOrders = List.of(PRODUCT_ORDER_1, PRODUCT_ORDER_2,
                 PRODUCT_ORDER_3, PRODUCT_ORDER_4, PRODUCT_ORDER_5);
         ORDER = orderRepository.save(
-                Order.create(MEMBER, productOrders.stream().mapToInt(ProductOrder::getPrice).sum(),
+                Order.create(MEMBER,
+                        Recipient.from(RecipientDto.create(MEMBER.getName(), MEMBER.getEmail(),
+                                MEMBER.getPhone(), MEMBER.getAddress())),
+                        productOrders.stream().mapToInt(ProductOrder::getPrice).sum(),
                         productOrders)
         );
     }
