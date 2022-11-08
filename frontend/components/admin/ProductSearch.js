@@ -45,7 +45,7 @@ export default function ProductSearch() {
               return (
                 <tr style={{ height: "3vw" }} key={product.id}>
                   <td>
-                    <img width="60px" src={product.image_url} />
+                    <img width="60px" src={product.imageUrl} />
                   </td>
                   <td>{product.name}</td>
 
