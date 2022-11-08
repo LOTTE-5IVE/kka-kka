@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Title from "../../components/common/Title";
-import { useMoney } from "../../hooks/useMoney";
+import { commaMoney } from "../../hooks/commaMoney";
 import { NGray } from "../../typings/NormalColor";
 
 export default function MyOrder({ orderList }) {
@@ -45,7 +45,7 @@ export default function MyOrder({ orderList }) {
                   paddingRight: "15px",
                 }}
               >
-                <p>{useMoney(product.product.price * product.quantity)}원</p>
+                <p>{commaMoney(product.product.price * product.quantity)}원</p>
               </td>
             ) : (
               ""
@@ -63,7 +63,7 @@ export default function MyOrder({ orderList }) {
             >
               {product.product.discount ? (
                 <>
-                  {useMoney(
+                  {commaMoney(
                     Math.ceil(
                       product.product.price *
                         (1 - 0.01 * product.product.discount),
@@ -72,7 +72,7 @@ export default function MyOrder({ orderList }) {
                   원
                 </>
               ) : (
-                <>{useMoney(product.product.price)}원</>
+                <>{commaMoney(product.product.price)}원</>
               )}
             </td>
           </tr>

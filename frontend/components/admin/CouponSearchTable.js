@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { AdminButton } from "../common/Button/AdminButton";
-import { useMoney } from "../../hooks/useMoney";
+import { commaMoney } from "../../hooks/commaMoney";
 
 export default function CouponSearchTable() {
   const [coupons, setCoupons] = useState();
@@ -61,9 +61,9 @@ export default function CouponSearchTable() {
                 <td>쿠폰</td>
                 <td>{coupon.name}</td>
                 <td>
-                  {coupon.percentage}% (최대 {useMoney(coupon.maxDiscount)}원)
+                  {coupon.percentage}% (최대 {commaMoney(coupon.maxDiscount)}원)
                 </td>
-                <td>{useMoney(coupon.minOrderPrice)}원</td>
+                <td>{commaMoney(coupon.minOrderPrice)}원</td>
                 <td>
                   {coupon.startedAt.slice(0, 10)} ~{" "}
                   {coupon.expiredAt.slice(0, 10)}

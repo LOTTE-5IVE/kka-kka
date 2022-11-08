@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useMoney } from "../../hooks/useMoney";
+import { commaMoney } from "../../hooks/commaMoney";
 import { NBlack } from "../../typings/NormalColor";
 import { ThemeRed } from "../../typings/ThemeColor";
 
@@ -14,13 +14,13 @@ export default function ProductInfo({ id, name, price, discount }) {
 
               {discount !== 0 ? (
                 <>
-                  <p className="discount">{useMoney(price)}원</p>
+                  <p className="discount">{commaMoney(price)}원</p>
                   <div
                     className="priceRate"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <span>
-                      {useMoney(Math.ceil(price * (1 - discount * 0.01)))}원
+                      {commaMoney(Math.ceil(price * (1 - discount * 0.01)))}원
                     </span>
                     <span style={{ color: `${ThemeRed}` }}>{discount}%</span>
                   </div>
@@ -32,7 +32,7 @@ export default function ProductInfo({ id, name, price, discount }) {
                     className="priceRate"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <span>{useMoney(price)}원</span>
+                    <span>{commaMoney(price)}원</span>
                   </div>
                 </>
               )}

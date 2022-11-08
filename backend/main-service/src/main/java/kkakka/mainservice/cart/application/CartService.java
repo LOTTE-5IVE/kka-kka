@@ -9,6 +9,7 @@ import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
 import kkakka.mainservice.cart.ui.dto.CouponDto;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
@@ -114,5 +115,11 @@ public class CartService {
     private Cart findOrCreateCart(Member member) {
         return cartRepository.findByMemberId(member.getId())
                 .orElseGet(() -> cartRepository.save(new Cart(member)));
+    }
+
+    public int showCartItemCount(Long id) {
+        final Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
+        return cartItemRepository.countAllByMemberId(member.getId());
     }
 }

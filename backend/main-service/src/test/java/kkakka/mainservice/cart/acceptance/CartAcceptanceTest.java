@@ -210,14 +210,17 @@ class CartAcceptanceTest extends DocumentConfiguration {
         return response.body().as(CartResponseDto.class);
     }
 
-    private void 장바구니_추가함(String accessToken, long productId, int quantity) {
-        RestAssured.given().log().all()
+    private Long 장바구니_추가함(String accessToken, long productId, int quantity) {
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new CartRequestDto(productId, quantity))
                 .when()
                 .post("/api/carts")
-                .then().log().all();
+                .then().log().all()
+                .extract();
+
+        return Long.valueOf(response.header("Location"));
     }
 
     private String 액세스_토큰_가져옴() {
