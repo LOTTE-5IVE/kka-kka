@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import kkakka.mainservice.coupon.application.CouponService;
 import kkakka.mainservice.coupon.application.DiscountService;
+import kkakka.mainservice.coupon.ui.dto.CouponProductResponseDto;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
 import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.coupon.ui.dto.DiscountRequestDto;
@@ -29,8 +30,6 @@ public class CouponController {
 
     private final CouponService couponService;
     private final DiscountService discountService;
-
-    /* TODO : return 값 */
 
     /* 쿠폰 등록 */
     @PostMapping
@@ -102,11 +101,20 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.OK).body(discounts);
     }
 
+    /* 상품, 멤버에 대해 적용 가능한 쿠폰 조회 */
+    @GetMapping("/me/products/{productId}")
+    public ResponseEntity<List<CouponProductResponseDto>> showCouponsByProductIdAndMemberId(
+        @PathVariable Long productId, @AuthenticationPrincipal LoginMember loginMember) {
+        List<CouponProductResponseDto> couponResponseDtos = couponService.showCouponsByProductIdAndMemberId(
+            productId, loginMember.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(couponResponseDtos);
+    }
+
     /* 상품에 대해 적용 가능한 쿠폰 조회 */
-    @GetMapping("/{productId}")
-    public ResponseEntity<List<CouponResponseDto>> showCouponsByProductId(
+    @GetMapping("/products/{productId}")
+    public ResponseEntity<List<CouponProductResponseDto>> showCouponsByProductId(
         @PathVariable Long productId) {
-        List<CouponResponseDto> couponResponseDtos = couponService.showCouponsByProductId(
+        List<CouponProductResponseDto> couponResponseDtos = couponService.showCouponsByProductId(
             productId);
         return ResponseEntity.status(HttpStatus.OK).body(couponResponseDtos);
     }
