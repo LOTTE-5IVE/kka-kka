@@ -101,3 +101,5 @@ export default function NotFound() {
     </>
   );
 }
+
+NotFound.displayName = "NotFound";

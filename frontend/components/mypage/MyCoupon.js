@@ -4,6 +4,7 @@ import MyCouponCard from "./MyCouponCard";
 
 export default function MyCoupon() {
   const [tab, setTab] = useState("valid");
+  const [moreToggle, setMoreToggle] = useState(true);
 
   return (
     <>
@@ -52,13 +53,18 @@ export default function MyCoupon() {
                   <MyCouponCard test="사용한" />
                 )}
                 <tr className="loadMore">
-                  <td
-                    colSpan="5"
-                    onClick={() => {
-                      console.log("loadMore clicked");
-                    }}
-                  >
-                    ▼ 더보기
+                  <td colSpan="5">
+                    {moreToggle && (
+                      <div
+                        onClick={() => {
+                          console.log("loadMore clicked");
+                        }}
+                        className={"d-flex align-center moreBtn"}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <span>▼ 더보기</span>
+                      </div>
+                    )}
                   </td>
                 </tr>
               </tbody>
@@ -67,6 +73,22 @@ export default function MyCoupon() {
         </div>
 
         <style jsx>{`
+          .d-flex {
+            display: flex;
+            justify-content: center;
+          }
+
+          .align-center {
+            align-items: center;
+          }
+
+          .moreBtn {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 1px solid #c5c5c5;
+            color: #525252;
+          }
+
           @media screen and (min-width: 769px) {
             /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
             .MyCouponWrapper {
@@ -123,12 +145,6 @@ export default function MyCoupon() {
                     color: #000;
                     border: 2px solid;
                     border-bottom: none;
-                    cursor: pointer;
-                  }
-
-                  .loadMore {
-                    text-align: center;
-                    border: 1px solid;
                     cursor: pointer;
                   }
                 }
@@ -195,10 +211,11 @@ export default function MyCoupon() {
                     cursor: pointer;
                   }
 
-                  .loadMore {
-                    text-align: center;
-                    border: 1px solid;
-                    cursor: pointer;
+                  .moreBtn {
+                    margin-bottom: 2rem;
+                    padding: 0.5rem;
+                    border: 1px solid #c5c5c5;
+                    color: #525252;
                   }
                 }
               }
@@ -264,10 +281,15 @@ export default function MyCoupon() {
                     cursor: pointer;
                   }
 
-                  .loadMore {
-                    text-align: center;
-                    border: 1px solid;
-                    cursor: pointer;
+                  .moreBtn {
+                    margin-bottom: 1rem;
+                    padding: 0.5rem;
+                    border: 1px solid #c5c5c5;
+                    color: #525252;
+
+                    span {
+                      font-size: 12px;
+                    }
                   }
                 }
               }
