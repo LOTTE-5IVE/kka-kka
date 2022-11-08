@@ -11,23 +11,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class SearchParamRequest {
 
     private String keyword;
-    private String sort;
+    private String sortby;
     private List<Long> catecodes;
     private int minprice;
     private int maxprice;
     private int mincalorie;
     private int maxcalorie;
 
-    public SearchParamRequest() {
-        this.sort="accuracy";
-    }
-
     public SearchParamDto toDto() {
         return SearchParamDto.create(keyword,
-            sort,
+            sortby,
             catecodes,
             minprice,
             maxprice,

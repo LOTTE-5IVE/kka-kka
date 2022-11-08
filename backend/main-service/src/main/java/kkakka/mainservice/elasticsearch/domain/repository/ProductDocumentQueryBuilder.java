@@ -1,9 +1,11 @@
 package kkakka.mainservice.elasticsearch.domain.repository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import kkakka.mainservice.elasticsearch.application.dto.SearchParamDto;
 import lombok.NoArgsConstructor;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.index.query.TermsQueryBuilder;
@@ -36,15 +38,15 @@ public class ProductDocumentQueryBuilder {
                 .filter(rangeFilter("calorie", searchParamDto.getMinCalorie(),
                     searchParamDto.getMaxCalorie())));
         }
-        if (!searchParamDto.getSort().equals("accuracy")) {
-            query.withSorts(sortByPrice(searchParamDto.getSort()));
+        if (!searchParamDto.getSortby().equals("accuracy")) {
+            query.withSorts(sortByPrice(searchParamDto.getSortby()));
         }
 
         return query.withPageable(pageable).build();
     }
 
     private static TermsQueryBuilder selectFilter(String field, List<Long> query) {
-        return (Optional.ofNullable(query).isEmpty()) ? null
+        return ((Optional.ofNullable(query).isEmpty()) || query.size() == 0) ? null
             : QueryBuilders.termsQuery(field, query);
     }
 

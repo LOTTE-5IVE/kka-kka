@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class SearchParamDto {
 
     private String keyword;
-    private String sort;
+    private String sortby;
     private List<Long> catecodes;
     private Integer minPrice;
     private Integer maxPrice;
@@ -21,14 +21,14 @@ public class SearchParamDto {
     private Integer maxCalorie;
 
     public static SearchParamDto create(String keyword,
-        String sort,
+        String sortby,
         List<Long> catecodes,
         Integer minPrice,
         Integer maxPrice,
         Integer minCalorie,
         Integer maxCalorie) {
         return new SearchParamDto(keyword,
-            sort,
+            sortby,
             catecodes,
             minPrice,
             maxPrice,
