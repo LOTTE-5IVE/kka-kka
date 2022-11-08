@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const useMemberInfo = async (token) => {
+export const memberInfo = async (token) => {
   if (token) {
     const { data } = await axios
       .get("/api/members/me", {
@@ -15,6 +15,9 @@ export const useMemberInfo = async (token) => {
         console.log(error);
         return {};
       });
+
+    console.log("memberInfo data: ", data);
+
     return data;
   }
 };

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import LoginCheckLayout from "../layouts/LoginCheckLayout";
 
-export default function oauth() {
+export default function Oauth() {
   const router = useRouter();
   const [loginFlag, setLoginFlag] = useState();
 
@@ -28,8 +28,6 @@ export default function oauth() {
         providerName: getProvider({ state }.state),
       })
       .then((res) => {
-        console.log("loglog");
-        console.log(res.data);
         setLoginFlag(true);
         const obj = {
           value: res.data.accessToken,
@@ -44,7 +42,6 @@ export default function oauth() {
   };
 
   useEffect(() => {
-    console.log(code);
     if (!router.isReady) {
       return;
     }

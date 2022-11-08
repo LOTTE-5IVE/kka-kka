@@ -1,4 +1,4 @@
-import { useMoney } from "../../hooks/useMoney";
+import { commaMoney } from "../../hooks/commaMoney";
 import MyProductOrder from "./MyProductOrder";
 
 export default function MyOrderDetail({ orderDetail }) {
@@ -18,7 +18,8 @@ export default function MyOrderDetail({ orderDetail }) {
                     </div>
                     <div>
                       <span className="title-content">
-                        총 결제금액: <b>{useMoney(orderDetail.totalPrice)}</b>원
+                        총 결제금액: <b>{commaMoney(orderDetail.totalPrice)}</b>
+                        원
                       </span>
                       <span className="title-divider">|</span>
                       <span className="title-content">

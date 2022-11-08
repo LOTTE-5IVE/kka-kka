@@ -38,26 +38,37 @@ export default function LoginCheckLayout({ loginFlag }) {
         </div>
       </div>
       <style jsx>{`
+        .LoginCheckLContents {
+          .loginArea {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            display: block;
+            text-align: center;
+
+            .loginTitle {
+              margin: 0px;
+            }
+
+            .loginSubtitle {
+              color: #999999;
+            }
+          }
+        }
+
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
           .LoginCheckLContents {
             .loginArea {
-              position: absolute;
               left: 951px;
               top: 470px;
-              transform: translate(-50%, -50%);
-              display: block;
-              text-align: center;
 
               .loginTitle {
                 min-height: 30px;
                 padding: 34px 0 20px;
                 line-height: 1;
-                margin: 0px;
               }
 
               .loginSubtitle {
-                color: #999999;
                 font-size: 16px;
                 line-height: 26px;
               }
@@ -69,22 +80,16 @@ export default function LoginCheckLayout({ loginFlag }) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
           .LoginCheckLContents {
             .loginArea {
-              position: absolute;
               left: 951px;
               top: 470px;
-              transform: translate(-50%, -50%);
-              display: block;
-              text-align: center;
 
               .loginTitle {
                 min-height: 30px;
                 padding: 34px 0 20px;
                 line-height: 1;
-                margin: 0px;
               }
 
               .loginSubtitle {
-                color: #999999;
                 font-size: 16px;
                 line-height: 26px;
               }
@@ -100,23 +105,16 @@ export default function LoginCheckLayout({ loginFlag }) {
 
             .loginArea {
               width: 280px;
-
-              position: absolute;
               left: 240px;
               top: 350px;
-              transform: translate(-50%, -50%);
-              display: block;
-              text-align: center;
 
               .loginTitle {
                 min-height: 30px;
                 padding: 34px 0 20px;
                 line-height: 1;
-                margin: 0px;
               }
 
               .loginSubtitle {
-                color: #999999;
                 font-size: 16px;
                 line-height: 26px;
               }

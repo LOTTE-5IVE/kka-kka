@@ -1,4 +1,7 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
+import React from "react";
+
+React.useLayoutEffect = React.useEffect;
 
 class MyDocument extends Document {
   render() {

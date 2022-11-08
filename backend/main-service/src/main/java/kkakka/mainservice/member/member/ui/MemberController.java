@@ -1,7 +1,10 @@
 package kkakka.mainservice.member.member.ui;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import kkakka.mainservice.cart.application.CartService;
 import kkakka.mainservice.common.dto.NoOffsetPageInfo;
 import kkakka.mainservice.common.dto.PageableNoOffsetResponse;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
@@ -33,6 +36,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final OrderService orderService;
+    private final CartService cartService;
 
     @GetMapping("/health_check")
     public String status() {
@@ -56,7 +60,7 @@ public class MemberController {
     }
 
     @GetMapping("/me/orders")
-    public ResponseEntity<PageableNoOffsetResponse<List<OrderResponse>>> findOrders(
+    public ResponseEntity<PageableNoOffsetResponse<List<OrderResponse>>> showMyOrders(
             @AuthenticationPrincipal LoginMember loginMember,
             @RequestParam(required = false) Long orderId,
             @RequestParam(defaultValue = "6") int pageSize
@@ -84,5 +88,23 @@ public class MemberController {
                                 .map(MemberOrderDto::toResponseDto)
                                 .collect(Collectors.toList()), pageInfo)
         );
+    }
+
+    @GetMapping("/me/orders/all")
+    public ResponseEntity<Map<String, Integer>> showOrderCount(
+            @AuthenticationPrincipal LoginMember loginMember) {
+        final int orderCount = orderService.showMemberOrderCount(loginMember.getId());
+        final Map<String, Integer> result = new HashMap<>();
+        result.put("orderCount", orderCount);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/me/carts/all")
+    public ResponseEntity<Map<String, Integer>> showCartCount(
+            @AuthenticationPrincipal LoginMember loginMember) {
+        final int cartItemCount = cartService.showCartItemCount(loginMember.getId());
+        final Map<String, Integer> result = new HashMap<>();
+        result.put("cartCount", cartItemCount);
+        return ResponseEntity.ok().body(result);
     }
 }

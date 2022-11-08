@@ -1,13 +1,20 @@
 package kkakka.mainservice.order.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import kkakka.mainservice.common.exception.IllegalQuantityException;
 import kkakka.mainservice.common.exception.OutOfStockException;
 import kkakka.mainservice.product.domain.Product;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "product_order")
@@ -36,6 +43,10 @@ public class ProductOrder {
 
     public static ProductOrder create(Product product, int price, int quantity) {
         ProductOrder productOrder = new ProductOrder(null, null, product, price, quantity, 0);
+
+        if (quantity < 1) {
+            throw new IllegalQuantityException();
+        }
 
         if (product.inStock(quantity)) {
             product.reduceStock(quantity);
