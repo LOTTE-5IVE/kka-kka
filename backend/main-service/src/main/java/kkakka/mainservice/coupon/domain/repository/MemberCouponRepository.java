@@ -15,15 +15,12 @@ public interface MemberCouponRepository extends JpaRepository<MemberCoupon, Long
     @Query("select mc from MemberCoupon mc join fetch mc.coupon where mc.member.id = :memberId and mc.isUsed = true")
     List<MemberCoupon> findAllByMemberIdAndIsUsedTrue(@Param(value = "memberId") Long memberId);
 
-    @Query("select mc.coupon from MemberCoupon mc where mc.member.id = :memberId")
-    List<Coupon> findAllByMemberId(@Param(value = "memberId") Long memberId);
+    List<MemberCoupon> findAllByMemberId(@Param(value = "memberId") Long memberId);
 
-    @Query("select mc from MemberCoupon mc where mc.coupon.id = :couponId and mc.member.id = :memberId")
-    MemberCoupon findMemberCouponByCouponIdAndMemberId(@Param(value = "couponId") Long couponId,
+    MemberCoupon findAllByCouponIdAndMemberId(@Param(value = "couponId") Long couponId,
         @Param(value = "memberId") Long memberId);
 
-    @Query("select mc from MemberCoupon mc where mc.coupon.id = :couponId")
-    List<MemberCoupon> findAllMemberCouponByCouponId(@Param(value = "couponId") Long couponId);
+    List<MemberCoupon> findAllByCouponId(@Param(value = "couponId") Long couponId);
 
     Long countByCouponIdAndMemberId(@Param(value = "couponId") Long couponId,
         @Param(value = "memberId") Long memberId);

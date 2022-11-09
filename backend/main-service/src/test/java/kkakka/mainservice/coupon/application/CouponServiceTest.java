@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import kkakka.mainservice.TestContext;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
@@ -61,7 +59,7 @@ public class CouponServiceTest extends TestContext {
         // when
         couponService.downloadCoupon(coupon.getId(), member.getId());
         couponService.useCouponByMember(coupon.getId(), member.getId());
-        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllMemberCouponByCouponId(
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllByCouponId(
             coupon.getId());
 
         // then
