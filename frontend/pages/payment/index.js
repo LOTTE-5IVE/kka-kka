@@ -47,8 +47,8 @@ export default function Payment() {
     }
 
     if (!router.query.orderItems) {
-      // alert("주문/결제가 취소되었습니다.");
-      // history.back();
+      alert("주문/결제가 취소되었습니다.");
+      history.back();
     }
 
     if (router.query.orderItems) {
@@ -122,7 +122,7 @@ export default function Payment() {
 
     orderItems?.map((x) => {
       return arr.push({
-        productId: x.productId,
+        productId: x.id,
         quantity: x.quantity,
       });
     });
@@ -485,11 +485,8 @@ export default function Payment() {
                       orderItems.reduce(
                         (prev, cur) =>
                           prev +
-                          Math.ceil(
-                            cur.price *
-                              0.01 *
-                              cur.productDiscount *
-                              cur.quantity,
+                          Math.floor(
+                            cur.price * 0.01 * cur.discount * cur.quantity,
                           ),
                         0,
                       ),
@@ -512,11 +509,8 @@ export default function Payment() {
                         orderItems.reduce(
                           (prev, cur) =>
                             prev +
-                            Math.ceil(
-                              cur.price *
-                                0.01 *
-                                cur.productDiscount *
-                                cur.quantity,
+                            Math.floor(
+                              cur.price * 0.01 * cur.discount * cur.quantity,
                             ),
                           0,
                         ),

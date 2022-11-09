@@ -36,7 +36,7 @@ export default function Review({ productOrderId, setReviewed }) {
       `/api/reviews?productOrder=${productOrderId}`,
       {
         rating: rating,
-        contents: contents.slice(0, 50),
+        contents: contents.slice(0, 100),
       },
       token,
     ).then(() => {
@@ -69,12 +69,12 @@ export default function Review({ productOrderId, setReviewed }) {
             value={contents}
             cols="5"
             rows="3"
-            placeholder="5글자 이상 50글자 이하로 입력해주세요."
-            maxLength={50}
+            placeholder="5글자 이상 100글자 이하로 입력해주세요."
+            maxLength={100}
             onChange={onWriteContents}
           />
           <p>
-            <span>({contents.slice(0, 50).length} / 50자)</span>
+            <span>({contents.slice(0, 100).length} / 100자)</span>
           </p>
 
           <span className="submitBtn" onClick={() => handleSubmit()}>
