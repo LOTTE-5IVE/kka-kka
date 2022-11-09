@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import kkakka.mainservice.common.exception.InvalidRecommendResponseException;
@@ -69,7 +70,7 @@ public class ProductRecommendStrategy implements ProductRecommender {
 
     private RecommendProductDto convertResponseBody(ResponseEntity<String> response) {
         try {
-            if (Optional.ofNullable(response.getBody()).isEmpty()) {
+            if (Objects.isNull(response.getBody())) {
                 return new RecommendProductDto(Collections.emptyList());
             }
             return objectMapper.readValue(
