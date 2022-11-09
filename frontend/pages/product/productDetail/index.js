@@ -22,9 +22,10 @@ import {
 } from "../../../typings/ThemeColor";
 import RangeWithIcons from "../../../components/mypage/review/RangeWithIcons";
 import { isNumber } from "../../../hooks/isNumber";
-import { useContext } from "react";
-import { TokenContext } from "../../../context/TokenContext";
 import { CartCntContext } from "../../../context/CartCntContext";
+import { getToken } from "../../../hooks/getToken";
+import { useContext } from "react";
+import { CouponDownModal } from "../../../components/coupon/CouponDownModal";
 
 export default function ProductDetail() {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function ProductDetail() {
   const [tab, setTab] = useState("info");
   const [modal, setModal] = useState(false);
   const [product, setProduct] = useState({});
-  const { token, setToken } = useContext(TokenContext);
+  const [token, setToken] = useState("");
   const { cartCnt, setCartCnt } = useContext(CartCntContext);
 
   const buyQuery = () => {
@@ -120,6 +121,10 @@ export default function ProductDetail() {
     getItem();
   }, [productId]);
 
+  useEffect(() => {
+    setToken(getToken());
+  }, [token]);
+
   return (
     <>
       <Title title="상품상세" />
@@ -182,11 +187,11 @@ export default function ProductDetail() {
                   <AdminButton context="쿠폰받기" color="red" width="70px" />
                 </div>
                 {modal && (
-                  <CouponModal>
+                  <CouponDownModal>
                     <div>
                       <CouponDown handleModal={handleModal} product={product} />
                     </div>
-                  </CouponModal>
+                  </CouponDownModal>
                 )}
               </div>
               <div className="totalProducts">

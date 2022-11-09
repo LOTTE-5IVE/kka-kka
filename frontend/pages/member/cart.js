@@ -8,13 +8,12 @@ import Title from "../../components/common/Title";
 import { CouponApply } from "../../components/coupon/CouponApply";
 import { CouponModal } from "../../components/coupon/CouponModal";
 import { CartCntContext } from "../../context/CartCntContext";
-import { TokenContext } from "../../context/TokenContext";
 import { commaMoney } from "../../hooks/commaMoney";
+import { getToken } from "../../hooks/getToken";
 import { isNumber } from "../../hooks/isNumber";
 import { NGray } from "../../typings/NormalColor";
 
 export default function Cart() {
-  const [modal, setModal] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [checkItemsIdx, setCheckItemsIdx] = useState([]);
   const [checkItems, setCheckItems] = useState([]);
@@ -23,8 +22,13 @@ export default function Cart() {
   const [totalUnValid, setTotalUnValid] = useState(true);
   const [selectUnValid, setSelectUnValid] = useState(true);
   const [couponProduct, setCouponProduct] = useState();
-  const { token, setToken } = useContext(TokenContext);
+  const [token, setToken] = useState("");
   const { cartCnt, setCartCnt } = useContext(CartCntContext);
+  const [modalVisibleId, setModalVisibleId] = useState("");
+
+  const onModalHandler = (id) => {
+    setModalVisibleId(id);
+  };
 
   const selectQuery = () => {
     router.push(
@@ -73,10 +77,6 @@ export default function Cart() {
     }
   };
 
-  function handleModal() {
-    setModal(false);
-  }
-
   const handlePlus = (id) => {
     setCartItems(
       cartItems.map((product) =>
@@ -106,25 +106,19 @@ export default function Cart() {
   };
 
   const getCartItem = async () => {
+    console.log("getCartItem", token);
     GetHApi("/api/carts", token).then((res) => {
-      if (res) {
-        console.log(res.cartItems);
-
-        setCartItems(res.cartItems);
-        setTotalPrice(
-          res.cartItems.reduce(
-            (prev, cur) => prev + cur.price * cur.quantity,
-            0,
-          ),
-        );
-        setDiscountPrice(
-          res.cartItems.reduce(
-            (prev, cur) =>
-              prev + Math.floor(cur.price * 0.01 * cur.discount * cur.quantity),
-            0,
-          ),
-        );
-      }
+      setCartItems(res.cartItems);
+      setTotalPrice(
+        res.cartItems.reduce((prev, cur) => prev + cur.price * cur.quantity, 0),
+      );
+      setDiscountPrice(
+        res.cartItems.reduce(
+          (prev, cur) =>
+            prev + Math.floor(cur.price * 0.01 * cur.discount * cur.quantity),
+          0,
+        ),
+      );
     });
   };
 
@@ -152,8 +146,11 @@ export default function Cart() {
   };
 
   useEffect(() => {
-    getCartItem();
-  }, []);
+    setToken(getToken());
+    if (token !== "") {
+      getCartItem();
+    }
+  }, [token]);
 
   useEffect(() => {
     if (checkItems.length > 0) {
@@ -230,9 +227,9 @@ export default function Cart() {
                   </tr>
                 )}
 
-                {cartItems?.map((product, index) => {
+                {cartItems?.map((product) => {
                   return (
-                    <tr key={index}>
+                    <tr key={product.cartItemId}>
                       <td>
                         <input
                           type="checkbox"
@@ -253,18 +250,14 @@ export default function Cart() {
                         <div>{product.name}</div>
                         <div className="couponWrapper">
                           <div className="couponContents">
-                            <span>coupon</span>{" "}
-                            <input
-                              type="text"
-                              size="15"
-                              defaultValue=""
-                              readOnly
-                            />
+                            <p>
+                              {product.couponDto ? product.couponDto.name : ""}
+                            </p>
                           </div>
                           <div>
                             <div
                               onClick={() => {
-                                setModal(true);
+                                onModalHandler(product.id);
                                 setCouponProduct(product);
                               }}
                             >
@@ -274,15 +267,20 @@ export default function Cart() {
                                 width="60px"
                               />
                             </div>
-                            {modal && (
+                            {product.id === modalVisibleId ? (
                               <CouponModal>
                                 <div>
                                   <CouponApply
-                                    handleModal={handleModal}
-                                    product={couponProduct}
+                                    id={product.id}
+                                    modalVisibleId={modalVisibleId}
+                                    setModalVisibleId={setModalVisibleId}
+                                    cartItemId={product.cartItemId}
+                                    product={product}
                                   />
                                 </div>
                               </CouponModal>
+                            ) : (
+                              ""
                             )}
                           </div>
                         </div>
@@ -348,6 +346,9 @@ export default function Cart() {
                                   product.price * (1 - 0.01 * product.discount),
                                 ) * product.quantity,
                               )}
+                              {product.couponDto
+                                ? product.totalDiscountedPrice
+                                : ""}
                               원
                             </p>
                             <p>
@@ -471,9 +472,10 @@ export default function Cart() {
                   .couponContents {
                     display: flex;
 
-                    span {
-                      background-color: #05c7f2;
-                      color: #fff;
+                    p {
+                      border: 1px solid;
+                      width: 100px;
+                      font-size: 16px;
                     }
                   }
                 }

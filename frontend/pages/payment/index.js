@@ -26,7 +26,6 @@ export default function Payment() {
   const [addr1, setAddr1] = useState("");
   const [addr2, setAddr2] = useState("");
   const [popup, setPopup] = useState(false);
-  const [modal, setModal] = useState(false);
   const [orderItems, setOrderItems] = useState([]);
   const [check, setCheck] = useState(false);
   const [nameValid, setNameValid] = useState(false);
@@ -36,6 +35,11 @@ export default function Payment() {
   const [addressValid1, setAddressValid1] = useState(false);
   const [addressValid2, setAddressValid2] = useState(false);
   const [unvalid, setUnValid] = useState(true);
+  const [modalVisibleId, setModalVisibleId] = useState("");
+
+  const onModalHandler = (id) => {
+    setModalVisibleId(id);
+  };
 
   const { token, setToken } = useContext(TokenContext);
 
@@ -146,10 +150,6 @@ export default function Payment() {
     document.location.href = "/";
   };
 
-  function handleModal() {
-    setModal(false);
-  }
-
   function popupHandler() {
     setPopup(!popup);
   }
@@ -227,7 +227,7 @@ export default function Payment() {
                       <td>
                         <div
                           onClick={() => {
-                            setModal(true);
+                            onModalHandler(product.id);
                           }}
                         >
                           <AdminButton
@@ -236,15 +236,20 @@ export default function Payment() {
                             width="70px"
                           />
                         </div>
-                        {modal && (
+                        {product.id === modalVisibleId ? (
                           <CouponModal>
                             <div>
                               <CouponApply
-                                handleModal={handleModal}
+                                id={product.id}
+                                modalVisibleId={modalVisibleId}
+                                setModalVisibleId={setModalVisibleId}
+                                cartItemId={product.cartItemId}
                                 product={product}
                               />
                             </div>
                           </CouponModal>
+                        ) : (
+                          ""
                         )}
                       </td>
                     </tr>
