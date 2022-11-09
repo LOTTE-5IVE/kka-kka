@@ -58,7 +58,7 @@ public class CartItem {
     }
 
     public Integer getDiscountedPrice(Coupon coupon) {
-        return product.getPrice() - product.getMaxDiscount(coupon);
+        return product.getDiscountPrice() - product.getMaxDiscount(coupon);
     }
 
     @Override

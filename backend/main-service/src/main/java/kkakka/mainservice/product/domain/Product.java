@@ -79,6 +79,10 @@ public class Product {
         this.ratingAvg = ratingAvg;
     }
 
+    public Integer getDiscountPrice() {
+        return (int)(price * (1 - discount * 0.01));
+    }
+
     public Integer getMaxDiscount(Coupon coupon) {
         Integer maxDiscount = coupon.getMaxDiscount();
 
