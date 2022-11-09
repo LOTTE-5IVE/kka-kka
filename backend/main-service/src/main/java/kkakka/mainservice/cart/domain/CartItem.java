@@ -57,6 +57,12 @@ public class CartItem {
         this.coupon = coupon;
     }
 
+    public void cancelCoupon(Coupon coupon) {
+        if (coupon == this.coupon) {
+            this.coupon = null;
+        }
+    }
+
     public Integer getDiscountedPrice(Coupon coupon) {
         return product.getDiscountPrice() - product.getMaxDiscount(coupon);
     }

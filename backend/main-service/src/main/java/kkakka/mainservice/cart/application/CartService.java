@@ -78,10 +78,6 @@ public class CartService {
         return new CartResponseDto(cart.getId(), cartItemDtos);
     }
 
-    private boolean isCouponApplied(CartItem cartItem) {
-        Coupon coupon = cartItem.getCoupon();
-        return coupon != null && coupon.isNotExpired();
-    }
 
     private CartItem findOrCreateCartItem(Product product, Cart cart) {
         return cartItemRepository.findByCartIdAndProductId(cart.getId(),
@@ -113,6 +109,25 @@ public class CartService {
         Integer discountedPrice = cartItem.getDiscountedPrice(coupon);
 
         return CartItemDto.createWithCoupon(cartItem, discountedPrice, coupon);
+    }
+
+    @Transactional
+    public CartItemDto cancelCouponCartItem(Long cartItemId, Long couponId, LoginMember loginMember) {
+        Long loginMemberId = loginMember.getId();
+
+        CartItem cartItem = cartItemRepository.findByIdandMemberId(cartItemId, loginMemberId)
+                .orElseThrow(KkaKkaException::new);
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
+        cartItem.cancelCoupon(coupon);
+        cartItemRepository.save(cartItem);
+        CartItemDto cartItemDto = CartItemDto.createWithoutCoupon(cartItem);
+
+        return cartItemDto;
+    }
+
+    private boolean isCouponApplied(CartItem cartItem) {
+        Coupon coupon = cartItem.getCoupon();
+        return coupon != null && coupon.isNotExpired();
     }
 
     private Cart findOrCreateCart(Member member) {

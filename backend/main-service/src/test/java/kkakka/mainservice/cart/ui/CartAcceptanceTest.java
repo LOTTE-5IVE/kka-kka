@@ -201,6 +201,30 @@ class CartAcceptanceTest extends DocumentConfiguration {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @DisplayName("장바구니 쿠폰 적용 취소 성공")
+    @Test
+    void cancelCouponCartItem_success() {
+        //given
+        final String accessToken = 액세스_토큰_가져옴();
+        장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
+        장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
+        final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
+        퍼센트_쿠폰_생성();
+        장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getCartItemId(),1L,accessToken);
+
+        //when
+        ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
+                .filter(document("cancelCartItemCoupon-success"))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId() + "/" + 1)
+                .then().log().all().extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
     @DisplayName("총 장바구니 아이템 수 조회 - 성공")
     @Test
     void findMemberCartItemCount_success(){
