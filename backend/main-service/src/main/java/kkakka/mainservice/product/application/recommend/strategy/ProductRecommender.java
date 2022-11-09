@@ -1,4 +1,4 @@
-package kkakka.mainservice.product.application.recommend;
+package kkakka.mainservice.product.application.recommend.strategy;
 
 import java.util.Optional;
 import kkakka.mainservice.product.domain.Product;

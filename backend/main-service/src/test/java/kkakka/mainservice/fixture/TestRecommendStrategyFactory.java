@@ -7,12 +7,10 @@ import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_4;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_5;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.netflix.discovery.converters.Auto;
 import java.util.List;
 import java.util.Optional;
 import kkakka.mainservice.member.auth.ui.Authority;
-import kkakka.mainservice.product.application.recommend.ProductRecommendStrategy;
-import kkakka.mainservice.product.application.recommend.ProductRecommender;
+import kkakka.mainservice.product.application.recommend.strategy.ProductRecommender;
 import kkakka.mainservice.product.application.recommend.RecommendStrategy;
 import kkakka.mainservice.product.application.recommend.RecommenderFactory;
 import kkakka.mainservice.product.domain.Product;
