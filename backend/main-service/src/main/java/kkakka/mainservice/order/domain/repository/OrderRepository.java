@@ -1,6 +1,7 @@
 package kkakka.mainservice.order.domain.repository;
 
 import java.util.List;
+import java.util.Optional;
 import kkakka.mainservice.order.domain.Order;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
