@@ -99,6 +99,7 @@ export default function ProductInfo({ id, name, price, discount }) {
                 font-weight: 600;
                 color: #898989;
                 text-decoration: line-through;
+                margin: 0;
               }
 
               .blank {
@@ -135,6 +136,7 @@ export default function ProductInfo({ id, name, price, discount }) {
                 font-weight: 600;
                 color: #898989;
                 text-decoration: line-through;
+                margin: 3px 0;
               }
 
               .blank {
