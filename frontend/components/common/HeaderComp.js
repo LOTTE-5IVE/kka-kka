@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SearchBar from "./SearchBar";
 import { useContext } from "react";
 import { useEffect, useState } from "react";
 import { TokenContext } from "../../context/TokenContext";
@@ -20,6 +21,15 @@ export default function Header() {
     });
   };
 
+  const updateChange = (e) => {
+      if (isText(e.currentTarget.value)) {
+        setValue(e.currentTarget.value);
+      } else {
+        alert("특수문자는 입력할 수 없습니다.");
+        e.currentTarget.value = "";
+      }
+  }
+
   function search(event) {
     if (event.key === "Enter") {
       if (value.length < 2 || value.length > 20) {
@@ -37,7 +47,7 @@ export default function Header() {
       setValue("");
     }
   }
-
+  
   useEffect(() => {
     if (isLogin()) {
       setToken(getToken());
@@ -45,6 +55,12 @@ export default function Header() {
       getMemberInfo();
     }
   }, [isLogin()]);
+
+  useEffect(() => {
+    if(value) {
+
+    }
+  },[value]);
 
   return (
     <div>
@@ -56,29 +72,24 @@ export default function Header() {
             </a>
           </Link>
         </div>
-        <div className="search">
-          <input
-            type="text"
-            size="30"
-            defaultValue={value}
-            placeholder="검색어를 입력해주세요"
-            onChange={(e) => {
-              if (isText(e.currentTarget.value)) {
-                setValue(e.currentTarget.value);
-              } else {
-                alert("특수문자는 입력할 수 없습니다.");
-                e.currentTarget.value = "";
-              }
-            }}
-            onKeyUp={(event) => {
-              search(event, value);
-            }}
-          ></input>
-
-          <Link href={`/product?search=${value}`}>
-            <img src="/common/main_search.png" />
-          </Link>
-        </div>
+        <div className="searchWrapper">
+          <div className="search">
+            <input
+              type="text"
+              size="30"
+              defaultValue={value}
+              placeholder="검색어를 입력해주세요"
+              onChange={(e) => updateChange(e)}
+              onKeyUp={(event) => {
+                search(event, value);
+              }}   
+            ></input>
+              {value.length > 0? <SearchBar value={value}/> : ""}
+            </div>
+              <Link href={`/product?search=${value}`}>
+              <img src="/common/main_search.png" />
+            </Link>
+          </div>
         <div className="icons">
           <div className="top">
             {login ? (
@@ -154,10 +165,11 @@ export default function Header() {
               transform: translate(-50%, -50%);
             }
           }
-
-          .search {
+          .searchWrapper {
             position: absolute;
             transform: translate(-50%, -50%);
+          }
+          .search {
             border: 2px solid #ed1b23;
 
             input[type="text"] {
@@ -219,9 +231,11 @@ export default function Header() {
               }
             }
 
-            .search {
+            .searchWrapper {
               left: 45%;
               top: 35%;
+            }
+            .search {
               border-radius: 40px;
               padding: 0 17px;
 
