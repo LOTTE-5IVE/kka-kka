@@ -3,6 +3,7 @@ package kkakka.mainservice.product.application.recommend;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +69,9 @@ public class ProductRecommendStrategy implements ProductRecommender {
 
     private RecommendProductDto convertResponseBody(ResponseEntity<String> response) {
         try {
+            if (Optional.ofNullable(response.getBody()).isEmpty()) {
+                return new RecommendProductDto(Collections.emptyList());
+            }
             return objectMapper.readValue(
                     response.getBody(),
                     new TypeReference<RecommendProductDto>() {
