@@ -64,8 +64,9 @@ export default function Admin() {
             }
 
             .contents {
-              height: 95%;
+              height: 110%;
               padding: 40px 30px;
+              background: #ebebeb;
             }
           }
         }
