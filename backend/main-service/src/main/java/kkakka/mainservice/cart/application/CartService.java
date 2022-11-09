@@ -11,7 +11,9 @@ import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
 import kkakka.mainservice.coupon.domain.Coupon;
+import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
+import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
@@ -36,6 +38,7 @@ public class CartService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
+    private final MemberCouponRepository memberCouponRepository;
 
     @Transactional
     public Long addCartItem(CartRequestDto cartRequestDto, LoginMember loginMember) {
@@ -105,9 +108,12 @@ public class CartService {
 
         CartItem cartItem = cartItemRepository.findByIdandMemberId(cartItemId, loginMemberId).orElseThrow(KkaKkaException::new);
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
-        cartItem.applyCoupon(coupon);
-        Integer discountedPrice = cartItem.getDiscountedPrice(coupon);
 
+        cartItem.applyCoupon(coupon);
+        MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponIdAndMemberId(couponId, loginMemberId);
+        memberCoupon.useCoupon();
+
+        Integer discountedPrice = cartItem.getDiscountedPrice(coupon);
         return CartItemDto.createWithCoupon(cartItem, discountedPrice, coupon);
     }
 
@@ -120,8 +126,12 @@ public class CartService {
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
         cartItem.cancelCoupon(coupon);
         cartItemRepository.save(cartItem);
-        CartItemDto cartItemDto = CartItemDto.createWithoutCoupon(cartItem);
 
+        MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponIdAndMemberId(couponId, loginMemberId);
+        memberCoupon.cancelCoupon();
+        memberCouponRepository.save(memberCoupon);
+
+        CartItemDto cartItemDto = CartItemDto.createWithoutCoupon(cartItem);
         return cartItemDto;
     }
 

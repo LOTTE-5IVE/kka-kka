@@ -3,7 +3,6 @@ package kkakka.mainservice.cart.ui;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.List;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
@@ -22,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
@@ -103,8 +103,8 @@ class CartAcceptanceTest extends DocumentConfiguration {
         장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
         장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
         final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
-        퍼센트_쿠폰_생성();
-        장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getCartItemId(),1L,accessToken);
+        String couponId = 퍼센트_쿠폰_생성();
+        장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getCartItemId(), couponId, accessToken);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
@@ -180,13 +180,13 @@ class CartAcceptanceTest extends DocumentConfiguration {
 
     @Test
     @DisplayName("장바구니 쿠폰 적용 - 성공")
-    void applyCouponCartItem_success() {
+    void testApplyCouponCartItem_success() {
         //given
         final String accessToken = 액세스_토큰_가져옴();
         장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
         final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
-        퍼센트_쿠폰_생성();
-        String couponId = 사용가능_쿠폰_조회(PRODUCT_1.getId(), accessToken);
+        String couponId = 퍼센트_쿠폰_생성();
+        상품_쿠폰_다운로드(accessToken, couponId);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
@@ -203,14 +203,15 @@ class CartAcceptanceTest extends DocumentConfiguration {
 
     @DisplayName("장바구니 쿠폰 적용 취소 성공")
     @Test
-    void cancelCouponCartItem_success() {
+    void testCancelCouponCartItem_success() {
         //given
         final String accessToken = 액세스_토큰_가져옴();
         장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
         장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
         final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
-        퍼센트_쿠폰_생성();
-        장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getCartItemId(),1L,accessToken);
+        String couponId = 퍼센트_쿠폰_생성();
+        상품_쿠폰_다운로드(accessToken, couponId);
+        장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getCartItemId(), couponId, accessToken);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
@@ -218,7 +219,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId() + "/" + 1)
+                .delete("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId() + "/" + couponId)
                 .then().log().all().extract();
 
         //then
@@ -227,7 +228,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
 
     @DisplayName("총 장바구니 아이템 수 조회 - 성공")
     @Test
-    void findMemberCartItemCount_success(){
+    void findMemberCartItemCount_success() {
         // given
         final String accessToken = 액세스_토큰_가져옴();
         final Long cart1 = 장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
@@ -289,8 +290,8 @@ class CartAcceptanceTest extends DocumentConfiguration {
         return response.body().jsonPath().get("accessToken");
     }
 
-    private void 퍼센트_쿠폰_생성() {
-        RestAssured.given(spec).log().all()
+    private String 퍼센트_쿠폰_생성() {
+        final ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("{\n"
                         + "  \"categoryId\": null,\n"
@@ -307,26 +308,26 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .when()
                 .post("/api/coupons")
                 .then().log().all().extract();
+        return response.header("Location");
     }
 
-    private String 사용가능_쿠폰_조회(Long productId, String accessToken) {
-
-        final ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/api/coupons/me/products/" + productId)
-                .then().log().all().extract();
-        return response.body().path("[0].id").toString();
-    }
-
-    private void 장바구니_쿠폰_적용(Long cartItemId, Long couponId, String accessToken) {
+    private void 장바구니_쿠폰_적용(Long cartItemId, String couponId, String accessToken) {
         RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/api/carts/" + cartItemId + "/" + couponId)
                 .then().log().all();
+    }
+
+    private String 상품_쿠폰_다운로드(String accessToken, String couponId) {
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .post("/api/coupons/download/" + couponId)
+                .then().log().all().extract();
+
+        return couponId;
     }
 }
