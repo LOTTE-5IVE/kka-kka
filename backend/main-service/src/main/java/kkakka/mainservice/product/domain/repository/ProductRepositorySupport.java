@@ -1,6 +1,8 @@
 package kkakka.mainservice.product.domain.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import kkakka.mainservice.category.domain.QCategory;

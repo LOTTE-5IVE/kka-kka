@@ -1,11 +1,17 @@
+import axios from "axios";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { fetchSearchData } from "../../apis/SearchApi";
 
-export default function SearchFilter() {
+export default function SearchFilter({setResource, search, page}) {
   const [category, setCategory] = useState([]);
-  const [sort, setSort] = useState();
+  const [sort, setSort] = useState("");
   const [toggle, setToggle] = useState(false);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [minCalorie, setMinCalorie] = useState(0);
+  const [maxCalorie, setMaxCalorie] = useState(0);
 
   const handleSingleCheck = (checked, product) => {
     if (checked) {
@@ -14,6 +20,18 @@ export default function SearchFilter() {
       setCategory(category.filter((el) => el !== product));
     }
   };
+
+  const searchFilter = async () => {
+    setResource (fetchSearchData(sort, page, search, category, minPrice, maxPrice, minCalorie, maxCalorie));
+  }
+
+  useEffect(() => {
+    console.log(category);
+  }, [category]);
+
+  useEffect(() => {
+    searchFilter();
+  },[page]);
 
   return (
     <div className="SFWrapper">
@@ -46,11 +64,11 @@ export default function SearchFilter() {
           onChange={(e) => {
             setSort(e.target.value);
           }}
-          defaultValue={"DEFAULT"}
+          defaultValue={""}
         >
-          <option value="DEFAULT">정확도순</option>
-          <option value="최저가순">최저가순</option>
-          <option value="최고가순">최고가순</option>
+          <option value="accuracy">정확도순</option>
+          <option value="asc">최저가순</option>
+          <option value="desc">최고가순</option>
         </select>{" "}
       </div>
       {toggle && (
@@ -141,16 +159,19 @@ export default function SearchFilter() {
               <tr>
                 <th>가격</th>
                 <td>
-                  <input type="text" size="3" />원 ~{" "}
-                  <input type="text" size="3" />원
+                <input type="text" size="3"  onChange={(e) => {setMinPrice(e.target.value);
+                  console.log(minPrice);}} />원 ~{" "}
+                  <input type="text" size="3" onChange={(e) => {setMaxPrice(e.target.value);
+                  console.log(maxPrice);}}/>원
                 </td>
               </tr>
               <tr>
                 <th>칼로리</th>
                 <td>
-                  <input type="text" size="3" />
-                  kcal ~ <input type="text" size="3" />
-                  kcal
+                <input type="text" size="3" onChange={(e) => {setMinCalorie(e.target.value);
+                  console.log(minCalorie);}}/>
+                  kcal ~ <input type="text" size="3" onChange={(e) => {setMaxCalorie(e.target.value);
+                  console.log(maxCalorie);}}/>kcal
                 </td>
               </tr>
               <tr>
@@ -158,6 +179,7 @@ export default function SearchFilter() {
                   <button
                     onClick={() => {
                       console.log("click");
+                      searchFilter();
                     }}
                   >
                     검색

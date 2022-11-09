@@ -6,6 +6,7 @@ import { isLogin } from "../../hooks/isLogin";
 import { getToken } from "../../hooks/getToken";
 import { memberInfo } from "../../hooks/memberInfo";
 import { isText } from "../../hooks/isText";
+import { router } from "next/router";
 
 export default function Header() {
   const [value, setValue] = useState("");
@@ -26,7 +27,13 @@ export default function Header() {
         return;
       }
 
-      window.location.href = `/product?search=${value}`;
+      router.push(
+        {
+          pathname: `/product`,
+          query: { cat_id: 0, search: value },
+        },
+        `/product`,
+      );
       setValue("");
     }
   }

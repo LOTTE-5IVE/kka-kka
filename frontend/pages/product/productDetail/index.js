@@ -74,7 +74,7 @@ export default function ProductDetail() {
       Swal.fire({
         title: "장바구니에 담으시겠습니까?",
         html: `${product.name}` + "<br/>" + `수량 : ${quantity}개`,
-        imageUrl: `${product.image_url}`,
+        imageUrl: `${product.imageUrl}`,
         imageHeight: 300,
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
