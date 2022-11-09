@@ -70,10 +70,21 @@ public class CouponController {
     }
 
     /* 사용 가능한 쿠폰 조회 */
-    @GetMapping("/me")
+    @GetMapping("/me/available")
     public ResponseEntity<List<CouponResponseDto>> findUsableCoupons(
         @AuthenticationPrincipal LoginMember loginMember) {
         List<CouponResponseDto> coupons = couponService.findUsableCoupons(loginMember.getId())
+            .stream()
+            .map(coupon -> CouponResponseDto.create(coupon))
+            .collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(coupons);
+    }
+
+    /* 사용한 쿠폰 조회 */
+    @GetMapping("/me/unavailable")
+    public ResponseEntity<List<CouponResponseDto>> findUsedCoupons(
+        @AuthenticationPrincipal LoginMember loginMember) {
+        List<CouponResponseDto> coupons = couponService.findUsedCoupons(loginMember.getId())
             .stream()
             .map(coupon -> CouponResponseDto.create(coupon))
             .collect(Collectors.toList());
@@ -117,5 +128,13 @@ public class CouponController {
         List<CouponProductResponseDto> couponResponseDtos = couponService.showCouponsByProductId(
             productId);
         return ResponseEntity.status(HttpStatus.OK).body(couponResponseDtos);
+    }
+
+    /* 쿠폰 사용 */
+    @PostMapping("/use/{couponId}")
+    public ResponseEntity<Void> useCoupon(@PathVariable Long couponId,
+        @AuthenticationPrincipal LoginMember loginMember) {
+        couponService.useCouponByMember(couponId, loginMember.getId());
+        return ResponseEntity.ok().build();
     }
 }
