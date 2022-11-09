@@ -213,7 +213,7 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
 
     @DisplayName("할인 조회 - 성공")
     @Test
-    public void showAllDiscounts() {
+    void showAllDiscounts() {
         // given
         상품_할인_생성();
 

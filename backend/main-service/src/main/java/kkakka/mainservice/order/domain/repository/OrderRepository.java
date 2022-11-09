@@ -25,4 +25,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAllByMemberId(@Param(value = "memberId") Long memberId, Pageable pageable);
 
     int countAllByMemberId(Long memberId);
+
+    @Query("select sum(o.totalPrice) from Order o where o.member.id = :memberId")
+    Optional<Integer> findTotalPriceByMemberId(@Param(value = "memberId") Long memberId);
 }
