@@ -171,7 +171,7 @@ export default function SearchFilter({setResource, search, page}) {
                 <input type="text" size="3" onChange={(e) => {setMinCalorie(e.target.value);
                   console.log(minCalorie);}}/>
                   kcal ~ <input type="text" size="3" onChange={(e) => {setMaxCalorie(e.target.value);
-                  console.log(maxCalorie);}}/>
+                  console.log(maxCalorie);}}/>kcal
                 </td>
               </tr>
               <tr>
