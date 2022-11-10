@@ -106,7 +106,7 @@ export default function AdminSidebar({ LmenuHandler, SmenuHandler }) {
             }
 
             .active {
-              color: #f2889b;
+              color: #fe5c57;
             }
           }
         }

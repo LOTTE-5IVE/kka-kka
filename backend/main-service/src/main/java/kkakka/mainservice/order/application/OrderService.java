@@ -1,7 +1,6 @@
 package kkakka.mainservice.order.application;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import kkakka.mainservice.common.exception.KkaKkaException;
@@ -40,6 +39,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final ProductOrderRepository productOrderRepository;
     private final ReviewRepository reviewRepository;
+    private final OrderMessageProducer orderMessageProducer;
 
     @Transactional
     public Long order(OrderDto orderDto) {
@@ -68,7 +68,12 @@ public class OrderService {
         orderRepository.save(order);
         productOrderRepository.saveAll(productOrders);
 
+        sendToKafka(order);
         return order.getId();
+    }
+
+    private void sendToKafka(Order order) {
+        orderMessageProducer.sendMessage(order);
     }
 
     public List<MemberOrderDto> showMemberOrders(Long memberId, Long orderId, int pageSize) {

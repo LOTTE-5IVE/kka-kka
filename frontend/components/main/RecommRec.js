@@ -23,7 +23,7 @@ export default function RecommRec({ id, imgsrc, name, price, discount }) {
               background-color: #f5f5f5;
 
               img {
-                height: 330px;
+                height: 280px;
               }
             }
           }
