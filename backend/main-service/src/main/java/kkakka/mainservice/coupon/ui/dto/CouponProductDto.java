@@ -58,7 +58,7 @@ public class CouponProductDto {
         this.discountedPrice = discountedPrice;
     }
 
-    public void downloadCoupon (){
+    public void downloadCoupon() {
         this.isDownloadable = false;
     }
 }
