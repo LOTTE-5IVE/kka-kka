@@ -1,8 +1,20 @@
-package kkakka.mainservice.cart.ui;
+package kkakka.mainservice.cart.acceptance;
+
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
+import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
@@ -15,19 +27,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
-
-import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
-import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
-import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 class CartAcceptanceTest extends DocumentConfiguration {
 
@@ -180,7 +179,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
 
     @Test
     @DisplayName("장바구니 쿠폰 적용 - 성공")
-    void testApplyCouponCartItem_success() {
+    void applyCouponCartItem_success() {
         //given
         final String accessToken = 액세스_토큰_가져옴();
         장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
@@ -194,7 +193,8 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId() + "/" + couponId)
+                .post("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId() + "/"
+                        + couponId)
                 .then().log().all().extract();
 
         //then
@@ -219,7 +219,8 @@ class CartAcceptanceTest extends DocumentConfiguration {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId() + "/" + couponId)
+                .delete("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId() + "/"
+                        + couponId)
                 .then().log().all().extract();
 
         //then
