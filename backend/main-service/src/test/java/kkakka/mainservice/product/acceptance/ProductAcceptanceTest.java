@@ -8,7 +8,10 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import kkakka.mainservice.DocumentConfiguration;
+import kkakka.mainservice.fixture.TestDataLoader;
+import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.ui.dto.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -94,6 +97,33 @@ public class ProductAcceptanceTest extends DocumentConfiguration {
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("전체 상품 조회(2페이지 이상) - 성공")
+    void showAllProductsPage_success() {
+        //given
+        int pageSize = 3;
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("products-show-all-page-success"))
+                .when()
+                .get("/api/products?size=" + pageSize)
+                .then()
+                .log().all().extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().jsonPath().get("pageInfo.lastPage").toString())
+                .isEqualTo(String.valueOf(calculatePage(TestDataLoader.ALL_PRODUCTS, pageSize)));
+    }
+
+    private int calculatePage(List<Product> products, int pageSize) {
+        if (products.size() % pageSize > 0) {
+            return products.size() / pageSize + 1;
+        }
+        return products.size() / pageSize;
     }
 
     @DisplayName("검색 조회 - 성공")
