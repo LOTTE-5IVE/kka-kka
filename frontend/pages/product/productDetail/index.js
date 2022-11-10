@@ -180,7 +180,7 @@ export default function ProductDetail() {
                       />
                       <div className="reviewCnt">
                         ({product.ratingAvg?.toFixed(1)},{" "}
-                        {commaMoney(reviewCount) || 0}개)
+                        {commaMoney(reviewCount) || 0}건)
                       </div>
                     </div>
                   </div>
