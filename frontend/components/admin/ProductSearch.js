@@ -45,7 +45,7 @@ export default function ProductSearch() {
               return (
                 <tr style={{ height: "3vw" }} key={product.id}>
                   <td>
-                    <img width="60px" src={product.image_url} />
+                    <img width="60px" src={product.imageUrl} />
                   </td>
                   <td>{product.name}</td>
 
@@ -84,6 +84,9 @@ export default function ProductSearch() {
           height: 100%;
           border: 2px solid #dedede;
           color: #7a7a7a;
+          font-size: 0.8rem;
+          background: #fcfcfc;
+          border-radius: 2em;
 
           table {
             overflow: auto;

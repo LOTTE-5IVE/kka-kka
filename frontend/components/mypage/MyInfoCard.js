@@ -1,6 +1,4 @@
-import axios from "axios";
 import { useEffect } from "react";
-import { useContext } from "react";
 import { useState } from "react";
 import { GetHApi } from "../../apis/Apis";
 import { getToken } from "../../hooks/getToken";

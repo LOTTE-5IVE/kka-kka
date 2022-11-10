@@ -183,7 +183,7 @@ public class CouponService {
         }
     }
 
-    /* 사용자 사용 가능한 쿠폰 목록 조회 */
+    /* 회원 사용 가능한 쿠폰 목록 조회 */
     public List<Coupon> findUsableCoupons(Long memberId) {
         List<MemberCoupon> memberCoupons = memberCouponRepository
             .findAllByMemberIdAndIsUsedFalse(memberId);
@@ -192,7 +192,16 @@ public class CouponService {
             .collect(Collectors.toList());
     }
 
-    /* 사용자 다운 가능한 쿠폰 목록 조회 */
+    /* 회원 사용한 쿠폰 목록 조회 */
+    public List<Coupon> findUsedCoupons(Long memberId) {
+        List<MemberCoupon> memberCoupons = memberCouponRepository
+            .findAllByMemberIdAndIsUsedTrue(memberId);
+        return memberCoupons.stream()
+            .map(memberCoupon -> memberCoupon.getCoupon())
+            .collect(Collectors.toList());
+    }
+
+    /* 회원 다운 가능한 쿠폰 목록 조회 */
     public List<CouponResponseDto> findDownloadableCoupons(Long memberId) {
         List<Coupon> coupons = couponRepository.findAll();
         List<Coupon> downloadedCoupons = memberCouponRepository.findAllByMemberId(
@@ -246,20 +255,20 @@ public class CouponService {
 
     private List<CouponProductResponseDto> sortWithMaximumDiscountAmount(
         List<CouponProductResponseDto> couponProductResponseDtos, Product product) {
+        int discountedProductPrice = (int) Math.ceil(
+            product.getPrice() * (1 - (product.getDiscount() * 0.01)));
         for (CouponProductResponseDto couponProductResponseDto : couponProductResponseDtos) {
             if (couponProductResponseDto.getPercentage() != null) {
                 int calculatedPercentValue = calculatePercentage
-                    .apply(product.getPrice() - product.getDiscount(),
-                        couponProductResponseDto.getPercentage());
+                    .apply(discountedProductPrice, couponProductResponseDto.getPercentage());
                 int calculatedStaticValue = calculateStaticPrice
-                    .apply(product.getPrice() - product.getDiscount(),
-                        couponProductResponseDto.getMaxDiscount());
+                    .apply(discountedProductPrice, couponProductResponseDto.getMaxDiscount());
                 couponProductResponseDto.saveDiscountedPrice(
                     Math.max(calculatedPercentValue, calculatedStaticValue));
                 continue;
             }
             couponProductResponseDto.saveDiscountedPrice(
-                calculateStaticPrice.apply(product.getPrice() - product.getDiscount(),
+                calculateStaticPrice.apply(discountedProductPrice,
                     couponProductResponseDto.getMaxDiscount()));
         }
         return couponProductResponseDtos;

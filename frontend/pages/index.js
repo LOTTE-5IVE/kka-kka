@@ -6,7 +6,7 @@ import Introduction from "../components/main/Introduction";
 import RecommSlider from "../components/main/RecommSlider";
 
 export default function Home() {
-  const [tab, setTab] = useState("리뷰");
+  const [tab, setTab] = useState("맞춤");
 
   function handleTab(text) {
     setTab(text);
