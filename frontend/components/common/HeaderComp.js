@@ -6,8 +6,6 @@ import { TokenContext } from "../../context/TokenContext";
 import { isLogin } from "../../hooks/isLogin";
 import { getToken } from "../../hooks/getToken";
 import { memberInfo } from "../../hooks/memberInfo";
-import { isText } from "../../hooks/isText";
-import { router } from "next/router";
 
 export default function Header() {
   const [value, setValue] = useState("");
@@ -40,17 +38,7 @@ export default function Header() {
             </a>
           </Link>
         </div>
-        {/* <div className="searchWrapper"> */}
-          {/* <div className="search"> */}
-            <SearchBar value={value} setValue={setValue} />
-
-            {/* <Link href={`/product?search=${value}`}>
-              <img src="/common/main_search.png" />
-            </Link> */}
-
-
-          {/* </div> */}
-        {/* </div> */}
+        <SearchBar value={value} setValue={setValue} />
         <div className="icons">
           <div className="top">
             {login ? (
