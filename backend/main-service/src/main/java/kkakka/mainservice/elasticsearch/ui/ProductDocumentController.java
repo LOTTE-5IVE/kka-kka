@@ -24,7 +24,6 @@ public class ProductDocumentController {
     public ResponseEntity<SearchResultResponse> showProductsBySearch(
         @ModelAttribute SearchParamRequest searchParamRequest,
         @PageableDefault(size = 9) Pageable pageable) {
-
         SearchResultResponse result = productDocumentService.findByKeyword(
             searchParamRequest.toDto(),
             pageable
