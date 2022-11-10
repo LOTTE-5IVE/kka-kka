@@ -44,8 +44,6 @@ public class CouponServiceTest extends TestContext {
     MemberCouponRepository memberCouponRepository;
     @Autowired
     MemberRepository memberRepository;
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Test
     @DisplayName("쿠폰 사용 여부 확인 - 성공")
@@ -332,6 +330,32 @@ public class CouponServiceTest extends TestContext {
 
         // then
         assertThat(count).isEqualTo(1);
+    }
+
+    @DisplayName("사용한 쿠폰 조회 - 성공")
+    @Test
+    void showUsedCoupon_success() {
+        // given
+        Product product = new Product(null, null, "product",
+            1000, 20, "", "", "", null);
+        Member member = new Member();
+        productRepository.save(product);
+        memberRepository.save(member);
+        Long coupon1 = couponService.createCoupon(new CouponRequestDto(
+            null, null, product.getId(),
+            "test", "COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+
+        // when
+        couponService.downloadCoupon(coupon1, member.getId());
+        couponService.useCouponByMember(coupon1, member.getId());
+        List<Coupon> coupons = couponService.findUsedCoupons(member.getId());
+
+        // then
+        assertThat(coupons.size()).isEqualTo(1);
     }
 
     @DisplayName("상품 쿠폰 다운로드 - 성공")

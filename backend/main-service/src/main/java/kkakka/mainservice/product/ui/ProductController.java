@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.common.dto.PageableResponse;
+import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
+import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.product.application.ProductService;
 import kkakka.mainservice.product.application.dto.ProductDetailDto;
 import kkakka.mainservice.product.application.dto.ProductDto;
@@ -12,6 +14,7 @@ import kkakka.mainservice.product.ui.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,26 +45,24 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<PageableResponse<List<ProductResponse>>> showAllProducts(
             @RequestParam(value = "category", required = false) Long categoryId,
+            @RequestParam(value = "sortBy", defaultValue = "NON", required = false) String sortBy,
+            @RequestParam(value = "keyword", required = false) String keyword,
             Pageable pageable) {
-        final Page<ProductDto> productDtos = productService.showAllProductsWithCategory(
-                Optional.ofNullable(categoryId), pageable);
+        final Page<ProductDto> productDtos = productService.showAllProductsWithCategoryAndSearch(
+                Optional.ofNullable(categoryId), sortBy, keyword, pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(dtoToPageableResponse(pageable, productDtos));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<PageableResponse<List<ProductResponse>>> showProductsBySearch(
-            @RequestParam(value = "keyword", required = false) String keyword,
-            Pageable pageable
+    @GetMapping("/recommend")
+    public ResponseEntity<PageableResponse<List<ProductResponse>>> showProductsByRecommendation(
+            @AuthenticationPrincipal LoginMember loginMember,
+            @PageableDefault(size = 9) Pageable pageable
     ) {
-        if (Optional.ofNullable(keyword).isEmpty()) {
-            final Page<ProductDto> productDtos = productService.showAllProductsWithCategory(
-                    Optional.empty(), pageable);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(dtoToPageableResponse(pageable, productDtos));
-        }
-
-        Page<ProductDto> productDtos = productService.showProductsBySearch(keyword, pageable);
+        final Page<ProductDto> productDtos = productService.showProductsByRecommendation(
+                loginMember,
+                pageable
+        );
         return ResponseEntity.status(HttpStatus.OK)
                 .body(dtoToPageableResponse(pageable, productDtos));
     }

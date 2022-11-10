@@ -123,6 +123,16 @@ include::{snippets}/show-member-coupons-success/http-request.adoc[]
 
 include::{snippets}/show-member-coupons-success/http-response.adoc[]
 
+=== 사용한 쿠폰 조회
+
+- Request
+
+include::{snippets}/find-used-coupons/http-request.adoc[]
+
+- Response
+
+include::{snippets}/find-used-coupons/http-response.adoc[]
+
 == Discount
 === 상품 할인 생성
 

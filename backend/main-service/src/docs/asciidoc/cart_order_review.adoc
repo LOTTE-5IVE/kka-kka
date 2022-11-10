@@ -122,3 +122,12 @@ include::{snippets}/review-write-fail-already-written/http-request.adoc[]
 
 include::{snippets}/review-write-fail-already-written/http-response.adoc[]
 
+=== 상품 전체 후기 조회
+
+- Request
+
+include::{snippets}/review-count-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/review-count-success/http-response.adoc[]
