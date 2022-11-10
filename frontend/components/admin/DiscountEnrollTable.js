@@ -62,7 +62,7 @@ export default function DiscountEnrollTable() {
           </colgroup>
 
           <tbody>
-            <tr style={{ height: "3vw" }}>
+            <tr style={{ height: "4vw" }}>
               <th scope="row">혜택 이름</th>
               <td
                 style={{
@@ -106,12 +106,12 @@ export default function DiscountEnrollTable() {
                       setDiscount(e.target.value);
                     }}
                   />
-                  %
+                  {" "}%
                 </div>
               </td>
             </tr>
 
-            <tr style={{ height: "6vw" }}>
+            <tr style={{ height: "5vw" }}>
               <th scope="row">유효 기간</th>
 
               <td>
@@ -181,7 +181,7 @@ export default function DiscountEnrollTable() {
                 makeDiscount();
               }}
             >
-              <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff"/>
             </div>
           ) : (
             <div
@@ -190,7 +190,7 @@ export default function DiscountEnrollTable() {
                 makeDiscountProduct();
               }}
             >
-              <Button context="혜택 등록하기" color="#F2889B" tcolor="#fff" />
+              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff"/>
             </div>
           )}
         </div>
@@ -199,7 +199,7 @@ export default function DiscountEnrollTable() {
       <style jsx>{`
         .contents {
           height: 80%;
-          color: #7a7a7a;
+          color: #2c2c2c;
 
           table {
             width: 90%;
@@ -217,12 +217,15 @@ export default function DiscountEnrollTable() {
             .btn {
               border: 1px solid;
               padding: 7px 25px;
+              border-radius: 1em;
+              margin-right: 15px;
             }
 
             .active {
-              background-color: #f2889b;
+              background-color: #fe5c57;
               color: #fff;
-              border: 1px solid #f2889b;
+              border: 1px solid #fe5c57;
+              border-radius: 1em;
             }
           }
 

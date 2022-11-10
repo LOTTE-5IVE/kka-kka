@@ -42,6 +42,10 @@ public class MemberCoupon {
         this.isUsed = true;
     }
 
+    public void cancelCoupon() {
+        this.isUsed = false;
+    }
+
     public boolean isUsed() {
         return this.isUsed;
     }

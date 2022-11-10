@@ -3,6 +3,8 @@
 
 # Spring Cloud Config
 backend/config-service/src/main/resources/application.yml
+backend/main-service/src/main/resources/static/product-data-v2.csv
+frontend/.next/
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:

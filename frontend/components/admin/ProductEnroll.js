@@ -214,9 +214,9 @@ export default function ProductEnroll() {
             }
 
             .active {
-              background-color: #f2889b;
+              background-color: #fe5c57;
               color: #fff;
-              border: 1px solid #f2889b;
+              border: 1px solid #fe5c57;
             }
           }
         }

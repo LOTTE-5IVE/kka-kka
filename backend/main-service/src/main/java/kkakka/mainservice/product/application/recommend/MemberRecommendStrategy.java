@@ -54,9 +54,18 @@ public class MemberRecommendStrategy implements ProductRecommender {
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
 
+    /**
+    * 회원 추천 기준 상품 선택 과정
+    * 1. 4.0 이상의 후기를 남겼을 경우
+    *   1.1 후기 남긴 상품들 중 랜덤으로 하나를 기준 상품으로 선정하여 추천
+    * 2. 4.0 이상의 후기는 없지만 주문 내역이 있을 경우
+    *   2.1 주문 내역의 상품들 중 랜덤으로 하나를 기준 상품으로 선정하여 추천
+    * 3. 4.0 이상의 후기도, 주문 내역도 없을 경우
+    *   3.1 베스트 상품을 반환 (비회원 추천과 같은 결과)
+    */
     @Override
-    public Page<Product> recommend(Optional<Long> recommendPivotId, Pageable pageable) {
-        final Member member = validateMember(recommendPivotId);
+    public Page<Product> recommend(Optional<Long> memberId, Pageable pageable) {
+        final Member member = validateMember(memberId);
 
         final List<Review> highRatedReviews = reviewRepository.findTopRatingReviewByMemberId(
                 member.getId(), Pageable.ofSize(5));

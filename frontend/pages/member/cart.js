@@ -7,6 +7,7 @@ import ButtonComp from "../../components/common/Button/ButtonComp";
 import Title from "../../components/common/Title";
 import { CouponApply } from "../../components/coupon/CouponApply";
 import { CouponModal } from "../../components/coupon/CouponModal";
+import { CartCntContext } from "../../context/CartCntContext";
 import { TokenContext } from "../../context/TokenContext";
 import { commaMoney } from "../../hooks/commaMoney";
 import { isNumber } from "../../hooks/isNumber";
@@ -23,6 +24,7 @@ export default function Cart() {
   const [selectUnValid, setSelectUnValid] = useState(true);
   const [couponProduct, setCouponProduct] = useState();
   const { token, setToken } = useContext(TokenContext);
+  const { cartCnt, setCartCnt } = useContext(CartCntContext);
 
   const selectQuery = () => {
     router.push(
@@ -139,6 +141,13 @@ export default function Cart() {
   const removeCartItem = async (id) => {
     DeleteHApi(`/api/carts/${id}`, token).then((res) => {
       getCartItem();
+      getCartCount();
+    });
+  };
+
+  const getCartCount = async () => {
+    await GetHApi("/api/members/me/carts/all", token).then((res) => {
+      setCartCnt(res.cartCount);
     });
   };
 
