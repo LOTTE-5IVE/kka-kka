@@ -1,7 +1,9 @@
 package kkakka.mainservice.review.ui;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.common.dto.PageableResponse;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,5 +69,15 @@ public class ReviewController {
         final Long reviewId = reviewService.writeReview(loginMember.getId(), productOrderId,
                 reviewRequest);
         return ResponseEntity.created(URI.create(reviewId.toString())).build();
+    }
+
+    @GetMapping("/{productId}/all")
+    public ResponseEntity<Map<String, Integer>> showReviewCount(
+            @PathVariable("productId") Long productId
+    ) {
+        final int reviewCount = reviewService.countReviews(productId);
+        final Map<String, Integer> result = new HashMap<>();
+        result.put("reviewCount", reviewCount);
+        return ResponseEntity.ok().body(result);
     }
 }

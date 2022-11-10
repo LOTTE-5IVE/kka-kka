@@ -20,6 +20,8 @@ import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,8 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CartService {
+
+    private static final Logger log = LoggerFactory.getLogger(CartService.class);
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
@@ -100,6 +104,17 @@ public class CartService {
                     .orElseThrow(NotOrderOwnerException::new);
             cartItemRepository.delete(cartItem);
         });
+    }
+
+    @Transactional
+    public void emptyCart(LoginMember loginMember) {
+        try {
+            cartItemRepository.deleteAllByMemberId(loginMember.getId());
+        } catch (Exception e) {
+            log.warn("-------- CartService Error start ---------");
+            log.warn("Fail to Empty CartItems: {}", e.getMessage());
+            log.warn("-------- CartService Error end ---------");
+        }
     }
 
     @Transactional

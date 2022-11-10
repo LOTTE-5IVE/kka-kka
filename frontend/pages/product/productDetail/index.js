@@ -33,6 +33,7 @@ export default function ProductDetail() {
   const [modal, setModal] = useState(false);
   const [product, setProduct] = useState({});
   const [token, setToken] = useState("");
+  const [reviewCount, setReviewCount] = useState(0);
   const { cartCnt, setCartCnt } = useContext(CartCntContext);
 
   const buyQuery = () => {
@@ -113,8 +114,19 @@ export default function ProductDetail() {
     }
   };
 
+  const getReviewCount = async () => {
+    if (productId) {
+      await axios.get(`/api/reviews/${productId}/all`).then((res) => {
+        console.log(res.data.reviewCount);
+        setReviewCount(res.data.reviewCount);
+        console.log(reviewCount);
+      });
+    }
+  };
+
   useEffect(() => {
     getItem();
+    getReviewCount();
   }, [productId]);
 
   useEffect(() => {
@@ -156,7 +168,7 @@ export default function ProductDetail() {
                     </>
                   )}
                   <div className="mt-3">
-                    <div className="d-flex align-start">
+                    <div className="review-box d-flex align-start">
                       <RangeWithIcons
                         value={product.ratingAvg}
                         max={5}
@@ -166,6 +178,10 @@ export default function ProductDetail() {
                         color={"#ffd151"}
                         starWidth={"40px"}
                       />
+                      <div className="reviewCnt">
+                        ({product.ratingAvg?.toFixed(1)},{" "}
+                        {commaMoney(reviewCount) || 0}개)
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -445,6 +461,18 @@ export default function ProductDetail() {
                   color: ${ThemeBlue};
                   transition: 0.7s;
                 }
+              }
+
+              .review-box {
+                align-items: flex-end;
+              }
+
+              .reviewCnt {
+                font-size: 1rem;
+                font-weight: 400;
+                color: ${NGray};
+                width: 100%;
+                margin-left: 0.6rem;
               }
             }
           }
@@ -738,6 +766,11 @@ export default function ProductDetail() {
                     line-height: 9vw;
                     font-size: 3vw;
                   }
+                }
+
+                .reviewCnt {
+                  font-size: 1vw;
+                  margin-left: 0.2rem;
                 }
               }
             }
