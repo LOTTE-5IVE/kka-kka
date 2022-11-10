@@ -45,6 +45,13 @@ public class ProductDocumentQueryBuilder {
         return query.withPageable(pageable).build();
     }
 
+    public Query autoCompleteByKeyword(String keyword) {
+        NativeSearchQueryBuilder query = new NativeSearchQueryBuilder();
+
+        return query.withQuery(QueryBuilders.boolQuery()
+            .must(QueryBuilders.queryStringQuery(keyword))).build();
+    }
+
     private static TermsQueryBuilder selectFilter(String field, List<Long> query) {
         return ((Optional.ofNullable(query).isEmpty()) || query.size() == 0) ? null
             : QueryBuilders.termsQuery(field, query);

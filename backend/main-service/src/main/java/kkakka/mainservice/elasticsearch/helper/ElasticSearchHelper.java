@@ -64,6 +64,20 @@ public class ElasticSearchHelper implements SearchHelper {
         );
     }
 
+    @Override
+    public List<String> autoCompleteByKeyword(String keyword) {
+        Query query = productDocumentQueryBuilder.autoCompleteByKeyword(keyword);
+
+        SearchHits<ProductDocument> searchHits = elasticsearchRestTemplate.search(query,
+            ProductDocument.class, IndexCoordinates.of(Indices.PRDUCT_INDEX));
+
+        List<String> productNames = searchHits.stream()
+            .map(productDocumentSearchHit -> productDocumentSearchHit.getContent().getName())
+            .collect(toList());
+
+        return productNames;
+    }
+
     private PageInfo createPageInfo(SearchPage<ProductDocument> searchPages) {
         return PageInfo.from(
             searchPages.getPageable().getPageNumber(),

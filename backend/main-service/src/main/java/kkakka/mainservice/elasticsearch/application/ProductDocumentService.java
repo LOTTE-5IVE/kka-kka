@@ -36,4 +36,8 @@ public class ProductDocumentService {
             productDtos,
             searchResult.getPageInfo()).toResponseDto();
     }
+
+    public List<String> autoCompleteByKeyword(String keyword) {
+        return searchHelper.autoCompleteByKeyword(keyword);
+    }
 }
