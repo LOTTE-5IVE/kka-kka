@@ -25,11 +25,9 @@ export function CouponApply({
   };
 
   const adaptCoupon = async (couponId) => {
-    console.log("cartItemId", cartItemId, couponId, token);
-
     await PostHApi(`/api/carts/${cartItemId}/${couponId}`, null, token).then(
       (res) => {
-        console.log(res);
+        onCloseHandler();
       },
     );
   };
@@ -165,8 +163,8 @@ export function CouponApply({
                           }}
                         >
                           <div
+                            style={{ cursor: "pointer" }}
                             onClick={() => {
-                              console.log("clicked");
                               adaptCoupon(coupon.id);
                             }}
                           >

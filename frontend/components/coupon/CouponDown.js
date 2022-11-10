@@ -155,8 +155,6 @@ export function CouponDown({ handleModal, product }) {
                     {coupons[0].isDownloadable ? (
                       <DownloadIcon
                         onClick={() => {
-                          console.log("sdfsdfdsfdsf");
-
                           downloadCoupon(coupons[0].id);
                         }}
                       />
@@ -218,8 +216,6 @@ export function CouponDown({ handleModal, product }) {
                         {coupon.isDownloadable ? (
                           <DownloadIcon
                             onClick={() => {
-                              console.log("test");
-
                               downloadCoupon(coupon.id);
                             }}
                           />

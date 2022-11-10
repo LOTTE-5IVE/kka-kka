@@ -41,6 +41,14 @@ export default function Payment() {
     setModalVisibleId(id);
   };
 
+  const cancelCoupon = async (cartItemId, couponId) => {
+    await DeleteHApi(`/api/carts/${cartItemId}/${couponId}`, token).then(
+      (res) => {
+        getCartItem();
+      },
+    );
+  };
+
   const { token, setToken } = useContext(TokenContext);
 
   const router = useRouter();
@@ -56,7 +64,6 @@ export default function Payment() {
     }
 
     if (router.query.orderItems) {
-      console.log(JSON.parse(router.query.orderItems));
       setOrderItems(JSON.parse(router.query.orderItems));
     }
   }, [router.isReady]);
@@ -66,7 +73,6 @@ export default function Payment() {
 
     memberInfo(token).then((res) => {
       if (res) {
-        console.log(res);
         setName(res.name);
         setNameValid(true);
 
@@ -185,9 +191,10 @@ export default function Payment() {
             <table>
               <colgroup>
                 <col style={{ width: "15%" }} />
-                <col style={{ width: "40%" }} />
+                <col style={{ width: "30%" }} />
                 <col style={{ width: "15%" }} />
-                <col style={{ width: "20%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "15%" }} />
                 <col style={{ width: "10%" }} />
               </colgroup>
               <tbody>
@@ -225,32 +232,78 @@ export default function Payment() {
                         )}
                       </td>
                       <td>
-                        <div
-                          onClick={() => {
-                            onModalHandler(product.id);
-                          }}
-                        >
-                          <AdminButton
-                            context="쿠폰적용"
-                            color="red"
-                            width="70px"
+                        {product.couponDto && (
+                          <input
+                            key={product.cartItemId}
+                            type="text"
+                            size="15"
+                            defaultValue={product.couponDto.name}
+                            readOnly
+                            style={{ fontWeight: "bold" }}
                           />
-                        </div>
-                        {product.id === modalVisibleId ? (
-                          <CouponModal>
-                            <div>
-                              <CouponApply
-                                id={product.id}
-                                modalVisibleId={modalVisibleId}
-                                setModalVisibleId={setModalVisibleId}
-                                cartItemId={product.cartItemId}
-                                product={product}
+                        )}
+                      </td>
+                      <td>
+                        <div style={{ display: "flex" }}>
+                          {product.couponDto ? (
+                            <>
+                              <div
+                                onClick={() => {
+                                  onModalHandler(product.id);
+                                  // setCouponProduct(product);
+                                }}
+                              >
+                                <AdminButton
+                                  context="쿠폰변경"
+                                  color="#05c7f2"
+                                  width="60px"
+                                />
+                              </div>
+                              <div
+                                onClick={() => {
+                                  cancelCoupon(
+                                    product.cartItemId,
+                                    product.couponDto.id,
+                                  );
+                                }}
+                              >
+                                <AdminButton
+                                  context="적용취소"
+                                  color="red"
+                                  width="60px"
+                                />
+                              </div>
+                            </>
+                          ) : (
+                            <div
+                              onClick={() => {
+                                onModalHandler(product.id);
+                                // setCouponProduct(product);
+                              }}
+                            >
+                              <AdminButton
+                                context="쿠폰적용"
+                                color="#05c7f2"
+                                width="60px"
                               />
                             </div>
-                          </CouponModal>
-                        ) : (
-                          ""
-                        )}
+                          )}
+                          {product.id === modalVisibleId ? (
+                            <CouponModal>
+                              <div>
+                                <CouponApply
+                                  id={product.id}
+                                  modalVisibleId={modalVisibleId}
+                                  setModalVisibleId={setModalVisibleId}
+                                  cartItemId={product.cartItemId}
+                                  product={product}
+                                />
+                              </div>
+                            </CouponModal>
+                          ) : (
+                            ""
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );

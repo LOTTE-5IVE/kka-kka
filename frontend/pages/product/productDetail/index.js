@@ -1,5 +1,4 @@
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { GetHApi, PostHApi } from "../../../apis/Apis";
@@ -8,7 +7,7 @@ import Swal from "sweetalert2";
 import { isLogin } from "../../../hooks/isLogin";
 import { AdminButton } from "../../../components/common/Button/AdminButton";
 import { CouponDown } from "../../../components/coupon/CouponDown";
-import { CouponModal } from "../../../components/coupon/CouponModal";
+import { CouponDownModal } from "../../../components/coupon/CouponDownModal";
 import Info from "../../../components/product/productDetail/Info";
 import Nutri from "../../../components/product/productDetail/Nutri";
 import Review from "../../../components/product/productDetail/Review";
@@ -25,7 +24,6 @@ import { isNumber } from "../../../hooks/isNumber";
 import { CartCntContext } from "../../../context/CartCntContext";
 import { getToken } from "../../../hooks/getToken";
 import { useContext } from "react";
-import { CouponDownModal } from "../../../components/coupon/CouponDownModal";
 
 export default function ProductDetail() {
   const router = useRouter();
@@ -39,8 +37,6 @@ export default function ProductDetail() {
 
   const buyQuery = () => {
     product.quantity = quantity;
-
-    console.log("JSON.stringify(product): ", JSON.stringify([product]));
 
     router.push(
       {
@@ -294,17 +290,6 @@ export default function ProductDetail() {
                     바로 구매
                   </div>
                 ) : (
-                  // <div
-                  //   className="buyBtn"
-                  //   onClick={() => {
-                  //     console.log("productDetailbefore: ", product);
-                  //     product.quantity = quantity;
-
-                  //     console.log("productDetail: ", product);
-                  //   }}
-                  // >
-                  //   바로 구매
-                  // </div>
                   <div
                     className="buyBtn"
                     onClick={() => {
