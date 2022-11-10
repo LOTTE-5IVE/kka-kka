@@ -6,8 +6,8 @@ import java.util.List;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.application.dto.RecipientDto;
 import kkakka.mainservice.order.domain.Order;
@@ -60,6 +60,7 @@ public class TestDataLoader implements CommandLineRunner {
     public static ProductOrder PRODUCT_ORDER_3;
     public static ProductOrder PRODUCT_ORDER_4;
     public static ProductOrder PRODUCT_ORDER_5;
+    public static List<Product> ALL_PRODUCTS;
 
     @Override
     public void run(String... args) {
@@ -107,6 +108,8 @@ public class TestDataLoader implements CommandLineRunner {
         PRODUCT_5 = productRepository.save(new Product(CATEGORY_2, "롯데 롯샌 파인애플 105g", 4480, 100,
                 "https://user-images.githubusercontent.com/99088509/191633507-6280963f-6363-4137-ac2a-a8a060d28669.png",
                 "상세URL", NUTRITION_5));
+
+        ALL_PRODUCTS = List.of(PRODUCT_1, PRODUCT_2, PRODUCT_3, PRODUCT_4, PRODUCT_5);
 
         PRODUCT_ORDER_1 = productOrderRepository.save(
                 ProductOrder.create(PRODUCT_1, PRODUCT_1.getPrice(), 1)
