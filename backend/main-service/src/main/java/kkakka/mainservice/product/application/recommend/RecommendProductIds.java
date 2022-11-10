@@ -11,7 +11,7 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@RedisHash("recommend")
+@RedisHash(value = "recommend", timeToLive = 30)
 public class RecommendProductIds {
 
     @Id
