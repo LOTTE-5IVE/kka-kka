@@ -21,7 +21,6 @@ export default function Cart() {
   const [discountPrice, setDiscountPrice] = useState(0);
   const [totalUnValid, setTotalUnValid] = useState(true);
   const [selectUnValid, setSelectUnValid] = useState(true);
-  const [couponProduct, setCouponProduct] = useState();
   const [token, setToken] = useState("");
   const { cartCnt, setCartCnt } = useContext(CartCntContext);
   const [modalVisibleId, setModalVisibleId] = useState("");
@@ -106,7 +105,6 @@ export default function Cart() {
   };
 
   const getCartItem = async () => {
-    console.log("getCartItem", token);
     GetHApi("/api/carts", token).then((res) => {
       setCartItems(res.cartItems);
       setTotalPrice(
@@ -145,12 +143,20 @@ export default function Cart() {
     });
   };
 
+  const cancelCoupon = async (cartItemId, couponId) => {
+    await DeleteHApi(`/api/carts/${cartItemId}/${couponId}`, token).then(
+      (res) => {
+        getCartItem();
+      },
+    );
+  };
+
   useEffect(() => {
     setToken(getToken());
     if (token !== "") {
       getCartItem();
     }
-  }, [token]);
+  }, [token, modalVisibleId]);
 
   useEffect(() => {
     if (checkItems.length > 0) {
@@ -250,23 +256,66 @@ export default function Cart() {
                         <div>{product.name}</div>
                         <div className="couponWrapper">
                           <div className="couponContents">
-                            <p>
-                              {product.couponDto ? product.couponDto.name : ""}
-                            </p>
-                          </div>
-                          <div>
-                            <div
-                              onClick={() => {
-                                onModalHandler(product.id);
-                                setCouponProduct(product);
-                              }}
-                            >
-                              <AdminButton
-                                context="쿠폰적용"
-                                color="#05c7f2"
-                                width="60px"
+                            {product.couponDto ? (
+                              <input
+                                key={product.cartItemId}
+                                type="text"
+                                size="7"
+                                defaultValue={product.couponDto.name}
+                                readOnly
                               />
-                            </div>
+                            ) : (
+                              <input
+                                type="text"
+                                size="7"
+                                defaultValue=""
+                                readOnly
+                              />
+                            )}
+                          </div>
+                          <div style={{ display: "flex" }}>
+                            {product.couponDto ? (
+                              <>
+                                <div
+                                  onClick={() => {
+                                    onModalHandler(product.id);
+                                  }}
+                                >
+                                  <AdminButton
+                                    context="쿠폰변경"
+                                    color="#05c7f2"
+                                    width="60px"
+                                  />
+                                </div>
+                                <div
+                                  onClick={() => {
+                                    cancelCoupon(
+                                      product.cartItemId,
+                                      product.couponDto.id,
+                                    );
+                                  }}
+                                >
+                                  <AdminButton
+                                    context="적용취소"
+                                    color="red"
+                                    width="60px"
+                                  />
+                                </div>
+                              </>
+                            ) : (
+                              <div
+                                onClick={() => {
+                                  onModalHandler(product.id);
+                                }}
+                              >
+                                <AdminButton
+                                  context="쿠폰적용"
+                                  color="#05c7f2"
+                                  width="60px"
+                                />
+                              </div>
+                            )}
+
                             {product.id === modalVisibleId ? (
                               <CouponModal>
                                 <div>
@@ -338,17 +387,17 @@ export default function Cart() {
                       </td>
                       <td>무료</td>
                       <td>
-                        {product.discount ? (
+                        {product.couponDto || product.discount ? (
                           <>
                             <p>
-                              {commaMoney(
-                                Math.ceil(
-                                  product.price * (1 - 0.01 * product.discount),
-                                ) * product.quantity,
-                              )}
                               {product.couponDto
-                                ? product.totalDiscountedPrice
-                                : ""}
+                                ? commaMoney(product.totalDiscountedPrice)
+                                : commaMoney(
+                                    Math.ceil(
+                                      product.price *
+                                        (1 - 0.01 * product.discount),
+                                    ) * product.quantity,
+                                  )}
                               원
                             </p>
                             <p>
