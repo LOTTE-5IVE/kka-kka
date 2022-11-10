@@ -120,10 +120,12 @@ public class CouponController {
     }
 
     /* 사용자의 상품 쿠폰 다운로드 */
-    @PostMapping("/download/product/{couponId}")
-    public ResponseEntity<List<CouponProductDto>> downloadAndShowProductCoupons(@PathVariable Long couponId,
-        @AuthenticationPrincipal LoginMember loginMember, @RequestBody List<CouponProductDto> couponProductDto) {
-        couponService.downloadProductCoupon(couponId, couponProductDto, loginMember.getId());
-        return ResponseEntity.status(HttpStatus.OK).body(couponProductDto);
+    @PostMapping("/download/products/{productId}/{couponId}")
+    public ResponseEntity<List<CouponProductDto>> downloadAndShowProductCoupons(
+        @PathVariable Long couponId,
+        @AuthenticationPrincipal LoginMember loginMember, @PathVariable Long productId) {
+        List<CouponProductDto> couponProductDtos = couponService.downloadProductCoupon(couponId,
+            loginMember.getId(), productId);
+        return ResponseEntity.status(HttpStatus.OK).body(couponProductDtos);
     }
 }

@@ -347,31 +347,15 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     void downloadProductCoupon_success() {
         // given
         String accessToken = 액세스_토큰_가져옴();
-        String couponId = 상품_쿠폰_다운로드(accessToken);
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
 
         // when
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
             .filter(document("download-product-coupon"))
             .header("Authorization", "Bearer " + accessToken)
-            .body("{\n"
-                + "  \"id\": null,\n"
-                + "  \"categoryId\": null,\n"
-                + "  \"grade\": null,\n"
-                + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
-                + "  \"name\": \"test\",\n"
-                + "  \"priceRule\": \"COUPON\",\n"
-                + "  \"registerAt\": \"2020-01-01 00:00:00\",\n"
-                + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
-                + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
-                + "  \"percentage\": 10,\n"
-                + "  \"maxDiscount\": 2000,\n"
-                + "  \"minOrderPrice\": 20000\n"
-                + "  \"isDownloadable\": false\n"
-                + "  \"discountedPrice\": null\n"
-                + "}")
             .when()
-            .post("/api/coupons/download/product/" + couponId)
+            .post("/api/coupons/download/products/" + PRODUCT_1.getId() + "/" + couponId)
             .then().log().all().extract();
 
         // then

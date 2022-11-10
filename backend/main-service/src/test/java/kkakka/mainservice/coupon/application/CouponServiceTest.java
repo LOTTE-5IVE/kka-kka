@@ -65,7 +65,7 @@ public class CouponServiceTest extends TestContext {
         // when
         couponService.downloadCoupon(coupon.getId(), member.getId());
         couponService.useCouponByMember(coupon.getId(), member.getId());
-        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllMemberCouponByCouponId(
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllByCouponId(
             coupon.getId());
 
         // then
@@ -355,13 +355,13 @@ public class CouponServiceTest extends TestContext {
         couponProductDtos.add(CouponProductDto.create(coupon, true));
 
         // when
-        couponProductDtos = couponService.downloadProductCoupon(couponId,
-            couponProductDtos, member.getId());
+        couponProductDtos = couponService.downloadProductCoupon(couponId, member.getId(),
+            product.getId());
 
         // then
         CouponProductDto selectedDto = new CouponProductDto();
         for (CouponProductDto couponProductDto : couponProductDtos) {
-            if(couponProductDto.getId()==couponId) {
+            if (couponProductDto.getId() == couponId) {
                 selectedDto = couponProductDto;
             }
         }

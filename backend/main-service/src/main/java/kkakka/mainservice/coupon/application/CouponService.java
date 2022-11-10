@@ -143,7 +143,7 @@ public class CouponService {
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
         coupon.deleteCoupon();
         couponRepository.save(coupon);
-        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllMemberCouponByCouponId(
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllByCouponId(
             couponId);
         if (!memberCoupons.isEmpty()) {
             for (MemberCoupon memberCoupon : memberCoupons) {
@@ -159,7 +159,7 @@ public class CouponService {
             .collect(Collectors.toList());
     }
 
-    /* 사용자 쿠폰 다운로드 */
+    /* 회원 쿠폰 다운로드 */
     @Transactional
     public void downloadCoupon(Long couponId, Long memberId) {
         Member member = memberRepository.findById(memberId)
@@ -176,14 +176,14 @@ public class CouponService {
         Coupon coupon = couponRepository.findById(couponId)
             .orElseThrow(KkaKkaException::new);
         if (coupon.isNotExpired()) {
-            MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponIdAndMemberId(
+            MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(
                 couponId, memberId);
             memberCoupon.useCoupon();
             memberCouponRepository.save(memberCoupon);
         }
     }
 
-    /* 사용자 사용 가능한 쿠폰 목록 조회 */
+    /* 회원 사용 가능한 쿠폰 목록 조회 */
     public List<Coupon> findUsableCoupons(Long memberId) {
         List<MemberCoupon> memberCoupons = memberCouponRepository
             .findAllByMemberIdAndIsUsedFalse(memberId);
@@ -192,11 +192,11 @@ public class CouponService {
             .collect(Collectors.toList());
     }
 
-    /* 사용자 다운 가능한 쿠폰 목록 조회 */
+    /* 회원 다운 가능한 쿠폰 목록 조회 */
     public List<CouponResponseDto> findDownloadableCoupons(Long memberId) {
         List<Coupon> coupons = couponRepository.findAll();
-        List<Coupon> downloadedCoupons = memberCouponRepository.findAllByMemberId(
-            memberId);
+        List<Coupon> downloadedCoupons = memberCouponRepository.findAllByMemberId(memberId)
+            .stream().map(memberCoupon -> memberCoupon.getCoupon()).collect(Collectors.toList());
         coupons.removeAll(downloadedCoupons);
         return coupons.stream()
             .filter(coupon -> isDownloadable(coupon))
@@ -296,10 +296,12 @@ public class CouponService {
         return memberCouponRepository.countAllByMemberIdAndIsUsedFalse(memberId);
     }
 
-    /* 상품 쿠폰 다운로드 */
-    public List<CouponProductDto> downloadProductCoupon(Long couponId,
-        List<CouponProductDto> couponProductDtos, Long memberId) {
+    /* 회원 상품 쿠폰 다운로드 */
+    public List<CouponProductDto> downloadProductCoupon(Long couponId, Long memberId,
+        Long productId) {
         downloadCoupon(couponId, memberId);
+        List<CouponProductDto> couponProductDtos = showCouponsByProductIdAndMemberId(productId,
+            memberId);
         for (CouponProductDto couponProductDto : couponProductDtos) {
             if (couponProductDto.getId() == couponId) {
                 couponProductDto.downloadCoupon();
