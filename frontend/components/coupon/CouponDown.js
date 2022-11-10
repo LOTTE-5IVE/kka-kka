@@ -10,11 +10,12 @@ import axios from "axios";
 
 export function CouponDown({ handleModal, product }) {
   const [token, setToken] = useState("");
-  const [coupons, setCoupons] = useState();
+  const [coupons, setCoupons] = useState([]);
 
   const getProductMemberCoupon = async () => {
     await GetHApi(`/api/coupons/me/products/${product.id}`, token).then(
       (res) => {
+        console.log("getProductMemberCoupon: ", res);
         setCoupons(res);
       },
     );
@@ -129,7 +130,7 @@ export function CouponDown({ handleModal, product }) {
               </tr>
             </thead>
             <tbody>
-              {coupons && (
+              {coupons.length > 0 && (
                 <tr
                   style={{
                     height: "59px",

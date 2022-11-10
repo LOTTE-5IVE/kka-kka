@@ -85,15 +85,25 @@ export default function MyCoupon() {
                 )}
                 <tr className="loadMore">
                   <td colSpan="5">
-                    {moreToggle && (
+                    {coupons?.length > 0 && moreToggle ? (
                       <div
                         onClick={() => {
-                          console.log("loadMore clicked");
+                          console.log("loadMore clicked", coupons);
                         }}
                         className={"d-flex align-center moreBtn"}
                         style={{ cursor: "pointer" }}
                       >
                         <span>▼ 더보기</span>
+                      </div>
+                    ) : (
+                      <div className="couponEmpty">
+                        <img
+                          className="couponEmptyImg"
+                          src="/member/no_item.gif"
+                        />
+                        <span className="couponEmptyComment">
+                          쿠폰 내역이 없습니다.
+                        </span>
                       </div>
                     )}
                   </td>
@@ -118,6 +128,16 @@ export default function MyCoupon() {
             padding: 1rem;
             border: 1px solid #c5c5c5;
             color: #525252;
+          }
+
+          .couponEmpty {
+            display: flex;
+            flex-direction: column;
+
+            text-align: center;
+            .couponEmptyComment {
+              color: #9a9a9a;
+            }
           }
 
           @media screen and (min-width: 769px) {
@@ -177,6 +197,18 @@ export default function MyCoupon() {
                     border: 2px solid;
                     border-bottom: none;
                     cursor: pointer;
+                  }
+
+                  .couponEmpty {
+                    .couponEmptyImg {
+                      margin: 70px auto 30px;
+                      width: 70px;
+                    }
+                    .couponEmptyComment {
+                      margin-bottom: 70px;
+                      font-size: 18px;
+                      line-height: 1;
+                    }
                   }
                 }
               }
@@ -247,6 +279,18 @@ export default function MyCoupon() {
                     padding: 0.5rem;
                     border: 1px solid #c5c5c5;
                     color: #525252;
+                  }
+
+                  .couponEmpty {
+                    .couponEmptyImg {
+                      margin: 20px auto;
+                      width: 40px;
+                    }
+                    .couponEmptyComment {
+                      margin-bottom: 70px;
+                      font-size: 12px;
+                      line-height: 1;
+                    }
                   }
                 }
               }
@@ -320,6 +364,18 @@ export default function MyCoupon() {
 
                     span {
                       font-size: 12px;
+                    }
+                  }
+
+                  .couponEmpty {
+                    .couponEmptyImg {
+                      margin: 20px auto;
+                      width: 40px;
+                    }
+                    .couponEmptyComment {
+                      margin-bottom: 70px;
+                      font-size: 12px;
+                      line-height: 1;
                     }
                   }
                 }
