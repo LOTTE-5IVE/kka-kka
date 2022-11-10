@@ -1,5 +1,4 @@
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { GetHApi, PostHApi } from "../../../apis/Apis";
@@ -121,7 +120,9 @@ export default function ProductDetail() {
     if (productId) {
       await axios.get(`/api/reviews/${productId}/all`)
       .then((res) => {
+        console.log(res.data.reviewCount)
         setReviewCount(res.data.reviewCount);
+        console.log(reviewCount)
       });
     }
   }
@@ -177,7 +178,7 @@ export default function ProductDetail() {
                         starWidth={"40px"}
                       />
                       <div className="reviewCnt">
-                        ({product.ratingAvg}, {commaMoney(reviewCount)}개)
+                        ({product.ratingAvg}, {commaMoney(reviewCount) || 0}개)
                       </div>
                     </div>
                   </div>
