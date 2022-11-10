@@ -178,7 +178,7 @@ export default function ProductDetail() {
                         starWidth={"40px"}
                       />
                       <div className="reviewCnt">
-                        ({product.ratingAvg.toFixed(1)}, {commaMoney(reviewCount) || 0}개)
+                        ({(product.ratingAvg)?.toFixed(1)}, {commaMoney(reviewCount) || 0}개)
                       </div>
                     </div>
                   </div>
