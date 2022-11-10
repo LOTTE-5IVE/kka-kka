@@ -3,15 +3,22 @@ package kkakka.mainservice.product.redis;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import kkakka.mainservice.TestContext;
 import kkakka.mainservice.product.application.recommend.RecommendProductIds;
+import kkakka.mainservice.product.infrastructure.redis.EmbeddedRedisConfig;
 import kkakka.mainservice.product.infrastructure.redis.RecommendRedisRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
+@Import(EmbeddedRedisConfig.class)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @DataRedisTest
-public class RedisRepositoryTest {
+public class RedisRepositoryTest extends TestContext {
 
     @Autowired
     private RecommendRedisRepository recommendRedisRepository;
