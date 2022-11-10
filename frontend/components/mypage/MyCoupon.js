@@ -1,10 +1,35 @@
+import axios from "axios";
+import { useEffect } from "react";
 import { useState } from "react";
+import { GetHApi } from "../../apis/Apis";
 import Title from "../../components/common/Title";
+import { getToken } from "../../hooks/getToken";
 import MyCouponCard from "./MyCouponCard";
 
 export default function MyCoupon() {
   const [tab, setTab] = useState("valid");
   const [moreToggle, setMoreToggle] = useState(true);
+  const [token, setToken] = useState("");
+  const [coupons, setCoupons] = useState();
+
+  const getAvailableCoupon = async () => {
+    await GetHApi("/api/coupons/me/available", token).then((res) => {
+      setCoupons(res);
+    });
+  };
+
+  const getUnavailableCoupon = async () => {
+    await GetHApi("/api/coupons/me/unavailable", token).then((res) => {
+      setCoupons(res);
+    });
+  };
+
+  useEffect(() => {
+    setToken(getToken());
+    if (token !== "") {
+      getAvailableCoupon();
+    }
+  }, [token]);
 
   return (
     <>
@@ -25,14 +50,20 @@ export default function MyCoupon() {
                 <tr>
                   <th
                     className={`${tab === "valid" ? "left" : "normalLeft"}`}
-                    onClick={() => setTab("valid")}
+                    onClick={() => {
+                      setTab("valid");
+                      getAvailableCoupon();
+                    }}
                     colSpan="2"
                   >
                     사용 가능한 쿠폰
                   </th>
                   <th
                     className={`${tab === "invalid" ? "right" : "normalRight"}`}
-                    onClick={() => setTab("invalid")}
+                    onClick={() => {
+                      setTab("invalid");
+                      getUnavailableCoupon();
+                    }}
                     colSpan="3"
                   >
                     사용한 쿠폰
@@ -48,9 +79,9 @@ export default function MyCoupon() {
                   <td>분류</td>
                 </tr>
                 {tab == "valid" ? (
-                  <MyCouponCard test="사용 가능한" />
+                  <MyCouponCard coupons={coupons} />
                 ) : (
-                  <MyCouponCard test="사용한" />
+                  <MyCouponCard coupons={coupons} />
                 )}
                 <tr className="loadMore">
                   <td colSpan="5">
