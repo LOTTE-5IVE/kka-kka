@@ -109,7 +109,7 @@ public class ProductAcceptanceTest extends DocumentConfiguration {
                 .given(spec).log().all()
                 .filter(document("products-show-all-page-success"))
                 .when()
-                .get("/api/products?size=" + pageSize)
+                .get("/api/products?page=1&size=" + pageSize)
                 .then()
                 .log().all().extract();
 

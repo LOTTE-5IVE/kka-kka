@@ -24,6 +24,16 @@ include::{snippets}/products-show-all-success/http-request.adoc[]
 
 include::{snippets}/products-show-all-success/http-response.adoc[]
 
+=== 전체 상품 조회 (페이지)
+
+- Request
+
+include::{snippets}/products-show-all-page-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/products-show-all-page-success/http-response.adoc[]
+
 === 카테고리 기준 조회
 
 - Request
