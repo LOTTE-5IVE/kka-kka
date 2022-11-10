@@ -67,7 +67,10 @@ export default function PromotionEnroll() {
         .contents {
           height: 105%;
           border: 2px solid #dedede;
-          color: #7a7a7a;
+          color: #2c2c2c;
+          background: #fcfcfc;
+          border-radius: 5em;
+          font-size: 0.8rem;
 
           table {
             width: 90%;
@@ -85,12 +88,15 @@ export default function PromotionEnroll() {
             .btn {
               border: 1px solid;
               padding: 7px 25px;
+              border-radius: 1em;
+              margin-right: 15px;
             }
 
             .active {
-              background-color: #f2889b;
+              background-color: #fe5c57;
               color: #fff;
-              border: 1px solid #f2889b;
+              border: 1px solid #fe5c57;
+              border-radius: 1em;
             }
           }
 

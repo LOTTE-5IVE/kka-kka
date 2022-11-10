@@ -61,7 +61,7 @@ export default function CouponSearchTable() {
                 <td>쿠폰</td>
                 <td>{coupon.name}</td>
                 <td>
-                  {coupon.percentage}% (최대 {commaMoney(coupon.maxDiscount)}원)
+                  {coupon.percentage?`${coupon.percentage}%`:`${commaMoney(coupon.maxDiscount)}원`}
                 </td>
                 <td>{commaMoney(coupon.minOrderPrice)}원</td>
                 <td>

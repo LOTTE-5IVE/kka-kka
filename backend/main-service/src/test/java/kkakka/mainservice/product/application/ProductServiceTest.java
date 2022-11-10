@@ -3,6 +3,7 @@ package kkakka.mainservice.product.application;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Date;
+import java.util.Optional;
 import kkakka.mainservice.TestContext;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
@@ -55,7 +56,8 @@ public class ProductServiceTest extends TestContext {
 
         //when
         final String keyword = "단백질";
-        Page<ProductDto> productDtos = productService.showProductsBySearch(keyword,
+        Page<ProductDto> productDtos = productService.showAllProductsWithCategoryAndSearch(
+                Optional.empty(), "", keyword,
                 Pageable.ofSize(9));
 
         //then

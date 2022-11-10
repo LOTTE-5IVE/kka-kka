@@ -6,16 +6,25 @@ import { isLogin } from "../../hooks/isLogin";
 import { getToken } from "../../hooks/getToken";
 import { memberInfo } from "../../hooks/memberInfo";
 import { isText } from "../../hooks/isText";
+import { GetHApi } from "../../apis/Apis";
+import { CartCntContext } from "../../context/CartCntContext";
 
 export default function Header() {
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
   const [login, setLogin] = useState(false);
   const { token, setToken } = useContext(TokenContext);
+  const { cartCnt, setCartCnt } = useContext(CartCntContext);
 
   const getMemberInfo = async () => {
     await memberInfo(getToken()).then((res) => {
       setName(res.name);
+    });
+  };
+
+  const getCartCount = async () => {
+    await GetHApi("/api/members/me/carts/all", getToken()).then((res) => {
+      setCartCnt(res.cartCount);
     });
   };
 
@@ -26,7 +35,14 @@ export default function Header() {
         return;
       }
 
-      window.location.href = `/product?search=${value}`;
+      router.push(
+        {
+          pathname: `/product`,
+          query: { cat_id: 0, search: value },
+        },
+        `/product`,
+      );
+
       setValue("");
     }
   }
@@ -36,6 +52,7 @@ export default function Header() {
       setToken(getToken());
       setLogin(true);
       getMemberInfo();
+      getCartCount();
     }
   }, [isLogin()]);
 
@@ -110,26 +127,36 @@ export default function Header() {
                 </Link>
 
                 <Link href="/member/cart">
-                  <img
-                    src="/common/top_cart.png"
-                    style={{ cursor: "pointer" }}
-                  />
+                  <div className="cartCntWrapper" style={{ cursor: "pointer" }}>
+                    <p className="cartCnt">
+                      <span>{cartCnt}</span>
+                    </p>
+                    <img
+                      className="cart"
+                      src="/common/top_cart.png"
+                      style={{ cursor: "pointer" }}
+                    />
+                  </div>
                 </Link>
               </>
             ) : (
               <>
                 <Link href="/member/login">
                   <img
+                    className="cart"
                     src="/common/top_mypage.png"
                     style={{ cursor: "pointer" }}
                   />
                 </Link>
 
                 <Link href="/member/login">
-                  <img
-                    src="/common/top_cart.png"
-                    style={{ cursor: "pointer" }}
-                  />
+                  <div className="cartCntWrapper" style={{ cursor: "pointer" }}>
+                    <p className="between"></p>
+                    <img
+                      src="/common/top_cart.png"
+                      style={{ cursor: "pointer" }}
+                    />
+                  </div>
                 </Link>
               </>
             )}
@@ -193,6 +220,29 @@ export default function Header() {
             .bottom {
               display: flex;
               justify-content: right;
+
+              .cartCntWrapper {
+                display: flex;
+                .cartCnt {
+                  position: relative;
+                  top: -10%;
+                  left: 70%;
+                  transform: translate(-50%, -50%);
+                  background: #ff3d44;
+                  color: #fff;
+                  width: 19px;
+                  height: 19px;
+                  font-size: 12px;
+                  text-align: center;
+                  font-weight: 700;
+                  border-radius: 50%;
+                }
+
+                .between {
+                  width: 19px;
+                  height: 19px;
+                }
+              }
             }
           }
 
@@ -250,6 +300,8 @@ export default function Header() {
 
                 .topRight {
                   width: 60px;
+                  margin-right: 15px;
+                  text-align: right;
                 }
               }
 
@@ -257,7 +309,7 @@ export default function Header() {
                 img {
                   width: 29px;
                   height: 29px;
-                  margin: 0 15px;
+                  margin-right: 15px;
                 }
               }
             }
@@ -266,7 +318,7 @@ export default function Header() {
           @media screen and (max-width: 768px) {
             .HeaderWrapper {
               width: 67.5vw;
-              height: 6.3vw;
+              height: 10vw;
 
               .logo {
                 left: 20vw;
@@ -303,14 +355,14 @@ export default function Header() {
             .icons {
               right: 10vw;
               top: 3.5vw;
-              height: 4.2vw;
               width: 9.5vw;
               min-width: 110px;
+              height: 5vw;
 
               .top {
                 line-height: 2.1vw;
                 font-size: 0.6vw;
-                top: -0.79vw;
+                top: 0;
                 text-align: right;
 
                 .topLeft {
@@ -323,9 +375,44 @@ export default function Header() {
               }
 
               .bottom {
+                display: flex;
+                justify-content: right;
+                align-items: end;
+                height: 6vw;
+
                 img {
-                  width: 1.53vw;
-                  margin: 0 0.79vw;
+                  width: 4vw;
+                  height: 4vw;
+                  margin: 0 1.5vw;
+                }
+
+                .cartCntWrapper {
+                  display: flex;
+                  height: 60%;
+
+                  .cartCnt {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 0;
+                    position: relative;
+                    top: 30%;
+                    left: 77%;
+                    transform: translate(-50%, -50%);
+                    background: #ff3d44;
+                    color: #fff;
+                    width: 2.5vw;
+                    height: 2.5vw;
+                    font-size: 1vw;
+                    text-align: center;
+                    font-weight: 700;
+                    border-radius: 50%;
+                  }
+
+                  .between {
+                    width: 2.5vw;
+                    height: 2.5vw;
+                  }
                 }
               }
             }
@@ -388,10 +475,41 @@ export default function Header() {
                 }
 
                 .bottom {
+                  display: flex;
+                  height: 25px;
+
                   img {
                     width: 25px;
                     height: 25px;
-                    margin: 0px 20px;
+                    margin: 0px 15px;
+                  }
+
+                  .cartCntWrapper {
+                    display: flex;
+                    height: 100%;
+
+                    .cartCnt {
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      position: relative;
+                      top: 30%;
+                      left: 70%;
+                      transform: translate(-50%, -50%);
+                      background: #ff3d44;
+                      color: #fff;
+                      width: 15px;
+                      height: 15px;
+                      font-size: 10px;
+                      text-align: center;
+                      font-weight: 700;
+                      border-radius: 50%;
+                    }
+
+                    .between {
+                      width: 15px;
+                      height: 15px;
+                    }
                   }
                 }
               }

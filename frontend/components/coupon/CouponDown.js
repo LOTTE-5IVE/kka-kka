@@ -58,7 +58,7 @@ export function CouponDown({ handleModal, product }) {
             <tbody>
               <tr style={{ height: "71px", borderBottom: "1px solid #dedede" }}>
                 <td>
-                  <img width="64px" src={product.image_url} />
+                  <img width="64px" src={product.imageUrl} />
                 </td>
                 <td style={{ textAlign: "left" }}>{product.name}</td>
                 <td>
