@@ -48,8 +48,15 @@ public class CartController {
     public ResponseEntity<CartItemDto> applyCartCoupon(@PathVariable("cartItemId") Long cartItemId,
                                                        @PathVariable("couponId") Long couponId,
                                                        @AuthenticationPrincipal LoginMember loginMember) {
-        // TODO : 멤버 카트아이템 검증 추가
         CartItemDto cartItemDto = cartService.applyCouponCartItem(cartItemId, couponId, loginMember);
+        return ResponseEntity.status(HttpStatus.OK).body(cartItemDto);
+    }
+
+    @DeleteMapping("/{cartItemId}/{couponId}")
+    public ResponseEntity<CartItemDto> cancelCartCoupon(@PathVariable("cartItemId") Long cartItemId,
+                                                        @PathVariable("couponId") Long couponId,
+                                                        @AuthenticationPrincipal LoginMember loginMember) {
+        CartItemDto cartItemDto = cartService.cancelCouponCartItem(cartItemId, couponId, loginMember);
         return ResponseEntity.status(HttpStatus.OK).body(cartItemDto);
     }
 }
