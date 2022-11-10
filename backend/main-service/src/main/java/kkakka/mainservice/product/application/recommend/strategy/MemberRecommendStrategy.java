@@ -20,6 +20,7 @@ import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.product.application.recommend.RecommendProductIds;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
+import kkakka.mainservice.product.infrastructure.redis.RecommendRedisRepository;
 import kkakka.mainservice.review.domain.Review;
 import kkakka.mainservice.review.domain.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +56,7 @@ public class MemberRecommendStrategy implements ProductRecommender {
     private final MemberRepository memberRepository;
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
+    private final RecommendRedisRepository recommendRedisRepository;
 
     @Override
     public Page<Product> recommend(Optional<Long> recommendPivotId, Pageable pageable) {
@@ -116,6 +118,12 @@ public class MemberRecommendStrategy implements ProductRecommender {
     }
 
     private RecommendProductIds requestRecommendation(Product pivotProduct) {
+        final Optional<RecommendProductIds> savedRecommendIds = recommendRedisRepository.findById(
+                pivotProduct.getId().toString());
+        if (savedRecommendIds.isPresent()) {
+            return savedRecommendIds.get();
+        }
+
         final ResponseEntity<String> response = restTemplate.exchange(
                 RECOMMENDATION_SERVER_URL + pivotProduct.getId(),
                 HttpMethod.GET,

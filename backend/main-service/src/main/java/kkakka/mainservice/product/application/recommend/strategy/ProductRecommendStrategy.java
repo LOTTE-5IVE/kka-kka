@@ -13,6 +13,7 @@ import kkakka.mainservice.common.exception.InvalidRecommendResponseException;
 import kkakka.mainservice.product.application.recommend.RecommendProductIds;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
+import kkakka.mainservice.product.infrastructure.redis.RecommendRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -39,6 +40,7 @@ public class ProductRecommendStrategy implements ProductRecommender {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final ProductRepository productRepository;
+    private final RecommendRedisRepository recommendRedisRepository;
 
     @Override
     public Page<Product> recommend(Optional<Long> recommendPivotId, Pageable pageable) {
@@ -58,6 +60,11 @@ public class ProductRecommendStrategy implements ProductRecommender {
     }
 
     private RecommendProductIds requestRecommendation(Product pivotProduct) {
+        Optional<RecommendProductIds> recommendProductIdsSavedInRedis = findFromRedis(pivotProduct);
+        if (recommendProductIdsSavedInRedis.isPresent()) {
+            return recommendProductIdsSavedInRedis.get();
+        }
+
         final ResponseEntity<String> response = restTemplate.exchange(
                 RECOMMENDATION_SERVER_URL + pivotProduct.getId(),
                 HttpMethod.GET,
@@ -65,7 +72,27 @@ public class ProductRecommendStrategy implements ProductRecommender {
                 String.class
         );
 
-        return convertResponseBody(pivotProduct.getId(), response);
+        final RecommendProductIds recommendProductIds = convertResponseBody(pivotProduct.getId(),
+                response);
+        saveInRedis(recommendProductIds);
+        return recommendProductIds;
+    }
+
+    private void saveInRedis(RecommendProductIds recommendProductIds) {
+        recommendRedisRepository.save(recommendProductIds);
+    }
+
+    private Optional<RecommendProductIds> findFromRedis(Product pivotProduct) {
+        final Optional<RecommendProductIds> savedRecommendIds = recommendRedisRepository.findById(
+                pivotProduct.getId().toString());
+        if (savedRecommendIds.isPresent()) {
+            if (Objects.isNull(savedRecommendIds.get().getProductIds())) {
+                return Optional.of(new RecommendProductIds(pivotProduct.getId().toString(),
+                        Collections.emptyList()));
+            }
+            return Optional.of(savedRecommendIds.get());
+        }
+        return Optional.empty();
     }
 
     private RecommendProductIds convertResponseBody(Long pivotId, ResponseEntity<String> response) {
