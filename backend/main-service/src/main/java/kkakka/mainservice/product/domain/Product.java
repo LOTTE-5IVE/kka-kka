@@ -87,7 +87,7 @@ public class Product {
         Integer maxDiscount = coupon.getMaxDiscount();
 
         if (coupon.isPercentageCoupon()) {
-            return Math.min(maxDiscount, this.price * coupon.getPercentage() / 100);
+            return Math.min(maxDiscount, this.getDiscountPrice() * coupon.getPercentage() / 100);
         }
         return maxDiscount;
     }
