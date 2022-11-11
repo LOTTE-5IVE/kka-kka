@@ -108,8 +108,7 @@ public class CartService {
     @Transactional
     public void emptyCart(LoginMember loginMember) {
         try {
-            final Cart cart = cartRepository.findById(loginMember.getId())
-                    .orElseThrow();
+            final Cart cart = cartRepository.findByMemberId(loginMember.getId()).orElseThrow();
             cartItemRepository.deleteAllByMemberId(loginMember.getId());
             cart.empty();
         } catch (Exception e) {
