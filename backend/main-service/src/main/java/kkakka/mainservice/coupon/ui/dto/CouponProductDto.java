@@ -2,7 +2,6 @@ package kkakka.mainservice.coupon.ui.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.LocalDateTime;
-import java.util.function.BiFunction;
 import kkakka.mainservice.common.LocalDateTimeSerializer;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.PriceRule;
@@ -15,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Getter
-public class CouponProductResponseDto {
+public class CouponProductDto {
 
     private Long id;
     private Long categoryId;
@@ -38,8 +37,8 @@ public class CouponProductResponseDto {
     private Boolean isDownloadable;
     private Integer discountedPrice;
 
-    public static CouponProductResponseDto create(Coupon coupon, Boolean isDownloadable) {
-        return new CouponProductResponseDto(
+    public static CouponProductDto create(Coupon coupon, Boolean isDownloadable) {
+        return new CouponProductDto(
             coupon.getId(),
             coupon.getCategoryId(),
             coupon.getGrade(),
@@ -57,5 +56,9 @@ public class CouponProductResponseDto {
 
     public void saveDiscountedPrice(Integer discountedPrice) {
         this.discountedPrice = discountedPrice;
+    }
+
+    public void downloadCoupon() {
+        this.isDownloadable = false;
     }
 }

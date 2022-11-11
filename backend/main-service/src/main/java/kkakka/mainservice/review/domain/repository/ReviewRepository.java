@@ -1,5 +1,6 @@
 package kkakka.mainservice.review.domain.repository;
 
+import java.util.List;
 import java.util.Optional;
 import kkakka.mainservice.review.domain.Review;
 import org.springframework.data.domain.Page;
@@ -20,4 +21,20 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query("select avg(r.rating) from Review r where r.productOrder.product.id = :productId")
     Optional<Double> findRatingAvgByProductId(@Param(value = "productId") Long productId);
+
+    @Query("select count(r) from Review r where r.productOrder.product.id = :productId")
+    int countAllByProductId(Long productId);
+
+    @Query(value = "select r from Review r "
+            + "join fetch r.productOrder po "
+            + "join fetch po.product p "
+            + "where r.member.id = :memberId and r.rating > 4.0 "
+            + "order by r.rating desc",
+            countQuery = "select r from Review r "
+                    + "join fetch r.productOrder po "
+                    + "join fetch po.product p "
+                    + "where r.member.id = :memberId and r.rating > 4.0 "
+                    + "order by r.rating desc")
+    List<Review> findTopRatingReviewByMemberId(@Param(value = "memberId") Long memberId,
+            Pageable pageable);
 }

@@ -42,10 +42,6 @@ export default function MyOrderDetail({ orderDetail }) {
                             <td> {orderDetail.recipient.phone}</td>
                           </tr>
                           <tr>
-                            <th>이메일</th>
-                            <td> {orderDetail.recipient.email}</td>
-                          </tr>
-                          <tr>
                             <th>받으시는 주소</th>
                             <td> {orderDetail.recipient.address}</td>
                           </tr>

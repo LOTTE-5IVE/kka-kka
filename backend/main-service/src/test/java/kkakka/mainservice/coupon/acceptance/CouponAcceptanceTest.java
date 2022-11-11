@@ -160,11 +160,39 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
             .header("Authorization", "Bearer " + accessToken)
             .filter(document("find-usable-coupons"))
             .when()
-            .get("/api/coupons/me")
+            .get("/api/coupons/me/available")
             .then().log().all().extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.body()).isNotNull();
+    }
+
+    @DisplayName("회원별 사용한 쿠폰 조회 - 성공")
+    @Test
+    void usedCoupons() {
+        String accessToken = 액세스_토큰_가져옴();
+        String couponId = 상품_쿠폰_다운로드(accessToken);
+        쿠폰_사용(couponId, accessToken);
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .filter(document("find-used-coupons"))
+            .when()
+            .get("/api/coupons/me/unavailable")
+            .then().log().all().extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body()).isNotNull();
+    }
+
+    private void 쿠폰_사용(String couponId, String accessToken) {
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .post("/api/coupons/use/" + couponId)
+            .then().log().all().extract();
     }
 
     private String 쿠폰_생성함(String grade, Long productId, String priceRule, Integer percentage,
@@ -336,6 +364,26 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
             .header("Authorization", "Bearer " + accessToken)
             .when()
             .get("/api/members/me/coupons/all")
+            .then().log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("상품 쿠폰 다운로드 - 성공")
+    @Test
+    void downloadProductCoupon_success() {
+        // given
+        String accessToken = 액세스_토큰_가져옴();
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .filter(document("download-product-coupon"))
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .post("/api/coupons/" + PRODUCT_1.getId() + "/" + couponId)
             .then().log().all().extract();
 
         // then

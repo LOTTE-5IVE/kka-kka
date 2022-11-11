@@ -56,7 +56,7 @@ export default function ApplyProduct({ productId, setProductId }) {
             <div>
               <ul style={{ width: "70px" }}>
                 <li>
-                  <img width="60px" src={product.image_url} />
+                  <img width="60px" src={product.imageUrl} />
                 </li>
               </ul>
             </div>
