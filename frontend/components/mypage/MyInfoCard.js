@@ -1,9 +1,6 @@
-import axios from "axios";
 import { useEffect } from "react";
-import { useContext } from "react";
 import { useState } from "react";
 import { GetHApi } from "../../apis/Apis";
-import { TokenContext } from "../../context/TokenContext";
 import { getToken } from "../../hooks/getToken";
 import { memberInfo } from "../../hooks/memberInfo";
 
@@ -12,7 +9,7 @@ export default function MyInfoCard() {
   const [grade, setGrade] = useState("");
   const [orderCnt, setOrderCnt] = useState(0);
   const [couponCnt, setCouponCnt] = useState(0);
-  const { token, setToken } = useContext(TokenContext);
+  const [token, setToken] = useState("");
 
   const gradeColor = {
     GOLD: "#ffd700",
@@ -28,22 +25,24 @@ export default function MyInfoCard() {
 
   const getCouponCount = async () => {
     await GetHApi("/api/members/me/coupons/all", token).then((res) => {
-      console.log(res);
-      // setCouponCnt(res.couponCount);
+      setCouponCnt(res.couponCount);
     });
   };
 
   useEffect(() => {
-    memberInfo(token).then((res) => {
-      if (res) {
-        setName(res.name);
-        setGrade(res.grade);
+    setToken(getToken());
+    if (token !== "") {
+      memberInfo(token).then((res) => {
+        if (res) {
+          setName(res.name);
+          setGrade(res.grade);
 
-        getOrderCount();
-        getCouponCount();
-      }
-    });
-  }, []);
+          getOrderCount();
+          getCouponCount();
+        }
+      });
+    }
+  }, [token]);
 
   return (
     <>

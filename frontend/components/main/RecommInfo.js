@@ -1,70 +1,70 @@
 import Link from "next/link";
-import {NBlack} from "../../typings/NormalColor";
-import {ThemeRed} from "../../typings/ThemeColor";
-import {commaMoney} from "../../hooks/commaMoney";
+import { NBlack } from "../../typings/NormalColor";
+import { ThemeRed } from "../../typings/ThemeColor";
+import { commaMoney } from "../../hooks/commaMoney";
 
-export default function RecommInfo({id, name, price, discount}) {
+export default function RecommInfo({ id, name, price, discount }) {
   return (
-      <>
-        <div className="wrapper">
-          <Link href={`/product/productDetail?id=${id}`}>
-            <a>
-              <div style={{marginTop: "5%"}}>
-                <p
-                    className="name"
-                >
-                  {name}
-                </p>
-                {discount !== 0 ? (
-                    <>
-                      <div
-                          className="priceRate"
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between"
-                          }}
-                      >
-                        <div style={{
-                          width: "100%",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "flex-start"
-                        }}>
-                          <span className="discount">{commaMoney(price)}원</span>
-                          <span>
+    <>
+      <div className="wrapper">
+        <Link href={`/product/productDetail?id=${id}`}>
+          <a>
+            <div style={{ marginTop: "5%" }}>
+              <p className="name">{name}</p>
+              {discount !== 0 ? (
+                <>
+                  <div
+                    className="priceRate"
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <span className="discount">{commaMoney(price)}원</span>
+                      <span>
                         {commaMoney(Math.ceil(price * (1 - discount * 0.01)))}원
-                          </span>
-                        </div>
-                        <span style={{color: `${ThemeRed}`}}>{discount}%</span>
-                      </div>
-                    </>
-                ) : (
-                    <>
-                      <div
-                          className="priceRate"
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between"
-                          }}
-                      >
-                        <div style={{
-                          width: "100%",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "flex-start"
-                        }}>
-                          <span className="blank"></span>
-                          <span>{commaMoney(price)}원</span>
-                        </div>
-                      </div>
-                    </>
-                )}
-              </div>
-            </a>
-          </Link>
-        </div>
+                      </span>
+                    </div>
+                    <span style={{ color: `${ThemeRed}` }}>{discount}%</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div
+                    className="priceRate"
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <span className="blank"></span>
+                      <span>{commaMoney(price)}원</span>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </a>
+        </Link>
+      </div>
 
-        <style jsx>{`
+      <style jsx>{`
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
           .wrapper {
@@ -91,12 +91,12 @@ export default function RecommInfo({id, name, price, discount}) {
               height: 19px;
             }
           }
-          
+
           .priceRate {
             font-size: 1.3rem;
             font-weight: 700;
             color: ${NBlack};
-            padding: 0 7rem
+            padding: 0 7rem;
           }
         }
 
@@ -115,7 +115,7 @@ export default function RecommInfo({id, name, price, discount}) {
             }
 
             .discount {
-              font-size: 2.0vw;
+              font-size: 2vw;
               font-weight: 600;
               color: #898989;
               text-decoration: line-through;
@@ -125,7 +125,7 @@ export default function RecommInfo({id, name, price, discount}) {
               height: 10px;
             }
           }
-          
+
           .priceRate {
             font-size: 2.63vw;
             font-weight: 700;
@@ -135,7 +135,7 @@ export default function RecommInfo({id, name, price, discount}) {
           }
         }
       `}</style>
-      </>
+    </>
   );
 }
 
@@ -143,5 +143,5 @@ RecommInfo.defaultProps = {
   id: 1,
   name: "샘플",
   price: 10000,
-  discount: 10
+  discount: 10,
 };

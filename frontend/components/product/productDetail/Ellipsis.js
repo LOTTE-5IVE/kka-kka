@@ -6,8 +6,6 @@ export const Ellipsis = ({ text }) => {
   const [isShowReadMore, setIsShowReadMore] = useState(false);
   const observeCallback = (entries) => {
     for (let entry of entries) {
-      console.log(entry.target.scrollHeight, ">", entry.contentRect.height);
-
       if (entry.target.scrollHeight > entry.contentRect.height) {
         setIsShowReadMore(true);
       } else {

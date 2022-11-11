@@ -194,7 +194,7 @@ export default function Header() {
             }
 
             img {
-              position: relative;
+              position: absolute;
             }
           }
 
@@ -253,8 +253,8 @@ export default function Header() {
               height: 120px;
 
               .logo {
-                left: 27%;
-                top: 35%;
+                left: 515px;
+                top: 65px;
 
                 img {
                   height: 95px;
@@ -263,8 +263,8 @@ export default function Header() {
             }
 
             .search {
-              left: 45%;
-              top: 35%;
+              left: 850px;
+              top: 65px;
               border-radius: 40px;
               padding: 0 17px;
 
@@ -279,13 +279,14 @@ export default function Header() {
               img {
                 width: 24px;
                 height: 24px;
-                top: 5px;
+                top: 10px;
+                left: 310px;
               }
             }
 
             .icons {
-              right: 17%;
-              top: 35%;
+              left: 1400px;
+              top: 65px;
               height: 80px;
               width: 180px;
 
@@ -322,7 +323,7 @@ export default function Header() {
 
               .logo {
                 left: 20vw;
-                top: 3.5vw;
+                top: 5vw;
 
                 img {
                   height: 5vw;
@@ -332,7 +333,7 @@ export default function Header() {
 
             .search {
               left: 45vw;
-              top: 3.5vw;
+              top: 5vw;
               border-radius: 2vw;
               padding: 0 0.9vw;
 
@@ -340,15 +341,16 @@ export default function Header() {
                 border-radius: 2vw;
                 width: 17vw;
                 height: 2.4vw;
-                line-height: 2.4vw;
+                line-height: 4.4vw;
                 font-size: 1vw;
+                margin-bottom: 1vw;
               }
 
               img {
                 width: 1.3vw;
                 min-width: 9px;
-                /* height: 1.3vw; */
-                top: 0;
+                top: 1.5vw;
+                left: 16.5vw;
               }
             }
 
@@ -425,17 +427,16 @@ export default function Header() {
               height: 70px;
 
               .logo {
-                left: 10%;
-                top: 30%;
-
+                left: 80px;
+                top: 35px;
                 img {
                   height: 60px;
                 }
               }
 
               .search {
-                left: 45%;
-                top: 25%;
+                left: 210px;
+                top: 35px;
                 border-radius: 40px;
                 padding: 0 17px;
 
@@ -449,13 +450,14 @@ export default function Header() {
                 img {
                   width: 16px;
                   height: 16px;
-                  top: 2px;
+                  top: 5px;
+                  left: 130px;
                 }
               }
 
               .icons {
-                right: -18%;
-                top: 30%;
+                left: 350px;
+                top: 35px;
                 height: 80px;
                 width: 180px;
 
