@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import kkakka.mainservice.coupon.application.CouponService;
 import kkakka.mainservice.coupon.application.DiscountService;
-import kkakka.mainservice.coupon.ui.dto.CouponProductResponseDto;
+import kkakka.mainservice.coupon.ui.dto.CouponProductDto;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
 import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.coupon.ui.dto.DiscountRequestDto;
@@ -114,18 +114,18 @@ public class CouponController {
 
     /* 상품, 멤버에 대해 적용 가능한 쿠폰 조회 */
     @GetMapping("/me/products/{productId}")
-    public ResponseEntity<List<CouponProductResponseDto>> showCouponsByProductIdAndMemberId(
+    public ResponseEntity<List<CouponProductDto>> showCouponsByProductIdAndMemberId(
         @PathVariable Long productId, @AuthenticationPrincipal LoginMember loginMember) {
-        List<CouponProductResponseDto> couponResponseDtos = couponService.showCouponsByProductIdAndMemberId(
+        List<CouponProductDto> couponResponseDtos = couponService.showCouponsByProductIdAndMemberId(
             productId, loginMember.getId());
         return ResponseEntity.status(HttpStatus.OK).body(couponResponseDtos);
     }
 
     /* 상품에 대해 적용 가능한 쿠폰 조회 */
     @GetMapping("/products/{productId}")
-    public ResponseEntity<List<CouponProductResponseDto>> showCouponsByProductId(
+    public ResponseEntity<List<CouponProductDto>> showCouponsByProductId(
         @PathVariable Long productId) {
-        List<CouponProductResponseDto> couponResponseDtos = couponService.showCouponsByProductId(
+        List<CouponProductDto> couponResponseDtos = couponService.showCouponsByProductId(
             productId);
         return ResponseEntity.status(HttpStatus.OK).body(couponResponseDtos);
     }
@@ -136,5 +136,15 @@ public class CouponController {
         @AuthenticationPrincipal LoginMember loginMember) {
         couponService.useCouponByMember(couponId, loginMember.getId());
         return ResponseEntity.ok().build();
+    }
+
+    /* 사용자의 상품 쿠폰 다운로드 */
+    @PostMapping("/{productId}/{couponId}")
+    public ResponseEntity<List<CouponProductDto>> downloadAndShowProductCoupons(
+        @PathVariable Long couponId,
+        @AuthenticationPrincipal LoginMember loginMember, @PathVariable Long productId) {
+        List<CouponProductDto> couponProductDtos = couponService.downloadProductCoupon(couponId,
+            loginMember.getId(), productId);
+        return ResponseEntity.status(HttpStatus.OK).body(couponProductDtos);
     }
 }

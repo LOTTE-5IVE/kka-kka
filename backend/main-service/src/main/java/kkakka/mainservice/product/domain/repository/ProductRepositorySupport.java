@@ -3,6 +3,7 @@ package kkakka.mainservice.product.domain.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +14,9 @@ import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.QProduct;
 import kkakka.mainservice.product.domain.SearchWords;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -57,7 +58,13 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(result, pageable, result.size());
+        final JPAQuery<Long> countQuery = queryFactory.select(QProduct.product.count())
+                .from(QProduct.product)
+                .where(
+                        builder
+                );
+
+        return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
     }
 
     private boolean isSavedCategoryId(Long cId) {
