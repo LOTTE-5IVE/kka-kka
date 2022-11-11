@@ -312,7 +312,7 @@ public class CouponService {
         List<CouponProductDto> couponProductDtos = showCouponsByProductIdAndMemberId(productId,
             memberId);
         for (CouponProductDto couponProductDto : couponProductDtos) {
-            if (couponProductDto.getId() == couponId) {
+            if (couponProductDto.getId().equals(couponId)) {
                 couponProductDto.downloadCoupon();
             }
         }

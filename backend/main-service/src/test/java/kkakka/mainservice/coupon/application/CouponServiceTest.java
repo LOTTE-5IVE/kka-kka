@@ -385,7 +385,7 @@ public class CouponServiceTest extends TestContext {
         // then
         CouponProductDto selectedDto = new CouponProductDto();
         for (CouponProductDto couponProductDto : couponProductDtos) {
-            if (couponProductDto.getId() == couponId) {
+            if (couponProductDto.getId().equals(couponId)) {
                 selectedDto = couponProductDto;
             }
         }

@@ -139,7 +139,7 @@ public class CouponController {
     }
 
     /* 사용자의 상품 쿠폰 다운로드 */
-    @PostMapping("/download/products/{productId}/{couponId}")
+    @PostMapping("/{productId}/{couponId}")
     public ResponseEntity<List<CouponProductDto>> downloadAndShowProductCoupons(
         @PathVariable Long couponId,
         @AuthenticationPrincipal LoginMember loginMember, @PathVariable Long productId) {

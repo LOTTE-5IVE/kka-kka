@@ -383,7 +383,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
             .filter(document("download-product-coupon"))
             .header("Authorization", "Bearer " + accessToken)
             .when()
-            .post("/api/coupons/download/products/" + PRODUCT_1.getId() + "/" + couponId)
+            .post("/api/coupons/" + PRODUCT_1.getId() + "/" + couponId)
             .then().log().all().extract();
 
         // then
