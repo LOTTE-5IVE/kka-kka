@@ -7,11 +7,16 @@ import { fetchAutoData } from "../../apis/AutoComplete";
 export default function SearchBar() {
   const [keyword, setKeyword] = useState();
   const [resource, setResource] = useState();
-
   const [index, setIndex] = useState(-1);
   const [over, setOver] = useState(false);
   const autoRef = useRef(null);
   const inputRef = useRef(null);
+
+  const data = resource?.ProductNames.read();
+
+  const autoComplete = async () => {
+    if (keyword) setResource(fetchAutoData(keyword));
+  };
 
   const onChangeData = (e) => {
     setKeyword(e.currentTarget.value);
@@ -33,6 +38,22 @@ export default function SearchBar() {
     setIndex(-1);
   };
 
+  function searchClick(name) {
+    setOver(false);
+    inputRef.current.value = name;
+    setKeyword(name);
+
+    router.push(
+      {
+        pathname: `/product`,
+        query: { cat_id: 0, search: name },
+      },
+      `/product`,
+    );
+
+    setIndex(-1);
+  }
+
   const handleKeyArrow = (e) => {
     if (!data) return;
 
@@ -52,8 +73,13 @@ export default function SearchBar() {
           setIndex(-1);
           break;
         case "Enter":
-          if (index === -1) break;
-          var inputKeyword =
+          setOver(false);
+
+          if (index === -1) {
+            searchQuery();
+            break;
+          }
+          let inputKeyword =
             autoRef.current.childNodes[index].childNodes[0].innerText;
           setKeyword(inputKeyword);
           inputRef.current.value = inputKeyword;
@@ -66,6 +92,7 @@ export default function SearchBar() {
   };
 
   useEffect(() => {
+    console.log("auto calle");
     autoComplete();
   }, [keyword]);
 
@@ -74,7 +101,6 @@ export default function SearchBar() {
       if (autoRef.current && !autoRef.current.contains(e.target)) {
         setOver(false);
         setIndex(-1);
-        console.log("over ", over);
       }
     }
     document.addEventListener("mousedown", handleOutside);
@@ -82,45 +108,6 @@ export default function SearchBar() {
       document.removeEventListener("mousedown", handleOutside);
     };
   }, [autoRef]);
-
-  function search(event) {
-    if (event.key === "Enter") {
-      if (keyword.length < 2 || keyword.length > 20) {
-        alert("두 글자 이상 스무 글자 이하로 입력하세요.");
-        return;
-      }
-
-      router.push(
-        {
-          pathname: `/product`,
-          query: { cat_id: 0, search: keyword },
-        },
-        `/product`,
-      );
-      setIndex(-1);
-    }
-  }
-
-  const autoComplete = async () => {
-    if (keyword) setResource(fetchAutoData(keyword));
-  };
-
-  function searchClick(name) {
-    inputRef.current.value = name;
-    setKeyword(name);
-
-    router.push(
-      {
-        pathname: `/product`,
-        query: { cat_id: 0, search: name },
-      },
-      `/product`,
-    );
-
-    setIndex(-1);
-  }
-
-  const data = resource?.ProductNames.read();
 
   return (
     <>
@@ -132,11 +119,13 @@ export default function SearchBar() {
             size="30"
             defaultValue={keyword}
             placeholder="검색어를 입력해주세요"
-            onChange={(e) => onChangeData(e)}
-            onKeyUp={(event) => {
-              search(event, keyword);
+            onChange={(e) => {
+              if (!over) setOver(true);
+              onChangeData(e);
             }}
-            onKeyDown={(e) => handleKeyArrow(e)}
+            onKeyDown={(e) => {
+              handleKeyArrow(e);
+            }}
             onFocus={(e) => {
               setOver(true);
             }}
@@ -153,8 +142,11 @@ export default function SearchBar() {
                 return productName.includes(keyword) ? (
                   <li
                     className={index === idx ? "autoName isFocus" : "autoName"}
-                    onKeyDown={(e) => keypress(e, productName)}
-                    onClick={() => searchClick(productName)}
+                    onClick={() => {
+                      searchClick(productName);
+                    }}
+                    onMouseEnter={() => setIndex(idx)}
+                    onMouseLeave={() => setIndex(-1)}
                   >
                     <div className="name">
                       {productName.split(keyword)[0]}
@@ -165,7 +157,12 @@ export default function SearchBar() {
                 ) : (
                   <li
                     className={index === idx ? "autoName isFocus" : "autoName"}
-                    onClick={() => searchClick(productName)}
+                    onClick={() => {
+                      searchClick(productName);
+                      setOver(false);
+                    }}
+                    onMouseEnter={() => setIndex(idx)}
+                    onMouseLeave={() => setIndex(-1)}
                   >
                     <div className="name">{productName}</div>
                   </li>
@@ -228,11 +225,6 @@ export default function SearchBar() {
               list-style: none;
             }
 
-            .autoName:hover {
-              background: #e5e5e5;
-              cursor: pointer;
-            }
-
             .boldName {
               color: #ed1b23;
               font-weight: bold;
@@ -246,7 +238,6 @@ export default function SearchBar() {
                 padding: 0 17px;
 
                 input[type="text"] {
-                  border-radius: 40px;
                   width: 317px;
                   height: 45px;
                   line-height: 45px;
@@ -275,7 +266,6 @@ export default function SearchBar() {
                 }
 
                 input[type="text"] {
-                  border-radius: 2vw;
                   width: 17vw;
                   height: 2.4vw;
                   line-height: 4.4vw;
@@ -313,7 +303,6 @@ export default function SearchBar() {
                 }
 
                 input[type="text"] {
-                  border-radius: 40px;
                   width: 120px;
                   height: 15px;
                   font-size: 0.5em;

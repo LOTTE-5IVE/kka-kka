@@ -133,28 +133,6 @@ export default function Header() {
             }
           }
 
-          .search {
-            background: #fff;
-            border: 2px solid #ed1b23;
-
-            input[type="text"] {
-              border: none;
-              padding: 0;
-              box-sizing: border-box;
-              color: #c5c9cd;
-              font-weight: 600;
-            }
-
-            input[type="text"]:focus {
-              outline: none;
-              color: #000;
-            }
-
-            img {
-              position: absolute;
-            }
-          }
-
           .icons {
             position: absolute;
             transform: translate(-50%, -50%);
@@ -219,28 +197,6 @@ export default function Header() {
               }
             }
 
-            .search {
-              left: 850px;
-              top: 65px;
-              border-radius: 40px;
-              padding: 0 17px;
-
-              input[type="text"] {
-                border-radius: 40px;
-                width: 317px;
-                height: 45px;
-                line-height: 45px;
-                font-size: 1em;
-              }
-
-              img {
-                width: 24px;
-                height: 24px;
-                top: 10px;
-                left: 310px;
-              }
-            }
-
             .icons {
               left: 1400px;
               top: 65px;
@@ -285,29 +241,6 @@ export default function Header() {
                 img {
                   height: 5vw;
                 }
-              }
-            }
-
-            .search {
-              left: 45vw;
-              top: 5vw;
-              border-radius: 2vw;
-              padding: 0 0.9vw;
-
-              input[type="text"] {
-                border-radius: 2vw;
-                width: 17vw;
-                height: 2.4vw;
-                line-height: 4.4vw;
-                font-size: 1vw;
-                margin-bottom: 1vw;
-              }
-
-              img {
-                width: 1.3vw;
-                min-width: 9px;
-                top: 1.5vw;
-                left: 16.5vw;
               }
             }
 
@@ -388,27 +321,6 @@ export default function Header() {
                 top: 35px;
                 img {
                   height: 60px;
-                }
-              }
-
-              .search {
-                left: 210px;
-                top: 35px;
-                border-radius: 40px;
-                padding: 0 17px;
-
-                input[type="text"] {
-                  border-radius: 40px;
-                  width: 120px;
-                  height: 15px;
-                  font-size: 0.5em;
-                }
-
-                img {
-                  width: 16px;
-                  height: 16px;
-                  top: 5px;
-                  left: 130px;
                 }
               }
 
