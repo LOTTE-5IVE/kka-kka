@@ -10,7 +10,6 @@ import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.elasticsearch.application.dto.ProductDocumentDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.LessThan;
 import org.springframework.http.HttpStatus;
 
 public class ProductDocumentAcceptanceTest extends DocumentConfiguration {
@@ -57,5 +56,4 @@ public class ProductDocumentAcceptanceTest extends DocumentConfiguration {
             .map(name -> name.contains("롯데")))
             .isNotEmpty();
     }
-
 }
