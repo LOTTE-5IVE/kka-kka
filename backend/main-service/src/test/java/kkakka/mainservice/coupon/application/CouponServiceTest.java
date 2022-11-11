@@ -3,18 +3,20 @@ package kkakka.mainservice.coupon.application;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import kkakka.mainservice.TestContext;
+import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.PriceRule;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
-import kkakka.mainservice.coupon.ui.dto.CouponProductResponseDto;
+import kkakka.mainservice.coupon.ui.dto.CouponProductDto;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
 import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.member.member.domain.Grade;
@@ -61,7 +63,7 @@ public class CouponServiceTest extends TestContext {
         // when
         couponService.downloadCoupon(coupon.getId(), member.getId());
         couponService.useCouponByMember(coupon.getId(), member.getId());
-        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllMemberCouponByCouponId(
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllByCouponId(
             coupon.getId());
 
         // then
@@ -231,7 +233,7 @@ public class CouponServiceTest extends TestContext {
         couponRepository.save(coupon2);
 
         // when
-        List<CouponProductResponseDto> couponProductResponseDtos = couponService.showCouponsByProductIdAndMemberId(
+        List<CouponProductDto> couponProductResponseDtos = couponService.showCouponsByProductIdAndMemberId(
             product.getId(), member.getId());
 
         // then
@@ -289,7 +291,7 @@ public class CouponServiceTest extends TestContext {
         ));
 
         // when
-        List<CouponProductResponseDto> couponProductResponseDtos = couponService.showCouponsByProductId(
+        List<CouponProductDto> couponProductResponseDtos = couponService.showCouponsByProductId(
             product.getId());
 
         // then
@@ -354,5 +356,39 @@ public class CouponServiceTest extends TestContext {
 
         // then
         assertThat(coupons.size()).isEqualTo(1);
+    }
+
+    @DisplayName("상품 쿠폰 다운로드 - 성공")
+    @Test
+    void downloadProductCoupon() {
+        // given
+        Product product = new Product(null, null, "product",
+            1000, 20, "", "", "", null);
+        Member member = new Member();
+        productRepository.save(product);
+        memberRepository.save(member);
+        Long couponId = couponService.createCoupon(new CouponRequestDto(
+            null, null, product.getId(),
+            "test", "COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
+        List<CouponProductDto> couponProductDtos = new ArrayList<>();
+        couponProductDtos.add(CouponProductDto.create(coupon, true));
+
+        // when
+        couponProductDtos = couponService.downloadProductCoupon(couponId, member.getId(),
+            product.getId());
+
+        // then
+        CouponProductDto selectedDto = new CouponProductDto();
+        for (CouponProductDto couponProductDto : couponProductDtos) {
+            if (couponProductDto.getId().equals(couponId)) {
+                selectedDto = couponProductDto;
+            }
+        }
+        assertThat(selectedDto.getIsDownloadable()).isEqualTo(false);
     }
 }

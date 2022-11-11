@@ -125,7 +125,7 @@ public class CartService {
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
 
         cartItem.applyCoupon(coupon);
-        MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponIdAndMemberId(couponId, loginMemberId);
+        MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId, loginMemberId);
         memberCoupon.useCoupon();
 
         Integer discountedPrice = cartItem.getDiscountedPrice(coupon);
@@ -142,7 +142,7 @@ public class CartService {
         cartItem.cancelCoupon(coupon);
         cartItemRepository.save(cartItem);
 
-        MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponIdAndMemberId(couponId, loginMemberId);
+        MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId, loginMemberId);
         memberCoupon.cancelCoupon();
         memberCouponRepository.save(memberCoupon);
 

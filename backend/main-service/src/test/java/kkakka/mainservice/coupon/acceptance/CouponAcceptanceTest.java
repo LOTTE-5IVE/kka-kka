@@ -369,4 +369,24 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
+
+    @DisplayName("상품 쿠폰 다운로드 - 성공")
+    @Test
+    void downloadProductCoupon_success() {
+        // given
+        String accessToken = 액세스_토큰_가져옴();
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .filter(document("download-product-coupon"))
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .post("/api/coupons/" + PRODUCT_1.getId() + "/" + couponId)
+            .then().log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
 }

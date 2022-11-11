@@ -14,7 +14,6 @@ import kkakka.mainservice.coupon.domain.repository.DiscountRepository;
 import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
 import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
 import kkakka.mainservice.coupon.ui.dto.DiscountRequestDto;
-import kkakka.mainservice.coupon.util.PromotionScheduler;
 import kkakka.mainservice.member.member.domain.Grade;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
@@ -22,7 +21,6 @@ import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
-import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -106,7 +104,7 @@ public class SchedulerTest extends TestContext {
             }
         }
         Long couponId = createGradeCoupon(Grade.SILVER, 20, 2000, 10000);
-        MemberCoupon memberCoupon = memberCouponRepository.findMemberCouponByCouponIdAndMemberId(
+        MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(
             couponId,
             member.getId());
 
