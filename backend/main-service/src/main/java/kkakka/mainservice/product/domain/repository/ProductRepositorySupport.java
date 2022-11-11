@@ -85,6 +85,13 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
         return new OrderSpecifier<Long>(Order.DESC, QProduct.product.id);
     }
 
+    public List<Product> findTop10ByKeyword(String keyword) {
+        return queryFactory.selectFrom(QProduct.product)
+            .where(QProduct.product.name.contains(keyword))
+            .limit(10).fetch();
+
+    }
+
     private BooleanBuilder categoryNameEq(SearchWords searchWords) {
         final BooleanBuilder builder = new BooleanBuilder();
         if (searchWords.hasSearchWords()) {

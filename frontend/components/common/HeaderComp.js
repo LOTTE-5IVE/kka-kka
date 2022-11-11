@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { useContext } from "react";
+import SearchBar from "./SearchBar";
+import { useContext, useRef } from "react";
 import { useEffect, useState } from "react";
 import { TokenContext } from "../../context/TokenContext";
 import { isLogin } from "../../hooks/isLogin";
@@ -28,25 +29,6 @@ export default function Header() {
     });
   };
 
-  function search(event) {
-    if (event.key === "Enter") {
-      if (value.length < 2 || value.length > 20) {
-        alert("두 글자 이상 스무 글자 이하로 입력하세요.");
-        return;
-      }
-
-      router.push(
-        {
-          pathname: `/product`,
-          query: { cat_id: 0, search: value },
-        },
-        `/product`,
-      );
-
-      setValue("");
-    }
-  }
-
   useEffect(() => {
     if (isLogin()) {
       setToken(getToken());
@@ -66,29 +48,7 @@ export default function Header() {
             </a>
           </Link>
         </div>
-        <div className="search">
-          <input
-            type="text"
-            size="30"
-            defaultValue={value}
-            placeholder="검색어를 입력해주세요"
-            onChange={(e) => {
-              if (isText(e.currentTarget.value)) {
-                setValue(e.currentTarget.value);
-              } else {
-                alert("특수문자는 입력할 수 없습니다.");
-                e.currentTarget.value = "";
-              }
-            }}
-            onKeyUp={(event) => {
-              search(event, value);
-            }}
-          ></input>
-
-          <Link href={`/product?search=${value}`}>
-            <img src="/common/main_search.png" />
-          </Link>
-        </div>
+        <SearchBar value={value} setValue={setValue} />
         <div className="icons">
           <div className="top">
             {login ? (
@@ -174,10 +134,12 @@ export default function Header() {
               transform: translate(-50%, -50%);
             }
           }
-
-          .search {
+          /* .searchWrapper {
             position: absolute;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, 0%);
+          } */
+          .search {
+            background: #fff;
             border: 2px solid #ed1b23;
 
             input[type="text"] {
