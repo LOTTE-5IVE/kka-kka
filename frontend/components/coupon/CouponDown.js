@@ -29,9 +29,12 @@ export function CouponDown({ handleModal, product }) {
 
   const downloadCoupon = async (id) => {
     if (isLogin()) {
-      await PostHApi(`/api/coupons/download/${id}`, token).then((res) => {
-        getProductMemberCoupon();
-      });
+      await PostHApi(`/api/coupons/${product.id}/${id}`, null, token).then(
+        (res) => {
+          getProductMemberCoupon();
+          alert("다운 완료");
+        },
+      );
     } else {
       alert("로그인이 필요한 서비스입니다.");
     }
@@ -189,10 +192,10 @@ export function CouponDown({ handleModal, product }) {
                 </tr>
               </thead>
               <tbody>
-                {coupons?.map((coupon, idx) => {
+                {coupons?.map((coupon) => {
                   return (
                     <tr
-                      key={idx}
+                      key={coupon.id}
                       style={{
                         height: "59px",
                         borderBottom: "1px solid #dedede",
@@ -216,6 +219,7 @@ export function CouponDown({ handleModal, product }) {
                       >
                         {coupon.isDownloadable ? (
                           <DownloadIcon
+                            style={{ cursor: "pointer" }}
                             onClick={() => {
                               downloadCoupon(coupon.id);
                             }}

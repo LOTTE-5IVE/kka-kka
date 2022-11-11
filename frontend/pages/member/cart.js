@@ -8,6 +8,7 @@ import Title from "../../components/common/Title";
 import { CouponApply } from "../../components/coupon/CouponApply";
 import { CouponModal } from "../../components/coupon/CouponModal";
 import { CartCntContext } from "../../context/CartCntContext";
+import { PaymentContext } from "../../context/PaymentContext";
 import { commaMoney } from "../../hooks/commaMoney";
 import { getToken } from "../../hooks/getToken";
 import { isNumber } from "../../hooks/isNumber";
@@ -23,6 +24,7 @@ export default function Cart() {
   const [selectUnValid, setSelectUnValid] = useState(true);
   const [token, setToken] = useState("");
   const { cartCnt, setCartCnt } = useContext(CartCntContext);
+  const { payment, setPayment } = useContext(PaymentContext);
   const [modalVisibleId, setModalVisibleId] = useState("");
 
   const onModalHandler = (id) => {
@@ -30,6 +32,7 @@ export default function Cart() {
   };
 
   const selectQuery = () => {
+    setPayment(checkItems);
     router.push(
       {
         pathname: `/payment`,
@@ -40,6 +43,7 @@ export default function Cart() {
   };
 
   const selectAllQuery = () => {
+    setPayment(cartItems);
     router.push(
       {
         pathname: `/payment`,

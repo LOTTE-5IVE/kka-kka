@@ -14,6 +14,7 @@ import { memberInfo } from "../../hooks/memberInfo";
 import { commaMoney } from "../../hooks/commaMoney";
 import { isNumber } from "../../hooks/isNumber";
 import { NGray } from "../../typings/NormalColor";
+import { PaymentContext } from "../../context/PaymentContext";
 
 export default function Payment() {
   const [zipcode, setZipcode] = useState("");
@@ -36,6 +37,7 @@ export default function Payment() {
   const [addressValid2, setAddressValid2] = useState(false);
   const [unvalid, setUnValid] = useState(true);
   const [modalVisibleId, setModalVisibleId] = useState("");
+  const { payment, setPayment } = useContext(PaymentContext);
 
   const onModalHandler = (id) => {
     setModalVisibleId(id);
@@ -58,6 +60,8 @@ export default function Payment() {
       return;
     }
 
+    console.log("payment:::", payment);
+
     if (!router.query.orderItems) {
       alert("주문/결제가 취소되었습니다.");
       history.back();
@@ -67,6 +71,10 @@ export default function Payment() {
       setOrderItems(JSON.parse(router.query.orderItems));
     }
   }, [router.isReady]);
+
+  useEffect(() => {
+    console.log("payment222:::", payment);
+  }, []);
 
   useEffect(() => {
     if (!check) return;
