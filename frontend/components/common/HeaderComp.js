@@ -1,17 +1,15 @@
 import Link from "next/link";
 import SearchBar from "./SearchBar";
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import { useEffect, useState } from "react";
 import { TokenContext } from "../../context/TokenContext";
 import { isLogin } from "../../hooks/isLogin";
 import { getToken } from "../../hooks/getToken";
 import { memberInfo } from "../../hooks/memberInfo";
-import { isText } from "../../hooks/isText";
 import { GetHApi } from "../../apis/Apis";
 import { CartCntContext } from "../../context/CartCntContext";
 
 export default function Header() {
-  const [value, setValue] = useState("");
   const [name, setName] = useState("");
   const [login, setLogin] = useState(false);
   const { token, setToken } = useContext(TokenContext);
@@ -48,7 +46,7 @@ export default function Header() {
             </a>
           </Link>
         </div>
-        <SearchBar value={value} setValue={setValue} />
+        <SearchBar />
         <div className="icons">
           <div className="top">
             {login ? (
@@ -134,10 +132,7 @@ export default function Header() {
               transform: translate(-50%, -50%);
             }
           }
-          /* .searchWrapper {
-            position: absolute;
-            transform: translate(-50%, 0%);
-          } */
+
           .search {
             background: #fff;
             border: 2px solid #ed1b23;
