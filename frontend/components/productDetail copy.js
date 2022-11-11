@@ -1,28 +1,28 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { GetHApi, PostHApi } from "../../../apis/Apis";
-import Title from "../../../components/common/Title";
+import { GetHApi, PostHApi } from "../apis/Apis";
+import Title from "./common/Title";
 import Swal from "sweetalert2";
-import { isLogin } from "../../../hooks/isLogin";
-import { AdminButton } from "../../../components/common/Button/AdminButton";
-import { CouponDown } from "../../../components/coupon/CouponDown";
-import { CouponDownModal } from "../../../components/coupon/CouponDownModal";
-import Info from "../../../components/product/productDetail/Info";
-import Nutri from "../../../components/product/productDetail/Nutri";
-import Review from "../../../components/product/productDetail/Review";
-import { commaMoney } from "../../../hooks/commaMoney";
-import { NBlack, NGray, NLightGray } from "../../../typings/NormalColor";
+import { isLogin } from "../hooks/isLogin";
+import { AdminButton } from "./common/Button/AdminButton";
+import { CouponDown } from "./coupon/CouponDown";
+import { CouponDownModal } from "./coupon/CouponDownModal";
+import Info from "./product/productDetail/Info";
+import Nutri from "./product/productDetail/Nutri";
+import Review from "./product/productDetail/Review";
+import { commaMoney } from "../hooks/commaMoney";
+import { NBlack, NGray, NLightGray } from "../typings/NormalColor";
 import {
   ThemeBlue,
   ThemeGray,
   ThemePink,
   ThemeRed,
-} from "../../../typings/ThemeColor";
-import RangeWithIcons from "../../../components/mypage/review/RangeWithIcons";
-import { isNumber } from "../../../hooks/isNumber";
-import { CartCntContext } from "../../../context/CartCntContext";
-import { getToken } from "../../../hooks/getToken";
+} from "../typings/ThemeColor";
+import RangeWithIcons from "./mypage/review/RangeWithIcons";
+import { isNumber } from "../hooks/isNumber";
+import { CartCntContext } from "../context/CartCntContext";
+import { getToken } from "../hooks/getToken";
 import { useContext } from "react";
 
 export default function ProductDetail(props) {
