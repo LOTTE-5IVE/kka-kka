@@ -10,6 +10,7 @@ import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.elasticsearch.application.dto.ProductDocumentDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.LessThan;
 import org.springframework.http.HttpStatus;
 
 public class ProductDocumentAcceptanceTest extends DocumentConfiguration {
@@ -33,6 +34,27 @@ public class ProductDocumentAcceptanceTest extends DocumentConfiguration {
         assertThat(response.body().jsonPath().getList("data",ProductDocumentDto.class).stream()
                             .map(productDocumentDto -> productDocumentDto.getName().contains("웨하스"))
                             .findAny())
+            .isNotEmpty();
+    }
+
+    @DisplayName("자동 완성 조회 - 성공")
+    @Test
+    void showAutoCompleteByKeyword_success() {
+        //given
+        //when
+        ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .filter(document("show-product-names-search-autocomplete"))
+            .when()
+            .get("/api/es/auto?keyword=롯데")
+            .then()
+            .log().all().extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().jsonPath().getList("autoKeyword",String.class).size()).isLessThanOrEqualTo(10);
+        assertThat(response.body().jsonPath().getList("autoKeyword",String.class).stream()
+            .map(name -> name.contains("롯데")))
             .isNotEmpty();
     }
 

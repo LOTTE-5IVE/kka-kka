@@ -63,3 +63,13 @@ include::{snippets}/products-show-search/http-request.adoc[]
 - Response
 
 include::{snippets}/products-show-search/http-response.adoc[]
+
+=== 자동 검색
+
+- Request
+
+include::{snippets}/show-products-search-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/show-products-search-success/http-response.adoc[]

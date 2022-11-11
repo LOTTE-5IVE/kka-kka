@@ -71,11 +71,9 @@ public class ElasticSearchHelper implements SearchHelper {
         SearchHits<ProductDocument> searchHits = elasticsearchRestTemplate.search(query,
             ProductDocument.class, IndexCoordinates.of(Indices.PRDUCT_INDEX));
 
-        List<String> productNames = searchHits.stream()
+        return searchHits.stream()
             .map(productDocumentSearchHit -> productDocumentSearchHit.getContent().getName())
             .collect(toList());
-
-        return productNames;
     }
 
     private PageInfo createPageInfo(SearchPage<ProductDocument> searchPages) {
