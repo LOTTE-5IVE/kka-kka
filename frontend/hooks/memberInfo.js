@@ -16,8 +16,6 @@ export const memberInfo = async (token) => {
         return {};
       });
 
-    console.log("memberInfo data: ", data);
-
     return data;
   }
 };

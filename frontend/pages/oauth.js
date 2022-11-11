@@ -46,9 +46,7 @@ export default function Oauth() {
       return;
     }
 
-    login().then(() => {
-      console.log("logged in");
-    });
+    login();
   }, [router.isReady]);
 
   return (

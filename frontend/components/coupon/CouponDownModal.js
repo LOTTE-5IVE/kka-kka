@@ -1,4 +1,4 @@
-export function CouponModal({ children }) {
+export function CouponDownModal({ children }) {
   return (
     <>
       <div className="ModalBg"></div>
@@ -100,14 +100,14 @@ export function CouponModal({ children }) {
             z-index: 9999;
             top: 0;
             left: 0;
-            width: 480px;
+            width: 440px;
             height: 1100px;
 
             .wrapper {
               position: absolute;
-              top: 350px;
+              top: 30px;
               left: 240px;
-              transform: translate(-50%, -50%);
+              transform: translate(-240px, -50%);
 
               .container {
                 margin: 40px auto 0;

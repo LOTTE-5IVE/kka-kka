@@ -12,7 +12,6 @@ export const getToken = () => {
   } else if (obj) {
     token = obj.value;
   }
-  console.log("getToken", token);
 
   return token;
 };
