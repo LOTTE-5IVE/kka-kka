@@ -115,6 +115,10 @@ public class MemberRecommendStrategy implements ProductRecommender {
     }
 
     private List<Product> findMoreProductsByRatingAvg(List<Long> productIds, int numberRequired) {
+        if (productIds.isEmpty()) {
+            return productRepository.findAllOrderByRatingAvg(Pageable.ofSize(numberRequired))
+                    .getContent();
+        }
         return productRepository.findAllOrderByRatingAvg(
                 productIds,
                 Pageable.ofSize(numberRequired)
@@ -123,7 +127,7 @@ public class MemberRecommendStrategy implements ProductRecommender {
 
     private RecommendProductDto requestRecommendation(Product pivotProduct) {
         final ResponseEntity<String> response = restTemplate.exchange(
-                RECOMMENDATION_SERVER_URL + pivotProduct.getId(),
+                RECOMMENDATION_SERVER_URL + 4,
                 HttpMethod.GET,
                 new HttpEntity<>(new HttpHeaders()),
                 String.class
