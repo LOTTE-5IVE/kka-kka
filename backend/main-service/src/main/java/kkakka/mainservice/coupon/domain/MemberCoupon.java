@@ -33,9 +33,10 @@ public class MemberCoupon {
     private Coupon coupon;
 
     private Boolean isUsed;
+    private Boolean isApply;
 
     public static MemberCoupon create(Member member, Coupon coupon) {
-        return new MemberCoupon(null, member, coupon, false);
+        return new MemberCoupon(null, member, coupon, false , false);
     }
 
     public void useCoupon() {
@@ -43,7 +44,15 @@ public class MemberCoupon {
     }
 
     public void cancelCoupon() {
-        this.isUsed = false;
+        this.isApply = false;
+    }
+
+    public void applyCoupon() {
+        this.isApply = true;
+    }
+
+    public Boolean isUsable() {
+        return this.isApply;
     }
 
     public boolean isUsed() {
