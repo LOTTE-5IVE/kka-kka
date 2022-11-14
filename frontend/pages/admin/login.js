@@ -113,6 +113,7 @@ export default function Login() {
             padding: 4rem;
             background: white;
             border-radius: 30px;
+            box-shadow: 3px 9px 16px #e3e3e3, -4px -7px 16px #e3e3e3;
             
             input {
               margin: 1rem;
