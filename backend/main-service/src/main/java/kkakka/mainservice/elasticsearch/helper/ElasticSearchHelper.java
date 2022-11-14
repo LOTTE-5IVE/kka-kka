@@ -43,7 +43,9 @@ public class ElasticSearchHelper implements SearchHelper {
         if (!searchHits.hasSearchHits()) {
             return new ProductsSearchResult(
                 new ArrayList<>(),
-                new PageInfo(),
+                PageInfo.from(
+                    pageable.getPageNumber(),0,pageable.getPageSize(),0
+                ),
                 searchHits.getTotalHits()
             );
         }
