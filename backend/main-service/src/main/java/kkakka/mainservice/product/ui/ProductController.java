@@ -59,7 +59,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }
         result = productService.showAllProductsWithCategoryAndSearch(
-            Optional.ofNullable(searchParamRequest.getCategoryId()),
+            Optional.ofNullable(searchParamRequest.getCategory()),
             searchParamRequest.getSortBy(),
             pageable);
 

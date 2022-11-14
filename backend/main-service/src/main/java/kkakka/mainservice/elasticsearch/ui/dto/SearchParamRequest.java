@@ -16,7 +16,7 @@ public class SearchParamRequest {
     private String keyword;
     private String sortBy;
     private List<Long> catecodes;
-    private Long categoryId;
+    private Long category;
     private int minprice;
     private int maxprice;
     private int mincalorie;
