@@ -1,5 +1,9 @@
 package kkakka.mainservice.cart.application;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import kkakka.mainservice.cart.domain.Cart;
 import kkakka.mainservice.cart.domain.CartItem;
 import kkakka.mainservice.cart.domain.repository.CartItemRepository;
@@ -24,11 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -109,7 +108,9 @@ public class CartService {
     @Transactional
     public void emptyCart(LoginMember loginMember) {
         try {
+            final Cart cart = cartRepository.findByMemberId(loginMember.getId()).orElseThrow();
             cartItemRepository.deleteAllByMemberId(loginMember.getId());
+            cart.empty();
         } catch (Exception e) {
             log.warn("-------- CartService Error start ---------");
             log.warn("Fail to Empty CartItems: {}", e.getMessage());
@@ -118,13 +119,16 @@ public class CartService {
     }
 
     @Transactional
-    public CartItemDto applyCouponCartItem(Long cartItemId, Long couponId, LoginMember loginMember) {
+    public CartItemDto applyCouponCartItem(Long cartItemId, Long couponId,
+            LoginMember loginMember) {
         Long loginMemberId = loginMember.getId();
 
-        CartItem cartItem = cartItemRepository.findByIdandMemberId(cartItemId, loginMemberId).orElseThrow(KkaKkaException::new);
+        CartItem cartItem = cartItemRepository.findByIdandMemberId(cartItemId, loginMemberId)
+                .orElseThrow(KkaKkaException::new);
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
 
         cartItem.applyCoupon(coupon);
+
         MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId, loginMemberId);
         memberCoupon.useCoupon();
 
@@ -133,7 +137,8 @@ public class CartService {
     }
 
     @Transactional
-    public CartItemDto cancelCouponCartItem(Long cartItemId, Long couponId, LoginMember loginMember) {
+    public CartItemDto cancelCouponCartItem(Long cartItemId, Long couponId,
+            LoginMember loginMember) {
         Long loginMemberId = loginMember.getId();
 
         CartItem cartItem = cartItemRepository.findByIdandMemberId(cartItemId, loginMemberId)
