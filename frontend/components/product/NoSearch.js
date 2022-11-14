@@ -14,11 +14,6 @@ export default function NoSearch() {
           @media screen and (min-width: 769px) {
             /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
             .NotFoundWrapper {
-              position: relative;
-              top: 10%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-
               .image {
                 display: flex;
                 justify-content: center;
@@ -41,18 +36,12 @@ export default function NoSearch() {
           @media screen and (max-width: 768px) {
             /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
             .NotFoundWrapper {
-              width: 100vw;
-              position: relative;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-
               .image {
                 display: flex;
                 justify-content: center;
 
                 img {
-                  width: 200px;
+                  width: 120px;
                 }
               }
 
@@ -61,7 +50,7 @@ export default function NoSearch() {
                 flex-direction: column;
                 justify-content: center;
                 text-align: center;
-                font-size: 20px;
+                font-size: 15px;
               }
             }
           }
@@ -69,12 +58,6 @@ export default function NoSearch() {
           @media screen and (max-width: 480px) {
             /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
             .NotFoundWrapper {
-              width: 100vw;
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-
               .image {
                 display: flex;
                 justify-content: center;

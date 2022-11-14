@@ -55,10 +55,11 @@ export default function ProductList() {
   },[keyword]);
 
   const ProductLists = () => {
-    if (!resource) return;
-
     const data = resource.productList.read();
-    setLastPage(data.pageInfo.lastPage);
+
+    useEffect(() => {
+      setLastPage(data.pageInfo.lastPage);
+    }, [data]);
 
     return (
       <>
@@ -182,7 +183,7 @@ export default function ProductList() {
               </div>
             }
           >
-            <ProductLists />
+            {resource && <ProductLists />}
           </Suspense>
 
           <div className="pagination">

@@ -14,6 +14,7 @@ import { memberInfo } from "../../hooks/memberInfo";
 import { commaMoney } from "../../hooks/commaMoney";
 import { isNumber } from "../../hooks/isNumber";
 import { NGray } from "../../typings/NormalColor";
+import { PaymentContext } from "../../context/PaymentContext";
 
 export default function Payment() {
   const [zipcode, setZipcode] = useState("");
@@ -26,7 +27,6 @@ export default function Payment() {
   const [addr1, setAddr1] = useState("");
   const [addr2, setAddr2] = useState("");
   const [popup, setPopup] = useState(false);
-  const [modal, setModal] = useState(false);
   const [orderItems, setOrderItems] = useState([]);
   const [check, setCheck] = useState(false);
   const [nameValid, setNameValid] = useState(false);
@@ -36,6 +36,20 @@ export default function Payment() {
   const [addressValid1, setAddressValid1] = useState(false);
   const [addressValid2, setAddressValid2] = useState(false);
   const [unvalid, setUnValid] = useState(true);
+  const [modalVisibleId, setModalVisibleId] = useState("");
+  const { payment, setPayment } = useContext(PaymentContext);
+
+  const onModalHandler = (id) => {
+    setModalVisibleId(id);
+  };
+
+  const cancelCoupon = async (cartItemId, couponId) => {
+    await DeleteHApi(`/api/carts/${cartItemId}/${couponId}`, token).then(
+      (res) => {
+        getCartItem();
+      },
+    );
+  };
 
   const { token, setToken } = useContext(TokenContext);
 
@@ -46,23 +60,27 @@ export default function Payment() {
       return;
     }
 
+    console.log("payment:::", payment);
+
     if (!router.query.orderItems) {
-      // alert("주문/결제가 취소되었습니다.");
-      // history.back();
+      alert("주문/결제가 취소되었습니다.");
+      history.back();
     }
 
     if (router.query.orderItems) {
-      console.log(JSON.parse(router.query.orderItems));
       setOrderItems(JSON.parse(router.query.orderItems));
     }
   }, [router.isReady]);
+
+  useEffect(() => {
+    console.log("payment222:::", payment);
+  }, []);
 
   useEffect(() => {
     if (!check) return;
 
     memberInfo(token).then((res) => {
       if (res) {
-        console.log(res);
         setName(res.name);
         setNameValid(true);
 
@@ -122,7 +140,7 @@ export default function Payment() {
 
     orderItems?.map((x) => {
       return arr.push({
-        productId: x.productId,
+        productId: x.id,
         quantity: x.quantity,
       });
     });
@@ -145,10 +163,6 @@ export default function Payment() {
 
     document.location.href = "/";
   };
-
-  function handleModal() {
-    setModal(false);
-  }
 
   function popupHandler() {
     setPopup(!popup);
@@ -185,9 +199,10 @@ export default function Payment() {
             <table>
               <colgroup>
                 <col style={{ width: "15%" }} />
-                <col style={{ width: "40%" }} />
+                <col style={{ width: "30%" }} />
                 <col style={{ width: "15%" }} />
-                <col style={{ width: "20%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "15%" }} />
                 <col style={{ width: "10%" }} />
               </colgroup>
               <tbody>
@@ -225,27 +240,78 @@ export default function Payment() {
                         )}
                       </td>
                       <td>
-                        <div
-                          onClick={() => {
-                            setModal(true);
-                          }}
-                        >
-                          <AdminButton
-                            context="쿠폰적용"
-                            color="red"
-                            width="70px"
+                        {product.couponDto && (
+                          <input
+                            key={product.cartItemId}
+                            type="text"
+                            size="15"
+                            defaultValue={product.couponDto.name}
+                            readOnly
+                            style={{ fontWeight: "bold" }}
                           />
-                        </div>
-                        {modal && (
-                          <CouponModal>
-                            <div>
-                              <CouponApply
-                                handleModal={handleModal}
-                                product={product}
+                        )}
+                      </td>
+                      <td>
+                        <div style={{ display: "flex" }}>
+                          {product.couponDto ? (
+                            <>
+                              <div
+                                onClick={() => {
+                                  onModalHandler(product.id);
+                                  // setCouponProduct(product);
+                                }}
+                              >
+                                <AdminButton
+                                  context="쿠폰변경"
+                                  color="#05c7f2"
+                                  width="60px"
+                                />
+                              </div>
+                              <div
+                                onClick={() => {
+                                  cancelCoupon(
+                                    product.cartItemId,
+                                    product.couponDto.id,
+                                  );
+                                }}
+                              >
+                                <AdminButton
+                                  context="적용취소"
+                                  color="red"
+                                  width="60px"
+                                />
+                              </div>
+                            </>
+                          ) : (
+                            <div
+                              onClick={() => {
+                                onModalHandler(product.id);
+                                // setCouponProduct(product);
+                              }}
+                            >
+                              <AdminButton
+                                context="쿠폰적용"
+                                color="#05c7f2"
+                                width="60px"
                               />
                             </div>
-                          </CouponModal>
-                        )}
+                          )}
+                          {product.id === modalVisibleId ? (
+                            <CouponModal>
+                              <div>
+                                <CouponApply
+                                  id={product.id}
+                                  modalVisibleId={modalVisibleId}
+                                  setModalVisibleId={setModalVisibleId}
+                                  cartItemId={product.cartItemId}
+                                  product={product}
+                                />
+                              </div>
+                            </CouponModal>
+                          ) : (
+                            ""
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );
@@ -485,11 +551,8 @@ export default function Payment() {
                       orderItems.reduce(
                         (prev, cur) =>
                           prev +
-                          Math.ceil(
-                            cur.price *
-                              0.01 *
-                              cur.productDiscount *
-                              cur.quantity,
+                          Math.floor(
+                            cur.price * 0.01 * cur.discount * cur.quantity,
                           ),
                         0,
                       ),
@@ -512,11 +575,8 @@ export default function Payment() {
                         orderItems.reduce(
                           (prev, cur) =>
                             prev +
-                            Math.ceil(
-                              cur.price *
-                                0.01 *
-                                cur.productDiscount *
-                                cur.quantity,
+                            Math.floor(
+                              cur.price * 0.01 * cur.discount * cur.quantity,
                             ),
                           0,
                         ),

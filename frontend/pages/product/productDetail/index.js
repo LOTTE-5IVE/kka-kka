@@ -1,14 +1,13 @@
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { PostHApi } from "../../../apis/Apis";
+import { GetHApi, PostHApi } from "../../../apis/Apis";
 import Title from "../../../components/common/Title";
 import Swal from "sweetalert2";
 import { isLogin } from "../../../hooks/isLogin";
 import { AdminButton } from "../../../components/common/Button/AdminButton";
 import { CouponDown } from "../../../components/coupon/CouponDown";
-import { CouponModal } from "../../../components/coupon/CouponModal";
+import { CouponDownModal } from "../../../components/coupon/CouponDownModal";
 import Info from "../../../components/product/productDetail/Info";
 import Nutri from "../../../components/product/productDetail/Nutri";
 import Review from "../../../components/product/productDetail/Review";
@@ -22,22 +21,25 @@ import {
 } from "../../../typings/ThemeColor";
 import RangeWithIcons from "../../../components/mypage/review/RangeWithIcons";
 import { isNumber } from "../../../hooks/isNumber";
+import { CartCntContext } from "../../../context/CartCntContext";
+import { getToken } from "../../../hooks/getToken";
 import { useContext } from "react";
-import { TokenContext } from "../../../context/TokenContext";
+import { PaymentContext } from "../../../context/PaymentContext";
 
-export default function ProductDetail() {
-  const router = useRouter();
-  const productId = router.query.id;
+export default function ProductDetail({ product, reviewCount }) {
   const [quantity, setQuantity] = useState(1);
   const [tab, setTab] = useState("info");
   const [modal, setModal] = useState(false);
-  const [product, setProduct] = useState({});
-  const { token, setToken } = useContext(TokenContext);
+  const [token, setToken] = useState("");
+  const { cartCnt, setCartCnt } = useContext(CartCntContext);
+  const { payment, setPayment } = useContext(PaymentContext);
+
+  const router = useRouter();
 
   const buyQuery = () => {
     product.quantity = quantity;
 
-    console.log("JSON.stringify(product): ", JSON.stringify([product]));
+    setPayment([product]);
 
     router.push(
       {
@@ -90,7 +92,9 @@ export default function ProductDetail() {
               quantity: quantity,
             },
             token,
-          );
+          ).then((res) => {
+            getCartCount();
+          });
 
           Swal.fire("", "장바구니에 성공적으로 담겼습니다.", "success");
         }
@@ -98,17 +102,15 @@ export default function ProductDetail() {
     }
   };
 
-  const getItem = async () => {
-    if (productId) {
-      await axios.get(`/api/products/${productId}`).then((res) => {
-        setProduct(res.data);
-      });
-    }
+  const getCartCount = async () => {
+    await GetHApi("/api/members/me/carts/all", token).then((res) => {
+      setCartCnt(res.cartCount);
+    });
   };
 
   useEffect(() => {
-    getItem();
-  }, [productId]);
+    setToken(getToken());
+  }, [token]);
 
   return (
     <>
@@ -145,7 +147,7 @@ export default function ProductDetail() {
                     </>
                   )}
                   <div className="mt-3">
-                    <div className="d-flex align-start">
+                    <div className="review-box d-flex align-start">
                       <RangeWithIcons
                         value={product.ratingAvg}
                         max={5}
@@ -155,6 +157,10 @@ export default function ProductDetail() {
                         color={"#ffd151"}
                         starWidth={"40px"}
                       />
+                      <div className="reviewCnt">
+                        ({product.ratingAvg?.toFixed(1)},{" "}
+                        {commaMoney(reviewCount) || 0}건)
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -166,17 +172,18 @@ export default function ProductDetail() {
                 <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
                 <div
                   onClick={() => {
+                    console.log("product:::", product);
                     handleModal(true);
                   }}
                 >
                   <AdminButton context="쿠폰받기" color="red" width="70px" />
                 </div>
                 {modal && (
-                  <CouponModal>
+                  <CouponDownModal>
                     <div>
                       <CouponDown handleModal={handleModal} product={product} />
                     </div>
-                  </CouponModal>
+                  </CouponDownModal>
                 )}
               </div>
               <div className="totalProducts">
@@ -197,7 +204,7 @@ export default function ProductDetail() {
                             type="button"
                             onClick={() => handleQuantity("minus")}
                             value="-"
-                            style={{ marginRight: "15px" }}
+                            style={{ marginRight: "15px", cursor: "pointer" }}
                           />
 
                           <input
@@ -228,7 +235,7 @@ export default function ProductDetail() {
                             type="button"
                             onClick={() => handleQuantity("plus")}
                             value="+"
-                            style={{ marginLeft: "15px" }}
+                            style={{ marginLeft: "15px", cursor: "pointer" }}
                           />
                         </span>
                       </td>
@@ -279,17 +286,6 @@ export default function ProductDetail() {
                     바로 구매
                   </div>
                 ) : (
-                  // <div
-                  //   className="buyBtn"
-                  //   onClick={() => {
-                  //     console.log("productDetailbefore: ", product);
-                  //     product.quantity = quantity;
-
-                  //     console.log("productDetail: ", product);
-                  //   }}
-                  // >
-                  //   바로 구매
-                  // </div>
                   <div
                     className="buyBtn"
                     onClick={() => {
@@ -329,7 +325,7 @@ export default function ProductDetail() {
               ) : tab == "nutri" ? (
                 <Nutri nutrition={product.nutrition} />
               ) : (
-                <Review productId={productId} />
+                <Review productId={product.id} />
               )}
             </div>
           </div>
@@ -445,6 +441,18 @@ export default function ProductDetail() {
                   color: ${ThemeBlue};
                   transition: 0.7s;
                 }
+              }
+
+              .review-box {
+                align-items: flex-end;
+              }
+
+              .reviewCnt {
+                font-size: 1rem;
+                font-weight: 400;
+                color: ${NGray};
+                width: 100%;
+                margin-left: 0.6rem;
               }
             }
           }
@@ -739,6 +747,11 @@ export default function ProductDetail() {
                     font-size: 3vw;
                   }
                 }
+
+                .reviewCnt {
+                  font-size: 1vw;
+                  margin-left: 0.2rem;
+                }
               }
             }
 
@@ -935,7 +948,19 @@ export default function ProductDetail() {
 }
 
 export async function getServerSideProps(context) {
+  const { id } = context.query;
+  const res = await axios.get(`http://localhost:9000/api/products/${id}`);
+  const product = await res.data;
+
+  const reviewRes = await axios.get(
+    `http://localhost:9000/api/reviews/${id}/all`,
+  );
+  const reviewCount = await reviewRes.data.reviewCount;
+
   return {
-    props: {},
+    props: {
+      product,
+      reviewCount,
+    },
   };
 }

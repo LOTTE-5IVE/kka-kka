@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
+import { Ellipsis } from "./Ellipsis";
 import RangeWithIcons from "../../mypage/review/RangeWithIcons";
 import Pagination from "../Pagination";
 
@@ -38,9 +39,9 @@ export default function Review({ productId }) {
             </colgroup>
             <tbody>
               {reviews.length > 0 &&
-                reviews.map((review, index) => {
+                reviews.map((review) => {
                   return (
-                    <tr key={index} style={{ height: "96px" }}>
+                    <tr key={review.id} style={{ height: "96px" }}>
                       <td>
                         <RangeWithIcons
                           borderColor={"#ffd151"}
@@ -51,7 +52,8 @@ export default function Review({ productId }) {
                         />
                       </td>
                       <td>
-                        <p className="reviewContents">{review.contents}</p>
+                        {/* <p className="reviewContents">{review.contents}</p> */}
+                        <Ellipsis text={review.contents} />
                       </td>
                       <td>{review.member.name}</td>
                       <td>{review.createdAt}</td>
