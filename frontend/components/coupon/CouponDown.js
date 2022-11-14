@@ -15,7 +15,6 @@ export function CouponDown({ handleModal, product }) {
   const getProductMemberCoupon = async () => {
     await GetHApi(`/api/coupons/me/products/${product.id}`, token).then(
       (res) => {
-        console.log("getProductMemberCoupon: ", res);
         setCoupons(res);
       },
     );

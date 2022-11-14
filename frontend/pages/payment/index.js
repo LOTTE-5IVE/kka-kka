@@ -15,6 +15,7 @@ import { commaMoney } from "../../hooks/commaMoney";
 import { isNumber } from "../../hooks/isNumber";
 import { NGray } from "../../typings/NormalColor";
 import { PaymentContext } from "../../context/PaymentContext";
+import Image from "next/image";
 
 export default function Payment() {
   const [zipcode, setZipcode] = useState("");
@@ -60,8 +61,6 @@ export default function Payment() {
       return;
     }
 
-    console.log("payment:::", payment);
-
     if (!router.query.orderItems) {
       alert("주문/결제가 취소되었습니다.");
       history.back();
@@ -71,10 +70,6 @@ export default function Payment() {
       setOrderItems(JSON.parse(router.query.orderItems));
     }
   }, [router.isReady]);
-
-  useEffect(() => {
-    console.log("payment222:::", payment);
-  }, []);
 
   useEffect(() => {
     if (!check) return;
@@ -210,19 +205,24 @@ export default function Payment() {
                   return (
                     <tr key={index}>
                       <td>
-                        <img src={product.imageUrl} />
+                        <div className="img" style={{ position: "relative" }}>
+                          <Image src={product.imageUrl} alt="" layout="fill" />
+                        </div>
                       </td>
                       <td>{product.name}</td>
                       <td>x{product.quantity}</td>
                       <td>
-                        {product.discount ? (
+                        {product.couponDto || product.discount ? (
                           <>
                             <p>
-                              {commaMoney(
-                                Math.ceil(
-                                  product.price * (1 - 0.01 * product.discount),
-                                ) * product.quantity,
-                              )}
+                              {product.couponDto
+                                ? commaMoney(product.totalDiscountedPrice)
+                                : commaMoney(
+                                    Math.ceil(
+                                      product.price *
+                                        (1 - 0.01 * product.discount),
+                                    ) * product.quantity,
+                                  )}
                               원
                             </p>
                             <p>
@@ -548,14 +548,18 @@ export default function Payment() {
                   <td>
                     -{" "}
                     {commaMoney(
-                      orderItems.reduce(
-                        (prev, cur) =>
-                          prev +
-                          Math.floor(
-                            cur.price * 0.01 * cur.discount * cur.quantity,
-                          ),
-                        0,
-                      ),
+                      orderItems.reduce((prev, cur) => {
+                        if (cur.couponDto) {
+                          return prev + Math.floor(cur.totalDiscount);
+                        } else {
+                          return (
+                            prev +
+                            Math.floor(
+                              cur.price * 0.01 * cur.discount * cur.quantity,
+                            )
+                          );
+                        }
+                      }, 0),
                     ) || 0}{" "}
                     원
                   </td>
@@ -572,14 +576,18 @@ export default function Payment() {
                         (prev, cur) => prev + cur.price * cur.quantity,
                         0,
                       ) -
-                        orderItems.reduce(
-                          (prev, cur) =>
-                            prev +
-                            Math.floor(
-                              cur.price * 0.01 * cur.discount * cur.quantity,
-                            ),
-                          0,
-                        ),
+                        orderItems.reduce((prev, cur) => {
+                          if (cur.couponDto) {
+                            return prev + Math.floor(cur.totalDiscount);
+                          } else {
+                            return (
+                              prev +
+                              Math.floor(
+                                cur.price * 0.01 * cur.discount * cur.quantity,
+                              )
+                            );
+                          }
+                        }, 0),
                     )}{" "}
                     원
                   </td>
@@ -725,7 +733,7 @@ export default function Payment() {
                     }
                   }
 
-                  img {
+                  .img {
                     width: 96px;
                     height: 96px;
                   }
@@ -824,7 +832,7 @@ export default function Payment() {
                     }
                   }
 
-                  img {
+                  .img {
                     width: 96px;
                     height: 96px;
                   }
@@ -925,7 +933,7 @@ export default function Payment() {
                     }
                   }
 
-                  img {
+                  .img {
                     width: 64px;
                     height: 64px;
                   }
