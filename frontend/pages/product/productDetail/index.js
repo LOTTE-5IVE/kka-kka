@@ -330,7 +330,9 @@ export default function ProductDetail() {
               </div>
             </div>
           </div>
-          <RecommendList />
+          <div className="detailMiddle">
+            <RecommendList />
+          </div>
           <div className="detailBottom">
             <div className="tabMenu">
               <ul>
@@ -944,10 +946,16 @@ export default function ProductDetail() {
                 }
               }
             }
+            
+            .detailMiddle {
+              position: absolute;
+              top: 800px;
+              width: 400px;
+            }
 
             .detailBottom {
               position: absolute;
-              top: 770px;
+              top: 1150px;
               padding-top: 40px;
 
               .tabMenu {

@@ -92,19 +92,39 @@ export default function RecommendList() {
 
           @media screen and (max-width: 768px) {
             /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
-
+            .recommendWrapper {
+              padding: 0.5rem;
+            }
+            
+            .recommendText {
+              font-size: 1.3rem;
+              font-weight: 700;
+              margin-left: 2rem;
+            }
+            
+            .divider {
+              border-bottom: 1px solid #dedede;
+              margin: 1rem 0;
+            }
+            
             .productList {
-              display: table;
-              width: 60vw;
-              height: 82.42vw;
+              display: flex;
+              overflow: hidden;
+              overflow-x: scroll;
+              overflow-y: hidden;
+              white-space: no-wrap;
+              
+              margin-top: 0.7rem;
+              
+              ::-webkit-scrollbar {
+                display: none;
+              }
 
               .productInner {
-                display: inline-block;
-                width: 33.3%;
-                margin-bottom: 3vw;
+                margin: 0.5rem 0.5rem;
 
                 .productBox {
-                  width: 15.68vw;
+                  width: 20vw;
                   margin: 0 auto;
                 }
               }
@@ -114,16 +134,37 @@ export default function RecommendList() {
           @media screen and (max-width: 480px) {
             /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
 
+            .recommendWrapper {
+              padding: 0.5rem;
+            }
+            
+            .recommendText {
+              font-size: 1.3rem;
+              font-weight: 700;
+              margin-left: 2rem;
+            }
+            
+            .divider {
+              border-bottom: 1px solid #dedede;
+              margin: 1rem 0;
+            }
+            
             .productList {
-              display: table;
-              width: 480px;
-              height: 750px;
-              padding: 0;
+              display: flex;
+              overflow: hidden;
+              overflow-x: scroll;
+              overflow-y: hidden;
+              white-space: no-wrap;
+              
+              margin-top: 0.7rem;
+              
+              ::-webkit-scrollbar {
+                display: none;
+              }
 
+              
               .productInner {
-                display: inline-block;
-                width: 33.3%;
-                margin-bottom: 20px;
+                margin: 0.5rem 0.7rem;
 
                 .productBox {
                   width: 150px;
