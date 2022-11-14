@@ -64,7 +64,7 @@ include::{snippets}/products-show-search/http-request.adoc[]
 
 include::{snippets}/products-show-search/http-response.adoc[]
 
-=== 자동 검색
+=== es 적용 검색
 
 - Request
 
@@ -73,3 +73,13 @@ include::{snippets}/show-products-search-success/http-request.adoc[]
 - Response
 
 include::{snippets}/show-products-search-success/http-response.adoc[]
+
+=== 자동 완성
+
+- Request
+
+include::{snippets}/show-product-names-search-autocomplete/http-request.adoc[]
+
+- Response
+
+include::{snippets}/show-product-names-search-autocomplete/http-response.adoc[]
