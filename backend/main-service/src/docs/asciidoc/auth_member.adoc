@@ -89,3 +89,14 @@ include::{snippets}/orders-info-member-count-success/http-request.adoc[]
 - Response
 
 include::{snippets}/orders-info-member-count-success/http-response.adoc[]
+
+
+=== 회원 총 장바구니 아이템 수 조회
+
+- Request
+
+include::{snippets}/cart-item-count-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/cart-item-count-success/http-response.adoc[]

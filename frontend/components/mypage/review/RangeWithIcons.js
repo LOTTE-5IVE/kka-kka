@@ -25,10 +25,16 @@ const RangeWithIcons = ({
     }
 
     if (index < value) {
-      if (index === Math.floor(value)) {
-        return "HALF";
+      let rating_remainder = Math.round((value - index) * 100) / 100;
+      if (0 < rating_remainder && rating_remainder <= 0.3) {
+        return "SMALL_HALF";
       }
-
+      if (0.7 <= rating_remainder && rating_remainder <= 0.9) {
+        return "BIG_HALF"
+      }
+      if (0.4 <= rating_remainder && rating_remainder <= 0.6) {
+        return "HALF"
+      }
       return "FULL";
     }
 

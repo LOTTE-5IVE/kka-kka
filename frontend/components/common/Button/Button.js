@@ -16,6 +16,7 @@ export default function Button({ context, color, tcolor, border }) {
             border: ${border};
             text-align: center;
             cursor: pointer;
+            border-radius: 1em;
           }
         `}
       </style>

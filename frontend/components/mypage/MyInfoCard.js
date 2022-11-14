@@ -1,12 +1,18 @@
+import axios from "axios";
 import { useEffect } from "react";
+import { useContext } from "react";
 import { useState } from "react";
+import { GetHApi } from "../../apis/Apis";
+import { TokenContext } from "../../context/TokenContext";
 import { getToken } from "../../hooks/getToken";
 import { memberInfo } from "../../hooks/memberInfo";
 
 export default function MyInfoCard() {
-  const [token, setToken] = useState("");
   const [name, setName] = useState("");
   const [grade, setGrade] = useState("");
+  const [orderCnt, setOrderCnt] = useState(0);
+  const [couponCnt, setCouponCnt] = useState(0);
+  const { token, setToken } = useContext(TokenContext);
 
   const gradeColor = {
     GOLD: "#ffd700",
@@ -14,26 +20,36 @@ export default function MyInfoCard() {
     BRONZE: "#b08d57",
   };
 
+  const getOrderCount = async () => {
+    await GetHApi("/api/members/me/orders/all", token).then((res) => {
+      setOrderCnt(res.orderCount);
+    });
+  };
+
+  const getCouponCount = async () => {
+    await GetHApi("/api/members/me/coupons/all", token).then((res) => {
+      console.log(res);
+      // setCouponCnt(res.couponCount);
+    });
+  };
+
   useEffect(() => {
-    setToken(getToken());
+    memberInfo(token).then((res) => {
+      if (res) {
+        setName(res.name);
+        setGrade(res.grade);
 
-    if (token !== "") {
-      memberInfo(token).then((res) => {
-        if (res) {
-          setName(res.name);
-          setGrade(res.grade);
-        }
-      });
-    }
-  }, [token, grade]);
-
-  useEffect(() => {});
+        getOrderCount();
+        getCouponCount();
+      }
+    });
+  }, []);
 
   return (
     <>
       <div className="MyInfoCard">
         <div className="myinfoLeft">
-          <div style={{ padding: "15px 0" }}>
+          <div className="nameWrapper">
             <span className="myname">{name}</span>님
           </div>
           <div className="grade">
@@ -44,15 +60,14 @@ export default function MyInfoCard() {
               ></span>
               {grade}
             </span>
-            {/* <span className="gradeBtn">등급 혜택</span> */}
           </div>
         </div>
         <div className="myinfoRight">
           <div>
-            주문내역<div className="myOrderCnt">3</div>
+            주문내역<div className="myOrderCnt">{orderCnt}</div>
           </div>
           <div>
-            쿠폰<div className="myCouponCnt">3</div>
+            쿠폰<div className="myCouponCnt">{couponCnt}</div>
           </div>
         </div>
       </div>
@@ -76,9 +91,12 @@ export default function MyInfoCard() {
               padding: 0px 15px;
               border-right: 2px solid #e6e4e4;
 
-              .myname {
-                font-size: 24px;
-                vertical-align: bottom;
+              .nameWrapper {
+                padding: 15px 0;
+                .myname {
+                  font-size: 24px;
+                  vertical-align: bottom;
+                }
               }
 
               .grade {
@@ -139,16 +157,21 @@ export default function MyInfoCard() {
 
             .myinfoLeft {
               width: 27vw;
-              margin: 1.05vw 0px 1.05vw 3.95vw;
-              padding: 2vw 0.79vw;
+              margin: auto;
               border-right: 2px solid #e6e4e4;
               font-size: 1vw;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
 
-              .myname {
-                font-size: 1.26vw;
-                vertical-align: bottom;
+              .nameWrapper {
+                padding-bottom: 15px;
+                .myname {
+                  padding-bottom: 15px;
+                  font-size: 3vw;
+                  vertical-align: bottom;
+                }
               }
-
               .grade {
                 padding-top: 0;
                 font-size: 0.63vw;
@@ -175,10 +198,10 @@ export default function MyInfoCard() {
             .myinfoRight {
               width: 33vw;
               margin: 1.05vw;
-              padding: 5vw 2.63vw;
               display: flex;
               justify-content: space-around;
               text-align: center;
+              align-items: center;
 
               .myOrderCnt {
                 font-weight: 900;
@@ -208,9 +231,11 @@ export default function MyInfoCard() {
 
             .myinfoLeft {
               width: 150px;
-              margin: 10px 0px 20px 20px;
-              padding: 0px 15px;
+              margin: auto;
               border-right: 2px solid #e6e4e4;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
 
               .myname {
                 font-size: 16px;
@@ -234,21 +259,16 @@ export default function MyInfoCard() {
             .myinfoRight {
               width: 190px;
               margin: 15px 10px;
-              padding: 10px 30px;
               display: flex;
               justify-content: space-around;
               text-align: center;
+              align-items: center;
               font-size: 12px;
 
-              .myOrderCnt {
-                font-weight: 900;
-                padding: 20px 0;
-              }
-
+              .myOrderCnt,
               .myCouponCnt {
-                color: red;
                 font-weight: 900;
-                padding: 20px 0;
+                padding: 10px 0;
               }
             }
           }

@@ -6,15 +6,13 @@ import { commaMoney } from "../../hooks/commaMoney";
 
 export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
   const [token, setToken] = useState("");
-  const [orderList, setOrderList] = useState([]);
+  const [orderList, setOrderList] = useState();
   const [moreToggle, setMoreToggle] = useState(true);
   const [lastId, setLastId] = useState();
 
   const getOrders = async () => {
     GetHApi(`/api/members/me/orders?pageSize=3`, token).then((res) => {
       if (res) {
-        console.log("order", res.data);
-
         setOrderList(res.data);
         setLastId(res.pageInfo.lastId);
 
@@ -28,7 +26,7 @@ export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
   const getMoreOrders = async () => {
     GetHApi(`/api/members/me/orders?pageSize=3&orderId=${lastId}`, token).then(
       (res) => {
-        if (res.length > 0) {
+        if (res.data.length > 0) {
           setOrderList(orderList.concat(res.data));
           setLastId(res.pageInfo.lastId);
         }
@@ -54,6 +52,12 @@ export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
         <div className="wrapper">
           <div className="myorder">
             <div className="myorderTitle">주문내역</div>
+            {!orderList && (
+              <div className="orderEmpty">
+                <img className="orderEmptyImg" src="/member/no_item.gif" />
+                <span className="orderEmptyComment">주문내역이 없습니다.</span>
+              </div>
+            )}
             {orderList?.map((order, idx) => {
               return (
                 <div key={idx}>
@@ -103,10 +107,11 @@ export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
               );
             })}
           </div>
-          {moreToggle && (
+          {orderList && moreToggle && (
             <div
               onClick={getMoreOrders}
               className={"d-flex align-center moreBtn"}
+              style={{ cursor: "pointer" }}
             >
               <span>▼ 더보기</span>
             </div>
@@ -115,8 +120,29 @@ export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
       </div>
       <style jsx>
         {`
+          .orderEmpty {
+            display: flex;
+            flex-direction: column;
+
+            text-align: center;
+            .orderEmptyComment {
+              color: #9a9a9a;
+            }
+          }
           @media screen and (min-width: 769px) {
             /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+            .orderEmpty {
+              .orderEmptyImg {
+                margin: 70px auto 30px;
+                width: 70px;
+              }
+              .orderEmptyComment {
+                margin-bottom: 70px;
+                font-size: 18px;
+                line-height: 1;
+              }
+            }
+
             .order-divider {
               border-bottom: 1.1px solid #adadad;
               width: 100%;
@@ -214,6 +240,18 @@ export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
 
           @media screen and (max-width: 768px) {
             /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
+            .orderEmpty {
+              .orderEmptyImg {
+                margin: 70px auto 30px;
+                width: 70px;
+              }
+              .orderEmptyComment {
+                margin-bottom: 70px;
+                font-size: 18px;
+                line-height: 1;
+              }
+            }
+
             .order-divider {
               border-bottom: 1.1px solid #adadad;
               width: 100%;
@@ -312,6 +350,18 @@ export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
 
           @media screen and (max-width: 480px) {
             /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+            .orderEmpty {
+              .orderEmptyImg {
+                margin: 70px auto 30px;
+                width: 70px;
+              }
+              .orderEmptyComment {
+                margin-bottom: 70px;
+                font-size: 18px;
+                line-height: 1;
+              }
+            }
+
             .order-divider {
               border-bottom: 1.1px solid #adadad;
               width: 100%;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { PostHApi } from "../../../apis/Apis";
+import { GetHApi, PostHApi } from "../../../apis/Apis";
 import Title from "../../../components/common/Title";
 import Swal from "sweetalert2";
 import { isLogin } from "../../../hooks/isLogin";
@@ -25,6 +25,7 @@ import RangeWithIcons from "../../../components/mypage/review/RangeWithIcons";
 import { isNumber } from "../../../hooks/isNumber";
 import { useContext } from "react";
 import { TokenContext } from "../../../context/TokenContext";
+import { CartCntContext } from "../../../context/CartCntContext";
 
 export default function ProductDetail() {
   const router = useRouter();
@@ -33,7 +34,9 @@ export default function ProductDetail() {
   const [tab, setTab] = useState("info");
   const [modal, setModal] = useState(false);
   const [product, setProduct] = useState({});
+  const [reviewCount, setReviewCount] = useState(0);
   const { token, setToken } = useContext(TokenContext);
+  const { cartCnt, setCartCnt } = useContext(CartCntContext);
 
   const buyQuery = () => {
     product.quantity = quantity;
@@ -75,7 +78,7 @@ export default function ProductDetail() {
       Swal.fire({
         title: "장바구니에 담으시겠습니까?",
         html: `${product.name}` + "<br/>" + `수량 : ${quantity}개`,
-        imageUrl: `${product.image_url}`,
+        imageUrl: `${product.imageUrl}`,
         imageHeight: 300,
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -91,12 +94,20 @@ export default function ProductDetail() {
               quantity: quantity,
             },
             token,
-          );
+          ).then((res) => {
+            getCartCount();
+          });
 
           Swal.fire("", "장바구니에 성공적으로 담겼습니다.", "success");
         }
       });
     }
+  };
+
+  const getCartCount = async () => {
+    await GetHApi("/api/members/me/carts/all", token).then((res) => {
+      setCartCnt(res.cartCount);
+    });
   };
 
   const getItem = async () => {
@@ -107,8 +118,20 @@ export default function ProductDetail() {
     }
   };
 
+  const getReviewCount = async () => {
+    if (productId) {
+      await axios.get(`/api/reviews/${productId}/all`)
+      .then((res) => {
+        console.log(res.data.reviewCount)
+        setReviewCount(res.data.reviewCount);
+        console.log(reviewCount)
+      });
+    }
+  }
+
   useEffect(() => {
     getItem();
+    getReviewCount();
   }, [productId]);
 
   return (
@@ -146,7 +169,7 @@ export default function ProductDetail() {
                     </>
                   )}
                   <div className="mt-3">
-                    <div className="d-flex align-start">
+                    <div className="review-box d-flex align-start">
                       <RangeWithIcons
                         value={product.ratingAvg}
                         max={5}
@@ -156,6 +179,9 @@ export default function ProductDetail() {
                         color={"#ffd151"}
                         starWidth={"40px"}
                       />
+                      <div className="reviewCnt">
+                        ({(product.ratingAvg)?.toFixed(1)}, {commaMoney(reviewCount) || 0}개)
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -198,7 +224,7 @@ export default function ProductDetail() {
                             type="button"
                             onClick={() => handleQuantity("minus")}
                             value="-"
-                            style={{ marginRight: "15px" }}
+                            style={{ marginRight: "15px", cursor: "pointer" }}
                           />
 
                           <input
@@ -229,7 +255,7 @@ export default function ProductDetail() {
                             type="button"
                             onClick={() => handleQuantity("plus")}
                             value="+"
-                            style={{ marginLeft: "15px" }}
+                            style={{ marginLeft: "15px", cursor: "pointer" }}
                           />
                         </span>
                       </td>
@@ -447,6 +473,18 @@ export default function ProductDetail() {
                   color: ${ThemeBlue};
                   transition: 0.7s;
                 }
+              }
+              
+              .review-box {
+                align-items: flex-end;
+              }
+              
+              .reviewCnt {
+                font-size: 1rem;
+                font-weight: 400;
+                color: ${NGray};
+                width: 100%;
+                margin-left: 0.6rem;
               }
             }
           }
@@ -740,6 +778,11 @@ export default function ProductDetail() {
                     line-height: 9vw;
                     font-size: 3vw;
                   }
+                }
+                
+                .reviewCnt {
+                  font-size: 1vw;
+                  margin-left: 0.2rem;
                 }
               }
             }

@@ -2,6 +2,10 @@ package kkakka.mainservice.review.acceptance;
 
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_ORDER_1;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_ORDER_2;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_ORDER_3;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_ORDER_4;
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_ORDER_5;
 import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -12,6 +16,7 @@ import io.restassured.response.Response;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import kkakka.mainservice.DocumentConfiguration;
@@ -45,6 +50,8 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
     @DisplayName("상품후기 작성 - 성공")
     @Test
     void writeReview_success() {
+        tearDown();
+
         // given
         final String accessToken = 액세스_토큰_가져옴();
         final ProductOrder productOrder = PRODUCT_ORDER_1;
@@ -69,6 +76,8 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
     @DisplayName("상품후기 작성 - 실패(권한없음)")
     @Test
     void writeReview_fail() {
+        tearDown();
+
         // given
         final ProductOrder productOrder = PRODUCT_ORDER_1;
         final ReviewRequest reviewRequest = new ReviewRequest("fail review", 3.5);
@@ -91,6 +100,8 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
     @DisplayName("상품후기 작성 - 실패(이미 작성함")
     @Test
     void writeReview_fail_already_written() {
+        tearDown();
+
         // given
         final String accessToken = 액세스_토큰_가져옴();
         후기_작성함(accessToken, "review_01", PRODUCT_ORDER_1);
@@ -116,17 +127,15 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
     @DisplayName("상품에 대한 후기 조회 - 성공")
     @Test
     void showReviews_success() {
+        tearDown();
+
         // given
-        final String accessToken1 = 액세스_토큰_가져옴(TEST_MEMBER_01.getCode());
-        final String accessToken2 = 액세스_토큰_가져옴(TEST_MEMBER_01.getCode());
-        final String accessToken3 = 액세스_토큰_가져옴(TEST_MEMBER_01.getCode());
-        final String accessToken4 = 액세스_토큰_가져옴(TEST_MEMBER_01.getCode());
-        final String accessToken5 = 액세스_토큰_가져옴(TEST_MEMBER_01.getCode());
-        후기_작성함(accessToken1, "review_01", PRODUCT_ORDER_1);
-        후기_작성함(accessToken2, "review_02", PRODUCT_ORDER_1);
-        후기_작성함(accessToken3, "review_03", PRODUCT_ORDER_1);
-        후기_작성함(accessToken4, "review_04", PRODUCT_ORDER_1);
-        후기_작성함(accessToken5, "review_05", PRODUCT_ORDER_1);
+        final String accessToken = 액세스_토큰_가져옴(TEST_MEMBER_01.getCode());
+        후기_작성함(accessToken, "review_01", PRODUCT_ORDER_1);
+        후기_작성함(accessToken, "review_02", PRODUCT_ORDER_2);
+        후기_작성함(accessToken, "review_03", PRODUCT_ORDER_3);
+        후기_작성함(accessToken, "review_04", PRODUCT_ORDER_4);
+        후기_작성함(accessToken, "review_05", PRODUCT_ORDER_5);
 
         // when
         final ExtractableResponse<Response> response = RestAssured
@@ -141,16 +150,48 @@ public class ReviewAcceptanceTest extends DocumentConfiguration {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    private void 후기_작성함(String accessToken, String contents, ProductOrder productOrder) {
+    @DisplayName("총 상품 후기 수 조회 - 성공")
+    @Test
+    void showAllReviewByProduct_success(){
+        tearDown();
+
+        // given
+        final String accessToken = 액세스_토큰_가져옴(TEST_MEMBER_01.getCode());
+        final Long review_01 = 후기_작성함(accessToken, "review_01", PRODUCT_ORDER_1);
+        final Long review_02 = 후기_작성함(accessToken, "review_02", PRODUCT_ORDER_2);
+        final Long review_03 = 후기_작성함(accessToken, "review_03", PRODUCT_ORDER_3);
+        final Long review_04 = 후기_작성함(accessToken, "review_04", PRODUCT_ORDER_4);
+        final Long review_05 = 후기_작성함(accessToken, "review_05", PRODUCT_ORDER_5);
+
+        int count = List.of(review_01, review_02, review_03, review_04, review_05).size();
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("review-count-success"))
+                .when()
+                .get("/api/reviews/" + PRODUCT_ORDER_1.getProduct().getId() + "/all")
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().path("reviewCount").toString()).isEqualTo(String.valueOf(count));
+    }
+
+    private Long 후기_작성함(String accessToken, String contents, ProductOrder productOrder) {
         final ReviewRequest reviewRequest = new ReviewRequest(contents, 5.0);
 
-        RestAssured.given().log().all()
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Bearer " + accessToken)
                 .body(reviewRequest)
                 .when()
                 .post("/api/reviews?productOrder=" + productOrder.getId())
-                .then().log().all();
+                .then().log().all()
+                .extract();
+
+        return Long.valueOf(response.header("Location"));
     }
 
     private String 액세스_토큰_가져옴(String code) {

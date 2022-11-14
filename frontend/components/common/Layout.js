@@ -55,7 +55,7 @@ export default function Layout({ children }) {
           @media screen and (max-width: 768px) {
             .LayoutTop {
               width: 100vw;
-              height: 12vw;
+              height: 17vw;
             }
 
             .content {
@@ -65,7 +65,7 @@ export default function Layout({ children }) {
 
               .empty {
                 width: 100vw;
-                height: 12vw;
+                height: 17vw;
               }
             }
 

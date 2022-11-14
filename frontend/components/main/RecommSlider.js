@@ -137,7 +137,7 @@ export default function RecommSlider({tab, handleTab}) {
                       return (
                           <SwiperSlide key={idx} className="swiper-slide">
                             <RecommCard id={product.id} name={product.name}
-                                        imgsrc={product.image_url} price={product.price}
+                                        imgsrc={product.imageUrl} price={product.price}
                                         discount={product.discount}
                             />
                           </SwiperSlide>
@@ -147,34 +147,34 @@ export default function RecommSlider({tab, handleTab}) {
                 </Swiper>
               </div>
 
-                  <div className="swiper-pagination"></div>
-                  <div className="swiper-prev">
-                    <ArrowBackIcon ref={navigationPrevRef} />
-                  </div>
-                  <div className="swiper-next">
-                    <ArrowForwardIcon ref={navigationNextRef} />
-                  </div>
-                </div>
-              </>
-          )}
-          {tab === "리뷰" && (
-              <>
-                <div className={reviewToggle ? "promotion" : "promotion hide"}>
-                  <div className="swiper-container">
-                    <Swiper
-                        className="swiper-wrapper"
-                        loop={true}
-                        spaceBetween={20}
-                        centeredSlides={true}
-                        slidesPerView={5} // 한 슬라이드에 보여줄 갯수
-                        cssMode={true}
-                        navigation={{
-                          prevEl: navigationPrevRef.current,
-                          nextEl: navigationNextRef.current,
-                        }}
-                        onInit={(swiper) => {
-                          swiper.params.navigation.prevEl = navigationPrevRef.current;
-                          swiper.params.navigation.nextEl = navigationNextRef.current;
+              <div className="swiper-pagination"></div>
+              <div className="swiper-prev">
+                <ArrowBackIcon ref={navigationPrevRef} />
+              </div>
+              <div className="swiper-next">
+                <ArrowForwardIcon ref={navigationNextRef} />
+              </div>
+            </div>
+          </>
+        )}
+        {tab === "리뷰" && (
+          <>
+            <div className={reviewToggle ? "promotion" : "promotion hide"}>
+              <div className="swiper-container">
+                <Swiper
+                  className="swiper-wrapper"
+                  loop={true}
+                  spaceBetween={20}
+                  centeredSlides={true}
+                  slidesPerView={5} // 한 슬라이드에 보여줄 갯수
+                  cssMode={true}
+                  navigation={{
+                    prevEl: navigationPrevRef.current,
+                    nextEl: navigationNextRef.current,
+                  }}
+                  onInit={(swiper) => {
+                    swiper.params.navigation.prevEl = navigationPrevRef.current;
+                    swiper.params.navigation.nextEl = navigationNextRef.current;
 
                           swiper.navigation.init();
                           swiper.navigation.update();
@@ -193,7 +193,7 @@ export default function RecommSlider({tab, handleTab}) {
                           return (
                               <SwiperSlide key={idx} className="swiper-slide">
                                 <RecommCard id={product.id} name={product.name}
-                                            imgsrc={product.image_url} price={product.price}
+                                            imgsrc={product.imageUrl} price={product.price}
                                             discount={product.discount}
                                 />
                               </SwiperSlide>
@@ -203,19 +203,19 @@ export default function RecommSlider({tab, handleTab}) {
                     </Swiper>
                   </div>
 
-                  <div className="swiper-pagination"></div>
-                  <div className="swiper-prev">
-                    <ArrowBackIcon ref={navigationPrevRef}/>
-                  </div>
-                  <div className="swiper-next">
-                    <ArrowForwardIcon ref={navigationNextRef}/>
-                  </div>
-                </div>
-              </>
-          )}
-        </section>
+              <div className="swiper-pagination"></div>
+              <div className="swiper-prev">
+                <ArrowBackIcon ref={navigationPrevRef} />
+              </div>
+              <div className="swiper-next">
+                <ArrowForwardIcon ref={navigationNextRef} />
+              </div>
+            </div>
+          </>
+        )}
+      </section>
 
-        <style jsx>{`
+      <style jsx>{`
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
           .notice {
@@ -536,6 +536,6 @@ export default function RecommSlider({tab, handleTab}) {
           }
         }
       `}</style>
-      </>
+    </>
   );
 }
