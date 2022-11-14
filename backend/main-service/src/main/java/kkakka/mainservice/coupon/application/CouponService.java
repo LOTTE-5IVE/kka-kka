@@ -1,10 +1,5 @@
 package kkakka.mainservice.coupon.application;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.common.exception.InvalidCouponRequestException;
@@ -25,6 +20,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -58,7 +59,7 @@ public class CouponService {
             if (PriceRule.GRADE_COUPON.equals(couponRequestDto.getPriceRule())) {
                 Coupon coupon = couponRepository.save(toCouponEntity(couponRequestDto));
                 List<Member> members = memberRepository.findByGrade(
-                    couponRequestDto.getGrade());
+                        couponRequestDto.getGrade());
                 for (Member member : members) {
                     MemberCoupon memberCoupon = MemberCoupon.create(member, coupon);
                     memberCouponRepository.save(memberCoupon);
@@ -68,11 +69,11 @@ public class CouponService {
 
             if (PriceRule.COUPON.equals(couponRequestDto.getPriceRule())) {
                 Category category =
-                    couponRequestDto.getCategoryId() == null ? null : getCategory(couponRequestDto);
+                        couponRequestDto.getCategoryId() == null ? null : getCategory(couponRequestDto);
                 Product product =
-                    couponRequestDto.getProductId() == null ? null : getProduct(couponRequestDto);
+                        couponRequestDto.getProductId() == null ? null : getProduct(couponRequestDto);
                 Coupon coupon = couponRepository.save(
-                    toCouponEntity(couponRequestDto, category, product));
+                        toCouponEntity(couponRequestDto, category, product));
                 return coupon.getId();
             }
         }
@@ -82,60 +83,60 @@ public class CouponService {
     private Coupon toCouponEntity(CouponRequestDto couponRequestDto) {
         if (couponRequestDto.getPercentage() != null) {
             return Coupon.create(
+                    couponRequestDto.getGrade(),
+                    couponRequestDto.getName(),
+                    PriceRule.GRADE_COUPON,
+                    couponRequestDto.getStartedAt(),
+                    couponRequestDto.getExpiredAt(),
+                    couponRequestDto.getPercentage(),
+                    couponRequestDto.getMaxDiscount(),
+                    couponRequestDto.getMinOrderPrice());
+        }
+        return Coupon.create(
                 couponRequestDto.getGrade(),
                 couponRequestDto.getName(),
                 PriceRule.GRADE_COUPON,
                 couponRequestDto.getStartedAt(),
                 couponRequestDto.getExpiredAt(),
-                couponRequestDto.getPercentage(),
                 couponRequestDto.getMaxDiscount(),
                 couponRequestDto.getMinOrderPrice());
-        }
-        return Coupon.create(
-            couponRequestDto.getGrade(),
-            couponRequestDto.getName(),
-            PriceRule.GRADE_COUPON,
-            couponRequestDto.getStartedAt(),
-            couponRequestDto.getExpiredAt(),
-            couponRequestDto.getMaxDiscount(),
-            couponRequestDto.getMinOrderPrice());
     }
 
     private Coupon toCouponEntity(CouponRequestDto couponRequestDto, Category category,
-        Product product) {
+                                  Product product) {
         if (couponRequestDto.getPercentage() != null) {
             return Coupon.create(
+                    category,
+                    product,
+                    couponRequestDto.getName(),
+                    PriceRule.COUPON,
+                    couponRequestDto.getStartedAt(),
+                    couponRequestDto.getExpiredAt(),
+                    couponRequestDto.getPercentage(),
+                    couponRequestDto.getMaxDiscount(),
+                    couponRequestDto.getMinOrderPrice()
+            );
+        }
+        return Coupon.create(
                 category,
                 product,
                 couponRequestDto.getName(),
                 PriceRule.COUPON,
                 couponRequestDto.getStartedAt(),
                 couponRequestDto.getExpiredAt(),
-                couponRequestDto.getPercentage(),
                 couponRequestDto.getMaxDiscount(),
                 couponRequestDto.getMinOrderPrice()
-            );
-        }
-        return Coupon.create(
-            category,
-            product,
-            couponRequestDto.getName(),
-            PriceRule.COUPON,
-            couponRequestDto.getStartedAt(),
-            couponRequestDto.getExpiredAt(),
-            couponRequestDto.getMaxDiscount(),
-            couponRequestDto.getMinOrderPrice()
         );
     }
 
     private Product getProduct(CouponRequestDto couponRequestDto) {
         return productRepository.findById(couponRequestDto.getProductId())
-            .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     private Category getCategory(CouponRequestDto couponRequestDto) {
         return categoryRepository.findById(couponRequestDto.getCategoryId())
-            .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     @Transactional
@@ -144,7 +145,7 @@ public class CouponService {
         coupon.deleteCoupon();
         couponRepository.save(coupon);
         List<MemberCoupon> memberCoupons = memberCouponRepository.findAllByCouponId(
-            couponId);
+                couponId);
         if (!memberCoupons.isEmpty()) {
             for (MemberCoupon memberCoupon : memberCoupons) {
                 memberCouponRepository.delete(memberCoupon);
@@ -155,17 +156,17 @@ public class CouponService {
     public List<CouponResponseDto> showAllCouponsNotDeleted() {
         List<Coupon> coupons = couponRepository.findAllCouponsNotDeleted();
         return coupons.stream()
-            .map(CouponResponseDto::create)
-            .collect(Collectors.toList());
+                .map(CouponResponseDto::create)
+                .collect(Collectors.toList());
     }
 
     /* 회원 쿠폰 다운로드 */
     @Transactional
     public void downloadCoupon(Long couponId, Long memberId) {
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(IllegalArgumentException::new);
         Coupon coupon = couponRepository.findById(couponId)
-            .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(IllegalArgumentException::new);
         MemberCoupon memberCoupon = MemberCoupon.create(member, coupon);
         memberCouponRepository.save(memberCoupon);
     }
@@ -174,10 +175,10 @@ public class CouponService {
     @Transactional(propagation = Propagation.REQUIRED)
     public void useCouponByMember(Long couponId, Long memberId) {
         Coupon coupon = couponRepository.findById(couponId)
-            .orElseThrow(KkaKkaException::new);
+                .orElseThrow(KkaKkaException::new);
         if (coupon.isNotExpired()) {
             MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(
-                couponId, memberId);
+                    couponId, memberId);
             memberCoupon.useCoupon();
             memberCouponRepository.save(memberCoupon);
         }
@@ -186,41 +187,41 @@ public class CouponService {
     /* 회원 사용 가능한 쿠폰 목록 조회 */
     public List<Coupon> findUsableCoupons(Long memberId) {
         List<MemberCoupon> memberCoupons = memberCouponRepository
-            .findAllByMemberIdAndIsUsedFalse(memberId);
+                .findAllByMemberIdAndIsUsedFalse(memberId);
         return memberCoupons.stream()
-            .map(memberCoupon -> memberCoupon.getCoupon())
-            .collect(Collectors.toList());
+                .map(memberCoupon -> memberCoupon.getCoupon())
+                .collect(Collectors.toList());
     }
 
     /* 회원 사용한 쿠폰 목록 조회 */
     public List<Coupon> findUsedCoupons(Long memberId) {
         List<MemberCoupon> memberCoupons = memberCouponRepository
-            .findAllByMemberIdAndIsUsedTrue(memberId);
+                .findAllByMemberIdAndIsUsedTrue(memberId);
         return memberCoupons.stream()
-            .map(memberCoupon -> memberCoupon.getCoupon())
-            .collect(Collectors.toList());
+                .map(memberCoupon -> memberCoupon.getCoupon())
+                .collect(Collectors.toList());
     }
 
     /* 회원 다운 가능한 쿠폰 목록 조회 */
     public List<CouponResponseDto> findDownloadableCoupons(Long memberId) {
         List<Coupon> coupons = couponRepository.findAll();
         List<Coupon> downloadedCoupons = memberCouponRepository.findAllByMemberId(memberId)
-            .stream().map(memberCoupon -> memberCoupon.getCoupon()).collect(Collectors.toList());
+                .stream().map(memberCoupon -> memberCoupon.getCoupon()).collect(Collectors.toList());
         coupons.removeAll(downloadedCoupons);
         return coupons.stream()
-            .filter(coupon -> isDownloadable(coupon))
-            .map(coupon -> CouponResponseDto.create(coupon))
-            .collect(Collectors.toList());
+                .filter(coupon -> isDownloadable(coupon))
+                .map(coupon -> CouponResponseDto.create(coupon))
+                .collect(Collectors.toList());
     }
 
     private boolean isDownloadable(Coupon coupon) {
         return coupon.isNotExpired() && coupon.getPriceRule().equals(PriceRule.COUPON)
-            && !coupon.isDeleted();
+                && !coupon.isDeleted();
     }
 
     /* 회원 상품 쿠폰 조회 */
     public List<CouponProductDto> showCouponsByProductIdAndMemberId(Long productId,
-        Long memberId) {
+                                                                    Long memberId) {
 
         Product product = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
         List<Coupon> coupons = findProductCouponsByProductId(productId);
@@ -239,37 +240,39 @@ public class CouponService {
         }
 
         List<MemberCoupon> memberCoupons = memberCouponRepository.findGradeCouponByMemberId(
-            memberId);
+                memberId);
         if (!memberCoupons.isEmpty()) {
             for (MemberCoupon memberCoupon : memberCoupons) {
-                couponProductResponseDtos.add(
-                    CouponProductDto.create(memberCoupon.getCoupon(), false));
+                if (memberCoupon.isUsable()) {
+                    couponProductResponseDtos.add(
+                            CouponProductDto.create(memberCoupon.getCoupon(), false));
+                }
             }
         }
 
         return sortWithMaximumDiscountAmount(couponProductResponseDtos, product)
-            .stream()
-            .sorted(Comparator.comparing(CouponProductDto::getDiscountedPrice))
-            .collect(Collectors.toList());
+                .stream()
+                .sorted(Comparator.comparing(CouponProductDto::getDiscountedPrice))
+                .collect(Collectors.toList());
     }
 
     private List<CouponProductDto> sortWithMaximumDiscountAmount(
-        List<CouponProductDto> couponProductResponseDtos, Product product) {
+            List<CouponProductDto> couponProductResponseDtos, Product product) {
         int discountedProductPrice = (int) Math.ceil(
-            product.getPrice() * (1 - (product.getDiscount() * 0.01)));
+                product.getPrice() * (1 - (product.getDiscount() * 0.01)));
         for (CouponProductDto couponProductResponseDto : couponProductResponseDtos) {
             if (couponProductResponseDto.getPercentage() != null) {
                 int calculatedPercentValue = calculatePercentage
-                    .apply(discountedProductPrice, couponProductResponseDto.getPercentage());
+                        .apply(discountedProductPrice, couponProductResponseDto.getPercentage());
                 int calculatedStaticValue = calculateStaticPrice
-                    .apply(discountedProductPrice, couponProductResponseDto.getMaxDiscount());
+                        .apply(discountedProductPrice, couponProductResponseDto.getMaxDiscount());
                 couponProductResponseDto.saveDiscountedPrice(
-                    Math.max(calculatedPercentValue, calculatedStaticValue));
+                        Math.max(calculatedPercentValue, calculatedStaticValue));
                 continue;
             }
             couponProductResponseDto.saveDiscountedPrice(
-                calculateStaticPrice.apply(discountedProductPrice,
-                    couponProductResponseDto.getMaxDiscount()));
+                    calculateStaticPrice.apply(discountedProductPrice,
+                            couponProductResponseDto.getMaxDiscount()));
         }
         return couponProductResponseDtos;
     }
@@ -292,13 +295,13 @@ public class CouponService {
         Product product = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
         List<Coupon> coupons = couponRepository.findCouponsByProductIdAndNotDeleted(productId);
         List<CouponProductDto> couponProductResponseDtos = coupons.stream()
-            .map(coupon -> CouponProductDto.create(coupon, true))
-            .collect(Collectors.toList());
+                .map(coupon -> CouponProductDto.create(coupon, true))
+                .collect(Collectors.toList());
 
         return sortWithMaximumDiscountAmount(couponProductResponseDtos, product)
-            .stream()
-            .sorted(Comparator.comparing(CouponProductDto::getDiscountedPrice))
-            .collect(Collectors.toList());
+                .stream()
+                .sorted(Comparator.comparing(CouponProductDto::getDiscountedPrice))
+                .collect(Collectors.toList());
     }
 
     public int showMemberCouponCount(Long memberId) {
@@ -306,11 +309,12 @@ public class CouponService {
     }
 
     /* 회원 상품 쿠폰 다운로드 */
+    @Transactional
     public List<CouponProductDto> downloadProductCoupon(Long couponId, Long memberId,
-        Long productId) {
+                                                        Long productId) {
         downloadCoupon(couponId, memberId);
         List<CouponProductDto> couponProductDtos = showCouponsByProductIdAndMemberId(productId,
-            memberId);
+                memberId);
         for (CouponProductDto couponProductDto : couponProductDtos) {
             if (couponProductDto.getId().equals(couponId)) {
                 couponProductDto.downloadCoupon();

@@ -86,6 +86,12 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     /* elasticsearch */
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch:2.6.8'
+
+    /* Redis */
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation (group: 'it.ozimov', name: 'embedded-redis', version: '0.7.3') {
+        exclude group: 'org.slf4j', module: 'slf4j-simple'
+    }
 }
 
 dependencyManagement {

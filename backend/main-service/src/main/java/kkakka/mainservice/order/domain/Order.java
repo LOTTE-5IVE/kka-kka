@@ -16,6 +16,7 @@ import kkakka.mainservice.member.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "`ORDER`")
@@ -38,6 +39,7 @@ public class Order {
     private LocalDateTime orderedAt;
     private Integer totalPrice;
 
+    @BatchSize(size = 10)
     @OneToMany(mappedBy = "order")
     private List<ProductOrder> productOrders;
 

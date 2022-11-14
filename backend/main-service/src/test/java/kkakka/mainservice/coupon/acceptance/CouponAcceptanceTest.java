@@ -13,6 +13,7 @@ import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.ProviderName;
+import kkakka.mainservice.order.application.dto.ProductOrderDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -384,6 +385,28 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
             .header("Authorization", "Bearer " + accessToken)
             .when()
             .post("/api/coupons/" + PRODUCT_1.getId() + "/" + couponId)
+            .then().log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("상품 바로주문 쿠폰 적용 - 성공")
+    @Test
+    void applyProductCoupon_success() {
+        // given
+        String accessToken = 액세스_토큰_가져옴();
+        String couponId = 상품_쿠폰_다운로드(accessToken);
+        ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(), 3);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(productOrderDto)
+            .when()
+            .post("/api/orders/" + couponId)
             .then().log().all().extract();
 
         // then

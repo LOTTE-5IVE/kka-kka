@@ -11,6 +11,7 @@ import { CouponDownModal } from "../../../components/coupon/CouponDownModal";
 import Info from "../../../components/product/productDetail/Info";
 import Nutri from "../../../components/product/productDetail/Nutri";
 import Review from "../../../components/product/productDetail/Review";
+import RecommendList from "../../../components/product/productDetail/RecommendList";
 import { commaMoney } from "../../../hooks/commaMoney";
 import { NBlack, NGray, NLightGray } from "../../../typings/NormalColor";
 import {
@@ -173,6 +174,7 @@ export default function ProductDetail({ product, reviewCount }) {
                 <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
                 <div
                   onClick={() => {
+                    console.log("product:::", product);
                     handleModal(true);
                   }}
                 >
@@ -298,6 +300,9 @@ export default function ProductDetail({ product, reviewCount }) {
                 )}
               </div>
             </div>
+          </div>
+          <div className="detailMiddle">
+            <RecommendList />
           </div>
           <div className="detailBottom">
             <div className="tabMenu">
@@ -913,9 +918,15 @@ export default function ProductDetail({ product, reviewCount }) {
               }
             }
 
+            .detailMiddle {
+              position: absolute;
+              top: 800px;
+              width: 400px;
+            }
+
             .detailBottom {
               position: absolute;
-              top: 770px;
+              top: 1150px;
               padding-top: 40px;
 
               .tabMenu {

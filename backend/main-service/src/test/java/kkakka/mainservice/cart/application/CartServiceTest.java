@@ -2,6 +2,7 @@ package kkakka.mainservice.cart.application;
 
 import static kkakka.mainservice.fixture.TestDataLoader.MEMBER;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import kkakka.mainservice.TestContext;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
@@ -29,12 +30,13 @@ public class CartServiceTest extends TestContext {
         LoginMember loginMember = new LoginMember(member.getId(), Authority.MEMBER);
 
         cartService.addCartItem(cartRequestDto, loginMember);
+        assertThat(cartService.showCartItemCount(loginMember.getId())).isEqualTo(1);
 
         // when
+        cartService.emptyCart(loginMember);
+
         // then
-        Assertions.assertThatCode(
-                () -> cartService.emptyCart(loginMember)
-        ).doesNotThrowAnyException();
+        assertThat(cartService.showCartItemCount(loginMember.getId())).isEqualTo(0);
     }
 
     @DisplayName("장바구니 비우기 - 실패(에러 없음)")

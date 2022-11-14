@@ -10,11 +10,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import kkakka.mainservice.common.exception.IllegalQuantityException;
 import kkakka.mainservice.common.exception.OutOfStockException;
+import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.product.domain.Product;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "product_order")
@@ -31,18 +33,21 @@ public class ProductOrder {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @BatchSize(size = 100)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    //TODO: 2022.09.28 쿠폰 추가해야함 -hyeyeon
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id")
+    private Coupon coupon;
 
     private Integer price; //주문가격
     private Integer quantity; //주문수량
     private Integer deleted;
 
     public static ProductOrder create(Product product, int price, int quantity) {
-        ProductOrder productOrder = new ProductOrder(null, null, product, price, quantity, 0);
+        ProductOrder productOrder = new ProductOrder(null, null, product, null, price, quantity, 0);
 
         if (quantity < 1) {
             throw new IllegalQuantityException();

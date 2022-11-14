@@ -2,6 +2,7 @@ package kkakka.mainservice.cart.domain.repository;
 
 import kkakka.mainservice.cart.domain.CartItem;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -15,7 +16,8 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     @Query("select ci from CartItem ci join fetch ci.cart join ci.cart.member m where ci.id = :cartItemId and m.id = :memberId")
     Optional<CartItem> findByIdandMemberId(@Param("cartItemId") Long cartId, @Param("memberId") Long memberId);
 
-    @Query("delete from CartItem ci where ci.cart.member.id = :memberId")
+    @Modifying
+    @Query("delete from CartItem ci where ci.cart.id in (select c.id from ci.cart c where c.member.id = :memberId)")
     void deleteAllByMemberId(@Param("memberId") Long memberId);
 
     @Query("select count(ci) from CartItem ci where ci.cart.member.id = :memberId")
