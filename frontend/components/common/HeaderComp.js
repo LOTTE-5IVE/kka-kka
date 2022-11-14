@@ -14,7 +14,6 @@ export default function Header() {
   const [name, setName] = useState("");
   const [login, setLogin] = useState(false);
   const { token, setToken } = useContext(TokenContext);
-  const { cartCnt, setCartCnt } = useContext(CartCntContext);
 
   const getMemberInfo = async () => {
     await memberInfo(getToken()).then((res) => {
@@ -46,6 +45,11 @@ export default function Header() {
       setValue("");
     }
   }
+  const getCartCount = async () => {
+    await GetHApi("/api/members/me/carts/all", getToken()).then((res) => {
+      setCartCnt(res.cartCount);
+    });
+  };
 
   useEffect(() => {
     if (isLogin()) {
@@ -66,29 +70,7 @@ export default function Header() {
             </a>
           </Link>
         </div>
-        <div className="search">
-          <input
-            type="text"
-            size="30"
-            defaultValue={value}
-            placeholder="검색어를 입력해주세요"
-            onChange={(e) => {
-              if (isText(e.currentTarget.value)) {
-                setValue(e.currentTarget.value);
-              } else {
-                alert("특수문자는 입력할 수 없습니다.");
-                e.currentTarget.value = "";
-              }
-            }}
-            onKeyUp={(event) => {
-              search(event, value);
-            }}
-          ></input>
-
-          <Link href={`/product?search=${value}`}>
-            <img src="/common/main_search.png" />
-          </Link>
-        </div>
+        <SearchBar />
         <div className="icons">
           <div className="top">
             {login ? (
@@ -175,29 +157,6 @@ export default function Header() {
             }
           }
 
-          .search {
-            position: absolute;
-            transform: translate(-50%, -50%);
-            border: 2px solid #ed1b23;
-
-            input[type="text"] {
-              border: none;
-              padding: 0;
-              box-sizing: border-box;
-              color: #c5c9cd;
-              font-weight: 600;
-            }
-
-            input[type="text"]:focus {
-              outline: none;
-              color: #000;
-            }
-
-            img {
-              position: absolute;
-            }
-          }
-
           .icons {
             position: absolute;
             transform: translate(-50%, -50%);
@@ -262,28 +221,6 @@ export default function Header() {
               }
             }
 
-            .search {
-              left: 850px;
-              top: 65px;
-              border-radius: 40px;
-              padding: 0 17px;
-
-              input[type="text"] {
-                border-radius: 40px;
-                width: 317px;
-                height: 45px;
-                line-height: 45px;
-                font-size: 1em;
-              }
-
-              img {
-                width: 24px;
-                height: 24px;
-                top: 10px;
-                left: 310px;
-              }
-            }
-
             .icons {
               left: 1400px;
               top: 65px;
@@ -328,29 +265,6 @@ export default function Header() {
                 img {
                   height: 5vw;
                 }
-              }
-            }
-
-            .search {
-              left: 45vw;
-              top: 5vw;
-              border-radius: 2vw;
-              padding: 0 0.9vw;
-
-              input[type="text"] {
-                border-radius: 2vw;
-                width: 17vw;
-                height: 2.4vw;
-                line-height: 4.4vw;
-                font-size: 1vw;
-                margin-bottom: 1vw;
-              }
-
-              img {
-                width: 1.3vw;
-                min-width: 9px;
-                top: 1.5vw;
-                left: 16.5vw;
               }
             }
 
@@ -431,27 +345,6 @@ export default function Header() {
                 top: 35px;
                 img {
                   height: 60px;
-                }
-              }
-
-              .search {
-                left: 210px;
-                top: 35px;
-                border-radius: 40px;
-                padding: 0 17px;
-
-                input[type="text"] {
-                  border-radius: 40px;
-                  width: 120px;
-                  height: 15px;
-                  font-size: 0.5em;
-                }
-
-                img {
-                  width: 16px;
-                  height: 16px;
-                  top: 5px;
-                  left: 130px;
                 }
               }
 

@@ -6,8 +6,10 @@ import ProductRecCard from "../../components/product/ProductRecCard";
 import Pagination from "../../components/product/Pagination";
 import { Suspense } from "react";
 import { fetchData } from "../../apis/ProductApi";
+import { fetchSearchData } from "../../apis/SearchApi";
 import ProductSkeleton from "../../components/product/ProductSkeleton";
 import SearchFilter from "../../components/product/SearchFilter";
+import NoSearch from "../../components/product/NoSearch";
 
 export default function ProductList() {
   const cat_name = {
@@ -29,6 +31,8 @@ export default function ProductList() {
   const [page, setPage] = useState(1);
   const [resource, setResource] = useState();
   const [lastPage, setLastPage] = useState();
+  const [keyword, setKeyword] = useState();
+  const [totalHits, setTotalHits] = useState(0);
 
   useEffect(() => {
     if (!search && cat_id) setResource(fetchData(cat_id, page));
@@ -39,6 +43,17 @@ export default function ProductList() {
     if (!search && cat_id) setResource(fetchData(cat_id, 1));
   }, [cat_id]);
 
+  useEffect(() => {
+    if(search) {
+      setKeyword(search);
+      setResource(fetchSearchData("accuracy", page, search, "", 0, 0, 0, 0));
+    }
+  },[search]);
+
+  useEffect(() => {
+
+  },[keyword]);
+
   const ProductLists = () => {
     const data = resource.productList.read();
 
@@ -48,7 +63,8 @@ export default function ProductList() {
 
     return (
       <>
-        <ul className="productList">
+        {data.data.length > 0 ? <ul className="productList">
+        {setTotalHits(data.totalHits)}
           {data?.data?.map((product) => {
             return (
               <li className="productInner" key={product.id}>
@@ -64,7 +80,7 @@ export default function ProductList() {
               </li>
             );
           })}
-        </ul>
+        </ul>:<NoSearch />}
 
         <style jsx>{`
           @media screen and (min-width: 769px) {
@@ -143,20 +159,22 @@ export default function ProductList() {
         </div>
 
         <div className="productWrapper">
-          {search && (
+          {/* {search && (
             <div className="title">
               <div className="searchBar">
                 <img src="/product/mg.png" />
                 <p>
-                  <input type="text" size="12" defaultValue={search} readOnly />
+                <input type="text" size="12" defaultValue={keyword} onChange={(e) => {setKeyword(e.target.value);
+                  console.log("테스트: ",e.target.value);}} />
                 </p>
               </div>
             </div>
-          )}
+          )} */}
 
-          <SearchFilter />
+          <SearchFilter setResource={setResource} search={keyword} page={page}/>
           <div className="title">
             {!search && <p className="category">{cat_name[cat_id]}</p>}
+            {search && totalHits > 0 && <p className="totalHits">등록 상품: {totalHits}</p>}
           </div>
           <Suspense
             fallback={
