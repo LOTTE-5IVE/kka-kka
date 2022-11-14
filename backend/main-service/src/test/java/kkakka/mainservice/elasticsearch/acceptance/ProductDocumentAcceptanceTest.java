@@ -23,7 +23,7 @@ public class ProductDocumentAcceptanceTest extends DocumentConfiguration {
             .given(spec).log().all()
             .filter(document("show-products-search-success"))
             .when()
-            .get("/api/es/search?keyword=웨하스")
+            .get("/api/products?keyword=웨하스")
             .then()
             .log().all().extract();
 
