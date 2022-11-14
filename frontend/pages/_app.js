@@ -1,14 +1,15 @@
 import Layout from "../components/common/Layout";
 import "../styles/globals.scss";
-import { QueryClientProvider, QueryClient } from "react-query";
-import { TokenContext } from "../context/TokenContext";
-import { useState } from "react";
-import { CartCntContext } from "../context/CartCntContext";
-import { PaymentContext } from "../context/PaymentContext";
+import {QueryClient, QueryClientProvider} from "react-query";
+import {TokenContext} from "../context/TokenContext";
+import {useState} from "react";
+import {CartCntContext} from "../context/CartCntContext";
+import {PaymentContext} from "../context/PaymentContext";
+import {AdminProvider} from "../context/AdminTokenContext";
 
 const queryClient = new QueryClient();
 
-function MyApp({ Component, pageProps }) {
+function MyApp({Component, pageProps}) {
   const [token, setToken] = useState();
   const [cartCnt, setCartCnt] = useState(0);
   const [payment, setPayment] = useState();
@@ -19,7 +20,9 @@ function MyApp({ Component, pageProps }) {
         {Component.displayName === "Admin"
         || Component.displayName === "NotFound"
         || Component.displayName === "AdminLogin" ? (
-          <Component {...pageProps} />
+          <AdminProvider>
+            <Component {...pageProps} />
+          </AdminProvider>
         ) : (
           <TokenContext.Provider value={{ token, setToken }}>
             <CartCntContext.Provider value={{ cartCnt, setCartCnt }}>
