@@ -74,7 +74,7 @@ export default function RecommSlider({ tab, handleTab }) {
     <>
       <section className="notice">
         <div className="notice-line">
-          <div className="inner">
+          <div className="inner" style={{ cursor: "pointer" }}>
             <div
               className="inner__left"
               onClick={() => {
@@ -129,6 +129,7 @@ export default function RecommSlider({ tab, handleTab }) {
                   }}
                   pagination={true}
                   keyboard={true}
+                  allowTouchMove={true}
                   modules={[Autoplay, Navigation, Pagination, Keyboard]}
                   ref={setSwiper}
                 >
