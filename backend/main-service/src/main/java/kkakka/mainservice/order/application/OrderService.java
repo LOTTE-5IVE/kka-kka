@@ -160,7 +160,7 @@ public class OrderService {
 
         MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId,
             memberId);
-        memberCoupon.useCoupon();
+        memberCoupon.applyCoupon();
         return ProductOrderWithCouponDto.create(productOrderDto.getQuantity(), product,
             discountedPrice, coupon);
     }
