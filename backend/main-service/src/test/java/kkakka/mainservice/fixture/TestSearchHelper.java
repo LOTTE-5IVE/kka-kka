@@ -43,7 +43,7 @@ public class TestSearchHelper implements SearchHelper {
 
     @Override
     public List<String> autoCompleteByKeyword(String keyword) {
-        List<Product> products = productRepositorySupport.findTop10ByKeyword(keyword);
+        List<Product> products = productRepositorySupport.findTopNByKeyword(keyword);
 
         return products.stream()
             .map(product -> product.getName())

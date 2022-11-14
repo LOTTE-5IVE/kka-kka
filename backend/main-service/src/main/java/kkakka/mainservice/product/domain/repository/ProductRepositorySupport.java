@@ -1,9 +1,6 @@
 package kkakka.mainservice.product.domain.repository;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import kkakka.mainservice.category.domain.QCategory;
@@ -41,11 +38,10 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
         return new PageImpl<>(result, pageable, result.size());
     }
 
-    public List<Product> findTop10ByKeyword(String keyword) {
+    public List<Product> findTopNByKeyword(String keyword) {
         return queryFactory.selectFrom(QProduct.product)
             .where(QProduct.product.name.contains(keyword))
             .limit(10).fetch();
-
     }
 
     private BooleanBuilder categoryNameEq(SearchWords searchWords) {

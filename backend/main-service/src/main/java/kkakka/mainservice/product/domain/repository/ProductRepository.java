@@ -23,7 +23,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select p from Product p where p.name like %:keyword% or p.category.name like %:keyword%",
     countQuery = "select count(p) from Product p where p.name like %:keyword% or p.category.name like %:keyword%")
     Page<Product> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
-
-    @Query("select p from Product p where p.name like %:keyword%")
-    List<Product> findTop10ByKeyword(@Param("keyword") String keyword);
 }
