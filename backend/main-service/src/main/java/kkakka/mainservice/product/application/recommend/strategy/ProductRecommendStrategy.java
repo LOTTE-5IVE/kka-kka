@@ -1,4 +1,4 @@
-package kkakka.mainservice.product.application.recommend;
+package kkakka.mainservice.product.application.recommend.strategy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -10,9 +10,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import kkakka.mainservice.common.exception.InvalidRecommendResponseException;
-import kkakka.mainservice.product.application.recommend.dto.RecommendProductDto;
+import kkakka.mainservice.product.application.recommend.RecommendProductIds;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
+import kkakka.mainservice.product.infrastructure.redis.RecommendRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -39,6 +40,7 @@ public class ProductRecommendStrategy implements ProductRecommender {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final ProductRepository productRepository;
+    private final RecommendRedisRepository recommendRedisRepository;
 
     @Override
     public Page<Product> recommend(Optional<Long> recommendPivotId, Pageable pageable) {
@@ -52,12 +54,17 @@ public class ProductRecommendStrategy implements ProductRecommender {
         }
 
         final Product pivotProduct = product.get();
-        final RecommendProductDto recommendProductDto = requestRecommendation(pivotProduct);
+        final RecommendProductIds recommendProductIds = requestRecommendation(pivotProduct);
 
-        return findRecommendedProducts(pageable, recommendProductDto);
+        return findRecommendedProducts(pageable, recommendProductIds);
     }
 
-    private RecommendProductDto requestRecommendation(Product pivotProduct) {
+    private RecommendProductIds requestRecommendation(Product pivotProduct) {
+        Optional<RecommendProductIds> recommendProductIdsSavedInRedis = findFromRedis(pivotProduct);
+        if (recommendProductIdsSavedInRedis.isPresent()) {
+            return recommendProductIdsSavedInRedis.get();
+        }
+
         final ResponseEntity<String> response = restTemplate.exchange(
                 RECOMMENDATION_SERVER_URL + pivotProduct.getId(),
                 HttpMethod.GET,
@@ -65,17 +72,37 @@ public class ProductRecommendStrategy implements ProductRecommender {
                 String.class
         );
 
-        return convertResponseBody(response);
+        final RecommendProductIds recommendProductIds = convertResponseBody(pivotProduct.getId(),
+                response);
+        saveInRedis(recommendProductIds);
+        return recommendProductIds;
     }
 
-    private RecommendProductDto convertResponseBody(ResponseEntity<String> response) {
+    private void saveInRedis(RecommendProductIds recommendProductIds) {
+        recommendRedisRepository.save(recommendProductIds);
+    }
+
+    private Optional<RecommendProductIds> findFromRedis(Product pivotProduct) {
+        final Optional<RecommendProductIds> savedRecommendIds = recommendRedisRepository.findById(
+                pivotProduct.getId().toString());
+        if (savedRecommendIds.isPresent()) {
+            if (Objects.isNull(savedRecommendIds.get().getProductIds())) {
+                return Optional.of(new RecommendProductIds(pivotProduct.getId().toString(),
+                        Collections.emptyList()));
+            }
+            return Optional.of(savedRecommendIds.get());
+        }
+        return Optional.empty();
+    }
+
+    private RecommendProductIds convertResponseBody(Long pivotId, ResponseEntity<String> response) {
         try {
             if (Objects.isNull(response.getBody())) {
-                return new RecommendProductDto(Collections.emptyList());
+                return new RecommendProductIds(pivotId.toString(), Collections.emptyList());
             }
             return objectMapper.readValue(
                     response.getBody(),
-                    new TypeReference<RecommendProductDto>() {
+                    new TypeReference<RecommendProductIds>() {
                     }
             );
         } catch (JsonProcessingException e) {
@@ -85,9 +112,9 @@ public class ProductRecommendStrategy implements ProductRecommender {
 
     private PageImpl<Product> findRecommendedProducts(
             Pageable pageable,
-            RecommendProductDto recommendProductDto
+            RecommendProductIds recommendProductIds
     ) {
-        final List<Long> productIds = recommendProductDto.getProductIds();
+        final List<Long> productIds = recommendProductIds.getProductIds();
         final List<Long> pagedProductIds = productIds.subList(
                 (int) pageable.getOffset(),
                 (int) pageable.getOffset() + maximumPageSize(pageable, productIds)

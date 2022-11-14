@@ -1,10 +1,12 @@
-package kkakka.mainservice.product.application.recommend;
+package kkakka.mainservice.product.application.recommend.strategy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -15,9 +17,10 @@ import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.order.domain.repository.OrderRepository;
-import kkakka.mainservice.product.application.recommend.dto.RecommendProductDto;
+import kkakka.mainservice.product.application.recommend.RecommendProductIds;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
+import kkakka.mainservice.product.infrastructure.redis.RecommendRedisRepository;
 import kkakka.mainservice.review.domain.Review;
 import kkakka.mainservice.review.domain.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +56,7 @@ public class MemberRecommendStrategy implements ProductRecommender {
     private final MemberRepository memberRepository;
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
+    private final RecommendRedisRepository recommendRedisRepository;
 
     /**
     * 회원 추천 기준 상품 선택 과정
@@ -93,16 +97,17 @@ public class MemberRecommendStrategy implements ProductRecommender {
         final int randomIdx = selectRandomPivotIndex(orderedProducts.size());
 
         final Product pivotProduct = orderedProducts.get(randomIdx);
-        final RecommendProductDto recommendProductDto = requestRecommendation(pivotProduct);
+        final RecommendProductIds recommendProductIds = requestRecommendation(pivotProduct);
 
-        return findRecommendedProducts(pageable, recommendProductDto);
+        return findRecommendedProducts(pageable, recommendProductIds);
     }
 
-    private Page<Product> recommendWithHighRatedReviewRandom(Pageable pageable, List<Review> topRatedReview) {
+    private Page<Product> recommendWithHighRatedReviewRandom(Pageable pageable,
+            List<Review> topRatedReview) {
         final Product pivotProduct = reviewedPivotProduct(topRatedReview);
-        final RecommendProductDto recommendProductDto = requestRecommendation(pivotProduct);
+        final RecommendProductIds recommendProductIds = requestRecommendation(pivotProduct);
 
-        return findRecommendedProducts(pageable, recommendProductDto);
+        return findRecommendedProducts(pageable, recommendProductIds);
     }
 
     private Product reviewedPivotProduct(List<Review> topRatedReview) {
@@ -121,7 +126,13 @@ public class MemberRecommendStrategy implements ProductRecommender {
         ).getContent();
     }
 
-    private RecommendProductDto requestRecommendation(Product pivotProduct) {
+    private RecommendProductIds requestRecommendation(Product pivotProduct) {
+        final Optional<RecommendProductIds> savedRecommendIds = recommendRedisRepository.findById(
+                pivotProduct.getId().toString());
+        if (savedRecommendIds.isPresent()) {
+            return savedRecommendIds.get();
+        }
+
         final ResponseEntity<String> response = restTemplate.exchange(
                 RECOMMENDATION_SERVER_URL + pivotProduct.getId(),
                 HttpMethod.GET,
@@ -129,7 +140,7 @@ public class MemberRecommendStrategy implements ProductRecommender {
                 String.class
         );
 
-        return convertResponseBody(response);
+        return convertResponseBody(pivotProduct.getId(), response);
     }
 
     private int selectRandomPivotIndex(int itemSize) {
@@ -142,9 +153,9 @@ public class MemberRecommendStrategy implements ProductRecommender {
 
     private PageImpl<Product> findRecommendedProducts(
             Pageable pageable,
-            RecommendProductDto recommendProductDto
+            RecommendProductIds recommendProductIds
     ) {
-        final List<Long> productIds = recommendProductDto.getProductIds();
+        final List<Long> productIds = recommendProductIds.getProductIds();
         final List<Long> pagedProductIds = productIds.subList(
                 (int) pageable.getOffset(),
                 (int) pageable.getOffset() + maximumPageSize(pageable, productIds)
@@ -176,11 +187,14 @@ public class MemberRecommendStrategy implements ProductRecommender {
         return Math.min(pageable.getPageSize(), (int) (productIds.size() - pageable.getOffset()));
     }
 
-    private RecommendProductDto convertResponseBody(ResponseEntity<String> response) {
+    private RecommendProductIds convertResponseBody(Long pivotId, ResponseEntity<String> response) {
         try {
+            if (Objects.isNull(response.getBody())) {
+                return new RecommendProductIds(pivotId.toString(), Collections.emptyList());
+            }
             return objectMapper.readValue(
                     response.getBody(),
-                    new TypeReference<RecommendProductDto>() {
+                    new TypeReference<RecommendProductIds>() {
                     }
             );
         } catch (JsonProcessingException e) {
