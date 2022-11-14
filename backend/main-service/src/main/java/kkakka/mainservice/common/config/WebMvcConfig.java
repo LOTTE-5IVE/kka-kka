@@ -44,7 +44,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/**/auth")
                 .excludePathPatterns("/**/login/token")
-                .excludePathPatterns("/**/coupons/**");
+                .excludePathPatterns("/**/admin/login");
     }
 
     @Override
