@@ -9,8 +9,8 @@ import kkakka.mainservice.cart.domain.repository.CartRepository;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.member.member.domain.Member;
-import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.Provider;
+import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Nutrition;
 import kkakka.mainservice.product.domain.Product;
@@ -120,5 +120,42 @@ public class CartRepositoryTest extends TestContext {
         savedItem.changeQuantity(3);
 
         assertThat(cart.getCartItems().get(0).getQuantity()).isEqualTo(3);
+    }
+
+    @DisplayName("장바구니에 담긴 아이템 삭제 테스트")
+    @Test
+    void deleteCartItemFromCart() {
+        // given
+        final Member member = memberRepository.save(
+                Member.create(
+                        Provider.create(TEST_MEMBER_01.getProviderId(), ProviderName.TEST),
+                        TEST_MEMBER_01.getName(),
+                        TEST_MEMBER_01.getEmail(),
+                        TEST_MEMBER_01.getPhone(),
+                        TEST_MEMBER_01.getAgeGroup()
+                )
+        );
+        final Product product = productRepository.save(
+                new Product(
+                        categoryRepository.save(new Category("test-category")),
+                        "product-name", 1000, 10, "", "",
+                        nutrition
+                )
+        );
+        final Cart cart = cartRepository.save(
+                new Cart(member)
+        );
+        final CartItem cartItem = CartItem.create(cart, product);
+        cartItem.changeQuantity(1);
+        cartItemRepository.save(cartItem);
+        cart.add(cartItem);
+
+        // when
+        cartItemRepository.deleteAllByMemberId(member.getId());
+        cart.empty();
+
+        // then
+        final Cart savedCart = cartRepository.findById(cart.getId()).get();
+        assertThat(savedCart.getCartItems().isEmpty()).isTrue();
     }
 }

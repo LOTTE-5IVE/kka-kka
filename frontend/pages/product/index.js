@@ -31,19 +31,20 @@ export default function ProductList() {
   const [lastPage, setLastPage] = useState();
 
   useEffect(() => {
-    if (cat_id) setResource(fetchData(cat_id, page));
+    if (!search && cat_id) setResource(fetchData(cat_id, page));
   }, [page]);
 
   useEffect(() => {
     if (page !== 1) setPage(1);
-    if (cat_id) setResource(fetchData(cat_id, 1));
+    if (!search && cat_id) setResource(fetchData(cat_id, 1));
   }, [cat_id]);
 
   const ProductLists = () => {
-    if (!resource) return;
-
     const data = resource.productList.read();
-    setLastPage(data.pageInfo.lastPage);
+
+    useEffect(() => {
+      setLastPage(data.pageInfo.lastPage);
+    }, [data]);
 
     return (
       <>
@@ -58,6 +59,7 @@ export default function ProductList() {
                     name={product.name}
                     price={product.price}
                     discount={product.discount}
+                    imgSize={'300px'}
                   />
                 </div>
               </li>
@@ -164,7 +166,7 @@ export default function ProductList() {
               </div>
             }
           >
-            <ProductLists />
+            {resource && <ProductLists />}
           </Suspense>
 
           <div className="pagination">

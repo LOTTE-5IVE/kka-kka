@@ -47,6 +47,10 @@ public class Cart {
         return cartItems.isEmpty();
     }
 
+    public void empty() {
+        cartItems = new ArrayList<>();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

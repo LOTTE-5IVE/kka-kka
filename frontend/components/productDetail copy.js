@@ -1,47 +1,43 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { GetHApi, PostHApi } from "../../../apis/Apis";
-import Title from "../../../components/common/Title";
+import { GetHApi, PostHApi } from "../apis/Apis";
+import Title from "./common/Title";
 import Swal from "sweetalert2";
-import { isLogin } from "../../../hooks/isLogin";
-import { AdminButton } from "../../../components/common/Button/AdminButton";
-import { CouponDown } from "../../../components/coupon/CouponDown";
-import { CouponDownModal } from "../../../components/coupon/CouponDownModal";
-import Info from "../../../components/product/productDetail/Info";
-import Nutri from "../../../components/product/productDetail/Nutri";
-import Review from "../../../components/product/productDetail/Review";
-import RecommendList
-  from "../../../components/product/productDetail/RecommendList";
-import { commaMoney } from "../../../hooks/commaMoney";
-import { NBlack, NGray, NLightGray } from "../../../typings/NormalColor";
+import { isLogin } from "../hooks/isLogin";
+import { AdminButton } from "./common/Button/AdminButton";
+import { CouponDown } from "./coupon/CouponDown";
+import { CouponDownModal } from "./coupon/CouponDownModal";
+import Info from "./product/productDetail/Info";
+import Nutri from "./product/productDetail/Nutri";
+import Review from "./product/productDetail/Review";
+import { commaMoney } from "../hooks/commaMoney";
+import { NBlack, NGray, NLightGray } from "../typings/NormalColor";
 import {
   ThemeBlue,
   ThemeGray,
   ThemePink,
   ThemeRed,
-} from "../../../typings/ThemeColor";
-import RangeWithIcons from "../../../components/mypage/review/RangeWithIcons";
-import { isNumber } from "../../../hooks/isNumber";
-import { CartCntContext } from "../../../context/CartCntContext";
-import { getToken } from "../../../hooks/getToken";
+} from "../typings/ThemeColor";
+import RangeWithIcons from "./mypage/review/RangeWithIcons";
+import { isNumber } from "../hooks/isNumber";
+import { CartCntContext } from "../context/CartCntContext";
+import { getToken } from "../hooks/getToken";
 import { useContext } from "react";
-import { PaymentContext } from "../../../context/PaymentContext";
 
-export default function ProductDetail({ product, reviewCount }) {
+export default function ProductDetail(props) {
+  const router = useRouter();
+  const productId = router.query.id;
   const [quantity, setQuantity] = useState(1);
   const [tab, setTab] = useState("info");
   const [modal, setModal] = useState(false);
+  const [product, setProduct] = useState({});
   const [token, setToken] = useState("");
+  const [reviewCount, setReviewCount] = useState(0);
   const { cartCnt, setCartCnt } = useContext(CartCntContext);
-  const { payment, setPayment } = useContext(PaymentContext);
-
-  const router = useRouter();
 
   const buyQuery = () => {
     product.quantity = quantity;
-
-    setPayment([product]);
 
     router.push(
       {
@@ -110,6 +106,29 @@ export default function ProductDetail({ product, reviewCount }) {
     });
   };
 
+  const getItem = async () => {
+    if (productId) {
+      await axios.get(`/api/products/${productId}`).then((res) => {
+        setProduct(res.data);
+      });
+    }
+  };
+
+  const getReviewCount = async () => {
+    if (productId) {
+      await axios.get(`/api/reviews/${productId}/all`).then((res) => {
+        console.log(res.data.reviewCount);
+        setReviewCount(res.data.reviewCount);
+        console.log(reviewCount);
+      });
+    }
+  };
+
+  useEffect(() => {
+    getItem();
+    getReviewCount();
+  }, [productId]);
+
   useEffect(() => {
     setToken(getToken());
   }, [token]);
@@ -126,7 +145,10 @@ export default function ProductDetail({ product, reviewCount }) {
 
             <div className="detailEtc" key={product.id}>
               <div className="headingArea">
-                <div className="headingAreaName">{product.name}</div>
+                <div className="headingAreaName">
+                  {product.name}
+                  {props.id + "stetest"}
+                </div>
 
                 <div className="headingDescription">
                   {product.discount !== 0 ? (
@@ -174,7 +196,6 @@ export default function ProductDetail({ product, reviewCount }) {
                 <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
                 <div
                   onClick={() => {
-                    console.log("product:::", product);
                     handleModal(true);
                   }}
                 >
@@ -301,9 +322,6 @@ export default function ProductDetail({ product, reviewCount }) {
               </div>
             </div>
           </div>
-          <div className="detailMiddle">
-            <RecommendList />
-          </div>
           <div className="detailBottom">
             <div className="tabMenu">
               <ul>
@@ -330,7 +348,7 @@ export default function ProductDetail({ product, reviewCount }) {
               ) : tab == "nutri" ? (
                 <Nutri nutrition={product.nutrition} />
               ) : (
-                <Review productId={product.id} />
+                <Review productId={productId} />
               )}
             </div>
           </div>
@@ -917,16 +935,10 @@ export default function ProductDetail({ product, reviewCount }) {
                 }
               }
             }
-            
-            .detailMiddle {
-              position: absolute;
-              top: 800px;
-              width: 400px;
-            }
 
             .detailBottom {
               position: absolute;
-              top: 1150px;
+              top: 770px;
               padding-top: 40px;
 
               .tabMenu {
@@ -960,18 +972,10 @@ export default function ProductDetail({ product, reviewCount }) {
 
 export async function getServerSideProps(context) {
   const { id } = context.query;
-  const res = await axios.get(`http://localhost:9000/api/products/${id}`);
-  const product = await res.data;
-
-  const reviewRes = await axios.get(
-    `http://localhost:9000/api/reviews/${id}/all`,
-  );
-  const reviewCount = await reviewRes.data.reviewCount;
 
   return {
     props: {
-      product,
-      reviewCount,
+      id,
     },
   };
 }
