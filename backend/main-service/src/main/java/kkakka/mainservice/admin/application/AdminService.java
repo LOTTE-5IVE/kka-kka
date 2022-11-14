@@ -16,13 +16,14 @@ public class AdminService {
     @Value("${admin.user.password}")
     private String adminPassword;
     @Value("${admin.user.key}")
+    private String adminKey;
 
     private final JwtTokenProvider jwtTokenProvider;
 
     public String requiredLogin(AdminUserRequest adminUserRequest) {
         if (adminUserRequest.getUserId().equals(adminId)
                 && adminUserRequest.getPassword().equals(adminPassword)) {
-            return jwtTokenProvider.generateToken(adminId);
+            return jwtTokenProvider.generateToken(adminKey);
         }
         throw new AuthorizationException();
     }
