@@ -1,4 +1,4 @@
-package kkakka.mainservice.product.application.recommend;
+package kkakka.mainservice.product.application.recommend.strategy;
 
 import java.util.Optional;
 import kkakka.mainservice.product.domain.Product;
@@ -15,7 +15,7 @@ public class AnonymousRecommendStrategy implements ProductRecommender {
     private final ProductRepository productRepository;
 
     @Override
-    public Page<Product> recommend(Optional<Long> memberId, Pageable pageable) {
+    public Page<Product> recommend(Optional<Long> recommendPivotId, Pageable pageable) {
         return productRepository.findAllOrderByRatingAvg(pageable);
     }
 }
