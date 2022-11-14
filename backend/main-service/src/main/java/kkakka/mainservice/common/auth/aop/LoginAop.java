@@ -25,4 +25,16 @@ public class LoginAop {
         }
     }
 
+    @Before("@annotation(kkakka.mainservice.common.auth.aop.AdminOnly) "
+            + "|| @within(kkakka.mainservice.common.auth.aop.AdminOnly)")
+    public void checkAdmin(JoinPoint joinPoint) {
+        final LoginMember loginMember = (LoginMember) Arrays.stream(joinPoint.getArgs())
+                .filter(argument -> argument instanceof LoginMember)
+                .findAny()
+                .orElseThrow(AuthorizationException::new);
+
+        if (!loginMember.isAdmin()) {
+            throw new AuthorizationException();
+        }
+    }
 }
