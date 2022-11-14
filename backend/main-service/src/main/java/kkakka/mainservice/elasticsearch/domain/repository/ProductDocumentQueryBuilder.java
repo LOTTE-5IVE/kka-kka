@@ -1,11 +1,9 @@
 package kkakka.mainservice.elasticsearch.domain.repository;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import kkakka.mainservice.elasticsearch.application.dto.SearchParamDto;
 import lombok.NoArgsConstructor;
-import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.index.query.TermsQueryBuilder;
@@ -43,6 +41,13 @@ public class ProductDocumentQueryBuilder {
         }
 
         return query.withPageable(pageable).build();
+    }
+
+    public Query autoCompleteByKeyword(String keyword) {
+        NativeSearchQueryBuilder query = new NativeSearchQueryBuilder();
+
+        return query.withQuery(QueryBuilders.boolQuery()
+            .must(QueryBuilders.queryStringQuery(keyword))).build();
     }
 
     private static TermsQueryBuilder selectFilter(String field, List<Long> query) {

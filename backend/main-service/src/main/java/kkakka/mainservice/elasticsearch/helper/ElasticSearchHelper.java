@@ -43,7 +43,9 @@ public class ElasticSearchHelper implements SearchHelper {
         if (!searchHits.hasSearchHits()) {
             return new ProductsSearchResult(
                 new ArrayList<>(),
-                new PageInfo(),
+                PageInfo.from(
+                    pageable.getPageNumber(),0,pageable.getPageSize(),0
+                ),
                 searchHits.getTotalHits()
             );
         }
@@ -62,6 +64,18 @@ public class ElasticSearchHelper implements SearchHelper {
             createPageInfo(searchPages),
             searchHits.getTotalHits()
         );
+    }
+
+    @Override
+    public List<String> autoCompleteByKeyword(String keyword) {
+        Query query = productDocumentQueryBuilder.autoCompleteByKeyword(keyword);
+
+        SearchHits<ProductDocument> searchHits = elasticsearchRestTemplate.search(query,
+            ProductDocument.class, IndexCoordinates.of(Indices.PRDUCT_INDEX));
+
+        return searchHits.stream()
+            .map(productDocumentSearchHit -> productDocumentSearchHit.getContent().getName())
+            .collect(toList());
     }
 
     private PageInfo createPageInfo(SearchPage<ProductDocument> searchPages) {

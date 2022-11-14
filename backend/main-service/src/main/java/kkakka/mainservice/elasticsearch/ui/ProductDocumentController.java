@@ -1,5 +1,8 @@
 package kkakka.mainservice.elasticsearch.ui;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import kkakka.mainservice.elasticsearch.application.ProductDocumentService;
 import kkakka.mainservice.elasticsearch.ui.dto.SearchParamRequest;
 import kkakka.mainservice.elasticsearch.ui.dto.SearchResultResponse;
@@ -11,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -30,5 +34,14 @@ public class ProductDocumentController {
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @GetMapping("/auto")
+    public ResponseEntity<Map<String, List<String>>> autoCompleteByKeyword(@RequestParam(value = "keyword", required = false) String keyword) {
+        List<String> autoProductNames = productDocumentService.autoCompleteByKeyword(keyword);
+        Map<String, List<String>> result = new HashMap<>();
+        result.put("autoKeyword",autoProductNames);
+
+        return ResponseEntity.ok().body(result);
     }
 }

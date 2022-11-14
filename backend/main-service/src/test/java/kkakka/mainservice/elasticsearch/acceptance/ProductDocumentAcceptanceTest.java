@@ -36,4 +36,24 @@ public class ProductDocumentAcceptanceTest extends DocumentConfiguration {
             .isNotEmpty();
     }
 
+    @DisplayName("자동 완성 조회 - 성공")
+    @Test
+    void showAutoCompleteByKeyword_success() {
+        //given
+        //when
+        ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .filter(document("show-product-names-search-autocomplete"))
+            .when()
+            .get("/api/es/auto?keyword=롯데")
+            .then()
+            .log().all().extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().jsonPath().getList("autoKeyword",String.class).size()).isLessThanOrEqualTo(10);
+        assertThat(response.body().jsonPath().getList("autoKeyword",String.class).stream()
+            .map(name -> name.contains("롯데")))
+            .isNotEmpty();
+    }
 }

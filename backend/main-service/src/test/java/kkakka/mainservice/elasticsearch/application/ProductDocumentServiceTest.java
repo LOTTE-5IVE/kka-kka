@@ -3,6 +3,7 @@ package kkakka.mainservice.elasticsearch.application;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.Date;
+import java.util.List;
 import kkakka.mainservice.TestContext;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
@@ -62,4 +63,16 @@ public class ProductDocumentServiceTest extends TestContext {
         assertThat(response.getTotalHits()).isEqualTo(1);
     }
 
+    @DisplayName("ES 자동완성 조회 - 성공")
+    @Test
+    public void showAutoCompleteByKeywordTest() {
+        //given
+        final String keyword = "테스";
+
+        //when
+        List<String> response = productDocumentService.autoCompleteByKeyword(keyword);
+
+        //then
+        assertThat(response.get(0)).isEqualTo("롯데 테스트 과자 100g");
+    }
 }

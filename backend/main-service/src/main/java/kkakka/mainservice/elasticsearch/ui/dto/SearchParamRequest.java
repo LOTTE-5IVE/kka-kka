@@ -1,6 +1,5 @@
 package kkakka.mainservice.elasticsearch.ui.dto;
 
-import java.net.URI;
 import java.util.List;
 import kkakka.mainservice.elasticsearch.application.dto.SearchParamDto;
 import lombok.AllArgsConstructor;
