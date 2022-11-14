@@ -1,9 +1,8 @@
 import {useContext, useEffect, useState} from "react";
-import {AdminProvider} from "../../context/AdminTokenContext";
+import {UserContext} from "../../context/AdminTokenContext";
 import axios from "axios";
 import {useRouter} from "next/router";
 import {ThemeGray} from "../../typings/ThemeColor";
-import {NGray, NLightGray} from "../../typings/NormalColor";
 
 export default function Login() {
   const [userInfo, setUserInfo] = useState({
@@ -11,10 +10,31 @@ export default function Login() {
     'password': ''
   });
 
-  const userData = useContext(AdminProvider);
-  const isLoggedIn = useContext(AdminProvider)?.isLoggedIn;
+  const userData = useContext(UserContext);
+  const isLoggedIn = useContext(UserContext)?.isLoggedIn;
 
-  const router = useRouter;
+  const router = useRouter();
+
+  const handleSubmit = async () => {
+    await axios.post("/api/admin/login", {
+      'userId': userInfo.userId,
+      'password': userInfo.password,
+    })
+    .then((res) => {
+      if (res.status === 200) {
+        localStorage.setItem('adminToken', res.data.adminToken);
+        userData.getAdminUser();
+      } else {
+        alert("로그인에 실패했습니다.");
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push('/admin')
+    }
+  }, [isLoggedIn])
 
   const handleChange = (e) => {
     setUserInfo((prevState) => {
@@ -25,29 +45,6 @@ export default function Login() {
     });
   }
 
-  const handleSubmit = async () => {
-    await axios.post('http://localhost:8080/login/token', {
-      'userId': userInfo.userId,
-      'password': userInfo.password,
-    })
-    .then((res) => {
-      if (res.status === 200) {
-        console.log(res.data)
-        localStorage.setItem('adminToken', res.data.adminToken);
-        userData.getUser();
-      }
-    })
-    .catch(() => {
-      alert('로그인에 실패했습니다.');
-    })
-  }
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      router().push('/admin')
-    }
-  }, [isLoggedIn])
-
   return (
       <>
         <div className='wrapper'>
@@ -55,7 +52,7 @@ export default function Login() {
             <div className="logo">
               <img width="155" src="/main/logo.png"/>
             </div>
-            <form
+            <div
                 className={'login-form'}
             >
               <p className='h4'>관리자 로그인</p>
@@ -84,7 +81,7 @@ export default function Login() {
                       className="login-btn">
                 로그인
               </button>
-            </form>
+            </div>
           </div>
         </div>
         <style jsx>{`
