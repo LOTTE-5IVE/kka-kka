@@ -1,6 +1,7 @@
 package kkakka.mainservice.product.domain.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -31,7 +32,6 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
     public Page<Product> findAllByCategoryWithSort(
             Optional<Long> categoryId,
             String sortBy,
-            SearchWords searchWords,
             Pageable pageable
     ) {
         final BooleanBuilder builder = new BooleanBuilder();
@@ -40,7 +40,6 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
                 builder.and(QCategory.category.id.eq(cId));
             }
         });
-        builder.and(categoryNameEq(searchWords).or(productNameLike(searchWords)));
 
         final OrderSpecifier<?> orderSpecifier = orderWithSortBy(sortBy);
 
@@ -79,6 +78,14 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
 
         if ("OLD".equals(sortBy)) {
             return new OrderSpecifier<Long>(Order.ASC, QProduct.product.id);
+        }
+
+        if("DESC".equals(sortBy)) {
+            return new OrderSpecifier<>(Order.DESC, QProduct.product.price);
+        }
+
+        if("ASC".equals(sortBy)) {
+            return new OrderSpecifier<>(Order.ASC, QProduct.product.price);
         }
 
         return new OrderSpecifier<Long>(Order.DESC, QProduct.product.id);

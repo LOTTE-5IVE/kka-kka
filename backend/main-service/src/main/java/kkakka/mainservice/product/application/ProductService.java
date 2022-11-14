@@ -1,17 +1,20 @@
 package kkakka.mainservice.product.application;
 
 import java.util.Optional;
+import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.elasticsearch.application.dto.CategoryDocumentDto;
+import kkakka.mainservice.elasticsearch.application.dto.ProductDocumentDto;
+import kkakka.mainservice.elasticsearch.application.dto.SearchResultDto;
+import kkakka.mainservice.elasticsearch.ui.dto.SearchResultResponse;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.product.application.dto.CategoryDto;
 import kkakka.mainservice.product.application.dto.NutritionDto;
 import kkakka.mainservice.product.application.dto.ProductDetailDto;
 import kkakka.mainservice.product.application.dto.ProductDto;
 import kkakka.mainservice.product.application.recommend.ProductRecommender;
-import kkakka.mainservice.product.application.recommend.RecommendStrategyFactory;
 import kkakka.mainservice.product.application.recommend.RecommenderFactory;
 import kkakka.mainservice.product.domain.Product;
-import kkakka.mainservice.product.domain.SearchWords;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.product.domain.repository.ProductRepositorySupport;
 import lombok.AllArgsConstructor;
@@ -37,20 +40,28 @@ public class ProductService {
         );
     }
 
-    public Page<ProductDto> showAllProductsWithCategoryAndSearch(
+    public SearchResultResponse showAllProductsWithCategoryAndSearch(
             Optional<Long> categoryId,
             String sortBy,
-            String keyword,
             Pageable pageable
     ) {
-        final SearchWords searchWords = SearchWords.create(keyword);
-        return productRepositorySupport.findAllByCategoryWithSort(categoryId, sortBy, searchWords,
-                        pageable)
-                .map(product -> ProductDto.toDto(
-                                product,
-                                CategoryDto.toDto(product.getCategory())
-                        )
-                );
+        Page<ProductDocumentDto> productDtos = productRepositorySupport.findAllByCategoryWithSort(
+                categoryId,
+                sortBy,
+                pageable)
+            .map(product -> ProductDocumentDto.toDto(
+                product,
+                CategoryDocumentDto.toDto(product.getCategory())
+            ));
+
+        return SearchResultDto.toDto(
+            productDtos.getTotalElements(),
+            productDtos.toList(),
+            PageInfo.from(pageable.getPageNumber(),
+                productDtos.getTotalPages(),
+                pageable.getPageSize(),
+                productDtos.getTotalElements())
+        ).toResponseDto();
     }
 
     public Page<ProductDto> showProductsByRecommendation(LoginMember loginMember,
