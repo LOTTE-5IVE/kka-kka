@@ -16,8 +16,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        {Component.displayName === "Admin" ||
-        Component.displayName == "NotFound" ? (
+        {Component.displayName === "Admin"
+        || Component.displayName === "NotFound"
+        || Component.displayName === "AdminLogin" ? (
           <Component {...pageProps} />
         ) : (
           <TokenContext.Provider value={{ token, setToken }}>
