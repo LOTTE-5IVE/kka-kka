@@ -13,16 +13,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    @Query(value = "select o from Order o "
-            + "join fetch o.productOrders po "
-            + "join fetch po.product "
-            + "where o.member.id = :memberId "
-            + "order by o.orderedAt desc",
-    countQuery = "select count(o) from Order o "
-            + "join fetch o.productOrders po "
-            + "join fetch po.product "
-            + "where o.member.id = :memberId "
-            + "order by o.orderedAt desc")
+    @Query(value = "select o from Order o where o.member.id = :memberId order by o.orderedAt desc",
+            countQuery = "select count(o) from Order o where o.member.id = :memberId order by o.orderedAt desc")
     List<Order> findAllByMemberId(@Param(value = "memberId") Long memberId, Pageable pageable);
 
     int countAllByMemberId(Long memberId);

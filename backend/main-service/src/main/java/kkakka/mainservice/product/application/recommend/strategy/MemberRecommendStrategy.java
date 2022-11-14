@@ -120,6 +120,10 @@ public class MemberRecommendStrategy implements ProductRecommender {
     }
 
     private List<Product> findMoreProductsByRatingAvg(List<Long> productIds, int numberRequired) {
+        if (productIds.isEmpty()) {
+            return productRepository.findAllOrderByRatingAvg(Pageable.ofSize(numberRequired))
+                    .getContent();
+        }
         return productRepository.findAllOrderByRatingAvg(
                 productIds,
                 Pageable.ofSize(numberRequired)
