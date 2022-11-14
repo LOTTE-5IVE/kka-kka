@@ -1,15 +1,10 @@
 package kkakka.mainservice.product.ui;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.List;
 import java.util.Optional;
 import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.common.dto.PageableResponse;
 import kkakka.mainservice.elasticsearch.application.ProductDocumentService;
-import kkakka.mainservice.elasticsearch.application.dto.CategoryDocumentDto;
-import kkakka.mainservice.elasticsearch.application.dto.ProductDocumentDto;
-import kkakka.mainservice.elasticsearch.application.dto.SearchResultDto;
 import kkakka.mainservice.elasticsearch.ui.dto.SearchParamRequest;
 import kkakka.mainservice.elasticsearch.ui.dto.SearchResultResponse;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;

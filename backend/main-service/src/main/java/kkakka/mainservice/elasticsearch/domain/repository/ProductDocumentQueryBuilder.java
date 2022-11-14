@@ -61,7 +61,7 @@ public class ProductDocumentQueryBuilder {
     }
 
     private static FieldSortBuilder sortByPrice(String sorting) {
-        return sorting.equals("desc") ? SortBuilders.fieldSort("price").order(SortOrder.DESC)
+        return sorting.equals("DESC") ? SortBuilders.fieldSort("price").order(SortOrder.DESC)
             : SortBuilders.fieldSort("price").order(SortOrder.ASC);
     }
 }
