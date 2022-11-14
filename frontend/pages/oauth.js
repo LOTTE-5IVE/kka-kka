@@ -19,35 +19,35 @@ export default function Oauth() {
     }
   };
 
-  const { code, state } = router.query;
-  // TODO: code 가지고 /login/token으로 요청해서 우리 서비스의 accessToken 받아오기
-  const login = async () => {
-    await axios
-      .post(`/api/login/token`, {
-        code: { code }.code,
-        providerName: getProvider({ state }.state),
-      })
-      .then((res) => {
-        setLoginFlag(true);
-        const obj = {
-          value: res.data.accessToken,
-          expire: new Date().getTime() + 1000 * 60 * 60,
-        };
-        localStorage.setItem("accessToken", JSON.stringify(obj));
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoginFlag(false);
-      });
-  };
-
   useEffect(() => {
     if (!router.isReady) {
       return;
     }
 
+    const { code, state } = router.query;
+
+    const login = async () => {
+      await axios
+        .post(`/api/login/token`, {
+          code: { code }.code,
+          providerName: getProvider({ state }.state),
+        })
+        .then((res) => {
+          setLoginFlag(true);
+          const obj = {
+            value: res.data.accessToken,
+            expire: new Date().getTime() + 1000 * 60 * 60,
+          };
+          localStorage.setItem("accessToken", JSON.stringify(obj));
+        })
+        .catch(function (error) {
+          console.log(error);
+          setLoginFlag(false);
+        });
+    };
+
     login();
-  }, [router.isReady]);
+  }, [router]);
 
   return (
     <>

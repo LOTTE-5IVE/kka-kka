@@ -66,7 +66,6 @@ export default function RecommSlider({ tab, handleTab }) {
   };
 
   useEffect(() => {
-    console.log("loaded!");
     getRecommendProducts();
     getReviewProducts();
   }, [recommToggle, reviewToggle]);
@@ -441,10 +440,9 @@ export default function RecommSlider({ tab, handleTab }) {
             .swiper-next {
               right: 40vw;
             }
-            .swiper-prev:hover,
-            .swiper-next:hover {
-              background-color: #333;
-              color: #fff;
+            .swiper-prev,
+            .swiper-next {
+              display: none;
             }
           }
           .notice .promotion.hide {

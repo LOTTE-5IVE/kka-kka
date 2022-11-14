@@ -15,6 +15,10 @@ const nextConfig = {
       },
     ];
   },
+
+  images: {
+    domains: ["d1n7ys0in64qon.cloudfront.net"],
+  },
 };
 
 module.exports = nextConfig;

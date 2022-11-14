@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { router } from "next/router";
 import { useContext } from "react";
 import { useEffect, useState } from "react";
@@ -115,11 +116,15 @@ export default function Cart() {
         res.cartItems.reduce((prev, cur) => prev + cur.price * cur.quantity, 0),
       );
       setDiscountPrice(
-        res.cartItems.reduce(
-          (prev, cur) =>
-            prev + Math.floor(cur.price * 0.01 * cur.discount * cur.quantity),
-          0,
-        ),
+        res.cartItems.reduce((prev, cur) => {
+          if (cur.couponDto) {
+            return prev + Math.floor(cur.totalDiscount);
+          } else {
+            return (
+              prev + Math.floor(cur.price * 0.01 * cur.discount * cur.quantity)
+            );
+          }
+        }, 0),
       );
     });
   };
@@ -229,7 +234,13 @@ export default function Cart() {
                 {cartItems.length === 0 && (
                   <tr>
                     <td colSpan="7">
-                      <img className="cartEmptyImg" src="/member/no_item.gif" />
+                      <div
+                        className="cartEmptyImg"
+                        style={{ position: "relative" }}
+                      >
+                        <Image src="/member/no_item.gif" alt="" layout="fill" />
+                      </div>
+
                       <p className="cartEmptyComment">
                         장바구니가 비어 있습니다.
                       </p>
@@ -254,7 +265,12 @@ export default function Cart() {
                         />
                       </td>
                       <td>
-                        <img className="thumnail" src={product.imageUrl} />
+                        <div
+                          className="thumnail"
+                          style={{ position: "relative", margin: "auto" }}
+                        >
+                          <Image src={product.imageUrl} alt="" layout="fill" />
+                        </div>
                       </td>
                       <td>
                         <div>{product.name}</div>
@@ -363,7 +379,6 @@ export default function Cart() {
                                 alert("수량 한도를 초과했습니다.");
                               } else {
                                 handleQuantity(product.id, e.target.value);
-
                                 editCartItem(product.id, e.target.value);
                               }
                             }}
@@ -423,11 +438,20 @@ export default function Cart() {
                           removeCartItem(product.cartItemId);
                         }}
                       >
-                        <img
+                        <div
                           className="cancelBtn"
-                          src="/common/cancelred.png"
-                          style={{ cursor: "pointer" }}
-                        />
+                          style={{
+                            cursor: "pointer",
+                            position: "relative",
+                            margin: "auto",
+                          }}
+                        >
+                          <Image
+                            src="/common/cancelred.png"
+                            alt=""
+                            layout="fill"
+                          />
+                        </div>
                       </td>
                     </tr>
                   );
@@ -600,6 +624,7 @@ export default function Cart() {
                     .cartEmptyImg {
                       margin: 70px auto 30px;
                       width: 70px;
+                      height: 70px;
                     }
                     .cartEmptyComment {
                       margin-bottom: 70px;
@@ -609,6 +634,7 @@ export default function Cart() {
 
                     .thumnail {
                       width: 70px;
+                      height: 70px;
                     }
 
                     .couponWrapper {
@@ -629,6 +655,7 @@ export default function Cart() {
 
                     .cancelBtn {
                       width: 20px;
+                      height: 20px;
                     }
                   }
                 }
@@ -683,8 +710,20 @@ export default function Cart() {
                   td {
                     font-size: 2vw;
 
+                    .cartEmptyImg {
+                      margin: 30px auto 20px;
+                      width: 40px;
+                      height: 40px;
+                    }
+                    .cartEmptyComment {
+                      margin-bottom: 30px;
+                      font-size: 12px;
+                      line-height: 1;
+                    }
+
                     .thumnail {
                       width: 8vw;
+                      height: 8vw;
                     }
                     img {
                       width: 8vw;
@@ -735,6 +774,7 @@ export default function Cart() {
 
                     .cancelBtn {
                       width: 15px;
+                      height: 15px;
                     }
                   }
                 }
@@ -789,6 +829,7 @@ export default function Cart() {
                     .cartEmptyImg {
                       margin: 30px auto 15px;
                       width: 40px;
+                      height: 40px;
                     }
                     .cartEmptyComment {
                       margin-bottom: 30px;
@@ -798,6 +839,7 @@ export default function Cart() {
 
                     .thumnail {
                       width: 30px;
+                      height: 30px;
                     }
                     img {
                       width: 15px;
