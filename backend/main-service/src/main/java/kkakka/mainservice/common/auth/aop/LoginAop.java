@@ -1,8 +1,8 @@
-package kkakka.mainservice.member.auth.util;
+package kkakka.mainservice.common.auth.aop;
 
 import java.util.Arrays;
-import kkakka.mainservice.member.auth.exception.AuthorizationException;
-import kkakka.mainservice.member.auth.ui.LoginMember;
+import kkakka.mainservice.common.auth.LoginMember;
+import kkakka.mainservice.common.exception.AuthorizationException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginAop {
 
-    @Before("@annotation(kkakka.mainservice.member.auth.ui.MemberOnly) "
-            + "|| @within(kkakka.mainservice.member.auth.ui.MemberOnly)")
+    @Before("@annotation(kkakka.mainservice.common.auth.aop.MemberOnly) "
+            + "|| @within(kkakka.mainservice.common.auth.aop.MemberOnly)")
     public void checkLoginMember(JoinPoint joinPoint) {
         final LoginMember loginMember = (LoginMember) Arrays.stream(joinPoint.getArgs())
                 .filter(argument -> argument instanceof LoginMember)
@@ -24,4 +24,5 @@ public class LoginAop {
             throw new AuthorizationException();
         }
     }
+
 }

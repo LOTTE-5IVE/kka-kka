@@ -1,9 +1,9 @@
 package kkakka.mainservice.common.config;
 
 import java.util.List;
-import kkakka.mainservice.member.auth.infrastructure.LoginInterceptor;
-import kkakka.mainservice.member.auth.util.AuthenticationPrincipalArgumentResolver;
-import kkakka.mainservice.member.auth.util.JwtTokenProvider;
+import kkakka.mainservice.common.auth.LoginInterceptor;
+import kkakka.mainservice.common.auth.util.AuthenticationPrincipalArgumentResolver;
+import kkakka.mainservice.common.auth.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

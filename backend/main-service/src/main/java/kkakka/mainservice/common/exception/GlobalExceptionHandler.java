@@ -1,6 +1,5 @@
 package kkakka.mainservice.common.exception;
 
-import kkakka.mainservice.member.auth.exception.AuthorizationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

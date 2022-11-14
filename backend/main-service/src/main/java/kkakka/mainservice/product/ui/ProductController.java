@@ -2,10 +2,11 @@ package kkakka.mainservice.product.ui;
 
 import java.util.List;
 import java.util.Optional;
+import kkakka.mainservice.common.auth.aop.AdminOnly;
 import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.common.dto.PageableResponse;
-import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
-import kkakka.mainservice.member.auth.ui.LoginMember;
+import kkakka.mainservice.common.auth.AuthenticationPrincipal;
+import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.product.application.ProductService;
 import kkakka.mainservice.product.application.dto.ProductDetailDto;
 import kkakka.mainservice.product.application.dto.ProductDto;

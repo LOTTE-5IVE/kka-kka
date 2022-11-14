@@ -6,7 +6,7 @@ import java.util.Optional;
 import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
-import kkakka.mainservice.member.auth.ui.LoginMember;
+import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.application.dto.MemberOrderDto;

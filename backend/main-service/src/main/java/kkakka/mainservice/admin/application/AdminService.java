@@ -1,8 +1,8 @@
 package kkakka.mainservice.admin.application;
 
 import kkakka.mainservice.admin.ui.dto.AdminUserRequest;
-import kkakka.mainservice.member.auth.exception.AuthorizationException;
-import kkakka.mainservice.member.auth.util.JwtTokenProvider;
+import kkakka.mainservice.common.exception.AuthorizationException;
+import kkakka.mainservice.common.auth.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

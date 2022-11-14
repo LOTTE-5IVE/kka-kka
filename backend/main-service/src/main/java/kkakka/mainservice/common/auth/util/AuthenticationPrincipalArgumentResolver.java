@@ -1,9 +1,9 @@
-package kkakka.mainservice.member.auth.util;
+package kkakka.mainservice.common.auth.util;
 
 import javax.servlet.http.HttpServletRequest;
-import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
-import kkakka.mainservice.member.auth.ui.Authority;
-import kkakka.mainservice.member.auth.ui.LoginMember;
+import kkakka.mainservice.common.auth.AuthenticationPrincipal;
+import kkakka.mainservice.common.auth.Authority;
+import kkakka.mainservice.common.auth.LoginMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -32,7 +32,11 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
             return new LoginMember(Authority.ANONYMOUS);
         }
 
-        final Long id = Long.parseLong(jwtTokenProvider.getPayload(credentials));
-        return new LoginMember(id, Authority.MEMBER);
+        try {
+            final Long id = Long.parseLong(jwtTokenProvider.getPayload(credentials));
+            return new LoginMember(id, Authority.MEMBER);
+        } catch (NumberFormatException e) {
+            return new LoginMember(Authority.ADMIN);
+        }
     }
 }

@@ -2,7 +2,7 @@ package kkakka.mainservice.product.application;
 
 import java.util.Optional;
 import kkakka.mainservice.common.exception.KkaKkaException;
-import kkakka.mainservice.member.auth.ui.LoginMember;
+import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.product.application.dto.CategoryDto;
 import kkakka.mainservice.product.application.dto.NutritionDto;
 import kkakka.mainservice.product.application.dto.ProductDetailDto;
