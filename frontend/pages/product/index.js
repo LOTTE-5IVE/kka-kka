@@ -171,7 +171,7 @@ export default function ProductList() {
             </div>
           )} */}
 
-          <SearchFilter setResource={setResource} search={keyword} page={page}/>
+          <SearchFilter setResource={setResource} search={keyword} page={page} cat_id={cat_id}/>
           <div className="title">
             {!search && <p className="category">{cat_name[cat_id]}</p>}
             {search && totalHits > 0 && <p className="totalHits">등록 상품: {totalHits}</p>}

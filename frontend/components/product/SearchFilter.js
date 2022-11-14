@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { fetchSearchData } from "../../apis/SearchApi";
 
-export default function SearchFilter({setResource, search, page}) {
+export default function SearchFilter({setResource, search, page, cat_id}) {
   const [category, setCategory] = useState([]);
   const [sort, setSort] = useState("");
   const [toggle, setToggle] = useState(false);
@@ -12,6 +12,7 @@ export default function SearchFilter({setResource, search, page}) {
   const [maxPrice, setMaxPrice] = useState(0);
   const [minCalorie, setMinCalorie] = useState(0);
   const [maxCalorie, setMaxCalorie] = useState(0);
+  const [cateId, setCateId] = useState(0);
 
   const handleSingleCheck = (checked, product) => {
     if (checked) {
@@ -22,7 +23,7 @@ export default function SearchFilter({setResource, search, page}) {
   };
 
   const searchFilter = async () => {
-    setResource (fetchSearchData(sort, page, search, category, minPrice, maxPrice, minCalorie, maxCalorie));
+    setResource (fetchSearchData(sort, page, search, category, minPrice, maxPrice, minCalorie, maxCalorie, cat_id));
   }
 
   useEffect(() => {
@@ -32,6 +33,11 @@ export default function SearchFilter({setResource, search, page}) {
   useEffect(() => {
     searchFilter();
   },[page]);
+
+  useEffect(() => {
+    setCateId(cat_id);
+    searchFilter();
+  },[sort]);
 
   return (
     <div className="SFWrapper">
