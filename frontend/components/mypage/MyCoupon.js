@@ -1,9 +1,35 @@
+import axios from "axios";
+import { useEffect } from "react";
 import { useState } from "react";
+import { GetHApi } from "../../apis/Apis";
 import Title from "../../components/common/Title";
+import { getToken } from "../../hooks/getToken";
 import MyCouponCard from "./MyCouponCard";
 
 export default function MyCoupon() {
   const [tab, setTab] = useState("valid");
+  const [moreToggle, setMoreToggle] = useState(true);
+  const [token, setToken] = useState("");
+  const [coupons, setCoupons] = useState();
+
+  const getAvailableCoupon = async () => {
+    await GetHApi("/api/coupons/me/available", token).then((res) => {
+      setCoupons(res);
+    });
+  };
+
+  const getUnavailableCoupon = async () => {
+    await GetHApi("/api/coupons/me/unavailable", token).then((res) => {
+      setCoupons(res);
+    });
+  };
+
+  useEffect(() => {
+    setToken(getToken());
+    if (token !== "") {
+      getAvailableCoupon();
+    }
+  }, [token]);
 
   return (
     <>
@@ -24,14 +50,20 @@ export default function MyCoupon() {
                 <tr>
                   <th
                     className={`${tab === "valid" ? "left" : "normalLeft"}`}
-                    onClick={() => setTab("valid")}
+                    onClick={() => {
+                      setTab("valid");
+                      getAvailableCoupon();
+                    }}
                     colSpan="2"
                   >
                     사용 가능한 쿠폰
                   </th>
                   <th
                     className={`${tab === "invalid" ? "right" : "normalRight"}`}
-                    onClick={() => setTab("invalid")}
+                    onClick={() => {
+                      setTab("invalid");
+                      getUnavailableCoupon();
+                    }}
                     colSpan="3"
                   >
                     사용한 쿠폰
@@ -47,18 +79,33 @@ export default function MyCoupon() {
                   <td>분류</td>
                 </tr>
                 {tab == "valid" ? (
-                  <MyCouponCard test="사용 가능한" />
+                  <MyCouponCard coupons={coupons} />
                 ) : (
-                  <MyCouponCard test="사용한" />
+                  <MyCouponCard coupons={coupons} />
                 )}
                 <tr className="loadMore">
-                  <td
-                    colSpan="5"
-                    onClick={() => {
-                      console.log("loadMore clicked");
-                    }}
-                  >
-                    ▼ 더보기
+                  <td colSpan="5">
+                    {coupons?.length > 0 && moreToggle ? (
+                      <div
+                        onClick={() => {
+                          console.log("loadMore clicked", coupons);
+                        }}
+                        className={"d-flex align-center moreBtn"}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <span>▼ 더보기</span>
+                      </div>
+                    ) : (
+                      <div className="couponEmpty">
+                        <img
+                          className="couponEmptyImg"
+                          src="/member/no_item.gif"
+                        />
+                        <span className="couponEmptyComment">
+                          쿠폰 내역이 없습니다.
+                        </span>
+                      </div>
+                    )}
                   </td>
                 </tr>
               </tbody>
@@ -67,6 +114,32 @@ export default function MyCoupon() {
         </div>
 
         <style jsx>{`
+          .d-flex {
+            display: flex;
+            justify-content: center;
+          }
+
+          .align-center {
+            align-items: center;
+          }
+
+          .moreBtn {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 1px solid #c5c5c5;
+            color: #525252;
+          }
+
+          .couponEmpty {
+            display: flex;
+            flex-direction: column;
+
+            text-align: center;
+            .couponEmptyComment {
+              color: #9a9a9a;
+            }
+          }
+
           @media screen and (min-width: 769px) {
             /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
             .MyCouponWrapper {
@@ -126,10 +199,16 @@ export default function MyCoupon() {
                     cursor: pointer;
                   }
 
-                  .loadMore {
-                    text-align: center;
-                    border: 1px solid;
-                    cursor: pointer;
+                  .couponEmpty {
+                    .couponEmptyImg {
+                      margin: 70px auto 30px;
+                      width: 70px;
+                    }
+                    .couponEmptyComment {
+                      margin-bottom: 70px;
+                      font-size: 18px;
+                      line-height: 1;
+                    }
                   }
                 }
               }
@@ -195,10 +274,23 @@ export default function MyCoupon() {
                     cursor: pointer;
                   }
 
-                  .loadMore {
-                    text-align: center;
-                    border: 1px solid;
-                    cursor: pointer;
+                  .moreBtn {
+                    margin-bottom: 2rem;
+                    padding: 0.5rem;
+                    border: 1px solid #c5c5c5;
+                    color: #525252;
+                  }
+
+                  .couponEmpty {
+                    .couponEmptyImg {
+                      margin: 20px auto;
+                      width: 40px;
+                    }
+                    .couponEmptyComment {
+                      margin-bottom: 70px;
+                      font-size: 12px;
+                      line-height: 1;
+                    }
                   }
                 }
               }
@@ -264,10 +356,27 @@ export default function MyCoupon() {
                     cursor: pointer;
                   }
 
-                  .loadMore {
-                    text-align: center;
-                    border: 1px solid;
-                    cursor: pointer;
+                  .moreBtn {
+                    margin-bottom: 1rem;
+                    padding: 0.5rem;
+                    border: 1px solid #c5c5c5;
+                    color: #525252;
+
+                    span {
+                      font-size: 12px;
+                    }
+                  }
+
+                  .couponEmpty {
+                    .couponEmptyImg {
+                      margin: 20px auto;
+                      width: 40px;
+                    }
+                    .couponEmptyComment {
+                      margin-bottom: 70px;
+                      font-size: 12px;
+                      line-height: 1;
+                    }
                   }
                 }
               }

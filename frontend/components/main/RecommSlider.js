@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -9,6 +9,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import RecommCard from "./RecommCard";
+import { getToken } from "../../hooks/getToken";
+import axios from "axios";
 
 export default function RecommSlider({ tab, handleTab }) {
   SwiperCore.use([Autoplay, Navigation, Pagination]);
@@ -17,6 +19,10 @@ export default function RecommSlider({ tab, handleTab }) {
   const navigationNextRef = useRef(null);
   const [recommToggle, setRecommToggle] = useState(true);
   const [reviewToggle, setReviewToggle] = useState(true);
+  const [recommendProducts, setRecommendProducts] = useState([]);
+  const [reviewProducts, setReviewProducts] = useState([]);
+
+  const SLIDE_SIZE = 5;
 
   function handleRecToggle() {
     if (tab === "맞춤" && recommToggle) {
@@ -33,6 +39,37 @@ export default function RecommSlider({ tab, handleTab }) {
       setReviewToggle(true);
     }
   }
+
+  const getRecommendProducts = async () => {
+    await axios
+      .get(`/api/products/recommend?size=${SLIDE_SIZE}`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+      .then((res) => {
+        setRecommendProducts(res.data.data);
+        return res;
+      })
+      .catch(function (error) {
+        console.log(error);
+        return {};
+      });
+  };
+
+  const getReviewProducts = async () => {
+    await axios
+      .get(`/api/products?sortBy=BEST&size=${SLIDE_SIZE}`)
+      .then((res) => {
+        setReviewProducts(res.data.data);
+      });
+  };
+
+  useEffect(() => {
+    console.log("loaded!");
+    getRecommendProducts();
+    getReviewProducts();
+  }, [recommToggle, reviewToggle]);
 
   return (
     <>
@@ -58,7 +95,7 @@ export default function RecommSlider({ tab, handleTab }) {
                 handleRevToggle();
               }}
             >
-              <h2>리뷰 추천</h2>
+              <h2>별점 추천</h2>
               <div className="toggle-promotion">
                 <ArrowDropDownIcon />
               </div>
@@ -75,7 +112,7 @@ export default function RecommSlider({ tab, handleTab }) {
                   loop={true}
                   spaceBetween={10}
                   centeredSlides={true}
-                  slidesPerView={5}
+                  slidesPerView={SLIDE_SIZE}
                   cssMode={true}
                   navigation={{
                     prevEl: navigationPrevRef.current,
@@ -84,7 +121,6 @@ export default function RecommSlider({ tab, handleTab }) {
                   onInit={(swiper) => {
                     swiper.params.navigation.prevEl = navigationPrevRef.current;
                     swiper.params.navigation.nextEl = navigationNextRef.current;
-
                     swiper.navigation.init();
                     swiper.navigation.update();
                   }}
@@ -97,21 +133,21 @@ export default function RecommSlider({ tab, handleTab }) {
                   modules={[Autoplay, Navigation, Pagination, Keyboard]}
                   ref={setSwiper}
                 >
-                  <SwiperSlide className="swiper-slide">
-                    <RecommCard />
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <RecommCard />
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <RecommCard />
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <RecommCard />
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <RecommCard />
-                  </SwiperSlide>
+                  <>
+                    {recommendProducts.map((product, idx) => {
+                      return (
+                        <SwiperSlide key={idx} className="swiper-slide">
+                          <RecommCard
+                            id={product.id}
+                            name={product.name}
+                            imgsrc={product.imageUrl}
+                            price={product.price}
+                            discount={product.discount}
+                          />
+                        </SwiperSlide>
+                      );
+                    })}
+                  </>
                 </Swiper>
               </div>
 
@@ -156,21 +192,21 @@ export default function RecommSlider({ tab, handleTab }) {
                   modules={[Autoplay, Navigation, Pagination, Keyboard]}
                   ref={setSwiper}
                 >
-                  <SwiperSlide className="swiper-slide">
-                    <RecommCard />
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <RecommCard />
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <RecommCard />
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <RecommCard />
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <RecommCard />
-                  </SwiperSlide>
+                  <>
+                    {reviewProducts.map((product, idx) => {
+                      return (
+                        <SwiperSlide key={idx} className="swiper-slide">
+                          <RecommCard
+                            id={product.id}
+                            name={product.name}
+                            imgsrc={product.imageUrl}
+                            price={product.price}
+                            discount={product.discount}
+                          />
+                        </SwiperSlide>
+                      );
+                    })}
+                  </>
                 </Swiper>
               </div>
 

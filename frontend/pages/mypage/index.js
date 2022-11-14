@@ -3,7 +3,7 @@ import Title from "../../components/common/Title";
 import MyCoupon from "../../components/mypage/MyCoupon";
 import MyInfoCard from "../../components/mypage/MyInfoCard";
 import Mysidebar from "../../components/mypage/Mysidebar";
-import MyOrderTemp from "../../components/mypage/MyOrderTemp";
+import MyOrder from "../../components/mypage/MyOrder";
 import MyInfoEdit from "../../components/mypage/MyInfoEdit";
 import MyOrderDetail from "../../components/mypage/MyOrderDetail";
 
@@ -41,7 +41,7 @@ export default function MyPage() {
               ) : tab == "coupon" ? (
                 <MyCoupon />
               ) : tab == "order" && !detail ? (
-                <MyOrderTemp
+                <MyOrder
                   handleDetail={handleDetail}
                   setOrderDetail={setOrderDetail}
                 />

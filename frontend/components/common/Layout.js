@@ -10,10 +10,7 @@ export default function Layout({ children }) {
         <NavBar />
       </div>
 
-      <div className="content">
-        <div className="empty"></div>
-        {children}
-      </div>
+      <div className="content">{children}</div>
 
       <div className="LayoutBottom">
         <Footer />
@@ -22,9 +19,6 @@ export default function Layout({ children }) {
       <style jsx>
         {`
           .LayoutTop {
-            position: absolute;
-            left: 0;
-            right: 0;
             background-color: #fff;
             border-bottom: 1px solid #d8d8d8;
             z-index: 999;
@@ -39,11 +33,6 @@ export default function Layout({ children }) {
             .content {
               width: 1903px;
               min-height: 850px;
-
-              .empty {
-                width: 1903px;
-                height: 177px;
-              }
             }
 
             .LayoutBottom {
@@ -55,18 +44,12 @@ export default function Layout({ children }) {
           @media screen and (max-width: 768px) {
             .LayoutTop {
               width: 100vw;
-              height: 12vw;
+              height: 17vw;
             }
 
             .content {
               width: 100vw;
-
               min-height: 600px;
-
-              .empty {
-                width: 100vw;
-                height: 12vw;
-              }
             }
 
             .LayoutBottom {
@@ -85,11 +68,6 @@ export default function Layout({ children }) {
             .content {
               width: 480px;
               min-height: 600px;
-
-              .empty {
-                width: 480px;
-                height: 130px;
-              }
             }
 
             .LayoutBottom {

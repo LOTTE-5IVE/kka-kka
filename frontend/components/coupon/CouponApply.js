@@ -1,42 +1,61 @@
 import DownloadIcon from "@mui/icons-material/Download";
 import { useState } from "react";
 import { useEffect } from "react";
-import { GetHApi } from "../../apis/Apis";
+import { GetHApi, PostHApi } from "../../apis/Apis";
 import { getToken } from "../../hooks/getToken";
 import { commaMoney } from "../../hooks/commaMoney";
 import { NGray } from "../../typings/NormalColor";
 
-export function CouponApply({ handleModal, product }) {
+export function CouponApply({
+  id,
+  modalVisibleId,
+  setModalVisibleId,
+  cartItemId,
+  product,
+}) {
   const [token, setToken] = useState("");
   const [coupons, setCoupons] = useState();
 
-  const getProductCoupon = async () => {
-    await GetHApi(`/api/coupons/${product.productId}`, token).then((res) => {
-      console.log(res);
+  const getProductMemberCoupon = async () => {
+    await GetHApi(`/api/coupons/me/products/${product.id}`, token).then(
+      (res) => {
+        setCoupons(res);
+      },
+    );
+  };
 
-      setCoupons(res);
-    });
+  const adaptCoupon = async (couponId) => {
+    await PostHApi(`/api/carts/${cartItemId}/${couponId}`, null, token).then(
+      (res) => {
+        onCloseHandler();
+      },
+    );
+  };
+
+  const onCloseHandler = () => {
+    setModalVisibleId("");
   };
 
   useEffect(() => {
     setToken(getToken());
     if (token !== "") {
-      getProductCoupon();
+      getProductMemberCoupon();
     }
   }, [token]);
 
   return (
     <>
-      <div className="wrapper">
+      <div className={modalVisibleId === id ? "wrapper" : "none"}>
         <div
           style={{
             display: "flex",
             justifyContent: "end",
             width: "98%",
             margin: "10px 0",
+            cursor: "pointer",
           }}
           onClick={() => {
-            handleModal();
+            onCloseHandler();
           }}
         >
           <img width="24px" src="/common/cancel.png" />
@@ -60,15 +79,14 @@ export function CouponApply({ handleModal, product }) {
                 <td>
                   <img width="64px" src={product.imageUrl} />
                 </td>
-                <td style={{ textAlign: "left" }}>{product.productName}</td>
+                <td style={{ textAlign: "left" }}>{product.name}</td>
                 <td>
-                  {product.productDiscount ? (
+                  {product.discount ? (
                     <>
                       <p style={{ marginBottom: "0" }}>
                         {commaMoney(
                           Math.ceil(
-                            product.price *
-                              (1 - 0.01 * product.productDiscount),
+                            product.price * (1 - 0.01 * product.discount),
                           ) * product.quantity,
                         )}
                         원
@@ -93,136 +111,142 @@ export function CouponApply({ handleModal, product }) {
         </div>
         <div className="ownContainer" style={{ textAlign: "left" }}>
           <p>보유한 쿠폰</p>
-          <table>
-            <colgroup>
-              <col style={{ width: "30%" }} />
-              <col style={{ width: "8%" }} />
-              <col style={{ width: "35%" }} />
-              <col style={{ width: "20%" }} />
-              <col style={{ width: "7%" }} />
-            </colgroup>
-            <thead style={{ height: "59px" }}>
-              <tr>
-                <th>쿠폰명</th>
-                <th>할인</th>
-                <th>사용기한</th>
-                <th>쿠폰 적용가</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {coupons?.map((coupon, idx) => {
-                return (
-                  <tr
-                    key={idx}
-                    style={{
-                      height: "59px",
-                      borderBottom: "1px solid #dedede",
-                    }}
-                  >
-                    <td>{coupon.name}</td>
-                    <td>{coupon.percentage}%</td>
-                    <td>{coupon.expiredAt.slice(0, 10)}</td>
-                    <td>
-                      {commaMoney(
-                        Math.ceil(
-                          Number(
-                            Math.ceil(
-                              product.price *
-                                (1 - 0.01 * product.productDiscount),
-                            ),
-                          ) *
-                            (1 - 0.01 * coupon.percentage),
-                        ) * product.quantity,
-                      )}
-                      원
-                    </td>
-                    <td
-                      style={{
-                        height: "59px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <DownloadIcon />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <div className="tableWrapper">
+            <table>
+              <colgroup>
+                <col style={{ width: "30%" }} />
+                <col style={{ width: "13%" }} />
+                <col style={{ width: "30%" }} />
+                <col style={{ width: "20%" }} />
+                <col style={{ width: "7%" }} />
+              </colgroup>
+              <thead style={{ height: "59px" }}>
+                <tr>
+                  <th>쿠폰명</th>
+                  <th>할인</th>
+                  <th>사용기한</th>
+                  <th>쿠폰 적용가</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {coupons
+                  ?.filter((coupon) => !coupon.isDownloadable)
+                  .map((coupon, idx) => {
+                    return (
+                      <tr
+                        key={idx}
+                        style={{
+                          height: "59px",
+                          borderBottom: "1px solid #dedede",
+                        }}
+                      >
+                        <td>{coupon.name}</td>
+                        <td>
+                          {coupon.percentage
+                            ? `${coupon.percentage}%`
+                            : `${commaMoney(coupon.maxDiscount)}원`}
+                        </td>
+                        <td>{coupon.expiredAt.slice(0, 10)}</td>
+                        <td>
+                          {commaMoney(
+                            coupon.discountedPrice * product.quantity,
+                          )}
+                          원
+                        </td>
+                        <td
+                          style={{
+                            height: "59px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <div
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              adaptCoupon(coupon.id);
+                            }}
+                          >
+                            적용
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
         </div>
         <div className="totalContainer" style={{ textAlign: "left" }}>
           <p>다운로드 가능한 쿠폰</p>
-          <table>
-            <colgroup>
-              <col style={{ width: "30%" }} />
-              <col style={{ width: "8%" }} />
-              <col style={{ width: "35%" }} />
-              <col style={{ width: "20%" }} />
-              <col style={{ width: "7%" }} />
-            </colgroup>
-            <thead style={{ height: "59px" }}>
-              <tr>
-                <th>쿠폰명</th>
-                <th>할인</th>
-                <th>사용기한</th>
-                <th>쿠폰 적용가</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {coupons?.map((coupon, idx) => {
-                return (
-                  <tr
-                    key={idx}
-                    style={{
-                      height: "59px",
-                      borderBottom: "1px solid #dedede",
-                    }}
-                  >
-                    <td>{coupon.name}</td>
-                    <td>{coupon.percentage}%</td>
-                    <td>{coupon.expiredAt.slice(0, 10)}</td>
-                    <td>
-                      {commaMoney(
-                        Math.ceil(
-                          Number(
-                            Math.ceil(
-                              product.price *
-                                (1 - 0.01 * product.productDiscount),
-                            ),
-                          ) *
-                            (1 - 0.01 * coupon.percentage),
-                        ) * product.quantity,
-                      )}
-                      원
-                    </td>
-                    <td
-                      style={{
-                        height: "59px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <DownloadIcon />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <div className="tableWrapper">
+            <table>
+              <colgroup>
+                <col style={{ width: "30%" }} />
+                <col style={{ width: "13%" }} />
+                <col style={{ width: "30%" }} />
+                <col style={{ width: "20%" }} />
+                <col style={{ width: "7%" }} />
+              </colgroup>
+              <thead style={{ height: "59px" }}>
+                <tr>
+                  <th>쿠폰명</th>
+                  <th>할인</th>
+                  <th>사용기한</th>
+                  <th>쿠폰 적용가</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {coupons
+                  ?.filter((coupon) => coupon.isDownloadable)
+                  .map((coupon, idx) => {
+                    return (
+                      <tr
+                        key={idx}
+                        style={{
+                          height: "59px",
+                          borderBottom: "1px solid #dedede",
+                        }}
+                      >
+                        <td>{coupon.name}</td>
+                        <td>
+                          {coupon.percentage
+                            ? `${coupon.percentage}%`
+                            : `${commaMoney(coupon.maxDiscount)}원`}
+                        </td>
+                        <td>{coupon.expiredAt.slice(0, 10)}</td>
+                        <td>{commaMoney(coupon.discountedPrice)}원</td>
+                        <td
+                          style={{
+                            height: "59px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <DownloadIcon />
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       <style jsx>{`
+        .none {
+          display: none;
+        }
+
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
           .wrapper {
-            width: 600px;
-            height: 660px;
+            width: 700px;
+            height: 900px;
             margin-top: 5px;
             .container {
               p {
@@ -251,6 +275,17 @@ export function CouponApply({ handleModal, product }) {
               }
             }
 
+            .tableWrapper {
+              max-height: 400px;
+              overflow: auto;
+              margin: auto;
+              width: 90%;
+
+              table {
+                width: 100%;
+              }
+            }
+
             .ownContainer,
             .totalContainer {
               margin-top: 30px;
@@ -263,7 +298,6 @@ export function CouponApply({ handleModal, product }) {
               }
 
               table {
-                width: 90%;
                 border-collapse: collapse;
                 margin: 0 auto;
                 text-align: center;
@@ -289,6 +323,12 @@ export function CouponApply({ handleModal, product }) {
                 width: 90%;
                 margin: 0 auto 3vw;
                 font-weight: bold;
+
+                span {
+                  font-size: 1.5vw;
+                  color: ${NGray};
+                  text-decoration: line-through;
+                }
               }
 
               table {
@@ -305,6 +345,17 @@ export function CouponApply({ handleModal, product }) {
               }
             }
 
+            .tableWrapper {
+              max-height: 300px;
+              overflow: auto;
+              margin: auto;
+              width: 90%;
+
+              table {
+                width: 100%;
+              }
+            }
+
             .ownContainer,
             .totalContainer {
               margin-top: 3vw;
@@ -316,7 +367,6 @@ export function CouponApply({ handleModal, product }) {
               }
 
               table {
-                width: 90%;
                 border-collapse: collapse;
                 margin: 0 auto;
                 text-align: center;
@@ -343,6 +393,12 @@ export function CouponApply({ handleModal, product }) {
                 margin: 0 auto 10px;
                 font-weight: bold;
                 font-size: 12px;
+
+                span {
+                  font-size: 10px;
+                  color: ${NGray};
+                  text-decoration: line-through;
+                }
               }
 
               table {
@@ -360,6 +416,17 @@ export function CouponApply({ handleModal, product }) {
               }
             }
 
+            .tableWrapper {
+              max-height: 250px;
+              overflow: auto;
+              margin: auto;
+              width: 90%;
+
+              table {
+                width: 100%;
+              }
+            }
+
             .ownContainer,
             .totalContainer {
               margin-top: 20px;
@@ -371,7 +438,6 @@ export function CouponApply({ handleModal, product }) {
               }
 
               table {
-                width: 90%;
                 border-collapse: collapse;
                 margin: 0 auto;
                 font-size: 12px;

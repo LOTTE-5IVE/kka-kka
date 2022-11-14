@@ -3,20 +3,20 @@ import { GetHApi } from "../../apis/Apis";
 import { getToken } from "../../hooks/getToken";
 import { commaMoney } from "../../hooks/commaMoney";
 
-export default function MyCouponCard({ test }) {
-  const [coupons, setCoupons] = useState();
+export default function MyCouponCard({ coupons }) {
+  // const [coupons, setCoupons] = useState();
 
-  const getCoupon = async () => {
-    GetHApi("/api/coupons/me", getToken()).then((res) => {
-      if (res) {
-        setCoupons(res);
-      }
-    });
-  };
+  // const getCoupon = async () => {
+  //   GetHApi("/api/coupons/me", getToken()).then((res) => {
+  //     if (res) {
+  //       setCoupons(res);
+  //     }
+  //   });
+  // };
 
-  useEffect(() => {
-    getCoupon();
-  }, []);
+  // useEffect(() => {
+  //   getCoupon();
+  // }, []);
 
   return (
     <>
