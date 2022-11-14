@@ -4,7 +4,7 @@ spring:
       uri: http://127.0.0.1:8888
       name: main-service
   profiles:
-    active: dev
+    active: local
     group:
       "local": "console-logging"
       "dev": "console-logging, file-logging, performance-logging"
