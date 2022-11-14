@@ -127,7 +127,7 @@ public class MemberRecommendStrategy implements ProductRecommender {
 
     private RecommendProductDto requestRecommendation(Product pivotProduct) {
         final ResponseEntity<String> response = restTemplate.exchange(
-                RECOMMENDATION_SERVER_URL + 4,
+                RECOMMENDATION_SERVER_URL + pivotProduct.getId(),
                 HttpMethod.GET,
                 new HttpEntity<>(new HttpHeaders()),
                 String.class
