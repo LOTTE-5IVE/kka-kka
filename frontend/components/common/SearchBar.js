@@ -5,7 +5,7 @@ import { useState } from "react";
 import { fetchAutoData } from "../../apis/AutoComplete";
 
 export default function SearchBar() {
-  const [keyword, setKeyword] = useState();
+  const [keyword, setKeyword] = useState("");
   const [resource, setResource] = useState();
   const [index, setIndex] = useState(-1);
   const [over, setOver] = useState(false);
@@ -169,7 +169,7 @@ export default function SearchBar() {
                 );
               })
             ) : (
-              <li className="autoName">최근 검색결과가 없습니다.</li>
+              <li className="autoName">검색결과가 없습니다.</li>
             )}
           </ul>
         ) : (

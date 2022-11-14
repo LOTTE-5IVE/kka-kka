@@ -8,10 +8,17 @@ export const fetchSearchData = (sort, page, keyword, category, minPrice, maxPric
 };
 
 const getProduct = (sort, page, keyword, category, minPrice, maxPrice, minCalorie, maxCalorie) => {
-  return axios
-  .get(`/api/es/search?sortby=${sort}&page=${page}&keyword=${keyword}&catecodes=${category}&minprice=${minPrice}&maxprice=${maxPrice}&mincalorie=${minCalorie}&maxcalorie=${maxCalorie}`)
-  .then((res) => res.data)
-  .catch((err) => console.log(err));
+  if(keyword){
+    return axios
+    .get(`/api/products?sortBy=${sort}&page=${page}&keyword=${keyword}&catecodes=${category}&minprice=${minPrice}&maxprice=${maxPrice}&mincalorie=${minCalorie}&maxcalorie=${maxCalorie}`)
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+  }else{
+    return axios
+    .get(`/api/products?sortBy=${sort}&page=${page}`)
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+  }
 };
 
 const wrapPromise = (promise) => {

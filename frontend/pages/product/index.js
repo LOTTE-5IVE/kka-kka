@@ -31,7 +31,7 @@ export default function ProductList() {
   const [page, setPage] = useState(1);
   const [resource, setResource] = useState();
   const [lastPage, setLastPage] = useState();
-  const [keyword, setKeyword] = useState();
+  const [keyword, setKeyword] = useState("");
   const [totalHits, setTotalHits] = useState(0);
 
   useEffect(() => {

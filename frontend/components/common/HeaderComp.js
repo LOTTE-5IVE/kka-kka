@@ -8,11 +8,13 @@ import { memberInfo } from "../../hooks/memberInfo";
 import { isText } from "../../hooks/isText";
 import { GetHApi } from "../../apis/Apis";
 import { CartCntContext } from "../../context/CartCntContext";
+import SearchBar from "./SearchBar";
 
 export default function Header() {
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
   const [login, setLogin] = useState(false);
+  const { cartCnt, setCartCnt} = useContext(CartCntContext);
   const { token, setToken } = useContext(TokenContext);
 
   const getMemberInfo = async () => {
@@ -45,12 +47,7 @@ export default function Header() {
       setValue("");
     }
   }
-  const getCartCount = async () => {
-    await GetHApi("/api/members/me/carts/all", getToken()).then((res) => {
-      setCartCnt(res.cartCount);
-    });
-  };
-
+ 
   useEffect(() => {
     if (isLogin()) {
       setToken(getToken());
