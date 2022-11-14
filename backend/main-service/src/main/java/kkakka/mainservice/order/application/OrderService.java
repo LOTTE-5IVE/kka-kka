@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.exception.NotFoundCouponException;
 import kkakka.mainservice.common.exception.NotFoundMemberException;
+import kkakka.mainservice.common.exception.NotFoundProductException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
@@ -154,8 +156,8 @@ public class OrderService {
     public ProductOrderWithCouponDto applyProductCoupon(Long memberId,
         ProductOrderDto productOrderDto, Long couponId) {
         Product product = productRepository.findById(productOrderDto.getProductId())
-            .orElseThrow(KkaKkaException::new);
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
+            .orElseThrow(NotFoundProductException::new);
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotFoundCouponException::new);
         Integer discountedPrice = product.getDiscountPrice() - product.getMaxDiscount(coupon);
 
         MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId,
