@@ -6,7 +6,6 @@ import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -26,11 +25,8 @@ import kkakka.mainservice.order.ui.dto.RecipientRequest;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
 import org.hibernate.Session;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -101,14 +97,14 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
 
         //when
         final ExtractableResponse<Response> response = RestAssured
-                .given(spec).log().all()
-                .filter(document("orders-info-member-success"))
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/api/members/me/orders")
-                .then().log().all()
-                .extract();
+            .given(spec).log().all()
+            .filter(document("orders-info-member-success"))
+            .header("Authorization", "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/api/members/me/orders")
+            .then().log().all()
+            .extract();
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());

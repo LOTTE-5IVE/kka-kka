@@ -309,6 +309,7 @@ public class CouponService {
     }
 
     /* 회원 상품 쿠폰 다운로드 */
+    @Transactional
     public List<CouponProductDto> downloadProductCoupon(Long couponId, Long memberId,
                                                         Long productId) {
         downloadCoupon(couponId, memberId);
