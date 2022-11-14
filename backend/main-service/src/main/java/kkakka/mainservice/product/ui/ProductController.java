@@ -79,6 +79,17 @@ public class ProductController {
                 .body(dtoToPageableResponse(pageable, productDtos));
     }
 
+    @GetMapping("/{productId}/recommend")
+    public ResponseEntity<PageableResponse<List<ProductResponse>>> showRecommendationByProduct(
+            @PathVariable("productId") Long productId,
+            @PageableDefault(size = 9) Pageable pageable
+    ) {
+        final Page<ProductDto> productDtos = productService.showRecommendationByProduct(productId,
+                pageable);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(dtoToPageableResponse(pageable, productDtos));
+    }
+
     private PageableResponse<List<ProductResponse>> dtoToPageableResponse(Pageable pageable,
             Page<ProductDto> productDtos) {
 

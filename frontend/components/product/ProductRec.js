@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function ProductRec({ id, imgsrc }) {
+export default function ProductRec({ id, imgsrc, imgSize }) {
   return (
     <>
       <div className="wrapper">
@@ -23,7 +23,7 @@ export default function ProductRec({ id, imgsrc }) {
               background-color: #f5f5f5;
 
               img {
-                height: 300px;
+                height: ${imgSize};
               }
             }
           }
@@ -66,4 +66,5 @@ export default function ProductRec({ id, imgsrc }) {
 ProductRec.defaultProps = {
   id: 1,
   imgsrc: "/sample.png",
+  imgSize: "300px",
 };

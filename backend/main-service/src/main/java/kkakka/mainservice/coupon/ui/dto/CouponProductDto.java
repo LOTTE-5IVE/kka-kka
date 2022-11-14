@@ -51,7 +51,7 @@ public class CouponProductDto {
             coupon.getPercentage(),
             coupon.getMaxDiscount(),
             coupon.getMinOrderPrice(),
-            isDownloadable, 0);
+            isDownloadable,0);
     }
 
     public void saveDiscountedPrice(Integer discountedPrice) {
