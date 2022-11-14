@@ -72,8 +72,11 @@ export default function SearchFilter({setResource, search, page, cat_id}) {
           }}
           defaultValue={""}
         >
-          <option value="accuracy">정확도순</option>
+          {search &&
+          <option value="accuracy">정확도순</option>}
+          <option value="NEW">최신순</option>
           <option value="BEST">베스트순</option>
+          <option value="OLD">오래된순</option>
           <option value="ASC">최저가순</option>
           <option value="DESC">최고가순</option>
         </select>{" "}
