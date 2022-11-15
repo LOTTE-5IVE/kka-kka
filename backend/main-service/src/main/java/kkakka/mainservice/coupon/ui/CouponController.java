@@ -3,6 +3,7 @@ package kkakka.mainservice.coupon.ui;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+import kkakka.mainservice.common.auth.aop.AdminOnly;
 import kkakka.mainservice.coupon.application.CouponService;
 import kkakka.mainservice.coupon.application.DiscountService;
 import kkakka.mainservice.coupon.ui.dto.CouponProductDto;
@@ -32,15 +33,23 @@ public class CouponController {
     private final DiscountService discountService;
 
     /* 쿠폰 등록 */
+    @AdminOnly
     @PostMapping
-    public ResponseEntity<Void> createCoupon(@RequestBody CouponRequestDto couponRequestDto) {
+    public ResponseEntity<Void> createCoupon(
+            @RequestBody CouponRequestDto couponRequestDto,
+            @AuthenticationPrincipal LoginMember loginMember
+    ) {
         Long couponId = couponService.createCoupon(couponRequestDto);
         return ResponseEntity.created(URI.create(couponId.toString())).build();
     }
 
     /* 쿠폰 삭제 */
+    @AdminOnly
     @PutMapping("/{couponId}")
-    public ResponseEntity<Void> deleteCouponByAdmin(@PathVariable Long couponId) {
+    public ResponseEntity<Void> deleteCouponByAdmin(
+            @PathVariable Long couponId,
+            @AuthenticationPrincipal LoginMember loginMember
+    ) {
         couponService.deleteCouponByCouponId(couponId);
         return ResponseEntity.ok().build();
     }
@@ -92,15 +101,23 @@ public class CouponController {
     }
 
     /* 할인 등록 */
+    @AdminOnly
     @PostMapping("/discount")
-    public ResponseEntity<Long> createDiscount(@RequestBody DiscountRequestDto discountRequestDto) {
+    public ResponseEntity<Long> createDiscount(
+            @RequestBody DiscountRequestDto discountRequestDto,
+            @AuthenticationPrincipal LoginMember loginMember
+    ) {
         Long discountId = discountService.createDiscount(discountRequestDto);
         return ResponseEntity.created(URI.create(discountId.toString())).build();
     }
 
     /* 할인 삭제 */
+    @AdminOnly
     @PutMapping("/discount/{discountId}")
-    public ResponseEntity<Void> deleteDiscount(@PathVariable Long discountId) {
+    public ResponseEntity<Void> deleteDiscount(
+            @PathVariable Long discountId,
+            @AuthenticationPrincipal LoginMember loginMember
+    ) {
         discountService.deleteDiscount(discountId);
         return ResponseEntity.ok().build();
     }
