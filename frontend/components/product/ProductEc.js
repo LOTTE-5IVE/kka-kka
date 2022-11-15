@@ -8,7 +8,7 @@ export default function ProductEc({ imgsrc, link, context }) {
           <a>
             <div className="pab">
               <div className="front">
-                <img src="/sample.png" />
+                <img src="/sample.png" alt="" />
               </div>
               <div className="back">
                 <p className="bottom_title">test</p>

@@ -125,35 +125,4 @@ public class ProductAcceptanceTest extends DocumentConfiguration {
         }
         return products.size() / pageSize;
     }
-
-    @DisplayName("검색 조회 - 성공")
-    @Test
-    void showProductsBySearchTest_success() {
-        //given
-        //when
-        final ExtractableResponse<Response> response = RestAssured
-                .given(spec).log().all()
-                .filter(document("products-show-search"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/api/products?keyword=제로 쿠키")
-                .then().log().all()
-                .extract();
-
-        //then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body().jsonPath().getList("data", ProductResponse.class)).hasSize(1);
-        assertThat(
-                response.body().jsonPath().getList("data", ProductResponse.class)
-                        .stream()
-                        .map(productResponse -> productResponse.getName().contains("제로"))
-                        .findAny())
-                .isNotEmpty();
-        assertThat(
-                response.body().jsonPath().getList("data", ProductResponse.class)
-                        .stream()
-                        .map(productResponse -> productResponse.getName().contains("쿠키"))
-                        .findAny())
-                .isNotEmpty();
-    }
 }

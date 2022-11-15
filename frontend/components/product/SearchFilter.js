@@ -1,11 +1,18 @@
+import axios from "axios";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { fetchSearchData } from "../../apis/SearchApi";
 
-export default function SearchFilter() {
+export default function SearchFilter({ setResource, search, page, cat_id }) {
   const [category, setCategory] = useState([]);
-  const [sort, setSort] = useState();
+  const [sort, setSort] = useState("");
   const [toggle, setToggle] = useState(false);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [minCalorie, setMinCalorie] = useState(0);
+  const [maxCalorie, setMaxCalorie] = useState(0);
+  const [cateId, setCateId] = useState(0);
 
   const handleSingleCheck = (checked, product) => {
     if (checked) {
@@ -14,6 +21,31 @@ export default function SearchFilter() {
       setCategory(category.filter((el) => el !== product));
     }
   };
+
+  const searchFilter = async () => {
+    setResource(
+      fetchSearchData(
+        sort,
+        page,
+        search,
+        category,
+        minPrice,
+        maxPrice,
+        minCalorie,
+        maxCalorie,
+        cat_id,
+      ),
+    );
+  };
+
+  useEffect(() => {
+    searchFilter();
+  }, [page]);
+
+  useEffect(() => {
+    setCateId(cat_id);
+    searchFilter();
+  }, [sort]);
 
   return (
     <div className="SFWrapper">
@@ -29,7 +61,7 @@ export default function SearchFilter() {
                 setToggle(true);
               }}
             >
-              필터 열기 <img src="/product/searchfilter_off.png" />
+              필터 열기 <img src="/product/searchfilter_off.png" alt="" />
             </div>
           ) : (
             <div
@@ -38,7 +70,7 @@ export default function SearchFilter() {
                 setToggle(false);
               }}
             >
-              필터 닫기 <img src="/product/searchfilter_on.png" />
+              필터 닫기 <img src="/product/searchfilter_on.png" alt="" />
             </div>
           )}
         </div>
@@ -46,11 +78,14 @@ export default function SearchFilter() {
           onChange={(e) => {
             setSort(e.target.value);
           }}
-          defaultValue={"DEFAULT"}
+          defaultValue={""}
         >
-          <option value="DEFAULT">정확도순</option>
-          <option value="최저가순">최저가순</option>
-          <option value="최고가순">최고가순</option>
+          {search && <option value="accuracy">정확도순</option>}
+          <option value="NEW">최신순</option>
+          <option value="BEST">베스트순</option>
+          <option value="OLD">오래된순</option>
+          <option value="ASC">최저가순</option>
+          <option value="DESC">최고가순</option>
         </select>{" "}
       </div>
       {toggle && (
@@ -141,15 +176,42 @@ export default function SearchFilter() {
               <tr>
                 <th>가격</th>
                 <td>
-                  <input type="text" size="3" />원 ~{" "}
-                  <input type="text" size="3" />원
+                  <input
+                    type="text"
+                    size="3"
+                    onChange={(e) => {
+                      setMinPrice(e.target.value);
+                    }}
+                  />
+                  원 ~{" "}
+                  <input
+                    type="text"
+                    size="3"
+                    onChange={(e) => {
+                      setMaxPrice(e.target.value);
+                    }}
+                  />
+                  원
                 </td>
               </tr>
               <tr>
                 <th>칼로리</th>
                 <td>
-                  <input type="text" size="3" />
-                  kcal ~ <input type="text" size="3" />
+                  <input
+                    type="text"
+                    size="3"
+                    onChange={(e) => {
+                      setMinCalorie(e.target.value);
+                    }}
+                  />
+                  kcal ~{" "}
+                  <input
+                    type="text"
+                    size="3"
+                    onChange={(e) => {
+                      setMaxCalorie(e.target.value);
+                    }}
+                  />
                   kcal
                 </td>
               </tr>
@@ -157,7 +219,7 @@ export default function SearchFilter() {
                 <td colSpan="2" style={{ border: "0", textAlign: "right" }}>
                   <button
                     onClick={() => {
-                      console.log("click");
+                      searchFilter();
                     }}
                   >
                     검색

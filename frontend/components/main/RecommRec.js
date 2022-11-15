@@ -7,7 +7,7 @@ export default function RecommRec({ id, imgsrc, name, price, discount }) {
         <Link href={`/product/productDetail?id=${id}`}>
           <a>
             <div className="imageSection">
-              <img src={imgsrc} />
+              <img src={imgsrc} alt="" />
             </div>
           </a>
         </Link>

@@ -8,13 +8,7 @@ export default function NotFound() {
       <div className="NotFoundWrapper">
         <div className="image">
           {/* <img src="/404.png" /> */}
-          <Image
-            src="/404.png"
-            height={200}
-            width={200}
-            alt="img"
-            layout="fill"
-          />
+          <Image src="/404.png" alt="img" layout="fill" />
         </div>
         <div className="comment">
           <span>까까에는 이런 페이지가 없어요 ㅠㅠ</span>

@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
+import Image from "next/image";
 
 export default function Visual() {
   const fadeEls = useRef([]);
@@ -18,18 +19,21 @@ export default function Visual() {
       <section className="visual">
         <div className="fade-in" ref={(el) => (fadeEls.current[4] = el)}>
           <div className="logoComment">
-            <img src="/main/intro.png" />
+            <Image src="/main/intro.png" alt="" layout="fill" />
           </div>
         </div>
 
-        <div className="fade-in" ref={(el) => (fadeEls.current[1] = el)}>
-          <img className="giftset" src="/main/giftset.png" />
+        <div
+          className="fade-in giftset"
+          ref={(el) => (fadeEls.current[1] = el)}
+        >
+          <Image src="/main/giftset.png" alt="" layout="fill" />
         </div>
-        <div className="fade-in" ref={(el) => (fadeEls.current[2] = el)}>
-          <img className="cookie" src="/main/cookie.png" />
+        <div className="fade-in cookie" ref={(el) => (fadeEls.current[2] = el)}>
+          <Image src="/main/cookie.png" alt="" layout="fill" />
         </div>
-        <div className="fade-in" ref={(el) => (fadeEls.current[3] = el)}>
-          <img className="bts" src="/main/bts.png" />
+        <div className="fade-in bts" ref={(el) => (fadeEls.current[3] = el)}>
+          <Image src="/main/bts.png" alt="" layout="fill" />
         </div>
       </section>
 
@@ -49,13 +53,13 @@ export default function Visual() {
               top: 30px;
               left: 130px;
 
-              img {
-                width: 845px;
-              }
+              width: 730px;
+              height: 320px;
             }
 
             .bts {
               width: 420px;
+              height: 420px;
               position: absolute;
               bottom: 0px;
               left: 805px;
@@ -63,6 +67,7 @@ export default function Visual() {
 
             .cookie {
               width: 500px;
+              height: 500px;
               position: absolute;
               bottom: 0px;
               right: 380px;
@@ -70,6 +75,7 @@ export default function Visual() {
 
             .giftset {
               width: 600px;
+              height: 600px;
               position: absolute;
               bottom: 20px;
               right: 75px;
@@ -95,13 +101,13 @@ export default function Visual() {
               top: 1.58vw;
               left: 6.73vw;
 
-              img {
-                width: 44.4vw;
-              }
+              width: 44.4vw;
+              height: 19.5vw;
             }
 
             .bts {
               width: 22.1vw;
+              height: 22.1vw;
               position: absolute;
               bottom: 0vw;
               left: 42.37vw;
@@ -109,6 +115,7 @@ export default function Visual() {
 
             .cookie {
               width: 26.31vw;
+              height: 26.31vw;
               position: absolute;
               bottom: 0vw;
               right: 20vw;
@@ -116,6 +123,7 @@ export default function Visual() {
 
             .giftset {
               width: 31.58vw;
+              height: 31.58vw;
               position: absolute;
               bottom: 1.05vw;
               right: 3.95vw;
@@ -143,13 +151,13 @@ export default function Visual() {
               top: 25%;
               transform: translate(-50%, -50%);
 
-              img {
-                width: 510px;
-              }
+              width: 510px;
+              height: 224px;
             }
 
             .bts {
               width: 200px;
+              height: 200px;
               position: absolute;
               left: 25%;
               top: 75%;
@@ -158,6 +166,7 @@ export default function Visual() {
 
             .cookie {
               width: 280px;
+              height: 280px;
               position: absolute;
               left: 50%;
               top: 70%;
@@ -166,6 +175,7 @@ export default function Visual() {
 
             .giftset {
               width: 350px;
+              height: 350px;
               position: absolute;
               left: 70%;
               top: 63%;

@@ -1,20 +1,19 @@
 import Link from "next/link";
+import SearchBar from "./SearchBar";
 import { useContext } from "react";
 import { useEffect, useState } from "react";
 import { TokenContext } from "../../context/TokenContext";
 import { isLogin } from "../../hooks/isLogin";
 import { getToken } from "../../hooks/getToken";
 import { memberInfo } from "../../hooks/memberInfo";
-import { isText } from "../../hooks/isText";
 import { GetHApi } from "../../apis/Apis";
 import { CartCntContext } from "../../context/CartCntContext";
 
 export default function Header() {
-  const [value, setValue] = useState("");
   const [name, setName] = useState("");
   const [login, setLogin] = useState(false);
-  const { token, setToken } = useContext(TokenContext);
   const { cartCnt, setCartCnt } = useContext(CartCntContext);
+  const { token, setToken } = useContext(TokenContext);
 
   const getMemberInfo = async () => {
     await memberInfo(getToken()).then((res) => {
@@ -27,25 +26,6 @@ export default function Header() {
       setCartCnt(res.cartCount);
     });
   };
-
-  function search(event) {
-    if (event.key === "Enter") {
-      if (value.length < 2 || value.length > 20) {
-        alert("두 글자 이상 스무 글자 이하로 입력하세요.");
-        return;
-      }
-
-      router.push(
-        {
-          pathname: `/product`,
-          query: { cat_id: 0, search: value },
-        },
-        `/product`,
-      );
-
-      setValue("");
-    }
-  }
 
   useEffect(() => {
     if (isLogin()) {
@@ -62,33 +42,11 @@ export default function Header() {
         <div className="logo">
           <Link href="/">
             <a>
-              <img src="/main/logo.png" />
+              <img src="/main/logo.png" alt="" />
             </a>
           </Link>
         </div>
-        <div className="search">
-          <input
-            type="text"
-            size="30"
-            defaultValue={value}
-            placeholder="검색어를 입력해주세요"
-            onChange={(e) => {
-              if (isText(e.currentTarget.value)) {
-                setValue(e.currentTarget.value);
-              } else {
-                alert("특수문자는 입력할 수 없습니다.");
-                e.currentTarget.value = "";
-              }
-            }}
-            onKeyUp={(event) => {
-              search(event, value);
-            }}
-          ></input>
-
-          <Link href={`/product?search=${value}`}>
-            <img src="/common/main_search.png" />
-          </Link>
-        </div>
+        <SearchBar />
         <div className="icons">
           <div className="top">
             {login ? (
@@ -123,6 +81,7 @@ export default function Header() {
                   <img
                     src="/common/top_mypage.png"
                     style={{ cursor: "pointer" }}
+                    alt=""
                   />
                 </Link>
 
@@ -135,6 +94,7 @@ export default function Header() {
                       className="cart"
                       src="/common/top_cart.png"
                       style={{ cursor: "pointer" }}
+                      alt=""
                     />
                   </div>
                 </Link>
@@ -146,6 +106,7 @@ export default function Header() {
                     className="cart"
                     src="/common/top_mypage.png"
                     style={{ cursor: "pointer" }}
+                    alt=""
                   />
                 </Link>
 
@@ -155,6 +116,7 @@ export default function Header() {
                     <img
                       src="/common/top_cart.png"
                       style={{ cursor: "pointer" }}
+                      alt=""
                     />
                   </div>
                 </Link>
@@ -172,29 +134,6 @@ export default function Header() {
             .logo {
               position: absolute;
               transform: translate(-50%, -50%);
-            }
-          }
-
-          .search {
-            position: absolute;
-            transform: translate(-50%, -50%);
-            border: 2px solid #ed1b23;
-
-            input[type="text"] {
-              border: none;
-              padding: 0;
-              box-sizing: border-box;
-              color: #c5c9cd;
-              font-weight: 600;
-            }
-
-            input[type="text"]:focus {
-              outline: none;
-              color: #000;
-            }
-
-            img {
-              position: absolute;
             }
           }
 
@@ -262,28 +201,6 @@ export default function Header() {
               }
             }
 
-            .search {
-              left: 850px;
-              top: 65px;
-              border-radius: 40px;
-              padding: 0 17px;
-
-              input[type="text"] {
-                border-radius: 40px;
-                width: 317px;
-                height: 45px;
-                line-height: 45px;
-                font-size: 1em;
-              }
-
-              img {
-                width: 24px;
-                height: 24px;
-                top: 10px;
-                left: 310px;
-              }
-            }
-
             .icons {
               left: 1400px;
               top: 65px;
@@ -328,29 +245,6 @@ export default function Header() {
                 img {
                   height: 5vw;
                 }
-              }
-            }
-
-            .search {
-              left: 45vw;
-              top: 5vw;
-              border-radius: 2vw;
-              padding: 0 0.9vw;
-
-              input[type="text"] {
-                border-radius: 2vw;
-                width: 17vw;
-                height: 2.4vw;
-                line-height: 4.4vw;
-                font-size: 1vw;
-                margin-bottom: 1vw;
-              }
-
-              img {
-                width: 1.3vw;
-                min-width: 9px;
-                top: 1.5vw;
-                left: 16.5vw;
               }
             }
 
@@ -431,27 +325,6 @@ export default function Header() {
                 top: 35px;
                 img {
                   height: 60px;
-                }
-              }
-
-              .search {
-                left: 210px;
-                top: 35px;
-                border-radius: 40px;
-                padding: 0 17px;
-
-                input[type="text"] {
-                  border-radius: 40px;
-                  width: 120px;
-                  height: 15px;
-                  font-size: 0.5em;
-                }
-
-                img {
-                  width: 16px;
-                  height: 16px;
-                  top: 5px;
-                  left: 130px;
                 }
               }
 
