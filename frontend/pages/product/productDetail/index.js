@@ -117,7 +117,7 @@ export default function ProductDetail({ product, reviewCount }) {
         <div className="ProductDetailLWrapper" key={product.id}>
           <div className="detailTop">
             <div className="detailImg" style={{ position: "relative" }}>
-              <Image src={product.imageUrl} alt="" layout="fill" />
+              <img src={product.imageUrl} alt="" layout="fill" priority />
             </div>
 
             <div className="detailEtc" key={product.id}>
