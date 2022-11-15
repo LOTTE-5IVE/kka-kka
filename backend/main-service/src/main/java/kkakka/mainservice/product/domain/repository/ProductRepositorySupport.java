@@ -12,7 +12,6 @@ import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.QCategory;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.QProduct;
-import kkakka.mainservice.product.domain.SearchWords;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -95,25 +94,5 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
         return queryFactory.selectFrom(QProduct.product)
             .where(QProduct.product.name.contains(keyword))
             .limit(10).fetch();
-    }
-
-    private BooleanBuilder categoryNameEq(SearchWords searchWords) {
-        final BooleanBuilder builder = new BooleanBuilder();
-        if (searchWords.hasSearchWords()) {
-            for (String searchWord : searchWords.getSearchWords()) {
-                builder.or(QProduct.product.category.name.likeIgnoreCase("%" + searchWord + "%"));
-            }
-        }
-        return builder;
-    }
-
-    private BooleanBuilder productNameLike(SearchWords searchWords) {
-        final BooleanBuilder builder = new BooleanBuilder();
-        if (searchWords.hasSearchWords()) {
-            for (String searchWord : searchWords.getSearchWords()) {
-                builder.or(QProduct.product.name.likeIgnoreCase("%" + searchWord + "%"));
-            }
-        }
-        return builder;
     }
 }
