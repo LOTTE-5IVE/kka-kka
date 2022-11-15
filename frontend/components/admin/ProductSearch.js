@@ -9,7 +9,6 @@ export default function ProductSearch() {
 
   const getProducts = async () => {
     await axios.get("/api/products?category=0").then((res) => {
-      console.log(res.data.data);
       setProducts(res.data.data);
     });
   };

@@ -1,21 +1,9 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { AdminButton } from "../common/Button/AdminButton";
+import { useState } from "react";
 import CouponSearchTable from "./CouponSearchTable";
 import DiscountSearchTable from "./DiscountSearchTable";
 
 export default function ProductSearch() {
   const [tab, setTab] = useState("할인");
-
-  // const getPromotion = async () => {
-  //   await axios.get("/api/coupons/discount").then((res) => {
-  //     console.log(res.data);
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   getPromotion();
-  // }, []);
 
   return (
     <div className="wrapper">

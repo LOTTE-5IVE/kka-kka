@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ApplyGrade from "./ApplyGrade";
 import ApplyProduct from "./ApplyProduct";
 import axios from "axios";
@@ -6,6 +6,7 @@ import Button from "../common/Button/Button";
 import ApplyCategory from "./ApplyCategory";
 import ValidDuration from "./ValidDuration";
 import ValidDate from "./ValidDate";
+import { UserContext } from "../../context/AdminTokenContext";
 
 export default function CouponEnrollTable() {
   const [valid, setValid] = useState("기간");
@@ -18,6 +19,8 @@ export default function CouponEnrollTable() {
   const [endDate, setEndDate] = useState();
   const [targetVal, setTargetVal] = useState(1);
   const [productId, setProductId] = useState(1);
+
+  const userData = useContext(UserContext)?.adminUser;
 
   const makeCoupon = async () => {
     await axios
@@ -33,6 +36,10 @@ export default function CouponEnrollTable() {
         percentage: discount,
         maxDiscount: maxdis,
         minOrderPrice: minorder,
+      }, {
+        headers: {
+          Authorization: `Bearer ${userData.adminToken}`
+        }
       })
       .then((res) => {
         alert("등록완료!");
@@ -55,6 +62,10 @@ export default function CouponEnrollTable() {
         percentage: discount,
         maxDiscount: maxdis,
         minOrderPrice: minorder,
+      }, {
+        headers: {
+          Authorization: `Bearer ${userData.adminToken}`
+        }
       })
       .then((res) => {
         alert("등록완료!");
@@ -77,6 +88,10 @@ export default function CouponEnrollTable() {
         percentage: discount,
         maxDiscount: maxdis,
         minOrderPrice: minorder,
+      }, {
+        headers: {
+          Authorization: `Bearer ${userData.adminToken}`
+        }
       })
       .then((res) => {
         alert("등록완료!");

@@ -1,9 +1,9 @@
-import { useState } from "react";
-import ApplyGrade from "./ApplyGrade";
+import { useContext, useState } from "react";
 import ApplyProduct from "./ApplyProduct";
 import axios from "axios";
 import Button from "../common/Button/Button";
 import ApplyCategory from "./ApplyCategory";
+import { UserContext } from "../../context/AdminTokenContext";
 
 export default function DiscountEnrollTable() {
   const [target, setTarget] = useState("카테고리");
@@ -13,6 +13,8 @@ export default function DiscountEnrollTable() {
   const [endDate, setEndDate] = useState();
   const [targetVal, setTargetVal] = useState(1);
   const [productId, setProductId] = useState(1);
+
+  const userData = useContext(UserContext)?.adminUser;
 
   const makeDiscount = async () => {
     await axios
@@ -24,6 +26,10 @@ export default function DiscountEnrollTable() {
         discountType: "CATEGORY_DISCOUNT",
         startedAt: `${startDate} 00:00:00`,
         expiredAt: `${endDate} 00:00:00`,
+      }, {
+        headers: {
+          Authorization: `Bearer ${userData.adminToken}`
+        }
       })
       .then((res) => {
         alert("등록완료!");
@@ -43,6 +49,10 @@ export default function DiscountEnrollTable() {
         discountType: "PRODUCT_DISCOUNT",
         startedAt: `${startDate} 00:00:00`,
         expiredAt: `${endDate} 00:00:00`,
+      }, {
+        headers: {
+          Authorization: `Bearer ${userData.adminToken}`
+        }
       })
       .then((res) => {
         alert("등록완료!");

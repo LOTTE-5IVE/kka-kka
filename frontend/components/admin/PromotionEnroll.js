@@ -1,33 +1,9 @@
 import { useState } from "react";
-import axios from "axios";
 import DiscountEnrollTable from "./DiscountEnrollTable";
 import CouponEnrollTable from "./CouponEnrollTable";
 
 export default function PromotionEnroll() {
   const [btn, setBtn] = useState("할인");
-  const [valid, setValid] = useState("기간");
-  const [target, setTarget] = useState("카테고리");
-  const [promotionName, setPromotionName] = useState("");
-  const [discount, setDiscount] = useState();
-  const [maxdis, setMaxdis] = useState();
-  const [minorder, setMinorder] = useState();
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
-  const [targetVal, setTargetVal] = useState("1");
-
-  const makeDiscount = async () => {
-    console.log(typeof startDate);
-    console.log(startDate);
-    await axios.post("/api/coupons/discount", {
-      categoryId: targetVal,
-      productId: null,
-      name: promotionName,
-      discount: discount,
-      discountType: "CATEGORY_DISCOUNT",
-      startedAt: `${startDate} 00:00:00`,
-      expiredAt: `${endDate} 00:00:00`,
-    });
-  };
 
   return (
     <>
