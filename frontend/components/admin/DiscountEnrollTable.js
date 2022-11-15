@@ -1,9 +1,9 @@
-import { useState } from "react";
-import ApplyGrade from "./ApplyGrade";
+import { useEffect, useState } from "react";
 import ApplyProduct from "./ApplyProduct";
 import axios from "axios";
 import Button from "../common/Button/Button";
 import ApplyCategory from "./ApplyCategory";
+import { isNumber } from "../../hooks/isNumber";
 
 export default function DiscountEnrollTable() {
   const [target, setTarget] = useState("카테고리");
@@ -13,6 +13,14 @@ export default function DiscountEnrollTable() {
   const [endDate, setEndDate] = useState();
   const [targetVal, setTargetVal] = useState(1);
   const [productId, setProductId] = useState(1);
+
+  const [nameValid, setNameValid] = useState(false);
+  const [discountValid, setDiscountValid] = useState(false);
+  const [sDateValid, setSDateValid] = useState(false);
+  const [eDateValid, setEDateValid] = useState(false);
+  const [unvalid, setUnValid] = useState(true);
+
+  const today = new Date().toISOString().substring(0, 10);
 
   const makeDiscount = async () => {
     await axios
@@ -52,6 +60,14 @@ export default function DiscountEnrollTable() {
       });
   };
 
+  useEffect(() => {
+    if (nameValid && discountValid & sDateValid & eDateValid) {
+      setUnValid(false);
+    } else {
+      setUnValid(true);
+    }
+  }, [nameValid, discountValid, sDateValid, eDateValid]);
+
   return (
     <>
       <div className="contents">
@@ -80,7 +96,13 @@ export default function DiscountEnrollTable() {
                     type="text"
                     defaultValue={promotionName}
                     onChange={(e) => {
-                      setPromotionName(e.target.value);
+                      if (e.target.value.length > 0) {
+                        setPromotionName(e.target.value);
+                        setNameValid(true);
+                      } else {
+                        setPromotionName(e.target.value);
+                        setNameValid(false);
+                      }
                     }}
                   />
                 </div>
@@ -103,7 +125,17 @@ export default function DiscountEnrollTable() {
                     type="text"
                     defaultValue={discount}
                     onChange={(e) => {
-                      setDiscount(e.target.value);
+                      if (isNumber(e.target.value)) {
+                        setDiscount(e.target.value);
+                        if (e.target.value.length > 0) setDiscountValid(true);
+                        else {
+                          setDiscountValid(false);
+                        }
+                      } else {
+                        alert("숫자만 입력할 수 있습니다.");
+                        setDiscountValid(false);
+                        e.target.value = "";
+                      }
                     }}
                   />{" "}
                   %
@@ -123,17 +155,36 @@ export default function DiscountEnrollTable() {
                       type="date"
                       defaultValue={startDate}
                       onChange={(e) => {
-                        setStartDate(e.target.value + "");
+                        if (e.target.value >= endDate) {
+                          alert("날짜를 다시 설정해주세요.");
+                          e.target.value = "";
+                          setStartDate("");
+                          setSDateValid(false);
+                        } else {
+                          setStartDate(e.target.value + "");
+                          setSDateValid(true);
+                        }
                       }}
-                    />{" "}
-                    ~{" "}
+                    />
+                    {"  "}~{"  "}
                     <input
                       id="oname"
                       className="inputTypeText"
                       type="date"
                       defaultValue={endDate}
                       onChange={(e) => {
-                        setEndDate(e.target.value + "");
+                        if (
+                          e.target.value <= today ||
+                          e.target.value <= startDate
+                        ) {
+                          alert("날짜를 다시 설정해주세요.");
+                          e.target.value = "";
+                          setEndDate("");
+                          setEDateValid(false);
+                        } else {
+                          setEndDate(e.target.value + "");
+                          setEDateValid(true);
+                        }
                       }}
                     />
                   </div>
@@ -174,23 +225,22 @@ export default function DiscountEnrollTable() {
         </table>
 
         <div className="btnWrapper">
-          {target == "카테고리" ? (
-            <div
-              onClick={() => {
+          <div
+            onClick={() => {
+              if (target === "카테고리") {
                 makeDiscount();
-              }}
-            >
-              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff" />
-            </div>
-          ) : (
-            <div
-              onClick={() => {
+              } else {
                 makeDiscountProduct();
-              }}
-            >
-              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff" />
-            </div>
-          )}
+              }
+            }}
+          >
+            <Button
+              context="혜택 등록하기"
+              color="#fe5c57"
+              tcolor="#fff"
+              unvalid={unvalid}
+            />
+          </div>
         </div>
       </div>
 

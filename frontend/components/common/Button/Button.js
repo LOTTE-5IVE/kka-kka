@@ -1,15 +1,21 @@
-export default function Button({ context, color, tcolor, border }) {
+export default function Button({ context, color, tcolor, border, unvalid }) {
   return (
     <>
-      <div className="btn">{context}</div>
+      <button className="btn" disabled={unvalid}>
+        {context}
+      </button>
 
       <style jsx>
         {`
+          .btn:disabled {
+            background: #dadada;
+            color: white;
+            border: none;
+          }
           .btn {
             width: 160px;
             height: 50px;
             padding: 0px;
-            line-height: 50px;
             color: ${tcolor};
             font-size: 18px;
             background: ${color};
@@ -28,4 +34,5 @@ Button.defaultProps = {
   tcolor: "000",
   color: "rgb(242, 29, 47)",
   border: "none",
+  unvalid: true,
 };
