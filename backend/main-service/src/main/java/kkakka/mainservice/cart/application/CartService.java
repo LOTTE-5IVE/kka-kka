@@ -125,11 +125,10 @@ public class CartService {
         CartItem cartItem = cartItemRepository.findByIdandMemberId(cartItemId, loginMemberId)
                 .orElseThrow(KkaKkaException::new);
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
-
         cartItem.applyCoupon(coupon);
 
         MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId, loginMemberId);
-        memberCoupon.useCoupon();
+        memberCoupon.applyCoupon();
 
         Integer discountedPrice = cartItem.getDiscountedPrice(coupon);
         return CartItemDto.createWithCoupon(cartItem, discountedPrice, coupon);

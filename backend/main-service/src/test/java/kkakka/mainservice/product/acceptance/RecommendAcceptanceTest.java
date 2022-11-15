@@ -1,5 +1,6 @@
 package kkakka.mainservice.product.acceptance;
 
+import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
 import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -50,6 +51,26 @@ public class RecommendAcceptanceTest extends DocumentConfiguration {
                 .header("Authorization", "Bearer " + accessToken)
                 .when()
                 .get("/api/products/recommend")
+                .then()
+                .log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().jsonPath().getList("data", ProductResponse.class))
+                .hasSize(MAXIMUM_PRODUCT_SIZE_WITH_PAGE_DEFAULT);
+    }
+
+
+    @DisplayName("상품과 연관된 추천 - 성공")
+    @Test
+    void showRecommendationByProduct_success(){
+        // given
+        // when
+        ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("show-recommend-product-success"))
+                .when()
+                .get("/api/products/" + PRODUCT_1.getId() + "/recommend")
                 .then()
                 .log().all().extract();
 
