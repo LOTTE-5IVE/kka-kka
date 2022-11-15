@@ -1,5 +1,6 @@
 package kkakka.mainservice.cart.acceptance;
 
+import static kkakka.mainservice.fixture.TestAdminUser.TEST_ADMIN;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
 import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
@@ -12,13 +13,16 @@ import io.restassured.response.Response;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
+import kkakka.mainservice.fixture.TestAdminUser;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.ProviderName;
 import org.hibernate.Session;
@@ -291,9 +295,26 @@ class CartAcceptanceTest extends DocumentConfiguration {
         return response.body().jsonPath().get("accessToken");
     }
 
+    private String 관리자_로그인() {
+        Map<String, String> request = new HashMap<>();
+        request.put("userId", TEST_ADMIN.getUserId());
+        request.put("password", TEST_ADMIN.getPassword());
+
+        final ExtractableResponse<Response> response = RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/api/admin/login")
+                .then().extract();
+        return response.body().jsonPath().get("adminToken");
+    }
+
     private String 퍼센트_쿠폰_생성() {
+        final String adminToken = 관리자_로그인();
+
         final ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + adminToken)
                 .body("{\n"
                         + "  \"categoryId\": null,\n"
                         + "  \"grade\": null,\n"
