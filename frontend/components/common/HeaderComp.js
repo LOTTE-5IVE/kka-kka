@@ -6,10 +6,8 @@ import { TokenContext } from "../../context/TokenContext";
 import { isLogin } from "../../hooks/isLogin";
 import { getToken } from "../../hooks/getToken";
 import { memberInfo } from "../../hooks/memberInfo";
-import { isText } from "../../hooks/isText";
 import { GetHApi } from "../../apis/Apis";
 import { CartCntContext } from "../../context/CartCntContext";
-import SearchBar from "./SearchBar";
 
 export default function Header() {
   const [name, setName] = useState("");
@@ -28,25 +26,6 @@ export default function Header() {
       setCartCnt(res.cartCount);
     });
   };
-
-  function search(event) {
-    if (event.key === "Enter") {
-      if (value.length < 2 || value.length > 20) {
-        alert("두 글자 이상 스무 글자 이하로 입력하세요.");
-        return;
-      }
-
-      router.push(
-        {
-          pathname: `/product`,
-          query: { cat_id: 0, search: value },
-        },
-        `/product`,
-      );
-
-      setValue("");
-    }
-  }
 
   useEffect(() => {
     if (isLogin()) {

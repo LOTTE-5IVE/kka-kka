@@ -14,6 +14,11 @@ export default function NoSearch() {
           @media screen and (min-width: 769px) {
             /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
             .NotFoundWrapper {
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+
               .image {
                 display: flex;
                 justify-content: center;
