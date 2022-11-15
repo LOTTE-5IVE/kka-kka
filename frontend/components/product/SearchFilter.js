@@ -39,10 +39,6 @@ export default function SearchFilter({ setResource, search, page, cat_id }) {
   };
 
   useEffect(() => {
-    console.log(category);
-  }, [category]);
-
-  useEffect(() => {
     searchFilter();
   }, [page]);
 

@@ -7,7 +7,6 @@ export default function ValidDate({ setStartDate, setEndDate }) {
   const [duration, setDuration] = useState(0);
 
   useEffect(() => {
-    console.log(duration);
     setStartDate(date);
   }, [duration]);
 

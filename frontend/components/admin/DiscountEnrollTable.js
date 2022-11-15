@@ -105,8 +105,8 @@ export default function DiscountEnrollTable() {
                     onChange={(e) => {
                       setDiscount(e.target.value);
                     }}
-                  />
-                  {" "}%
+                  />{" "}
+                  %
                 </div>
               </td>
             </tr>
@@ -177,20 +177,18 @@ export default function DiscountEnrollTable() {
           {target == "카테고리" ? (
             <div
               onClick={() => {
-                console.log("click");
                 makeDiscount();
               }}
             >
-              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff"/>
+              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff" />
             </div>
           ) : (
             <div
               onClick={() => {
-                console.log("click");
                 makeDiscountProduct();
               }}
             >
-              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff"/>
+              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff" />
             </div>
           )}
         </div>
@@ -219,6 +217,7 @@ export default function DiscountEnrollTable() {
               padding: 7px 25px;
               border-radius: 1em;
               margin-right: 15px;
+              cursor: pointer;
             }
 
             .active {

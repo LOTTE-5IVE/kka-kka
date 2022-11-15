@@ -170,7 +170,6 @@ export default function ProductDetail({ product, reviewCount }) {
                 <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
                 <div
                   onClick={() => {
-                    console.log("product:::", product);
                     handleModal(true);
                   }}
                 >

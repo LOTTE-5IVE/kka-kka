@@ -118,18 +118,6 @@ export default function CouponEnrollTable() {
                     }}
                   />
                 </div>
-
-                {/* <div style={{ width: "40%" }}>
-                  <span>
-                    수량 x{" "}
-                    <input
-                      id="oname"
-                      className="inputTypeText"
-                      size="1"
-                      type="text"
-                    />
-                  </span>
-                </div> */}
               </td>
             </tr>
             <tr style={{ height: "3vw" }}>
@@ -151,8 +139,8 @@ export default function CouponEnrollTable() {
                     onChange={(e) => {
                       setDiscount(e.target.value);
                     }}
-                  />
-                  {" "}%
+                  />{" "}
+                  %
                 </div>
 
                 <div style={{ width: "25%" }}>
@@ -275,7 +263,6 @@ export default function CouponEnrollTable() {
           {target == "카테고리" ? (
             <div
               onClick={() => {
-                console.log("click");
                 makeCoupon();
               }}
             >
@@ -284,7 +271,6 @@ export default function CouponEnrollTable() {
           ) : target == "상품" ? (
             <div
               onClick={() => {
-                console.log("click");
                 makeCouponProduct();
               }}
             >
@@ -293,7 +279,6 @@ export default function CouponEnrollTable() {
           ) : (
             <div
               onClick={() => {
-                console.log("click");
                 makeCouponGrade();
               }}
             >
@@ -326,6 +311,7 @@ export default function CouponEnrollTable() {
               padding: 7px 25px;
               border-radius: 1em;
               margin-right: 15px;
+              cursor: pointer;
             }
 
             .active {
