@@ -186,8 +186,9 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
 
         // when
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
+            .given(spec).log().all()
             .header("Authorization", "Bearer " + accessToken)
+            .filter(document("product-order-with-coupon"))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .get("/api/members/me/orders")

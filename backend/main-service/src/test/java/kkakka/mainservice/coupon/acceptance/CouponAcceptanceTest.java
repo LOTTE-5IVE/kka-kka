@@ -432,8 +432,9 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
 
         // when
         final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
+            .given(spec).log().all()
             .header("Authorization", "Bearer " + accessToken)
+            .filter(document("order-with-coupon"))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(orderRequest)
             .when()
