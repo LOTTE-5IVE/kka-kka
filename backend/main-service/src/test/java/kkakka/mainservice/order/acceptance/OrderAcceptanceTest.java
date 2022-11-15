@@ -57,8 +57,8 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         //given
         String accessToken = 액세스_토큰_가져옴();
 
-        ProductOrderDto productOrderDto1 = new ProductOrderDto(PRODUCT_1.getId(), 2);
-        ProductOrderDto productOrderDto2 = new ProductOrderDto(PRODUCT_2.getId(), 1);
+        ProductOrderDto productOrderDto1 = new ProductOrderDto(PRODUCT_1.getId(), null, 2);
+        ProductOrderDto productOrderDto2 = new ProductOrderDto(PRODUCT_2.getId(), null, 1);
         List<ProductOrderDto> productOrderDtos = new ArrayList<>();
         productOrderDtos.add(productOrderDto1);
         productOrderDtos.add(productOrderDto2);
@@ -91,9 +91,9 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
 
         //given
         String accessToken = 액세스_토큰_가져옴();
-        주문_요청함(accessToken, PRODUCT_1.getId());
+        주문_요청함(accessToken, PRODUCT_1.getId(), null);
         후기_작성함(accessToken, "test-review", 5.0);
-        주문_요청함(accessToken, PRODUCT_2.getId());
+        주문_요청함(accessToken, PRODUCT_2.getId(), null);
 
         //when
         final ExtractableResponse<Response> response = RestAssured
@@ -118,11 +118,11 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
 
         //given
         String accessToken = 액세스_토큰_가져옴();
-        주문_요청함(accessToken, PRODUCT_1.getId());
-        주문_요청함(accessToken, PRODUCT_1.getId());
-        주문_요청함(accessToken, PRODUCT_1.getId());
-        주문_요청함(accessToken, PRODUCT_1.getId());
-        주문_요청함(accessToken, PRODUCT_1.getId());
+        주문_요청함(accessToken, PRODUCT_1.getId(), null);
+        주문_요청함(accessToken, PRODUCT_1.getId(), null);
+        주문_요청함(accessToken, PRODUCT_1.getId(), null);
+        주문_요청함(accessToken, PRODUCT_1.getId(), null);
+        주문_요청함(accessToken, PRODUCT_1.getId(), null);
 
         String curSize = "4";
 
@@ -152,11 +152,11 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
 
         //given
         String accessToken = 액세스_토큰_가져옴();
-        Long order1 = 주문_요청함(accessToken, PRODUCT_1.getId());
-        Long order2 = 주문_요청함(accessToken, PRODUCT_1.getId());
-        Long order3 = 주문_요청함(accessToken, PRODUCT_1.getId());
-        Long order4 = 주문_요청함(accessToken, PRODUCT_1.getId());
-        Long order5 = 주문_요청함(accessToken, PRODUCT_1.getId());
+        Long order1 = 주문_요청함(accessToken, PRODUCT_1.getId(), null);
+        Long order2 = 주문_요청함(accessToken, PRODUCT_1.getId(), null);
+        Long order3 = 주문_요청함(accessToken, PRODUCT_1.getId(), null);
+        Long order4 = 주문_요청함(accessToken, PRODUCT_1.getId(), null);
+        Long order5 = 주문_요청함(accessToken, PRODUCT_1.getId(), null);
         int count = List.of(order1, order2, order3, order4, order5).size();
 
         //when
@@ -173,6 +173,68 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.body().path("orderCount").toString()).isEqualTo(String.valueOf(count));
+    }
+
+    @DisplayName("쿠폰 적용 상품 주문 조회 - 성공")
+    @Test
+    public void findMemberOrdersWithCoupon_success() {
+        tearDown();
+        // given
+        String accessToken = 액세스_토큰_가져옴();
+        String couponId = 상품_쿠폰_다운로드(accessToken);
+        주문_요청함(accessToken, PRODUCT_1.getId(), Long.parseLong(couponId));
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/api/members/me/orders")
+            .then().log().all()
+            .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    private String 쿠폰_생성함(String grade, Long productId, String priceRule, Integer percentage,
+        Integer maxDiscount) {
+        if (grade != null) {
+            grade = "\"" + grade + "\"";
+        }
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body("{\n"
+                + "  \"categoryId\": null,\n"
+                + "  \"grade\": " + grade + ",\n"
+                + "  \"productId\": " + productId + ",\n"
+                + "  \"name\": \"test\",\n"
+                + "  \"priceRule\": \"" + priceRule + "\",\n"
+                + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
+                + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
+                + "  \"percentage\": " + percentage + ",\n"
+                + "  \"maxDiscount\": " + maxDiscount + ",\n"
+                + "  \"minOrderPrice\": 20000\n"
+                + "}")
+            .when()
+            .post("/api/coupons")
+            .then().log().all().extract();
+        return response.header("Location");
+    }
+
+    private String 상품_쿠폰_다운로드(String accessToken) {
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .post("/api/coupons/download/" + couponId)
+            .then().log().all().extract();
+
+        return couponId;
     }
 
     private void 후기_작성함(String accessToken, String contents, Double rating) {
@@ -197,11 +259,11 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
                 .then().log().all();
     }
 
-    private Long 주문_요청함(String accessToken, Long productId) {
+    private Long 주문_요청함(String accessToken, Long productId, Long couponId) {
         OrderRequest orderRequest = new OrderRequest(
                 new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getEmail(),
                         TEST_MEMBER_01.getPhone(), TEST_MEMBER_01.getAddress()),
-                List.of(new ProductOrderDto(productId, 1))
+                List.of(new ProductOrderDto(productId, couponId, 1))
         );
 
         //when
