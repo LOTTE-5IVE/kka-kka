@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { useEffect, useState } from "react";
-import { PostHApi } from "../../apis/Apis";
+import { DeleteHApi, PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
 import Title from "../../components/common/Title";
@@ -39,20 +39,31 @@ export default function Payment() {
   const [unvalid, setUnValid] = useState(true);
   const [modalVisibleId, setModalVisibleId] = useState("");
   const { payment, setPayment } = useContext(PaymentContext);
+  const { token, setToken } = useContext(TokenContext);
 
   const onModalHandler = (id) => {
     setModalVisibleId(id);
   };
 
   const cancelCoupon = async (cartItemId, couponId) => {
-    await DeleteHApi(`/api/carts/${cartItemId}/${couponId}`, token).then(
-      (res) => {
-        getCartItem();
-      },
-    );
+    if (cartItemId) {
+      await DeleteHApi(`/api/carts/${cartItemId}/${couponId}`, token).then(
+        (res) => {
+          setPayment(
+            payment.map((product) =>
+              product.cartItemId === res.cartItemId
+                ? { ...product, couponDto: null }
+                : product,
+            ),
+          );
+        },
+      );
+    } else {
+      payment[0].couponDto = null;
+      setOrderItems(payment);
+      console.log("ttt:::", payment, orderItems);
+    }
   };
-
-  const { token, setToken } = useContext(TokenContext);
 
   const router = useRouter();
 
@@ -61,15 +72,11 @@ export default function Payment() {
       return;
     }
 
-    if (!router.query.orderItems) {
-      alert("주문/결제가 취소되었습니다.");
-      history.back();
-    }
-
-    if (router.query.orderItems) {
-      setOrderItems(JSON.parse(router.query.orderItems));
-    }
-  }, [router.isReady]);
+    // if (!router.query.orderItems) {
+    //   alert("주문/결제가 취소되었습니다.");
+    //   history.back();
+    // }
+  }, [router.isReady, orderItems]);
 
   useEffect(() => {
     if (!check) return;
@@ -107,6 +114,12 @@ export default function Payment() {
       }
     });
   }, [check]);
+
+  useEffect(() => {
+    if (token !== "") {
+      setOrderItems(payment);
+    }
+  }, [token, modalVisibleId, payment]);
 
   useEffect(() => {
     if (
@@ -501,28 +514,6 @@ export default function Payment() {
         </div>
 
         <div>
-          <div className="tableTitle cpTitle">쿠폰</div>
-          <div className="tableContents cp">
-            <table>
-              <colgroup>
-                <col style={{ width: "15%" }} />
-                <col style={{ width: "85%" }} />
-              </colgroup>
-              <tbody>
-                <tr>
-                  <th scope="row">쿠폰 할인</th>
-                  <td>0원</td>
-                </tr>
-                <tr>
-                  <th scope="row">적용금액</th>
-                  <td>-0원</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div>
           <div className="tableTitle payInfoTitle">결제정보</div>
           <div className="tableContents payInfo">
             <table>
@@ -692,7 +683,6 @@ export default function Payment() {
             }
           }
 
-          .cp,
           .payInfo {
             td {
               text-align: right;
@@ -1002,7 +992,6 @@ export default function Payment() {
               }
             }
 
-            .cp,
             .payInfo {
               font-size: 15px;
             }
