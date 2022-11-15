@@ -12,7 +12,6 @@ import kkakka.mainservice.product.application.dto.CategoryDto;
 import kkakka.mainservice.product.application.dto.NutritionDto;
 import kkakka.mainservice.product.application.dto.ProductDetailDto;
 import kkakka.mainservice.product.application.dto.ProductDto;
-import kkakka.mainservice.product.application.recommend.ProductRecommender;
 import kkakka.mainservice.product.application.recommend.RecommendStrategy;
 import kkakka.mainservice.product.application.recommend.RecommenderFactory;
 import kkakka.mainservice.product.application.recommend.strategy.ProductRecommender;
