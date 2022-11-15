@@ -43,13 +43,9 @@ export default function ProductDetail({ product, reviewCount }) {
 
     setPayment([product]);
 
-    router.push(
-      {
-        pathname: `/payment`,
-        query: { orderItems: JSON.stringify([product]) },
-      },
-      `/payment`,
-    );
+    router.push({
+      pathname: `/payment`,
+    });
   };
 
   const handleQuantity = (type) => {

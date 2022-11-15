@@ -34,24 +34,16 @@ export default function Cart() {
 
   const selectQuery = () => {
     setPayment(checkItems);
-    router.push(
-      {
-        pathname: `/payment`,
-        query: { orderItems: JSON.stringify(checkItems) },
-      },
-      `/payment`,
-    );
+    router.push({
+      pathname: `/payment`,
+    });
   };
 
   const selectAllQuery = () => {
     setPayment(cartItems);
-    router.push(
-      {
-        pathname: `/payment`,
-        query: { orderItems: JSON.stringify(cartItems) },
-      },
-      `/payment`,
-    );
+    router.push({
+      pathname: `/payment`,
+    });
   };
 
   const handleSingleCheck = (checked, product) => {
