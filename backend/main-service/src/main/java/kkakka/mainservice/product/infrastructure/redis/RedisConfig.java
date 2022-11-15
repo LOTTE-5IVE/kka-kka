@@ -21,7 +21,7 @@ public class RedisConfig {
     @Bean
     @ConditionalOnMissingBean(RedisConnectionFactory.class)
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory();
+        return new LettuceConnectionFactory(host, port);
     }
 
     @Bean
