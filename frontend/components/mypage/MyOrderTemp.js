@@ -54,7 +54,11 @@ export default function MyOrderTemp({ handleDetail, setOrderDetail }) {
             <div className="myorderTitle">주문내역</div>
             {!orderList && (
               <div className="orderEmpty">
-                <img className="orderEmptyImg" src="/member/no_item.gif" />
+                <img
+                  className="orderEmptyImg"
+                  src="/member/no_item.gif"
+                  alt=""
+                />
                 <span className="orderEmptyComment">주문내역이 없습니다.</span>
               </div>
             )}

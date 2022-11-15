@@ -42,7 +42,7 @@ export default function Header() {
         <div className="logo">
           <Link href="/">
             <a>
-              <img src="/main/logo.png" />
+              <img src="/main/logo.png" alt="" />
             </a>
           </Link>
         </div>
@@ -81,6 +81,7 @@ export default function Header() {
                   <img
                     src="/common/top_mypage.png"
                     style={{ cursor: "pointer" }}
+                    alt=""
                   />
                 </Link>
 
@@ -93,6 +94,7 @@ export default function Header() {
                       className="cart"
                       src="/common/top_cart.png"
                       style={{ cursor: "pointer" }}
+                      alt=""
                     />
                   </div>
                 </Link>
@@ -104,6 +106,7 @@ export default function Header() {
                     className="cart"
                     src="/common/top_mypage.png"
                     style={{ cursor: "pointer" }}
+                    alt=""
                   />
                 </Link>
 
@@ -113,6 +116,7 @@ export default function Header() {
                     <img
                       src="/common/top_cart.png"
                       style={{ cursor: "pointer" }}
+                      alt=""
                     />
                   </div>
                 </Link>

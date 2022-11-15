@@ -131,7 +131,7 @@ export default function SearchBar() {
           />
 
           <div onClick={searchQuery}>
-            <img src="/common/main_search.png" />
+            <img src="/common/main_search.png" alt="" />
           </div>
         </div>
         {keyword?.length > 0 && over ? (

@@ -54,7 +54,7 @@ export default function SearchFilter({ setResource, search, page }) {
                 setToggle(true);
               }}
             >
-              필터 열기 <img src="/product/searchfilter_off.png" />
+              필터 열기 <img src="/product/searchfilter_off.png" alt="" />
             </div>
           ) : (
             <div
@@ -63,7 +63,7 @@ export default function SearchFilter({ setResource, search, page }) {
                 setToggle(false);
               }}
             >
-              필터 닫기 <img src="/product/searchfilter_on.png" />
+              필터 닫기 <img src="/product/searchfilter_on.png" alt="" />
             </div>
           )}
         </div>

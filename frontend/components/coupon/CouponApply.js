@@ -77,7 +77,7 @@ export function CouponApply({
             onCloseHandler();
           }}
         >
-          <img width="24px" src="/common/cancel.png" />
+          <img width="24px" src="/common/cancel.png" alt="" />
         </div>
         <div className="container" style={{ textAlign: "left" }}>
           <p>상품 구매 시 사용 가능한 할인쿠폰입니다.</p>
@@ -96,7 +96,7 @@ export function CouponApply({
             <tbody>
               <tr style={{ height: "71px", borderBottom: "1px solid #dedede" }}>
                 <td>
-                  <img width="64px" src={product.imageUrl} />
+                  <img width="64px" src={product.imageUrl} alt="" />
                 </td>
                 <td style={{ textAlign: "left" }}>{product.name}</td>
                 <td>

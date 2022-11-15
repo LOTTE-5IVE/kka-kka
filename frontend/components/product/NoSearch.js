@@ -3,7 +3,7 @@ export default function NoSearch() {
     <>
       <div className="NotFoundWrapper">
         <div className="image">
-          <img src="/404.png" />
+          <img src="/404.png" alt="" />
         </div>
         <div className="comment">
           <span>까까에는 이런 상품이 없어요 ㅠㅠ</span>

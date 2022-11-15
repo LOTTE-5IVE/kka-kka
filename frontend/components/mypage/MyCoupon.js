@@ -100,6 +100,7 @@ export default function MyCoupon() {
                         <img
                           className="couponEmptyImg"
                           src="/member/no_item.gif"
+                          alt=""
                         />
                         <span className="couponEmptyComment">
                           쿠폰 내역이 없습니다.
