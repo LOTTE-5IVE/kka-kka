@@ -1,9 +1,13 @@
 package kkakka.mainservice.product.ui;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.common.dto.PageableResponse;
+import kkakka.mainservice.elasticsearch.application.ProductDocumentService;
+import kkakka.mainservice.elasticsearch.ui.dto.SearchParamRequest;
+import kkakka.mainservice.elasticsearch.ui.dto.SearchResultResponse;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.product.application.ProductService;
@@ -18,9 +22,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductDocumentService productDocumentService;
 
     @GetMapping("/health_check")
     public String status() {
@@ -43,15 +48,24 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<PageableResponse<List<ProductResponse>>> showAllProducts(
-            @RequestParam(value = "category", required = false) Long categoryId,
-            @RequestParam(value = "sortBy", defaultValue = "NON", required = false) String sortBy,
-            @RequestParam(value = "keyword", required = false) String keyword,
-            Pageable pageable) {
-        final Page<ProductDto> productDtos = productService.showAllProductsWithCategoryAndSearch(
-                Optional.ofNullable(categoryId), sortBy, keyword, pageable);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(dtoToPageableResponse(pageable, productDtos));
+    public ResponseEntity<SearchResultResponse> showAllProducts(
+        @ModelAttribute SearchParamRequest searchParamRequest,
+        Pageable pageable) {
+        SearchResultResponse result;
+        if (Objects.isNull(searchParamRequest.getKeyword())) {
+            result = productService.showAllProductsWithCategoryAndSearch(
+                Optional.ofNullable(searchParamRequest.getCategory()),
+                searchParamRequest.getSortBy(),
+                pageable);
+
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+        result = productDocumentService.findByKeyword(
+            searchParamRequest.toDto(),
+            pageable
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping("/recommend")
