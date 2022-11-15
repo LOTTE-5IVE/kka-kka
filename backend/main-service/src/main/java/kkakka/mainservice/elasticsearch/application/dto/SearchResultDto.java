@@ -17,17 +17,20 @@ public class SearchResultDto {
     private List<ProductDocumentDto> productDocumentDtos;
     private PageInfo pageInfo;
 
-    public static SearchResultDto toDto(Long totalHits, List<ProductDocumentDto> productDocumentDtos,PageInfo pageInfo) {
+    public static SearchResultDto toDto(Long totalHits,
+        List<ProductDocumentDto> productDocumentDtos, PageInfo pageInfo) {
         return new SearchResultDto(totalHits,
             productDocumentDtos,
             pageInfo
         );
     }
-    public SearchResultResponse toResponseDto() {
+
+    public static SearchResultResponse toResponseDto(Long totalHits,
+        List<ProductDocumentDto> productDocumentDtos, PageInfo pageInfo) {
         return new SearchResultResponse(
-            this.totalHits,
-            this.pageInfo,
-            this.productDocumentDtos
+            totalHits,
+            pageInfo,
+            productDocumentDtos
         );
     }
 }

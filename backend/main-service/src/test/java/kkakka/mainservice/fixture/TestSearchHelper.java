@@ -10,6 +10,7 @@ import kkakka.mainservice.elasticsearch.helper.ProductsSearchResult;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.product.domain.repository.ProductRepositorySupport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,14 +20,10 @@ import org.springframework.stereotype.Component;
 @Profile("test")
 public class TestSearchHelper implements SearchHelper {
 
-    private final ProductRepository productRepository;
-    private final ProductRepositorySupport productRepositorySupport;
-
-    public TestSearchHelper(ProductRepository productRepository,
-        ProductRepositorySupport productRepositorySupport) {
-        this.productRepository = productRepository;
-        this.productRepositorySupport = productRepositorySupport;
-    }
+    @Autowired
+   ProductRepository productRepository;
+    @Autowired
+    ProductRepositorySupport productRepositorySupport;
 
     @Override
     public ProductsSearchResult searchProductIds(SearchParamDto searchParamDto, Pageable pageable) {

@@ -1,6 +1,7 @@
 package kkakka.mainservice.product.ui;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.common.dto.PageableResponse;
@@ -51,17 +52,18 @@ public class ProductController {
         @ModelAttribute SearchParamRequest searchParamRequest,
         Pageable pageable) {
         SearchResultResponse result;
-        if (searchParamRequest.isKeyword()) {
-            result = productDocumentService.findByKeyword(
-                searchParamRequest.toDto(),
-                pageable
-            );
+        if (Objects.isNull(searchParamRequest.getKeyword())) {
+            result = productService.showAllProductsWithCategoryAndSearch(
+                Optional.ofNullable(searchParamRequest.getCategory()),
+                searchParamRequest.getSortBy(),
+                pageable);
+
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }
-        result = productService.showAllProductsWithCategoryAndSearch(
-            Optional.ofNullable(searchParamRequest.getCategory()),
-            searchParamRequest.getSortBy(),
-            pageable);
+        result = productDocumentService.findByKeyword(
+            searchParamRequest.toDto(),
+            pageable
+        );
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

@@ -54,14 +54,14 @@ public class ProductService {
                 CategoryDocumentDto.toDto(product.getCategory())
             ));
 
-        return SearchResultDto.toDto(
+        return SearchResultDto.toResponseDto(
             productDtos.getTotalElements(),
             productDtos.toList(),
             PageInfo.from(pageable.getPageNumber(),
                 productDtos.getTotalPages(),
                 pageable.getPageSize(),
                 productDtos.getTotalElements())
-        ).toResponseDto();
+        );
     }
 
     public Page<ProductDto> showProductsByRecommendation(LoginMember loginMember,
