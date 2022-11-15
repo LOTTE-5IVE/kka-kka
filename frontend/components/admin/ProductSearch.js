@@ -3,20 +3,25 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { commaMoney } from "../../hooks/commaMoney";
 import { AdminButton } from "../common/Button/AdminButton";
+import Pagination from "../product/Pagination";
 
 export default function ProductSearch() {
   const [products, setProducts] = useState();
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState();
 
   const getProducts = async () => {
-    await axios.get("/api/products?category=0").then((res) => {
-      console.log(res.data.data);
-      setProducts(res.data.data);
-    });
+    await axios
+      .get(`/api/products?category=0&page=${page}&size=15`)
+      .then((res) => {
+        setProducts(res.data.data);
+        setLastPage(res.data.pageInfo.lastPage);
+      });
   };
 
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [page]);
 
   return (
     <>
@@ -74,6 +79,23 @@ export default function ProductSearch() {
               <td></td>
               <td></td>
               <td></td>
+            </tr>
+            <tr>
+              <td colSpan="7">
+                <div
+                  className="pagination"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Pagination
+                    page={page}
+                    setPage={setPage}
+                    lastPage={lastPage}
+                  />
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>

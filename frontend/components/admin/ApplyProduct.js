@@ -1,21 +1,23 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { commaMoney } from "../../hooks/commaMoney";
+import Pagination from "../product/Pagination";
 
 export default function ApplyProduct({ productId, setProductId }) {
   const [products, setProducts] = useState();
-  const getProducts = async () => {
-    await axios.get("/api/products?category=0").then((res) => {
-      console.log(res.data);
-      console.log(res.data.data);
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState();
 
+  const getProducts = async () => {
+    await axios.get(`/api/products?category=0&page=${page}`).then((res) => {
       setProducts(res.data.data);
+      setLastPage(res.data.pageInfo.lastPage);
     });
   };
 
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [page]);
 
   return (
     <div className="wrapper">
@@ -36,9 +38,9 @@ export default function ApplyProduct({ productId, setProductId }) {
           <p style={{ width: "100px" }}>가격</p>
         </div>
       </div>
-      {products?.map((product, idx) => {
+      {products?.map((product) => {
         return (
-          <div className="outter" key={idx}>
+          <div className="outter" key={product.id}>
             <div className="check">
               <ul style={{ width: "90px" }}>
                 <li>
@@ -79,8 +81,13 @@ export default function ApplyProduct({ productId, setProductId }) {
         );
       })}
 
+      <div className="pagination" style={{ width: "710px", display: "flex" }}>
+        <Pagination page={page} setPage={setPage} lastPage={lastPage} />
+      </div>
+
       <style jsx>{`
         .wrapper {
+          width: 730px;
           overflow: auto;
           height: 16vw;
           .title {
