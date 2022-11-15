@@ -8,6 +8,8 @@ import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.common.auth.aop.MemberOnly;
 import kkakka.mainservice.order.application.OrderService;
 import kkakka.mainservice.order.application.dto.OrderDto;
+import kkakka.mainservice.order.application.dto.ProductOrderDto;
+import kkakka.mainservice.order.application.dto.ProductOrderWithCouponDto;
 import kkakka.mainservice.order.ui.dto.OrderRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,25 +32,37 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> order(
-            @AuthenticationPrincipal LoginMember loginMember,
-            @RequestBody OrderRequest orderRequest
+        @AuthenticationPrincipal LoginMember loginMember,
+        @RequestBody OrderRequest orderRequest
     ) {
         Long orderId = orderService.order(
-                OrderDto.create(
-                        loginMember.getId(),
-                        orderRequest.toRecipientDto(),
-                        orderRequest
-                ));
+            OrderDto.create(
+                loginMember.getId(),
+                orderRequest.toRecipientDto(),
+                orderRequest
+            ));
         cartService.emptyCart(loginMember);
         return ResponseEntity.created(URI.create(orderId.toString())).build();
     }
 
     @DeleteMapping("/{productOrderId}")
     public ResponseEntity<Void> requestOrdersCancel(
-            @AuthenticationPrincipal LoginMember loginMember,
-            @PathVariable("productOrderId") List<Long> productOrderIdList
+        @AuthenticationPrincipal LoginMember loginMember,
+        @PathVariable("productOrderId") List<Long> productOrderIdList
     ) {
         orderService.cancelOrder(productOrderIdList, loginMember);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/{couponId}")
+    public ResponseEntity<ProductOrderWithCouponDto> applyProductCoupon(
+        @PathVariable("couponId") Long couponId,
+        @RequestBody ProductOrderDto productOrderDto,
+        @AuthenticationPrincipal LoginMember loginMember) {
+        ProductOrderWithCouponDto productOrderWithCouponDto = orderService.applyProductCoupon(
+            loginMember.getId(), productOrderDto, couponId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(productOrderWithCouponDto);
+
     }
 }

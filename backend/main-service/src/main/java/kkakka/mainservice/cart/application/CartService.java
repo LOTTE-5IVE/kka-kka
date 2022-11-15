@@ -84,7 +84,6 @@ public class CartService {
         return new CartResponseDto(cart.getId(), cartItemDtos);
     }
 
-
     private CartItem findOrCreateCartItem(Product product, Cart cart) {
         return cartItemRepository.findByCartIdAndProductId(cart.getId(),
                         product.getId())

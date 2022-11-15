@@ -4,15 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.exception.NotFoundCouponException;
 import kkakka.mainservice.common.exception.NotFoundMemberException;
+import kkakka.mainservice.common.exception.NotFoundProductException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
 import kkakka.mainservice.common.auth.LoginMember;
+import kkakka.mainservice.coupon.domain.Coupon;
+import kkakka.mainservice.coupon.domain.MemberCoupon;
+import kkakka.mainservice.coupon.domain.repository.CouponRepository;
+import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.application.dto.MemberOrderDto;
 import kkakka.mainservice.order.application.dto.MemberProductOrderDto;
 import kkakka.mainservice.order.application.dto.OrderDto;
 import kkakka.mainservice.order.application.dto.ProductOrderDto;
+import kkakka.mainservice.order.application.dto.ProductOrderWithCouponDto;
 import kkakka.mainservice.order.domain.Order;
 import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.order.domain.Recipient;
@@ -40,13 +47,15 @@ public class OrderService {
     private final ProductOrderRepository productOrderRepository;
     private final ReviewRepository reviewRepository;
     private final OrderMessageProducer orderMessageProducer;
+    private final CouponRepository couponRepository;
+    private final MemberCouponRepository memberCouponRepository;
 
     @Transactional
     public Long order(OrderDto orderDto) {
         Long memberId = orderDto.getMemberId();
         List<ProductOrderDto> productOrderDtos = orderDto.getProductOrders();
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(NotFoundMemberException::new);
+            .orElseThrow(NotFoundMemberException::new);
         Recipient recipient = Recipient.from(orderDto.getRecipientDto());
 
         List<ProductOrder> productOrders = new ArrayList<>();
@@ -101,7 +110,6 @@ public class OrderService {
 
     @Transactional
     public void cancelOrder(List<Long> productOrderIds, LoginMember loginMember) {
-
         Long loginMemberId = loginMember.getId();
 
         productOrderIds.forEach(productOrderId -> {
@@ -119,6 +127,21 @@ public class OrderService {
         final Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         return orderRepository.countAllByMemberId(member.getId());
+    }
+
+    @Transactional
+    public ProductOrderWithCouponDto applyProductCoupon(Long memberId,
+            ProductOrderDto productOrderDto, Long couponId) {
+        Product product = productRepository.findById(productOrderDto.getProductId())
+                .orElseThrow(NotFoundProductException::new);
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotFoundCouponException::new);
+        Integer discountedPrice = product.getDiscountPrice() - product.getMaxDiscount(coupon);
+
+        MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId,
+                memberId);
+        memberCoupon.applyCoupon();
+        return ProductOrderWithCouponDto.create(productOrderDto.getQuantity(), product,
+                discountedPrice, coupon);
     }
 
     @NotNull
