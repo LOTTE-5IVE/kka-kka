@@ -117,9 +117,7 @@ export default function ProductDetail(props) {
   const getReviewCount = async () => {
     if (productId) {
       await axios.get(`/api/reviews/${productId}/all`).then((res) => {
-        console.log(res.data.reviewCount);
         setReviewCount(res.data.reviewCount);
-        console.log(reviewCount);
       });
     }
   };

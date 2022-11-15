@@ -53,17 +53,8 @@ export default function ApplyCategory({ targetVal, setTargetVal }) {
             text-align: left;
 
             li {
-              padding: 0 100px 0 0;
+              padding: 5px 100px 5px 0;
               border-bottom: 1px solid #dedede;
-              /* 
-              [type="radio"] {
-                appearance: none;
-                border: max(2px, 0.1em) solid gray;
-                border-radius: 50%;
-                width: 1em;
-                height: 1em;
-                transition: border 0.5s ease-in-out;
-              } */
             }
 
             li:last-child {

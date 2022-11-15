@@ -11,8 +11,7 @@ import { CouponDownModal } from "../../../components/coupon/CouponDownModal";
 import Info from "../../../components/product/productDetail/Info";
 import Nutri from "../../../components/product/productDetail/Nutri";
 import Review from "../../../components/product/productDetail/Review";
-import RecommendList
-  from "../../../components/product/productDetail/RecommendList";
+import RecommendList from "../../../components/product/productDetail/RecommendList";
 import { commaMoney } from "../../../hooks/commaMoney";
 import { NBlack, NGray, NLightGray } from "../../../typings/NormalColor";
 import {
@@ -27,6 +26,7 @@ import { CartCntContext } from "../../../context/CartCntContext";
 import { getToken } from "../../../hooks/getToken";
 import { useContext } from "react";
 import { PaymentContext } from "../../../context/PaymentContext";
+import Image from "next/image";
 
 export default function ProductDetail({ product, reviewCount }) {
   const [quantity, setQuantity] = useState(1);
@@ -43,13 +43,9 @@ export default function ProductDetail({ product, reviewCount }) {
 
     setPayment([product]);
 
-    router.push(
-      {
-        pathname: `/payment`,
-        query: { orderItems: JSON.stringify([product]) },
-      },
-      `/payment`,
-    );
+    router.push({
+      pathname: `/payment`,
+    });
   };
 
   const handleQuantity = (type) => {
@@ -120,8 +116,8 @@ export default function ProductDetail({ product, reviewCount }) {
       {product && (
         <div className="ProductDetailLWrapper" key={product.id}>
           <div className="detailTop">
-            <div className="detailImg">
-              <img src={`${product.imageUrl}`} />
+            <div className="detailImg" style={{ position: "relative" }}>
+              <Image src={product.imageUrl} alt="" layout="fill" />
             </div>
 
             <div className="detailEtc" key={product.id}>
@@ -174,7 +170,6 @@ export default function ProductDetail({ product, reviewCount }) {
                 <p>고객님께만 드리는 쿠폰이 있어요</p>{" "}
                 <div
                   onClick={() => {
-                    console.log("product:::", product);
                     handleModal(true);
                   }}
                 >
@@ -917,7 +912,7 @@ export default function ProductDetail({ product, reviewCount }) {
                 }
               }
             }
-            
+
             .detailMiddle {
               position: absolute;
               top: 800px;
@@ -960,11 +955,13 @@ export default function ProductDetail({ product, reviewCount }) {
 
 export async function getServerSideProps(context) {
   const { id } = context.query;
-  const res = await axios.get(`http://localhost:9000/api/products/${id}`);
+  const res = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_PATH}/api/products/${id}`,
+  );
   const product = await res.data;
 
   const reviewRes = await axios.get(
-    `http://localhost:9000/api/reviews/${id}/all`,
+    `${process.env.NEXT_PUBLIC_API_PATH}/api/reviews/${id}/all`,
   );
   const reviewCount = await reviewRes.data.reviewCount;
 

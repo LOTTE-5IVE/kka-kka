@@ -9,13 +9,12 @@ import { isLogin } from "../../hooks/isLogin";
 import axios from "axios";
 
 export function CouponDown({ handleModal, product }) {
-  const [token, setToken] = useState("");
-  const [coupons, setCoupons] = useState([]);
+  const [token, setToken] = useState();
+  const [coupons, setCoupons] = useState();
 
   const getProductMemberCoupon = async () => {
     await GetHApi(`/api/coupons/me/products/${product.id}`, token).then(
       (res) => {
-        console.log("getProductMemberCoupon: ", res);
         setCoupons(res);
       },
     );
@@ -42,7 +41,7 @@ export function CouponDown({ handleModal, product }) {
 
   useEffect(() => {
     setToken(getToken());
-    if (token !== "" && isLogin()) {
+    if (token && isLogin()) {
       getProductMemberCoupon();
     } else {
       getProductCoupon();
@@ -64,7 +63,7 @@ export function CouponDown({ handleModal, product }) {
             handleModal();
           }}
         >
-          <img width="24px" src="/common/cancel.png" />
+          <img width="24px" src="/common/cancel.png" alt="" />
         </div>
         <div className="container" style={{ textAlign: "left" }}>
           <p>상품 구매 시 사용 가능한 할인쿠폰입니다.</p>
@@ -83,7 +82,7 @@ export function CouponDown({ handleModal, product }) {
             <tbody>
               <tr style={{ height: "71px", borderBottom: "1px solid #dedede" }}>
                 <td>
-                  <img width="64px" src={product.imageUrl} />
+                  <img width="64px" src={product.imageUrl} alt="" />
                 </td>
                 <td style={{ textAlign: "left" }}>{product.name}</td>
                 <td>
@@ -133,7 +132,7 @@ export function CouponDown({ handleModal, product }) {
               </tr>
             </thead>
             <tbody>
-              {coupons.length > 0 && (
+              {coupons && (
                 <tr
                   style={{
                     height: "59px",

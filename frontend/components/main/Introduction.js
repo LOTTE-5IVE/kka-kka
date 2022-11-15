@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useEffect } from "react";
 
 export default function Introduction() {
@@ -7,7 +8,9 @@ export default function Introduction() {
     <div className="Introduction">
       <section className="btsProduct ">
         <div className="inner">
-          <img className="product" src="/main/bts.png" />
+          <div className="product" style={{ position: "relative" }}>
+            <Image src="/main/bts.png" alt="" layout="fill" />
+          </div>
 
           <div className="textGroup">
             <div>
@@ -38,17 +41,25 @@ export default function Introduction() {
               </p>
             </div>
           </div>
-
-          <img className="product" src="/main/ganachoco.png" alt="" />
+          <div className="product">
+            <Image src="/main/ganachoco.png" alt="" layout="fill" />
+          </div>
+          {/* <img className="product" src="/main/ganachoco.png" alt="" /> */}
         </div>
       </section>
 
       <section className="oatmeal ">
         <div className="inner">
-          <img src="/main/oatmeal_bg_texture.png" alt="" className="texture1" />
+          <div className="texture1">
+            <Image src="/main/oatmeal_bg_texture.png" alt="" layout="fill" />
+          </div>
+          <div className="picture picture1">
+            <Image src="/main/oatmeal1.png" alt="" layout="fill" />
+          </div>
 
-          <img className="picture picture1" src="/main/oatmeal1.png" />
-          <img className="picture picture2" src="/main/oatmeal2.png" />
+          <div className="picture picture2">
+            <Image src="/main/oatmeal2.png" alt="" layout="fill" />
+          </div>
 
           <div className="textGroup">
             <div className="title">
@@ -64,148 +75,201 @@ export default function Introduction() {
         </div>
       </section>
       <style jsx>{`
-        @media screen and (min-width: 769px) {
-          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
-          .btsProduct {
-            background-image: url("/main/bts_product_bg.jpg");
-            width: 1903px;
+        .btsProduct {
+          background-image: url("/main/bts_product_bg.jpg");
 
-            .inner {
-              width: 1100px;
-              margin: 0 auto;
-              position: relative;
-              height: 400px;
+          .inner {
+            margin: 0 auto;
+            position: relative;
+          }
 
-              .product {
-                width: 400px;
-              }
+          .textGroup {
+            position: absolute;
+
+            .text1 {
+              font-weight: 500;
+              color: #404041;
+              margin: 0;
             }
+
+            .text2 {
+              font-weight: 600;
+              color: #333333;
+              margin: 0;
+            }
+
+            .text3 {
+              font-weight: 600;
+              color: #767778;
+            }
+          }
+        }
+
+        .ganaChoco {
+          background-image: url("/main/gana_bg.jpg");
+
+          .inner {
+            margin: 0 auto;
+            position: relative;
 
             .textGroup {
               position: absolute;
-              top: 130px;
-              right: 100px;
 
               .text1 {
-                font-size: 20px;
                 font-weight: 500;
-                color: #404041;
+                color: #fff;
                 margin: 0;
               }
 
               .text2 {
-                font-size: 32px;
                 font-weight: 600;
-                color: #333333;
-                margin: 0;
-              }
-
-              .text3 {
-                font-weight: 600;
-                color: #767778;
+                color: #a9866e;
               }
             }
           }
 
-          .ganaChoco {
-            background-image: url("/main/gana_bg.jpg");
-            width: 1903px;
+          .product {
+            position: absolute;
+          }
+        }
 
-            .inner {
-              width: 1100px;
-              margin: 0 auto;
-              position: relative;
-              height: 400px;
+        .oatmeal {
+          background-image: url("/main/oatmeal_bg.jpg");
 
-              .textGroup {
-                position: absolute;
-                top: 150px;
-                left: 130px;
+          .inner {
+            margin: 0 auto;
+            position: relative;
 
+            .texture1,
+            .texture2,
+            .picture {
+              position: absolute;
+            }
+
+            .texture1 {
+              width: 343px;
+              height: 92px;
+            }
+
+            .textGroup {
+              position: absolute;
+
+              .title {
                 .text1 {
-                  font-size: 30px;
-                  font-weight: 500;
-                  color: #fff;
+                  font-weight: 600;
+                  color: #5d5d5d;
                   margin: 0;
                 }
 
                 .text2 {
                   font-weight: 600;
-                  color: #a9866e;
+                  color: #333333;
+                  margin: 0;
+                }
+
+                .text3 {
+                  font-weight: 600;
+                  color: #5d5d5d;
+                }
+              }
+            }
+          }
+        }
+
+        @media screen and (min-width: 769px) {
+          /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
+          .btsProduct {
+            width: 1903px;
+
+            .inner {
+              width: 1100px;
+              height: 400px;
+
+              .product {
+                width: 400px;
+                height: 400px;
+              }
+            }
+
+            .textGroup {
+              top: 130px;
+              right: 100px;
+
+              .text1 {
+                font-size: 20px;
+              }
+
+              .text2 {
+                font-size: 32px;
+              }
+            }
+          }
+
+          .ganaChoco {
+            width: 1903px;
+
+            .inner {
+              width: 1100px;
+              height: 400px;
+
+              .textGroup {
+                top: 150px;
+                left: 130px;
+
+                .text1 {
+                  font-size: 30px;
                 }
               }
             }
 
             .product {
               width: 400px;
-              position: absolute;
+              height: 400px;
               top: 0;
               right: 0;
             }
           }
 
           .oatmeal {
-            background-image: url("/main/oatmeal_bg.jpg");
             width: 1903px;
 
             .inner {
               height: 400px;
               width: 1100px;
-              margin: 0 auto;
-              position: relative;
 
               .texture1 {
-                position: absolute;
                 top: 0;
                 left: 400px;
               }
 
               .texture2 {
-                position: absolute;
                 bottom: 0;
                 right: 0;
               }
 
-              .picture {
-                position: absolute;
-              }
-
               .picture1 {
                 width: 350px;
+                height: 350px;
                 top: -60px;
                 left: 0;
               }
 
               .picture2 {
                 width: 216px;
+                height: 216px;
                 top: 105px;
                 left: 200px;
               }
 
               .textGroup {
-                position: absolute;
                 top: 120px;
                 left: 550px;
 
                 .title {
                   margin-bottom: 20px;
 
-                  .text1 {
-                    font-weight: 600;
-                    color: #5d5d5d;
-                    margin: 0;
-                  }
-
                   .text2 {
                     font-size: 30px;
-                    font-weight: 600;
-                    color: #333333;
-                    margin: 0;
-                  }
-
-                  .text3 {
-                    font-weight: 600;
-                    color: #5d5d5d;
                   }
                 }
               }
@@ -215,23 +279,20 @@ export default function Introduction() {
 
         @media screen and (max-width: 768px) {
           .btsProduct {
-            background-image: url("/main/bts_product_bg.jpg");
             width: 100vw;
             min-height: 150px;
 
             .inner {
               width: 70vw;
               height: 21.05vw;
-              margin: 0 auto;
-              position: relative;
 
               .product {
                 width: 21.05vw;
+                height: 21.05vw;
               }
             }
 
             .textGroup {
-              position: absolute;
               top: 5vw;
               right: 5.26vw;
               width: 40vw;
@@ -239,109 +300,83 @@ export default function Introduction() {
 
               .text1 {
                 font-size: 1.05vw;
-                font-weight: 500;
-                color: #404041;
-                margin: 0;
               }
 
               .text2 {
                 font-size: 1.68vw;
-                font-weight: 600;
-                color: #333333;
-                margin: 0;
               }
 
               .text3 {
                 font-size: 0.84vw;
-                font-weight: 600;
-                color: #767778;
               }
             }
           }
 
           .ganaChoco {
-            background-image: url("/main/gana_bg.jpg");
             width: 100vw;
             min-height: 150px;
 
             .inner {
               width: 70vw;
-              margin: 0 auto;
-              position: relative;
               height: 21.05vw;
 
               .textGroup {
                 width: 40vw;
-
-                position: absolute;
                 top: 7vw;
                 left: 6.84vw;
 
                 .text1 {
                   font-size: 1.58vw;
-                  font-weight: 500;
-                  color: #fff;
-                  margin: 0;
                 }
 
                 .text2 {
                   font-size: 0.84vw;
-                  font-weight: 600;
-                  color: #a9866e;
                 }
               }
             }
 
             .product {
               width: 21.05vw;
-              position: absolute;
+              height: 21.05vw;
               top: 0;
               right: 0;
             }
           }
 
           .oatmeal {
-            background-image: url("/main/oatmeal_bg.jpg");
             width: 100vw;
             min-height: 150px;
 
             .inner {
               width: 70vw;
               height: 21.05vw;
-              margin: 0 auto;
-              position: relative;
 
               .texture1 {
-                position: absolute;
                 top: 0;
                 left: 21.05vw;
                 width: 50vw;
               }
 
               .texture2 {
-                position: absolute;
                 bottom: 0;
                 right: 0;
               }
 
-              .picture {
-                position: absolute;
-              }
-
               .picture1 {
                 width: 18.4vw;
+                height: 18.4vw;
                 top: -3.16vw;
                 left: 0vw;
               }
 
               .picture2 {
                 width: 11.37vw;
+                height: 11.37vw;
                 top: 5.53vw;
                 left: 10.53vw;
               }
 
               .textGroup {
-                position: absolute;
                 top: 6.32vw;
                 left: 28.94vw;
                 width: 40vw;
@@ -349,23 +384,12 @@ export default function Introduction() {
                 .title {
                   margin-bottom: 1.05vw;
 
-                  .text1 {
-                    font-weight: 600;
-                    color: #5d5d5d;
-                    margin: 0;
-                  }
-
                   .text2 {
                     font-size: 1.58vw;
-                    font-weight: 600;
-                    color: #333333;
-                    margin: 0;
                   }
 
                   .text3 {
                     font-size: 0.84vw;
-                    font-weight: 600;
-                    color: #5d5d5d;
                   }
                 }
               }
@@ -379,17 +403,15 @@ export default function Introduction() {
             overflow: hidden;
 
             .btsProduct {
-              background-image: url("/main/bts_product_bg.jpg");
               width: 480px;
 
               .inner {
                 width: 440px;
-                margin: 0 auto;
-                position: relative;
                 height: 300px;
 
                 .product {
                   width: 200px;
+                  height: 200px;
                   position: absolute;
                   left: 20%;
                   top: 25%;
@@ -399,44 +421,30 @@ export default function Introduction() {
 
               .textGroup {
                 width: 380px;
-                position: absolute;
                 left: 45%;
                 top: 60%;
                 transform: translate(-50%, -50%);
 
                 .text1 {
                   font-size: 20px;
-                  font-weight: 500;
-                  color: #404041;
-                  margin: 0;
                 }
 
                 .text2 {
                   font-size: 32px;
-                  font-weight: 600;
-                  color: #333333;
-                  margin: 0;
-                }
-
-                .text3 {
-                  font-weight: 600;
-                  color: #767778;
                 }
               }
             }
 
             .ganaChoco {
-              background-image: url("/main/gana_bg.jpg");
               width: 480px;
 
               .inner {
                 width: 440px;
-                margin: 0 auto;
-                position: relative;
                 height: 300px;
 
                 .product {
                   width: 200px;
+                  height: 200px;
                   position: absolute;
                   left: 70%;
                   top: 35%;
@@ -445,54 +453,37 @@ export default function Introduction() {
 
                 .textGroup {
                   width: 380px;
-                  position: absolute;
                   left: 45%;
                   top: 70%;
                   transform: translate(-50%, -50%);
 
                   .text1 {
                     font-size: 30px;
-                    font-weight: 500;
-                    color: #fff;
-                    margin: 0;
-                  }
-
-                  .text2 {
-                    font-weight: 600;
-                    color: #a9866e;
                   }
                 }
               }
             }
 
             .oatmeal {
-              background-image: url("/main/oatmeal_bg.jpg");
               width: 480px;
 
               .inner {
                 width: 440px;
                 height: 300px;
-                margin: 0 auto;
-                position: relative;
 
                 .texture1 {
-                  position: absolute;
                   top: 0;
                   left: 100px;
                 }
 
                 .texture2 {
-                  position: absolute;
                   bottom: 0;
                   right: 0;
                 }
 
-                .picture {
-                  position: absolute;
-                }
-
                 .picture1 {
                   width: 200px;
+                  height: 200px;
                   position: absolute;
                   left: 15%;
                   top: 25%;
@@ -501,6 +492,7 @@ export default function Introduction() {
 
                 .picture2 {
                   width: 140px;
+                  height: 140px;
                   position: absolute;
                   left: 25%;
                   top: 40%;
@@ -509,7 +501,6 @@ export default function Introduction() {
 
                 .textGroup {
                   width: 380px;
-                  position: absolute;
                   left: 80%;
                   top: 70%;
                   transform: translate(-50%, -50%);
@@ -517,22 +508,8 @@ export default function Introduction() {
                   .title {
                     margin-bottom: 20px;
 
-                    .text1 {
-                      font-weight: 600;
-                      color: #5d5d5d;
-                      margin: 0;
-                    }
-
                     .text2 {
                       font-size: 30px;
-                      font-weight: 600;
-                      color: #333333;
-                      margin: 0;
-                    }
-
-                    .text3 {
-                      font-weight: 600;
-                      color: #5d5d5d;
                     }
                   }
                 }

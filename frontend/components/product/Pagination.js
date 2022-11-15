@@ -28,7 +28,7 @@ export default function Pagination({ page, setPage, lastPage }) {
             }}
             disabled={page === 1}
           >
-            <img className="btn" src="/common/btn_page_prev.gif" />
+            <img className="btn" src="/common/btn_page_prev.gif" alt="" />
           </li>
 
           {lastPage &&
@@ -60,7 +60,7 @@ export default function Pagination({ page, setPage, lastPage }) {
             }}
             disabled={page === lastPage - 200}
           >
-            <img className="btn" src="/common/btn_page_next.gif" />
+            <img className="btn" src="/common/btn_page_next.gif" alt="" />
           </li>
         </ul>
       </div>

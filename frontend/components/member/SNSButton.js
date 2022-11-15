@@ -7,7 +7,7 @@ export default function SNSButton({ imgsrc, link, context }) {
         <Link href={link}>
           <a>
             <div>
-              <img src={imgsrc} />
+              <img src={imgsrc} alt="" />
             </div>
             <div className="context">{context}</div>
           </a>

@@ -7,16 +7,6 @@ import DiscountSearchTable from "./DiscountSearchTable";
 export default function ProductSearch() {
   const [tab, setTab] = useState("할인");
 
-  // const getPromotion = async () => {
-  //   await axios.get("/api/coupons/discount").then((res) => {
-  //     console.log(res.data);
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   getPromotion();
-  // }, []);
-
   return (
     <div className="wrapper">
       <div style={{ display: "flex", marginBottom: "30px" }}>
@@ -49,6 +39,7 @@ export default function ProductSearch() {
             padding: 7px 25px;
             border-radius: 1em;
             margin-right: 15px;
+            cursor: pointer;
           }
 
           .active {
