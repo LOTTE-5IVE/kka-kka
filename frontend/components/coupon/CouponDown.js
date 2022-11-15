@@ -9,8 +9,8 @@ import { isLogin } from "../../hooks/isLogin";
 import axios from "axios";
 
 export function CouponDown({ handleModal, product }) {
-  const [token, setToken] = useState("");
-  const [coupons, setCoupons] = useState([]);
+  const [token, setToken] = useState();
+  const [coupons, setCoupons] = useState();
 
   const getProductMemberCoupon = async () => {
     await GetHApi(`/api/coupons/me/products/${product.id}`, token).then(
@@ -41,7 +41,7 @@ export function CouponDown({ handleModal, product }) {
 
   useEffect(() => {
     setToken(getToken());
-    if (token !== "" && isLogin()) {
+    if (token && isLogin()) {
       getProductMemberCoupon();
     } else {
       getProductCoupon();
@@ -132,7 +132,7 @@ export function CouponDown({ handleModal, product }) {
               </tr>
             </thead>
             <tbody>
-              {coupons.length > 0 && (
+              {coupons && (
                 <tr
                   style={{
                     height: "59px",
