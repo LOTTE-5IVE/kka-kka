@@ -37,13 +37,15 @@ export default function ProductSearch() {
             <col style={{ width: "10%" }} />
           </colgroup>
           <thead>
-            <th>대표사진</th>
-            <th>상품 이름</th>
-            <th>가격</th>
-            <th>재고</th>
-            <th>카테고리</th>
-            <th>수정</th>
-            <th>상품 페이지</th>
+            <tr>
+              <th>대표사진</th>
+              <th>상품 이름</th>
+              <th>가격</th>
+              <th>재고</th>
+              <th>카테고리</th>
+              <th>수정</th>
+              <th>상품 페이지</th>
+            </tr>
           </thead>
           <tbody>
             {products?.map((product) => {
