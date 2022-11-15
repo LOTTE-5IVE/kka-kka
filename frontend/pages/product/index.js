@@ -61,7 +61,7 @@ export default function ProductList() {
 
     return (
       <>
-        {data.data.length > 0 ? (
+        {data?.data?.length > 0 ? (
           <ul className="productList">
             {setTotalHits(data.totalHits)}
             {data?.data?.map((product) => {
