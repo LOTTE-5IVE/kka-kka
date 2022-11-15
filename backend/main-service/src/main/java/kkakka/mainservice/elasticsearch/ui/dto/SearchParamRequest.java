@@ -14,8 +14,9 @@ import lombok.Setter;
 public class SearchParamRequest {
 
     private String keyword;
-    private String sortby;
+    private String sortBy;
     private List<Long> catecodes;
+    private Long category;
     private int minprice;
     private int maxprice;
     private int mincalorie;
@@ -23,12 +24,16 @@ public class SearchParamRequest {
 
     public SearchParamDto toDto() {
         return SearchParamDto.create(keyword,
-            sortby,
+            sortBy,
             catecodes,
             minprice,
             maxprice,
             mincalorie,
             maxcalorie
         );
+    }
+
+    public boolean isKeyword() {
+        return keyword != null;
     }
 }

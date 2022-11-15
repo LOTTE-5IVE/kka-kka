@@ -1,6 +1,7 @@
 package kkakka.mainservice.elasticsearch.application.dto;
 
 import kkakka.mainservice.category.domain.Category;
+import kkakka.mainservice.product.application.dto.CategoryDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

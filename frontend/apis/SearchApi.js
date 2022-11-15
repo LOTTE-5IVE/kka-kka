@@ -1,17 +1,24 @@
 import axios from "axios";
 
-export const fetchSearchData = (sort, page, keyword, category, minPrice, maxPrice, minCalorie, maxCalorie) => {
-  const pPromise = getProduct(sort, page, keyword, category, minPrice, maxPrice, minCalorie, maxCalorie);
+export const fetchSearchData = (sort, page, keyword, category, minPrice, maxPrice, minCalorie, maxCalorie, cat_id) => {
+  const pPromise = getProduct(sort, page, keyword, category, minPrice, maxPrice, minCalorie, maxCalorie, cat_id);
   return {
     productList: wrapPromise(pPromise),
   };
 };
 
-const getProduct = (sort, page, keyword, category, minPrice, maxPrice, minCalorie, maxCalorie) => {
-  return axios
-  .get(`/api/es/search?sortby=${sort}&page=${page}&keyword=${keyword}&catecodes=${category}&minprice=${minPrice}&maxprice=${maxPrice}&mincalorie=${minCalorie}&maxcalorie=${maxCalorie}`)
-  .then((res) => res.data)
-  .catch((err) => console.log(err));
+const getProduct = (sort, page, keyword, category, minPrice, maxPrice, minCalorie, maxCalorie, cat_id) => {
+  if(keyword){
+    return axios
+    .get(`/api/products?sortBy=${sort}&page=${page}&keyword=${keyword}&catecodes=${category}&minprice=${minPrice}&maxprice=${maxPrice}&mincalorie=${minCalorie}&maxcalorie=${maxCalorie}`)
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+  }else{
+    return axios
+    .get(`/api/products?sortBy=${sort}&page=${page}&category=${cat_id}`)
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+  }
 };
 
 const wrapPromise = (promise) => {

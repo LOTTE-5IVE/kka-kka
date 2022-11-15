@@ -31,10 +31,11 @@ public class ProductDocumentService {
             ))
             .collect(toList());
 
-        return SearchResultDto.toDto(
+        return SearchResultDto.toResponseDto(
             searchResult.getTotalHits(),
             productDtos,
-            searchResult.getPageInfo()).toResponseDto();
+            searchResult.getPageInfo()
+        );
     }
 
     public List<String> autoCompleteByKeyword(String keyword) {

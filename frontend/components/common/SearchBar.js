@@ -168,7 +168,7 @@ export default function SearchBar() {
                 );
               })
             ) : (
-              <li className="autoName">최근 검색결과가 없습니다.</li>
+              <li className="autoName">검색결과가 없습니다.</li>
             )}
           </ul>
         ) : (

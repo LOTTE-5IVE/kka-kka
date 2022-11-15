@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchResultResponse {
+public class  SearchResultResponse {
 
     private Long totalHits;
     private PageInfo pageInfo;

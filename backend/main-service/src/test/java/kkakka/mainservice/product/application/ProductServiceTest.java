@@ -7,6 +7,7 @@ import java.util.Optional;
 import kkakka.mainservice.TestContext;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
+import kkakka.mainservice.elasticsearch.ui.dto.SearchResultResponse;
 import kkakka.mainservice.product.application.dto.ProductDto;
 import kkakka.mainservice.product.domain.Nutrition;
 import kkakka.mainservice.product.domain.Product;
@@ -42,7 +43,7 @@ public class ProductServiceTest extends TestContext {
     }
 
 
-    @DisplayName("검색 조회 - 성공")
+    @DisplayName("키워드가 없을 때 검색 조회 - 성공")
     @Test
     public void showProductsBySearchTest() {
         //given
@@ -55,12 +56,11 @@ public class ProductServiceTest extends TestContext {
         );
 
         //when
-        final String keyword = "단백질";
-        Page<ProductDto> productDtos = productService.showAllProductsWithCategoryAndSearch(
-                Optional.empty(), "", keyword,
-                Pageable.ofSize(9));
+        SearchResultResponse response = productService.showAllProductsWithCategoryAndSearch(
+            Optional.empty(), "",
+            Pageable.ofSize(9));
 
         //then
-        assertThat(productDtos.getContent().get(0).getName()).isEqualTo(product.getName());
+        assertThat(response.getProductResponses().get(0).getName()).isEqualTo(product.getName());
     }
 }

@@ -1,6 +1,8 @@
 package kkakka.mainservice.elasticsearch.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import kkakka.mainservice.product.application.dto.CategoryDto;
+import kkakka.mainservice.product.application.dto.ProductDto;
 import kkakka.mainservice.product.domain.Product;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

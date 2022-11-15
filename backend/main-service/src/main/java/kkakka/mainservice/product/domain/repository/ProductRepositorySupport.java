@@ -12,7 +12,6 @@ import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.QCategory;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.QProduct;
-import kkakka.mainservice.product.domain.SearchWords;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -32,7 +31,6 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
     public Page<Product> findAllByCategoryWithSort(
             Optional<Long> categoryId,
             String sortBy,
-            SearchWords searchWords,
             Pageable pageable
     ) {
         final BooleanBuilder builder = new BooleanBuilder();
@@ -41,7 +39,6 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
                 builder.and(QCategory.category.id.eq(cId));
             }
         });
-        builder.and(categoryNameEq(searchWords).or(productNameLike(searchWords)));
 
         final OrderSpecifier<?> orderSpecifier = orderWithSortBy(sortBy);
 
@@ -82,33 +79,20 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
             return new OrderSpecifier<Long>(Order.ASC, QProduct.product.id);
         }
 
+        if("DESC".equals(sortBy)) {
+            return new OrderSpecifier<>(Order.DESC, QProduct.product.price);
+        }
+
+        if("ASC".equals(sortBy)) {
+            return new OrderSpecifier<>(Order.ASC, QProduct.product.price);
+        }
+
         return new OrderSpecifier<Long>(Order.DESC, QProduct.product.id);
     }
 
-    public List<Product> findTop10ByKeyword(String keyword) {
+    public List<Product> findTopNByKeyword(String keyword) {
         return queryFactory.selectFrom(QProduct.product)
             .where(QProduct.product.name.contains(keyword))
             .limit(10).fetch();
-
-    }
-
-    private BooleanBuilder categoryNameEq(SearchWords searchWords) {
-        final BooleanBuilder builder = new BooleanBuilder();
-        if (searchWords.hasSearchWords()) {
-            for (String searchWord : searchWords.getSearchWords()) {
-                builder.or(QProduct.product.category.name.likeIgnoreCase("%" + searchWord + "%"));
-            }
-        }
-        return builder;
-    }
-
-    private BooleanBuilder productNameLike(SearchWords searchWords) {
-        final BooleanBuilder builder = new BooleanBuilder();
-        if (searchWords.hasSearchWords()) {
-            for (String searchWord : searchWords.getSearchWords()) {
-                builder.or(QProduct.product.name.likeIgnoreCase("%" + searchWord + "%"));
-            }
-        }
-        return builder;
     }
 }
