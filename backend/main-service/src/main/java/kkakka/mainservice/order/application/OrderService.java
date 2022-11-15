@@ -157,7 +157,8 @@ public class OrderService {
         ProductOrderDto productOrderDto, Long couponId) {
         Product product = productRepository.findById(productOrderDto.getProductId())
             .orElseThrow(NotFoundProductException::new);
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotFoundCouponException::new);
+        Coupon coupon = couponRepository.findById(couponId)
+            .orElseThrow(NotFoundCouponException::new);
         Integer discountedPrice = product.getDiscountPrice() - product.getMaxDiscount(coupon);
 
         MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId,
@@ -165,5 +166,11 @@ public class OrderService {
         memberCoupon.applyCoupon();
         return ProductOrderWithCouponDto.create(productOrderDto.getQuantity(), product,
             discountedPrice, coupon);
+    }
+
+    @Transactional
+    public void cancelProductCoupon(Long memberId, Long couponId) {
+        MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId, memberId);
+        memberCoupon.cancelCoupon();
     }
 }
