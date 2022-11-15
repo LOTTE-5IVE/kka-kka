@@ -1,4 +1,4 @@
-export default function ApplyGrade({ targetVal, setTargetVal }) {
+export default function ApplyGrade({ grade, setGrade }) {
   const grades = ["GOLD", "SILVER", "BRONZE"];
 
   return (
@@ -6,18 +6,18 @@ export default function ApplyGrade({ targetVal, setTargetVal }) {
       <div className="outter">
         <div>
           <ul>
-            {grades?.map((grade, index) => {
+            {grades?.map((grd, index) => {
               return (
                 <li key={index}>
                   <input
                     type="radio"
-                    value={grade}
-                    checked={targetVal == grade}
+                    value={grd}
+                    checked={grade == grd}
                     onChange={(e) => {
-                      setTargetVal(e.target.value);
+                      setGrade(e.target.value);
                     }}
                   />
-                  {grade}
+                  {grd}
                 </li>
               );
             })}

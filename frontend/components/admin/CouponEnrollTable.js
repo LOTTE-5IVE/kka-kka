@@ -19,6 +19,7 @@ export default function CouponEnrollTable() {
   const [endDate, setEndDate] = useState();
   const [targetVal, setTargetVal] = useState(1);
   const [productId, setProductId] = useState(1);
+  const [grade, setGrade] = useState("BRONZE");
 
   const [nameValid, setNameValid] = useState(false);
   const [maxdisValid, setMaxdisValid] = useState(false);
@@ -27,7 +28,17 @@ export default function CouponEnrollTable() {
   const [eDateValid, setEDateValid] = useState(false);
   const [unvalid, setUnValid] = useState(true);
 
-  const dateEls = useRef([]);
+  const initStates = () => {
+    setPromotionName("");
+    setDiscount("");
+    setMaxdis("");
+    setMinorder("");
+    setNameValid(false);
+    setDiscountValid(false);
+    setMaxdisValid(false);
+    setMinorderValid(false);
+    setUnValid(true);
+  };
 
   const makeCoupon = async () => {
     await axios
@@ -46,6 +57,7 @@ export default function CouponEnrollTable() {
       })
       .then((res) => {
         alert("등록완료!");
+        initStates();
       })
       .catch((err) => {
         alert("등록실패!");
@@ -68,6 +80,7 @@ export default function CouponEnrollTable() {
       })
       .then((res) => {
         alert("등록완료!");
+        initStates();
       })
       .catch((err) => {
         alert("등록실패!");
@@ -78,7 +91,7 @@ export default function CouponEnrollTable() {
     await axios
       .post("/api/coupons", {
         categoryId: null,
-        grade: targetVal,
+        grade: grade,
         productId: null,
         name: promotionName,
         priceRule: "GRADE_COUPON",
@@ -90,6 +103,7 @@ export default function CouponEnrollTable() {
       })
       .then((res) => {
         alert("등록완료!");
+        initStates();
       })
       .catch((err) => {
         alert("등록실패!");
@@ -137,7 +151,7 @@ export default function CouponEnrollTable() {
                     className="inputTypeText"
                     size="25"
                     type="text"
-                    defaultValue={promotionName}
+                    value={promotionName}
                     onChange={(e) => {
                       if (e.target.value.length > 0) {
                         setPromotionName(e.target.value);
@@ -166,7 +180,7 @@ export default function CouponEnrollTable() {
                     className="inputTypeText"
                     size="2"
                     type="text"
-                    defaultValue={discount}
+                    value={discount}
                     onChange={(e) => {
                       if (isNumber(e.target.value)) {
                         setDiscount(e.target.value);
@@ -186,7 +200,7 @@ export default function CouponEnrollTable() {
                     className="inputTypeText"
                     size="10"
                     type="text"
-                    defaultValue={maxdis}
+                    value={maxdis}
                     onChange={(e) => {
                       if (isNumber(e.target.value)) {
                         setMaxdis(e.target.value);
@@ -218,7 +232,7 @@ export default function CouponEnrollTable() {
                   placeholder=""
                   size="10"
                   type="text"
-                  defaultValue={minorder}
+                  value={minorder}
                   onChange={(e) => {
                     if (isNumber(e.target.value)) {
                       setMinorder(e.target.value);
@@ -305,10 +319,7 @@ export default function CouponEnrollTable() {
                     setProductId={setProductId}
                   />
                 ) : (
-                  <ApplyGrade
-                    targetVal={targetVal}
-                    setTargetVal={setTargetVal}
-                  />
+                  <ApplyGrade grade={grade} setGrade={setGrade} />
                 )}
               </td>
             </tr>

@@ -22,6 +22,18 @@ export default function DiscountEnrollTable() {
 
   const today = new Date().toISOString().substring(0, 10);
 
+  const initStates = () => {
+    setPromotionName("");
+    setDiscount("");
+    setStartDate("");
+    setEndDate("");
+    setNameValid(false);
+    setDiscountValid(false);
+    setSDateValid(false);
+    setEDateValid(false);
+    setUnValid(true);
+  };
+
   const makeDiscount = async () => {
     await axios
       .post("/api/coupons/discount", {
@@ -35,6 +47,7 @@ export default function DiscountEnrollTable() {
       })
       .then((res) => {
         alert("등록완료!");
+        initStates();
       })
       .catch((err) => {
         alert("등록실패!");
@@ -54,6 +67,7 @@ export default function DiscountEnrollTable() {
       })
       .then((res) => {
         alert("등록완료!");
+        initStates();
       })
       .catch((err) => {
         alert("등록실패!");
@@ -94,7 +108,7 @@ export default function DiscountEnrollTable() {
                     className="inputTypeText"
                     size="25"
                     type="text"
-                    defaultValue={promotionName}
+                    value={promotionName}
                     onChange={(e) => {
                       if (e.target.value.length > 0) {
                         setPromotionName(e.target.value);
@@ -123,7 +137,7 @@ export default function DiscountEnrollTable() {
                     className="inputTypeText"
                     size="2"
                     type="text"
-                    defaultValue={discount}
+                    value={discount}
                     onChange={(e) => {
                       if (isNumber(e.target.value)) {
                         setDiscount(e.target.value);
@@ -153,7 +167,7 @@ export default function DiscountEnrollTable() {
                       id="oname"
                       className="inputTypeText"
                       type="date"
-                      defaultValue={startDate}
+                      value={startDate}
                       onChange={(e) => {
                         if (e.target.value >= endDate) {
                           alert("날짜를 다시 설정해주세요.");
@@ -171,7 +185,7 @@ export default function DiscountEnrollTable() {
                       id="oname"
                       className="inputTypeText"
                       type="date"
-                      defaultValue={endDate}
+                      value={endDate}
                       onChange={(e) => {
                         if (
                           e.target.value <= today ||
