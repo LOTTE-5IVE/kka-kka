@@ -31,6 +31,7 @@ export default function Login() {
   }
 
   useEffect(() => {
+    userData.getAdminUser()
     if (isLoggedIn) {
       router.push('/admin')
     }
