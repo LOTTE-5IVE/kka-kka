@@ -37,7 +37,7 @@ export default function ApplyGrade({ targetVal, setTargetVal }) {
             text-align: left;
 
             li {
-              padding: 0 100px 0 0;
+              padding: 5px 100px 5px 0;
               border-bottom: 1px solid #dedede;
             }
 
