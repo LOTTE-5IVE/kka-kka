@@ -1,11 +1,11 @@
 import DownloadIcon from "@mui/icons-material/Download";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
 import { GetHApi, PostHApi } from "../../apis/Apis";
 import { getToken } from "../../hooks/getToken";
 import { commaMoney } from "../../hooks/commaMoney";
 import { NGray } from "../../typings/NormalColor";
-
+import { PaymentContext } from "../../context/PaymentContext";
 export function CouponApply({
   id,
   modalVisibleId,
@@ -15,6 +15,7 @@ export function CouponApply({
 }) {
   const [token, setToken] = useState("");
   const [coupons, setCoupons] = useState();
+  const { payment, setPayment } = useContext(PaymentContext);
 
   const getProductMemberCoupon = async () => {
     await GetHApi(`/api/coupons/me/products/${product.id}`, token).then(
@@ -25,11 +26,29 @@ export function CouponApply({
   };
 
   const adaptCoupon = async (couponId) => {
-    await PostHApi(`/api/carts/${cartItemId}/${couponId}`, null, token).then(
-      (res) => {
+    if (cartItemId) {
+      await PostHApi(`/api/carts/${cartItemId}/${couponId}`, null, token).then(
+        (res) => {
+          setPayment(
+            payment.map((product) =>
+              product.cartItemId === res.cartItemId ? res : product,
+            ),
+          );
+
+          onCloseHandler();
+        },
+      );
+    } else {
+      await PostHApi(
+        `/api/orders/${couponId}`,
+        { productId: product.id, quantity: product.quantity },
+        token,
+      ).then((res) => {
+        product = res;
+        setPayment([res]);
         onCloseHandler();
-      },
-    );
+      });
+    }
   };
 
   const onCloseHandler = () => {
@@ -58,7 +77,7 @@ export function CouponApply({
             onCloseHandler();
           }}
         >
-          <img width="24px" src="/common/cancel.png" />
+          <img width="24px" src="/common/cancel.png" alt="" />
         </div>
         <div className="container" style={{ textAlign: "left" }}>
           <p>상품 구매 시 사용 가능한 할인쿠폰입니다.</p>
@@ -77,7 +96,7 @@ export function CouponApply({
             <tbody>
               <tr style={{ height: "71px", borderBottom: "1px solid #dedede" }}>
                 <td>
-                  <img width="64px" src={product.imageUrl} />
+                  <img width="64px" src={product.imageUrl} alt="" />
                 </td>
                 <td style={{ textAlign: "left" }}>{product.name}</td>
                 <td>

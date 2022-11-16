@@ -66,7 +66,6 @@ export default function RecommSlider({ tab, handleTab }) {
   };
 
   useEffect(() => {
-    console.log("loaded!");
     getRecommendProducts();
     getReviewProducts();
   }, [recommToggle, reviewToggle]);
@@ -75,7 +74,7 @@ export default function RecommSlider({ tab, handleTab }) {
     <>
       <section className="notice">
         <div className="notice-line">
-          <div className="inner">
+          <div className="inner" style={{ cursor: "pointer" }}>
             <div
               className="inner__left"
               onClick={() => {
@@ -130,6 +129,7 @@ export default function RecommSlider({ tab, handleTab }) {
                   }}
                   pagination={true}
                   keyboard={true}
+                  allowTouchMove={true}
                   modules={[Autoplay, Navigation, Pagination, Keyboard]}
                   ref={setSwiper}
                 >
@@ -441,10 +441,9 @@ export default function RecommSlider({ tab, handleTab }) {
             .swiper-next {
               right: 40vw;
             }
-            .swiper-prev:hover,
-            .swiper-next:hover {
-              background-color: #333;
-              color: #fff;
+            .swiper-prev,
+            .swiper-next {
+              display: none;
             }
           }
           .notice .promotion.hide {

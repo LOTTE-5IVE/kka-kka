@@ -3,19 +3,25 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { commaMoney } from "../../hooks/commaMoney";
 import { AdminButton } from "../common/Button/AdminButton";
+import Pagination from "../product/Pagination";
 
 export default function ProductSearch() {
   const [products, setProducts] = useState();
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState();
 
   const getProducts = async () => {
-    await axios.get("/api/products?category=0").then((res) => {
-      setProducts(res.data.data);
-    });
+    await axios
+      .get(`/api/products?category=0&page=${page}&size=15`)
+      .then((res) => {
+        setProducts(res.data.data);
+        setLastPage(res.data.pageInfo.lastPage);
+      });
   };
 
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [page]);
 
   return (
     <>
@@ -31,20 +37,22 @@ export default function ProductSearch() {
             <col style={{ width: "10%" }} />
           </colgroup>
           <thead>
-            <th>대표사진</th>
-            <th>상품 이름</th>
-            <th>가격</th>
-            <th>재고</th>
-            <th>카테고리</th>
-            <th>수정</th>
-            <th>상품 페이지</th>
+            <tr>
+              <th>대표사진</th>
+              <th>상품 이름</th>
+              <th>가격</th>
+              <th>재고</th>
+              <th>카테고리</th>
+              <th>수정</th>
+              <th>상품 페이지</th>
+            </tr>
           </thead>
           <tbody>
             {products?.map((product) => {
               return (
                 <tr style={{ height: "3vw" }} key={product.id}>
                   <td>
-                    <img width="60px" src={product.imageUrl} />
+                    <img width="60px" src={product.imageUrl} alt={product.name} />
                   </td>
                   <td>{product.name}</td>
 
@@ -73,6 +81,23 @@ export default function ProductSearch() {
               <td></td>
               <td></td>
               <td></td>
+            </tr>
+            <tr>
+              <td colSpan="7">
+                <div
+                  className="pagination"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Pagination
+                    page={page}
+                    setPage={setPage}
+                    lastPage={lastPage}
+                  />
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>

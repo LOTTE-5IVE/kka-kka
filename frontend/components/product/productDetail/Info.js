@@ -2,7 +2,7 @@ export default function Info({ detailImageUrl }) {
   return (
     <>
       <div>
-        <img src={detailImageUrl} />
+        <img src={detailImageUrl} alt="" />
       </div>
       <style jsx>{`
         div {

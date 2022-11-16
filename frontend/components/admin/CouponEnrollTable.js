@@ -6,6 +6,7 @@ import Button from "../common/Button/Button";
 import ApplyCategory from "./ApplyCategory";
 import ValidDuration from "./ValidDuration";
 import ValidDate from "./ValidDate";
+import { isNumber } from "../../hooks/isNumber";
 import { UserContext } from "../../context/AdminTokenContext";
 
 export default function CouponEnrollTable() {
@@ -19,6 +20,15 @@ export default function CouponEnrollTable() {
   const [endDate, setEndDate] = useState();
   const [targetVal, setTargetVal] = useState(1);
   const [productId, setProductId] = useState(1);
+
+  const [nameValid, setNameValid] = useState(false);
+  const [maxdisValid, setMaxdisValid] = useState(false);
+  const [minorderValid, setMinorderValid] = useState(false);
+  const [sDateValid, setSDateValid] = useState(false);
+  const [eDateValid, setEDateValid] = useState(false);
+  const [unvalid, setUnValid] = useState(true);
+
+  const dateEls = useRef([]);
 
   const userData = useContext(UserContext)?.adminUser;
 
@@ -101,6 +111,21 @@ export default function CouponEnrollTable() {
       });
   };
 
+  useEffect(() => {
+    setStartDate();
+    setEndDate();
+    setSDateValid(false);
+    setEDateValid(false);
+  }, [valid]);
+
+  useEffect(() => {
+    if (nameValid & maxdisValid & minorderValid & sDateValid & eDateValid) {
+      setUnValid(false);
+    } else {
+      setUnValid(true);
+    }
+  }, [nameValid, maxdisValid, minorderValid, sDateValid, eDateValid]);
+
   return (
     <>
       <div className="contents">
@@ -129,22 +154,16 @@ export default function CouponEnrollTable() {
                     type="text"
                     defaultValue={promotionName}
                     onChange={(e) => {
-                      setPromotionName(e.target.value);
+                      if (e.target.value.length > 0) {
+                        setPromotionName(e.target.value);
+                        setNameValid(true);
+                      } else {
+                        setPromotionName(e.target.value);
+                        setNameValid(false);
+                      }
                     }}
                   />
                 </div>
-
-                {/* <div style={{ width: "40%" }}>
-                  <span>
-                    수량 x{" "}
-                    <input
-                      id="oname"
-                      className="inputTypeText"
-                      size="1"
-                      type="text"
-                    />
-                  </span>
-                </div> */}
               </td>
             </tr>
             <tr style={{ height: "3vw" }}>
@@ -164,10 +183,15 @@ export default function CouponEnrollTable() {
                     type="text"
                     defaultValue={discount}
                     onChange={(e) => {
-                      setDiscount(e.target.value);
+                      if (isNumber(e.target.value)) {
+                        setDiscount(e.target.value);
+                      } else {
+                        alert("숫자만 입력할 수 있습니다.");
+                        e.target.value = "";
+                      }
                     }}
-                  />
-                  {" "}%
+                  />{" "}
+                  %
                 </div>
 
                 <div style={{ width: "25%" }}>
@@ -179,7 +203,17 @@ export default function CouponEnrollTable() {
                     type="text"
                     defaultValue={maxdis}
                     onChange={(e) => {
-                      setMaxdis(e.target.value);
+                      if (isNumber(e.target.value)) {
+                        setMaxdis(e.target.value);
+                        if (e.target.value.length > 0) setMaxdisValid(true);
+                        else {
+                          setMaxdisValid(false);
+                        }
+                      } else {
+                        alert("숫자만 입력할 수 있습니다.");
+                        setMaxdisValid(false);
+                        e.target.value = "";
+                      }
                     }}
                   />{" "}
                   원
@@ -201,7 +235,17 @@ export default function CouponEnrollTable() {
                   type="text"
                   defaultValue={minorder}
                   onChange={(e) => {
-                    setMinorder(e.target.value);
+                    if (isNumber(e.target.value)) {
+                      setMinorder(e.target.value);
+                      if (e.target.value.length > 0) setMinorderValid(true);
+                      else {
+                        setMinorderValid(false);
+                      }
+                    } else {
+                      alert("숫자만 입력할 수 있습니다.");
+                      setMinorderValid(false);
+                      e.target.value = "";
+                    }
                   }}
                 />
                 원
@@ -227,17 +271,17 @@ export default function CouponEnrollTable() {
                 </div>
                 {valid == "기간" ? (
                   <ValidDuration
-                    startDate={startDate}
                     setStartDate={setStartDate}
-                    endDate={endDate}
                     setEndDate={setEndDate}
+                    setSDateValid={setSDateValid}
+                    setEDateValid={setEDateValid}
                   />
                 ) : (
                   <ValidDate
-                    startDate={startDate}
                     setStartDate={setStartDate}
-                    endDate={endDate}
                     setEndDate={setEndDate}
+                    setSDateValid={setSDateValid}
+                    setEDateValid={setEDateValid}
                   />
                 )}
               </td>
@@ -287,34 +331,24 @@ export default function CouponEnrollTable() {
         </table>
 
         <div className="btnWrapper">
-          {target == "카테고리" ? (
-            <div
-              onClick={() => {
-                console.log("click");
+          <div
+            onClick={() => {
+              if (target === "카테고리") {
                 makeCoupon();
-              }}
-            >
-              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff" />
-            </div>
-          ) : target == "상품" ? (
-            <div
-              onClick={() => {
-                console.log("click");
+              } else if (target === "상품") {
                 makeCouponProduct();
-              }}
-            >
-              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff" />
-            </div>
-          ) : (
-            <div
-              onClick={() => {
-                console.log("click");
+              } else {
                 makeCouponGrade();
-              }}
-            >
-              <Button context="혜택 등록하기" color="#fe5c57" tcolor="#fff" />
-            </div>
-          )}
+              }
+            }}
+          >
+            <Button
+              context="혜택 등록하기"
+              color="#fe5c57"
+              tcolor="#fff"
+              unvalid={unvalid}
+            />
+          </div>
         </div>
       </div>
 
@@ -341,6 +375,7 @@ export default function CouponEnrollTable() {
               padding: 7px 25px;
               border-radius: 1em;
               margin-right: 15px;
+              cursor: pointer;
             }
 
             .active {

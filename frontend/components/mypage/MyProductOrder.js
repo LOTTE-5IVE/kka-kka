@@ -21,7 +21,11 @@ export default function MyProductOrder({ productOrder }) {
               <div className="title-id">{productOrder.id}</div>
             </div>
             <div className="d-flex align-start">
-              <img className="mt-3" src={productOrder.product.imageUrl} />
+              <img
+                className="mt-3"
+                src={productOrder.product.imageUrl}
+                alt=""
+              />
               <div className="d-flex flex-column">
                 <div className="d-flex flex-column align-start">
                   <p>{productOrder.product.name}</p>

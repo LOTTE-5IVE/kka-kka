@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { fetchSearchData } from "../../apis/SearchApi";
 
-export default function SearchFilter({setResource, search, page, cat_id}) {
+export default function SearchFilter({ setResource, search, page, cat_id }) {
   const [category, setCategory] = useState([]);
   const [sort, setSort] = useState("");
   const [toggle, setToggle] = useState(false);
@@ -23,21 +23,29 @@ export default function SearchFilter({setResource, search, page, cat_id}) {
   };
 
   const searchFilter = async () => {
-    setResource (fetchSearchData(sort, page, search, category, minPrice, maxPrice, minCalorie, maxCalorie, cat_id));
-  }
-
-  useEffect(() => {
-    console.log(category);
-  }, [category]);
+    setResource(
+      fetchSearchData(
+        sort,
+        page,
+        search,
+        category,
+        minPrice,
+        maxPrice,
+        minCalorie,
+        maxCalorie,
+        cat_id,
+      ),
+    );
+  };
 
   useEffect(() => {
     searchFilter();
-  },[page]);
+  }, [page]);
 
   useEffect(() => {
     setCateId(cat_id);
     searchFilter();
-  },[sort]);
+  }, [sort]);
 
   return (
     <div className="SFWrapper">
@@ -53,7 +61,7 @@ export default function SearchFilter({setResource, search, page, cat_id}) {
                 setToggle(true);
               }}
             >
-              필터 열기 <img src="/product/searchfilter_off.png" />
+              필터 열기 <img src="/product/searchfilter_off.png" alt="" />
             </div>
           ) : (
             <div
@@ -62,7 +70,7 @@ export default function SearchFilter({setResource, search, page, cat_id}) {
                 setToggle(false);
               }}
             >
-              필터 닫기 <img src="/product/searchfilter_on.png" />
+              필터 닫기 <img src="/product/searchfilter_on.png" alt="" />
             </div>
           )}
         </div>
@@ -72,8 +80,7 @@ export default function SearchFilter({setResource, search, page, cat_id}) {
           }}
           defaultValue={""}
         >
-          {search &&
-          <option value="accuracy">정확도순</option>}
+          {search && <option value="accuracy">정확도순</option>}
           <option value="NEW">최신순</option>
           <option value="BEST">베스트순</option>
           <option value="OLD">오래된순</option>
@@ -169,26 +176,49 @@ export default function SearchFilter({setResource, search, page, cat_id}) {
               <tr>
                 <th>가격</th>
                 <td>
-                <input type="text" size="3"  onChange={(e) => {setMinPrice(e.target.value);
-                  console.log(minPrice);}} />원 ~{" "}
-                  <input type="text" size="3" onChange={(e) => {setMaxPrice(e.target.value);
-                  console.log(maxPrice);}}/>원
+                  <input
+                    type="text"
+                    size="3"
+                    onChange={(e) => {
+                      setMinPrice(e.target.value);
+                    }}
+                  />
+                  원 ~{" "}
+                  <input
+                    type="text"
+                    size="3"
+                    onChange={(e) => {
+                      setMaxPrice(e.target.value);
+                    }}
+                  />
+                  원
                 </td>
               </tr>
               <tr>
                 <th>칼로리</th>
                 <td>
-                <input type="text" size="3" onChange={(e) => {setMinCalorie(e.target.value);
-                  console.log(minCalorie);}}/>
-                  kcal ~ <input type="text" size="3" onChange={(e) => {setMaxCalorie(e.target.value);
-                  console.log(maxCalorie);}}/>kcal
+                  <input
+                    type="text"
+                    size="3"
+                    onChange={(e) => {
+                      setMinCalorie(e.target.value);
+                    }}
+                  />
+                  kcal ~{" "}
+                  <input
+                    type="text"
+                    size="3"
+                    onChange={(e) => {
+                      setMaxCalorie(e.target.value);
+                    }}
+                  />
+                  kcal
                 </td>
               </tr>
               <tr>
                 <td colSpan="2" style={{ border: "0", textAlign: "right" }}>
                   <button
                     onClick={() => {
-                      console.log("click");
                       searchFilter();
                     }}
                   >

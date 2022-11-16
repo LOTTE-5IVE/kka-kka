@@ -42,7 +42,7 @@ public class OrderControllerMockTest extends TestContext {
                 member.getAddress());
         OrderRequest orderRequest = new OrderRequest(
                 recipientRequest,
-                List.of(new ProductOrderDto(PRODUCT_1.getId(), 1))
+                List.of(new ProductOrderDto(PRODUCT_1.getId(), null, 1))
         );
 
         LoginMember loginMember = new LoginMember(member.getId(), Authority.MEMBER);

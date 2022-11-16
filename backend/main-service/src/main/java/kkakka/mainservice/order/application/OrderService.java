@@ -3,12 +3,11 @@ package kkakka.mainservice.order.application;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.common.exception.NotFoundCouponException;
 import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.common.exception.NotFoundProductException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
-import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
@@ -62,11 +61,16 @@ public class OrderService {
         int orderTotalPrice = 0;
         for (ProductOrderDto productOrderDto : productOrderDtos) {
             Long productId = productOrderDto.getProductId();
+            Long couponId = productOrderDto.getCouponId();
             Integer quantity = productOrderDto.getQuantity();
 
             Product product = productRepository.findById(productId)
-                    .orElseThrow(KkaKkaException::new);
+                .orElseThrow(NotFoundProductException::new);
             ProductOrder productOrder = ProductOrder.create(product, product.getPrice(), quantity);
+            if (couponId != null) {
+                Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotFoundCouponException::new);
+                productOrder.applyCoupon(coupon);
+            }
 
             productOrders.add(productOrder);
             orderTotalPrice += productOrder.getTotalPrice();
@@ -87,17 +91,17 @@ public class OrderService {
 
     public List<MemberOrderDto> showMemberOrders(Long memberId, Long orderId, int pageSize) {
         final List<Order> orders = orderRepositorySupport.findByMemberId(memberId, orderId,
-                pageSize);
+            pageSize);
 
         List<MemberOrderDto> dtos = new ArrayList<>();
         for (Order order : orders) {
             List<ProductOrder> productOrders = order.getProductOrders();
             List<MemberProductOrderDto> memberProductOrderDtos = toMemberProductOrderListWithProductOrders(
-                    memberId, productOrders);
+                memberId, productOrders);
             dtos.add(
-                    MemberOrderDto.toDto(
-                            order, memberProductOrderDtos
-                    )
+                MemberOrderDto.toDto(
+                    order, memberProductOrderDtos
+                )
             );
         }
         return dtos;
@@ -114,8 +118,8 @@ public class OrderService {
 
         productOrderIds.forEach(productOrderId -> {
             ProductOrder productOrder = productOrderRepository
-                    .findByIdAndMemberId(productOrderId, loginMemberId)
-                    .orElseThrow(NotOrderOwnerException::new);
+                .findByIdAndMemberId(productOrderId, loginMemberId)
+                .orElseThrow(NotOrderOwnerException::new);
             if (!productOrder.isOrderedAtInDay()) {
                 productOrder.cancel();
                 productOrderRepository.save(productOrder);
@@ -125,34 +129,19 @@ public class OrderService {
 
     public int showMemberOrderCount(Long id) {
         final Member member = memberRepository.findById(id)
-                .orElseThrow(NotFoundMemberException::new);
+            .orElseThrow(NotFoundMemberException::new);
         return orderRepository.countAllByMemberId(member.getId());
-    }
-
-    @Transactional
-    public ProductOrderWithCouponDto applyProductCoupon(Long memberId,
-            ProductOrderDto productOrderDto, Long couponId) {
-        Product product = productRepository.findById(productOrderDto.getProductId())
-                .orElseThrow(NotFoundProductException::new);
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotFoundCouponException::new);
-        Integer discountedPrice = product.getDiscountPrice() - product.getMaxDiscount(coupon);
-
-        MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId,
-                memberId);
-        memberCoupon.applyCoupon();
-        return ProductOrderWithCouponDto.create(productOrderDto.getQuantity(), product,
-                discountedPrice, coupon);
     }
 
     @NotNull
     private List<MemberProductOrderDto> toMemberProductOrderListWithProductOrders(
-            Long memberId,
-            List<ProductOrder> productOrders
+        Long memberId,
+        List<ProductOrder> productOrders
     ) {
         List<MemberProductOrderDto> memberProductOrderDtos = new ArrayList<>();
         for (ProductOrder productOrder : productOrders) {
             final MemberProductOrderDto memberProductOrderDto = toMemberProductOrderDto(
-                    memberId, productOrder);
+                memberId, productOrder);
             memberProductOrderDtos.add(memberProductOrderDto);
         }
         return memberProductOrderDtos;
@@ -160,9 +149,31 @@ public class OrderService {
 
     @NotNull
     private MemberProductOrderDto toMemberProductOrderDto(Long memberId,
-            ProductOrder productOrder) {
+        ProductOrder productOrder) {
         final Optional<Review> review = reviewRepository.findByMemberIdAndProductOrderId(
-                memberId, productOrder.getId());
+            memberId, productOrder.getId());
         return MemberProductOrderDto.create(productOrder, productOrder.getProduct(), review);
+    }
+
+    @Transactional
+    public ProductOrderWithCouponDto applyProductCoupon(Long memberId,
+        ProductOrderDto productOrderDto, Long couponId) {
+        Product product = productRepository.findById(productOrderDto.getProductId())
+            .orElseThrow(NotFoundProductException::new);
+        Coupon coupon = couponRepository.findById(couponId)
+            .orElseThrow(NotFoundCouponException::new);
+        Integer discountedPrice = product.getDiscountPrice() - product.getMaxDiscount(coupon);
+
+        MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId,
+            memberId);
+        memberCoupon.applyCoupon();
+        return ProductOrderWithCouponDto.create(productOrderDto.getQuantity(), product,
+            discountedPrice, coupon);
+    }
+
+    @Transactional
+    public void cancelProductCoupon(Long memberId, Long couponId) {
+        MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId, memberId);
+        memberCoupon.cancelCoupon();
     }
 }

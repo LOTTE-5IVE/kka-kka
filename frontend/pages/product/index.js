@@ -44,15 +44,13 @@ export default function ProductList() {
   }, [cat_id]);
 
   useEffect(() => {
-    if(search) {
+    if (search) {
       setKeyword(search);
       setResource(fetchSearchData("accuracy", page, search, "", 0, 0, 0, 0));
     }
-  },[search]);
+  }, [search]);
 
-  useEffect(() => {
-
-  },[keyword]);
+  useEffect(() => {}, [keyword]);
 
   const ProductLists = () => {
     const data = resource.productList.read();
@@ -63,25 +61,28 @@ export default function ProductList() {
 
     return (
       <>
-        {data.data.length > 0 ? <ul className="productList">
-        {setTotalHits(data.totalHits)}
-          {data?.data?.map((product) => {
-            return (
-              <li className="productInner" key={product.id}>
-                <div className="productBox">
-                  <ProductRecCard
-                    id={product.id}
-                    imgsrc={product.imageUrl}
-                    name={product.name}
-                    price={product.price}
-                    discount={product.discount}
-                    imgSize={'300px'}
-                  />
-                </div>
-              </li>
-            );
-          })}
-        </ul>:<NoSearch />}
+        {data?.data?.length > 0 ? (
+          <ul className="productList">
+            {setTotalHits(data.totalHits)}
+            {data?.data?.map((product) => {
+              return (
+                <li className="productInner" key={product.id}>
+                  <div className="productBox">
+                    <ProductRecCard
+                      id={product.id}
+                      imgsrc={product.imageUrl}
+                      name={product.name}
+                      price={product.price}
+                      discount={product.discount}
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <NoSearch />
+        )}
 
         <style jsx>{`
           @media screen and (min-width: 769px) {
@@ -160,22 +161,17 @@ export default function ProductList() {
         </div>
 
         <div className="productWrapper">
-          {/* {search && (
-            <div className="title">
-              <div className="searchBar">
-                <img src="/product/mg.png" />
-                <p>
-                <input type="text" size="12" defaultValue={keyword} onChange={(e) => {setKeyword(e.target.value);
-                  console.log("테스트: ",e.target.value);}} />
-                </p>
-              </div>
-            </div>
-          )} */}
-
-          <SearchFilter setResource={setResource} search={keyword} page={page} cat_id={cat_id}/>
+          <SearchFilter
+            setResource={setResource}
+            search={keyword}
+            page={page}
+            cat_id={cat_id}
+          />
           <div className="title">
             {!search && <p className="category">{cat_name[cat_id]}</p>}
-            {search && totalHits > 0 && <p className="totalHits">등록 상품: {totalHits}</p>}
+            {search && totalHits > 0 && (
+              <p className="totalHits">등록 상품: {totalHits}</p>
+            )}
           </div>
           <Suspense
             fallback={

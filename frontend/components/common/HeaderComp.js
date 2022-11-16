@@ -1,20 +1,18 @@
 import Link from "next/link";
+import SearchBar from "./SearchBar";
 import { useContext } from "react";
 import { useEffect, useState } from "react";
 import { TokenContext } from "../../context/TokenContext";
 import { isLogin } from "../../hooks/isLogin";
 import { getToken } from "../../hooks/getToken";
 import { memberInfo } from "../../hooks/memberInfo";
-import { isText } from "../../hooks/isText";
 import { GetHApi } from "../../apis/Apis";
 import { CartCntContext } from "../../context/CartCntContext";
-import SearchBar from "./SearchBar";
 
 export default function Header() {
-  const [value, setValue] = useState("");
   const [name, setName] = useState("");
   const [login, setLogin] = useState(false);
-  const { cartCnt, setCartCnt} = useContext(CartCntContext);
+  const { cartCnt, setCartCnt } = useContext(CartCntContext);
   const { token, setToken } = useContext(TokenContext);
 
   const getMemberInfo = async () => {
@@ -29,25 +27,6 @@ export default function Header() {
     });
   };
 
-  function search(event) {
-    if (event.key === "Enter") {
-      if (value.length < 2 || value.length > 20) {
-        alert("두 글자 이상 스무 글자 이하로 입력하세요.");
-        return;
-      }
-
-      router.push(
-        {
-          pathname: `/product`,
-          query: { cat_id: 0, search: value },
-        },
-        `/product`,
-      );
-
-      setValue("");
-    }
-  }
- 
   useEffect(() => {
     if (isLogin()) {
       setToken(getToken());
@@ -63,7 +42,7 @@ export default function Header() {
         <div className="logo">
           <Link href="/">
             <a>
-              <img src="/main/logo.png" />
+              <img src="/main/logo.png" alt="" />
             </a>
           </Link>
         </div>
@@ -102,6 +81,7 @@ export default function Header() {
                   <img
                     src="/common/top_mypage.png"
                     style={{ cursor: "pointer" }}
+                    alt=""
                   />
                 </Link>
 
@@ -114,6 +94,7 @@ export default function Header() {
                       className="cart"
                       src="/common/top_cart.png"
                       style={{ cursor: "pointer" }}
+                      alt=""
                     />
                   </div>
                 </Link>
@@ -125,6 +106,7 @@ export default function Header() {
                     className="cart"
                     src="/common/top_mypage.png"
                     style={{ cursor: "pointer" }}
+                    alt=""
                   />
                 </Link>
 
@@ -134,6 +116,7 @@ export default function Header() {
                     <img
                       src="/common/top_cart.png"
                       style={{ cursor: "pointer" }}
+                      alt=""
                     />
                   </div>
                 </Link>

@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,6 +64,13 @@ public class OrderController {
             loginMember.getId(), productOrderDto, couponId);
 
         return ResponseEntity.status(HttpStatus.OK).body(productOrderWithCouponDto);
+    }
 
+    @PutMapping("/{couponId}")
+    public ResponseEntity<Void> cancelProductCoupon(
+        @PathVariable("couponId") Long couponId,
+        @AuthenticationPrincipal LoginMember loginMember) {
+        orderService.cancelProductCoupon(loginMember.getId(), couponId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

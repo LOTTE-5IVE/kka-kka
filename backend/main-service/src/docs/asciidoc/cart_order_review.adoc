@@ -74,9 +74,7 @@ include::{snippets}/applyCartItemCoupon-success/http-request.adoc[]
 include::{snippets}/applyCartItemCoupon-success/http-response.adoc[]
 
 == Order
-=== 주문
-
-==== 주문 성공
+=== 주문 성공
 
 - Request
 
@@ -86,7 +84,7 @@ include::{snippets}/product-order-success/http-request.adoc[]
 
 include::{snippets}/product-order-success/http-response.adoc[]
 
-==== 바로결제 페이지 쿠폰 적용
+=== 바로결제 페이지 쿠폰 적용
 
 - Request
 
@@ -96,7 +94,35 @@ include::{snippets}/orders-products-apply-coupon/http-request.adoc[]
 
 include::{snippets}/orders-products-apply-coupon/http-response.adoc[]
 
+=== 주문 성공 - 쿠폰 적용 상태
 
+- Request
+
+include::{snippets}/order-with-coupon/http-request.adoc[]
+
+- Response
+
+include::{snippets}/order-with-coupon/http-response.adoc[]
+
+=== 주문 조회 - 쿠폰 적용 상태
+
+- Request
+
+include::{snippets}/product-order-with-coupon/http-request.adoc[]
+
+- Response
+
+include::{snippets}/product-order-with-coupon/http-response.adoc[]
+
+=== 바로결제 페이지 쿠폰 적용 취소
+
+- Request
+
+include::{snippets}/orders-products-cancel-coupon/http-request.adoc[]
+
+- Response
+
+include::{snippets}/orders-products-cancel-coupon/http-response.adoc[]
 
 == Review
 

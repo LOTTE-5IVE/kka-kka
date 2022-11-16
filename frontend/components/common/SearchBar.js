@@ -5,7 +5,7 @@ import { useState } from "react";
 import { fetchAutoData } from "../../apis/AutoComplete";
 
 export default function SearchBar() {
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState();
   const [resource, setResource] = useState();
   const [index, setIndex] = useState(-1);
   const [over, setOver] = useState(false);
@@ -92,7 +92,6 @@ export default function SearchBar() {
   };
 
   useEffect(() => {
-    console.log("auto calle");
     autoComplete();
   }, [keyword]);
 
@@ -132,7 +131,7 @@ export default function SearchBar() {
           />
 
           <div onClick={searchQuery}>
-            <img src="/common/main_search.png" />
+            <img src="/common/main_search.png" alt="" />
           </div>
         </div>
         {keyword?.length > 0 && over ? (
