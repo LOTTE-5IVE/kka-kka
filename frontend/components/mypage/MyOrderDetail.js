@@ -2,6 +2,18 @@ import { commaMoney } from "../../hooks/commaMoney";
 import MyProductOrder from "./MyProductOrder";
 
 export default function MyOrderDetail({ orderDetail, handleDetail }) {
+
+  const totalDiscountPrice = () => {
+    return orderDetail.productOrders.reduce((prev, curr) => {
+          let discount = (curr.price * (0.01 * curr.discount)) * curr.quantity;
+          if (curr.coupon) {
+            discount += curr.coupon.discountedPrice;
+          }
+          return prev + discount
+        }, 0
+    )
+  }
+
   return (
     <>
       <div>
@@ -22,13 +34,22 @@ export default function MyOrderDetail({ orderDetail, handleDetail }) {
                       <span className="title-label mr-2">주문번호</span>
                       <span className="title-id">{orderDetail.id}</span>
                     </div>
-                    <div>
+                    <div className="title-price-info">
                       <span className="title-content mr-2">
-                        총 결제금액: <b>{commaMoney(orderDetail.totalPrice)}</b>
+                        총 결제 금액: <b>{commaMoney(
+                            orderDetail.totalPrice - totalDiscountPrice()
+                      ) || 0}</b>
                         원
                       </span>
-                      <span className="title-content">
-                          (할인금액: - 0000 원)
+                      <span 
+                          className="title-content" 
+                          style={{ 
+                            fontSize: "0.9rem",
+                            color: "#aaa"
+                          }}
+                      >
+                          (총 금액: {commaMoney(orderDetail.totalPrice) || 0} 원,
+                        할인금액: {commaMoney(totalDiscountPrice()) || 0} 원)
                       </span>
                       <span className="title-divider">|</span>
                       <span className="title-content">
@@ -166,7 +187,7 @@ export default function MyOrderDetail({ orderDetail, handleDetail }) {
 
             .title-divider {
               color: #3e3e3e;
-              margin: 0 1rem 0 1rem;
+              margin: 0 1.3rem 0 1.3rem;
             }
             
             .back-btn {
@@ -267,8 +288,7 @@ export default function MyOrderDetail({ orderDetail, handleDetail }) {
             }
 
             .title-divider {
-              color: #3e3e3e;
-              margin: 0 1rem 0 1rem;
+              display: none;
             }
             
             .back-btn {
@@ -279,6 +299,11 @@ export default function MyOrderDetail({ orderDetail, handleDetail }) {
               padding: 0.5rem;
               cursor: pointer;
               margin: 1rem 0 0.5rem 0;
+            }
+            
+            .title-price-info {
+              display: flex;
+              flex-direction: column;
             }
           }
 

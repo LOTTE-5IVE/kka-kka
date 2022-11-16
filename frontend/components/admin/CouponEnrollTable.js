@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import ApplyGrade from "./ApplyGrade";
 import ApplyProduct from "./ApplyProduct";
 import axios from "axios";

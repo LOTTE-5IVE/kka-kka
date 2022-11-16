@@ -40,7 +40,7 @@ export default function MyProductOrder({ productOrder }) {
                         상품 가격
                       </div>
                       <div>
-                        {commaMoney(productOrder.price)} 원
+                        {commaMoney(productOrder.price * productOrder.quantity)} 원
                       </div>
                     </div>
                     <div className="d-flex justify-space-between detail-discount">
@@ -49,8 +49,8 @@ export default function MyProductOrder({ productOrder }) {
                       </div>
                       <div>
                         - {commaMoney(
-                          productOrder.price *
-                            (0.01 * productOrder.discount),
+                          (productOrder.price *
+                            (0.01 * productOrder.discount)) * productOrder.quantity,
                         ) || 0}{" "}
                         원
                       </div>
@@ -60,10 +60,10 @@ export default function MyProductOrder({ productOrder }) {
                         쿠폰 할인
                       </div>
                       <div>
-                        - {commaMoney(
-                          productOrder.price *
-                          (0.01 * 10),
-                      ) || 0}{" "}
+                        - {productOrder.coupon ? commaMoney(
+                          productOrder.coupon.discountedPrice
+                          * productOrder.quantity
+                      ) : 0}{" "}
                         원
                       </div>
                     </div>

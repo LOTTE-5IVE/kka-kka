@@ -29,7 +29,7 @@ public class MemberProductOrderDto {
     private Integer quantity;
     private Integer deleted;
     @Nullable
-    private CouponResponseDto couponDto;
+    private MemberCouponDto couponDto;
     private MemberProductDto productDto;
     @Nullable
     private MemberReviewDto reviewDto;
@@ -38,7 +38,8 @@ public class MemberProductOrderDto {
             ProductOrder productOrder,
             Product product,
             Review review,
-            Coupon coupon
+            Coupon coupon,
+            int discountedPrice
     ) {
         return new MemberProductOrderDto(
                 productOrder.getId(),
@@ -46,7 +47,11 @@ public class MemberProductOrderDto {
                 productOrder.getDiscount(),
                 productOrder.getQuantity(),
                 productOrder.getDeleted(),
-                CouponResponseDto.create(coupon),
+                new MemberCouponDto(
+                        coupon.getId(),
+                        coupon.getName(),
+                        discountedPrice
+                ),
                 new MemberProductDto(
                         product.getId(),
                         product.getName(),
@@ -83,7 +88,8 @@ public class MemberProductOrderDto {
     public static MemberProductOrderDto create (
             ProductOrder productOrder,
             Product product,
-            Coupon coupon
+            Coupon coupon,
+            int discountedPrice
     ) {
         return new MemberProductOrderDto(
                 productOrder.getId(),
@@ -91,7 +97,11 @@ public class MemberProductOrderDto {
                 productOrder.getDiscount(),
                 productOrder.getQuantity(),
                 productOrder.getDeleted(),
-                CouponResponseDto.create(coupon),
+                new MemberCouponDto(
+                        coupon.getId(),
+                        coupon.getName(),
+                        discountedPrice
+                ),
                 new MemberProductDto(
                         product.getId(),
                         product.getName(),
@@ -171,10 +181,7 @@ public class MemberProductOrderDto {
                 CouponResponse.create(
                     this.couponDto.getId(),
                     this.couponDto.getName(),
-                    this.couponDto.getPriceRule(),
-                    this.couponDto.getRegisteredAt(),
-                    this.couponDto.getPercentage(),
-                    this.couponDto.getMaxDiscount()
+                    this.couponDto.getDiscountedPrice()
                 ),
                 ProductResponse.create(
                     this.productDto.getId(),
@@ -194,10 +201,7 @@ public class MemberProductOrderDto {
                 CouponResponse.create(
                     this.couponDto.getId(),
                     this.couponDto.getName(),
-                    this.couponDto.getPriceRule(),
-                    this.couponDto.getRegisteredAt(),
-                    this.couponDto.getPercentage(),
-                    this.couponDto.getMaxDiscount()
+                    this.couponDto.getDiscountedPrice()
                 ),
                 ProductResponse.create(
                     this.productDto.getId(),
@@ -230,5 +234,14 @@ public class MemberProductOrderDto {
         private String contents;
         private Double rating;
         private LocalDateTime createdAt;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private static class MemberCouponDto {
+
+        private Long id;
+        private String name;
+        private Integer discountedPrice;
     }
 }
