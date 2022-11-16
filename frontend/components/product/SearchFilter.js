@@ -50,30 +50,34 @@ export default function SearchFilter({ setResource, search, page, cat_id }) {
   return (
     <div className="SFWrapper">
       <div className="menu">
-        <div
-          className={!toggle ? "filter" : "filter toggle"}
-          style={{ cursor: "pointer" }}
-        >
-          {!toggle ? (
-            <div
-              className="filterBtn"
-              onClick={() => {
-                setToggle(true);
-              }}
-            >
-              필터 열기 <img src="/product/searchfilter_off.png" alt="" />
-            </div>
-          ) : (
-            <div
-              className="filterBtn"
-              onClick={() => {
-                setToggle(false);
-              }}
-            >
-              필터 닫기 <img src="/product/searchfilter_on.png" alt="" />
-            </div>
-          )}
-        </div>
+        {search ? (
+          <div
+            className={!toggle ? "filter" : "filter toggle"}
+            style={{ cursor: "pointer" }}
+          >
+            {!toggle ? (
+              <div
+                className="filterBtn"
+                onClick={() => {
+                  setToggle(true);
+                }}
+              >
+                필터 열기 <img src="/product/searchfilter_off.png" alt="" />
+              </div>
+            ) : (
+              <div
+                className="filterBtn"
+                onClick={() => {
+                  setToggle(false);
+                }}
+              >
+                필터 닫기 <img src="/product/searchfilter_on.png" alt="" />
+              </div>
+            )}
+          </div>
+        ) : (
+          <div></div>
+        )}
         <select
           onChange={(e) => {
             setSort(e.target.value);
