@@ -66,7 +66,12 @@ public class OrderService {
 
             Product product = productRepository.findById(productId)
                 .orElseThrow(NotFoundProductException::new);
-            ProductOrder productOrder = ProductOrder.create(product, product.getPrice(), quantity);
+            ProductOrder productOrder = ProductOrder.create(
+                    product,
+                    product.getPrice(),
+                    product.getDiscount(),
+                    quantity
+            );
             if (couponId != null) {
                 Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotFoundCouponException::new);
                 productOrder.applyCoupon(coupon);

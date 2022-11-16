@@ -43,11 +43,21 @@ public class ProductOrder {
     private Coupon coupon;
 
     private Integer price;
+    private Integer discount;
     private Integer quantity;
     private Integer deleted;
 
-    public static ProductOrder create(Product product, int price, int quantity) {
-        ProductOrder productOrder = new ProductOrder(null, null, product, null, price, quantity, 0);
+    public static ProductOrder create(Product product, int price, int discount, int quantity) {
+        ProductOrder productOrder = new ProductOrder(
+                null,
+                null,
+                product,
+                null,
+                price,
+                discount,
+                quantity,
+                0
+        );
 
         if (quantity < 1) {
             throw new IllegalQuantityException();
@@ -65,7 +75,7 @@ public class ProductOrder {
     }
 
     public int getTotalPrice() {
-        return getPrice() * getQuantity();
+        return (int) ((getPrice() - Math.ceil(getPrice() * getDiscount() * 0.01)) * getQuantity());
     }
 
     public void setOrder(Order order) {
