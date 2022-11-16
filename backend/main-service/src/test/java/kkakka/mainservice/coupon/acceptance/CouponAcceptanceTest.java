@@ -94,6 +94,36 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         Assertions.assertThat(response.header("Location")).isNotNull();
     }
 
+    @DisplayName("쿠폰 생성 - 실패(권한이 없는 경우)")
+    @Test
+    void createCoupon_fail(){
+        // given
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("create-coupon-fail-unauthorized"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("{\n"
+                        + "  \"categoryId\": null,\n"
+                        + "  \"grade\": null,\n"
+                        + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
+                        + "  \"name\": \"test\",\n"
+                        + "  \"priceRule\": \"COUPON\",\n"
+                        + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
+                        + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
+                        + "  \"percentage\": 10,\n"
+                        + "  \"maxDiscount\": 2000,\n"
+                        + "  \"minOrderPrice\": 20000\n"
+                        + "}")
+                .when()
+                .post("/api/coupons")
+                .then().log().all().extract();
+
+        // then
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        Assertions.assertThat(response.header("Location")).isNull();
+    }
+
     @DisplayName("쿠폰 조회 - 성공")
     @Test
     void findAllCoupons() {

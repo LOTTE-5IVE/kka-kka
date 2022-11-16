@@ -57,7 +57,9 @@ public class CouponController {
     /* 쿠폰 조회 */
     @AdminOnly
     @GetMapping
-    public ResponseEntity<List<CouponResponseDto>> findAllCoupons() {
+    public ResponseEntity<List<CouponResponseDto>> findAllCoupons(
+            @AuthenticationPrincipal LoginMember loginMember
+    ) {
         List<CouponResponseDto> couponResponseDto = couponService.showAllCouponsNotDeleted();
         return ResponseEntity.status(HttpStatus.OK).body(couponResponseDto);
     }
@@ -126,7 +128,9 @@ public class CouponController {
     /* 할인 조회 */
     @AdminOnly
     @GetMapping("/discount")
-    public ResponseEntity<List<DiscountResponseDto>> showAllDiscounts() {
+    public ResponseEntity<List<DiscountResponseDto>> showAllDiscounts(
+            @AuthenticationPrincipal LoginMember loginMember
+    ) {
         List<DiscountResponseDto> discounts = discountService.showAllDiscountsNotDeleted();
         return ResponseEntity.status(HttpStatus.OK).body(discounts);
     }
