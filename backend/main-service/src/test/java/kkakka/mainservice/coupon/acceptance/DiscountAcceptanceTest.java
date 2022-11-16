@@ -236,11 +236,13 @@ public class DiscountAcceptanceTest extends DocumentConfiguration {
     void showAllDiscounts() {
         // given
         상품_할인_생성();
+        final String adminToken = 관리자_로그인();
 
         // when
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
             .filter(document("show-discounts-success"))
+            .header("Authorization", "Bearer " + adminToken)
             .when()
             .get("/api/coupons/discount")
             .then().log().all().extract();

@@ -55,6 +55,7 @@ public class CouponController {
     }
 
     /* 쿠폰 조회 */
+    @AdminOnly
     @GetMapping
     public ResponseEntity<List<CouponResponseDto>> findAllCoupons() {
         List<CouponResponseDto> couponResponseDto = couponService.showAllCouponsNotDeleted();
@@ -123,6 +124,7 @@ public class CouponController {
     }
 
     /* 할인 조회 */
+    @AdminOnly
     @GetMapping("/discount")
     public ResponseEntity<List<DiscountResponseDto>> showAllDiscounts() {
         List<DiscountResponseDto> discounts = discountService.showAllDiscountsNotDeleted();

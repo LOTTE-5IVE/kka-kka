@@ -98,10 +98,12 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void findAllCoupons() {
         쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", null, 1000);
+        final String adminToken = 관리자_로그인();
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
             .filter(document("find-all-coupons"))
+            .header("Authorization", "Bearer " + adminToken)
             .when()
             .get("/api/coupons")
             .then().log().all().extract();
