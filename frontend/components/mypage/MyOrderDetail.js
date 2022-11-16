@@ -17,9 +17,12 @@ export default function MyOrderDetail({ orderDetail }) {
                       <span className="title-id">{orderDetail.id}</span>
                     </div>
                     <div>
-                      <span className="title-content">
+                      <span className="title-content mr-2">
                         총 결제금액: <b>{commaMoney(orderDetail.totalPrice)}</b>
                         원
+                      </span>
+                      <span className="title-content">
+                          (할인금액: - 0000 원)
                       </span>
                       <span className="title-divider">|</span>
                       <span className="title-content">

@@ -25,6 +25,7 @@ public class MemberProductOrderDto {
 
     private Long id;
     private Integer price;
+    private Integer discount;
     private Integer quantity;
     private Integer deleted;
     @Nullable
@@ -42,15 +43,14 @@ public class MemberProductOrderDto {
         return new MemberProductOrderDto(
                 productOrder.getId(),
                 productOrder.getPrice(),
+                productOrder.getDiscount(),
                 productOrder.getQuantity(),
                 productOrder.getDeleted(),
                 CouponResponseDto.create(coupon),
                 new MemberProductDto(
                         product.getId(),
                         product.getName(),
-                        product.getPrice(),
-                        product.getImageUrl(),
-                        product.getDiscount()
+                        product.getImageUrl()
                 ),
                 new MemberReviewDto(
                         review.getId(), review.getContents(), review.getRating(), review.getCreatedAt()
@@ -66,15 +66,14 @@ public class MemberProductOrderDto {
         return new MemberProductOrderDto(
                 productOrder.getId(),
                 productOrder.getPrice(),
+                productOrder.getDiscount(),
                 productOrder.getQuantity(),
                 productOrder.getDeleted(),
                 null,
                 new MemberProductDto(
                         product.getId(),
                         product.getName(),
-                        product.getPrice(),
-                        product.getImageUrl(),
-                        product.getDiscount()
+                        product.getImageUrl()
                 ),
                 new MemberReviewDto(
                         review.getId(), review.getContents(), review.getRating(), review.getCreatedAt()
@@ -89,15 +88,14 @@ public class MemberProductOrderDto {
         return new MemberProductOrderDto(
                 productOrder.getId(),
                 productOrder.getPrice(),
+                productOrder.getDiscount(),
                 productOrder.getQuantity(),
                 productOrder.getDeleted(),
                 CouponResponseDto.create(coupon),
                 new MemberProductDto(
                         product.getId(),
                         product.getName(),
-                        product.getPrice(),
-                        product.getImageUrl(),
-                        product.getDiscount()
+                        product.getImageUrl()
                 ),
                 null
         );
@@ -110,15 +108,14 @@ public class MemberProductOrderDto {
         return new MemberProductOrderDto(
                 productOrder.getId(),
                 productOrder.getPrice(),
+                productOrder.getDiscount(),
                 productOrder.getQuantity(),
                 productOrder.getDeleted(),
                 null,
                 new MemberProductDto(
                         product.getId(),
                         product.getName(),
-                        product.getPrice(),
-                        product.getImageUrl(),
-                        product.getDiscount()
+                        product.getImageUrl()
                 ),
                 null
         );
@@ -129,15 +126,14 @@ public class MemberProductOrderDto {
             return ProductOrderResponse.create(
                     this.id,
                     this.price,
+                    this.discount,
                     this.quantity,
                     this.deleted,
                     null,
                     ProductResponse.create(
                             this.productDto.getId(),
                             this.productDto.getName(),
-                            this.productDto.getPrice(),
-                            this.productDto.imageUrl,
-                            this.productDto.getDiscount()
+                            this.productDto.imageUrl
                     ),
                     null
             );
@@ -147,15 +143,14 @@ public class MemberProductOrderDto {
             return ProductOrderResponse.create(
                 this.id,
                 this.price,
+                this.discount,
                 this.quantity,
                 this.deleted,
                 null,
                 ProductResponse.create(
                     this.productDto.getId(),
                     this.productDto.getName(),
-                    this.productDto.getPrice(),
-                    this.productDto.imageUrl,
-                    this.productDto.getDiscount()
+                    this.productDto.imageUrl
                 ),
                 ReviewSimpleResponse.create(
                     this.reviewDto.getId(),
@@ -170,6 +165,7 @@ public class MemberProductOrderDto {
             return ProductOrderResponse.create(
                 this.id,
                 this.price,
+                this.discount,
                 this.quantity,
                 this.deleted,
                 CouponResponse.create(
@@ -183,9 +179,7 @@ public class MemberProductOrderDto {
                 ProductResponse.create(
                     this.productDto.getId(),
                     this.productDto.getName(),
-                    this.productDto.getPrice(),
-                    this.productDto.imageUrl,
-                    this.productDto.getDiscount()
+                    this.productDto.imageUrl
                 ),
                 null
             );
@@ -194,6 +188,7 @@ public class MemberProductOrderDto {
         return ProductOrderResponse.create(
                 this.id,
                 this.price,
+                this.discount,
                 this.quantity,
                 this.deleted,
                 CouponResponse.create(
@@ -207,9 +202,7 @@ public class MemberProductOrderDto {
                 ProductResponse.create(
                     this.productDto.getId(),
                     this.productDto.getName(),
-                    this.productDto.getPrice(),
-                    this.productDto.imageUrl,
-                    this.productDto.getDiscount()
+                    this.productDto.imageUrl
                 ),
                 ReviewSimpleResponse.create(
                     this.reviewDto.getId(),
@@ -226,9 +219,7 @@ public class MemberProductOrderDto {
 
         private Long id;
         private String name;
-        private Integer price;
         private String imageUrl;
-        private Integer discount;
     }
 
     @Getter
