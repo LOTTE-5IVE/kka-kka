@@ -4,6 +4,7 @@ import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.common.exception.InvalidCouponRequestException;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.exception.NotFoundProductException;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.PriceRule;
@@ -223,7 +224,8 @@ public class CouponService {
     public List<CouponProductDto> showCouponsByProductIdAndMemberId(Long productId,
                                                                     Long memberId) {
 
-        Product product = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
+        Product product = productRepository.findById(productId)
+            .orElseThrow(NotFoundProductException::new);
         List<Coupon> coupons = findProductCouponsByProductId(productId);
 
         if (product.getCategory() != null) {
