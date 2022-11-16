@@ -11,6 +11,8 @@ export default function MyProductOrder({ productOrder }) {
 
   useEffect(() => {}, [reviewed]);
 
+  console.log(productOrder)
+
   return (
     <>
       <div className="wrapper">
@@ -57,7 +59,7 @@ export default function MyProductOrder({ productOrder }) {
                     </div>
                     <div className="d-flex justify-space-between detail-discount">
                       <div>
-                        쿠폰 할인
+                        쿠폰 할인 {productOrder.coupon == null || `(${productOrder.coupon.name})`}
                       </div>
                       <div>
                         - {productOrder.coupon ? commaMoney(
