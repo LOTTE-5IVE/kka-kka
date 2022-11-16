@@ -104,6 +104,8 @@ export default function Cart() {
   const getCartItem = async () => {
     GetHApi("/api/carts", token).then((res) => {
       setCartItems(res.cartItems);
+      setPayment(res.cartItems);
+
       setTotalPrice(
         res.cartItems.reduce((prev, cur) => prev + cur.price * cur.quantity, 0),
       );
@@ -273,7 +275,7 @@ export default function Cart() {
                                 key={product.cartItemId}
                                 type="text"
                                 size="7"
-                                defaultValue={product.couponDto.name}
+                                value={product.couponDto.name}
                                 readOnly
                               />
                             ) : (

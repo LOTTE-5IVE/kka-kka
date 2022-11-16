@@ -4,6 +4,18 @@ import { AdminButton } from "../common/Button/AdminButton";
 import { commaMoney } from "../../hooks/commaMoney";
 
 export default function CouponSearchTable() {
+  const cat_name = {
+    0: "전체 상품",
+    1: "비스킷/샌드",
+    2: "스낵/봉지과자",
+    3: "박스과자",
+    4: "캔디/사탕/젤리",
+    5: "시리얼/바",
+    6: "초콜릿",
+    7: "껌/자일리톨",
+    8: "선물세트",
+  };
+
   const [coupons, setCoupons] = useState();
 
   const getCoupon = async () => {
@@ -27,13 +39,14 @@ export default function CouponSearchTable() {
       <table>
         <colgroup>
           <col style={{ width: "5%" }} />
-          <col style={{ width: "8%" }} />
-          <col style={{ width: "22%" }} />
+          <col style={{ width: "5%" }} />
           <col style={{ width: "15%" }} />
+          <col style={{ width: "5%" }} />
           <col style={{ width: "10%" }} />
-          <col style={{ width: "16%" }} />
-          <col style={{ width: "16%" }} />
-          <col style={{ width: "8%" }} />
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "15%" }} />
+          <col style={{ width: "15%" }} />
+          <col style={{ width: "15%" }} />
         </colgroup>
         <thead>
           <tr>
@@ -42,6 +55,7 @@ export default function CouponSearchTable() {
             <th>혜택 이름</th>
             <th>할인 설정</th>
             <th>최소 주문 금액</th>
+            <th>최대 할인 금액</th>
             <th>유효기간</th>
             <th>등록일</th>
             <th>적용 유형</th>
@@ -60,10 +74,9 @@ export default function CouponSearchTable() {
                 </td>
                 <td>쿠폰</td>
                 <td>{coupon.name}</td>
-                <td>
-                  {coupon.percentage?`${coupon.percentage}%`:`${commaMoney(coupon.maxDiscount)}원`}
-                </td>
+                <td>{coupon.percentage ? `${coupon.percentage}%` : "x"}</td>
                 <td>{commaMoney(coupon.minOrderPrice)}원</td>
+                <td>{commaMoney(coupon.maxDiscount)}원</td>
                 <td>
                   {coupon.startedAt.slice(0, 10)} ~{" "}
                   {coupon.expiredAt.slice(0, 10)}
@@ -71,10 +84,10 @@ export default function CouponSearchTable() {
                 <td>{coupon.registeredAt}</td>
                 <td>
                   {coupon.categoryId
-                    ? "카테고리"
+                    ? `카테고리(${cat_name[coupon.categoryId]})`
                     : coupon.grade
-                    ? "등급"
-                    : "상품"}
+                    ? `등급(${coupon.grade})`
+                    : `상품(ID: ${coupon.productId})`}
                 </td>
               </tr>
             );

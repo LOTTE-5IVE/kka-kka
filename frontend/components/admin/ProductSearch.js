@@ -12,7 +12,7 @@ export default function ProductSearch() {
 
   const getProducts = async () => {
     await axios
-      .get(`/api/products?category=0&page=${page}&size=15`)
+      .get(`/api/products?category=0&page=${page}&size=11`)
       .then((res) => {
         setProducts(res.data.data);
         setLastPage(res.data.pageInfo.lastPage);

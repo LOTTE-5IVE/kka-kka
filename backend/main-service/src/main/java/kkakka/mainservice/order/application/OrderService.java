@@ -2,12 +2,14 @@ package kkakka.mainservice.order.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.common.exception.NotFoundCouponException;
 import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.common.exception.NotFoundProductException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
+import kkakka.mainservice.common.exception.OutOfMinOrderPriceException;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
@@ -30,7 +32,6 @@ import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.review.domain.Review;
 import kkakka.mainservice.review.domain.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.jgit.util.io.CountingOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,11 +74,13 @@ public class OrderService {
                     product.getDiscount(),
                     quantity
             );
-            if (couponId != null) {
+            if (!Objects.isNull(couponId)) {
                 Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotFoundCouponException::new);
+                if (product.getDiscountPrice() * quantity < coupon.getMinOrderPrice()) {
+                    throw new OutOfMinOrderPriceException();
+                }
                 productOrder.applyCoupon(coupon);
             }
-
             productOrders.add(productOrder);
             orderTotalPrice += productOrder.getTotalPrice();
         }

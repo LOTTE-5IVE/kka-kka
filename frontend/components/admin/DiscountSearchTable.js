@@ -7,6 +7,18 @@ export default function DiscountSearchTable() {
   const [discounts, setDiscounts] = useState();
   const userData = useContext(UserContext)?.adminUser;
 
+  const cat_name = {
+    0: "전체 상품",
+    1: "비스킷/샌드",
+    2: "스낵/봉지과자",
+    3: "박스과자",
+    4: "캔디/사탕/젤리",
+    5: "시리얼/바",
+    6: "초콜릿",
+    7: "껌/자일리톨",
+    8: "선물세트",
+  };
+
   const getDiscount = async () => {
     await axios.get("/api/coupons/discount").then((res) => {
       setDiscounts(res.data);
@@ -35,10 +47,10 @@ export default function DiscountSearchTable() {
         <colgroup>
           <col style={{ width: "5%" }} />
           <col style={{ width: "10%" }} />
-          <col style={{ width: "30%" }} />
+          <col style={{ width: "25%" }} />
           <col style={{ width: "5%" }} />
           <col style={{ width: "20%" }} />
-          <col style={{ width: "10%" }} />
+          <col style={{ width: "15%" }} />
         </colgroup>
         <thead>
           <tr>
@@ -68,7 +80,11 @@ export default function DiscountSearchTable() {
                   {discount.startedAt.slice(0, 10)} ~{" "}
                   {discount.expiredAt.slice(0, 10)}
                 </td>
-                <td>{discount.categoryId ? "카테고리" : "상품"}</td>
+                <td>
+                  {discount.categoryId
+                    ? `카테고리(${cat_name[discount.categoryId]})`
+                    : `상품(ID: ${discount.productId})`}
+                </td>
               </tr>
             );
           })}

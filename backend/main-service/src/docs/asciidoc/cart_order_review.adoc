@@ -73,6 +73,16 @@ include::{snippets}/applyCartItemCoupon-success/http-request.adoc[]
 
 include::{snippets}/applyCartItemCoupon-success/http-response.adoc[]
 
+=== 장바구니 쿠폰 적용 실패
+
+- Request
+
+include::{snippets}/applyCartItemCoupon-fail/http-request.adoc[]
+
+- Response
+
+include::{snippets}/applyCartItemCoupon-fail/http-response.adoc[]
+
 == Order
 === 주문 성공
 
@@ -84,7 +94,7 @@ include::{snippets}/product-order-success/http-request.adoc[]
 
 include::{snippets}/product-order-success/http-response.adoc[]
 
-=== 바로결제 페이지 쿠폰 적용
+=== 바로결제 페이지 쿠폰 적용 - 성공
 
 - Request
 
@@ -103,6 +113,16 @@ include::{snippets}/order-with-coupon/http-request.adoc[]
 - Response
 
 include::{snippets}/order-with-coupon/http-response.adoc[]
+
+=== 주문 실패 - 최소 주문 금액 부족
+
+- Request
+
+include::{snippets}/order-with-coupon-fail/http-request.adoc[]
+
+- Response
+
+include::{snippets}/order-with-coupon-fail/http-response.adoc[]
 
 === 주문 조회 - 쿠폰 적용 상태
 

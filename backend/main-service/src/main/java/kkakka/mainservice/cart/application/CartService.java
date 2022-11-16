@@ -12,8 +12,10 @@ import kkakka.mainservice.cart.ui.dto.CartItemDto;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
 import kkakka.mainservice.cart.ui.dto.CartResponseDto;
 import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.exception.NotFoundCouponException;
 import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.common.exception.NotOrderOwnerException;
+import kkakka.mainservice.common.exception.OutOfMinOrderPriceException;
 import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
@@ -123,11 +125,16 @@ public class CartService {
         Long loginMemberId = loginMember.getId();
 
         CartItem cartItem = cartItemRepository.findByIdandMemberId(cartItemId, loginMemberId)
-                .orElseThrow(KkaKkaException::new);
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow(KkaKkaException::new);
+            .orElseThrow(KkaKkaException::new);
+        Coupon coupon = couponRepository.findById(couponId)
+            .orElseThrow(NotFoundCouponException::new);
+        if (cartItem.getProduct().getDiscountPrice() * cartItem.getQuantity() < coupon.getMinOrderPrice()) {
+            throw new OutOfMinOrderPriceException();
+        }
         cartItem.applyCoupon(coupon);
 
-        MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId, loginMemberId);
+        MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId,
+            loginMemberId);
         memberCoupon.applyCoupon();
 
         Integer discountedPrice = cartItem.getDiscountedPrice(coupon);

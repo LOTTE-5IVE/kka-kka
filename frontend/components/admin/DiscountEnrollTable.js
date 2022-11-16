@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import ApplyProduct from "./ApplyProduct";
 import axios from "axios";
 import Button from "../common/Button/Button";
@@ -22,23 +22,38 @@ export default function DiscountEnrollTable() {
   const [unvalid, setUnValid] = useState(true);
   const today = new Date().toISOString().substring(0, 10);
 
+  const initStates = () => {
+    setPromotionName("");
+    setDiscount("");
+    setStartDate("");
+    setEndDate("");
+    setNameValid(false);
+    setDiscountValid(false);
+    setSDateValid(false);
+    setEDateValid(false);
+    setUnValid(true);
+  };
   const userData = useContext(UserContext)?.adminUser;
 
   const makeDiscount = async () => {
     await axios
-      .post("/api/coupons/discount", {
-        categoryId: targetVal,
-        productId: null,
-        name: promotionName,
-        discount: discount,
-        discountType: "CATEGORY_DISCOUNT",
-        startedAt: `${startDate} 00:00:00`,
-        expiredAt: `${endDate} 00:00:00`,
-      }, {
-        headers: {
-          Authorization: `Bearer ${userData.adminToken}`
-        }
-      })
+      .post(
+        "/api/coupons/discount",
+        {
+          categoryId: targetVal,
+          productId: null,
+          name: promotionName,
+          discount: discount,
+          discountType: "CATEGORY_DISCOUNT",
+          startedAt: `${startDate} 00:00:00`,
+          expiredAt: `${endDate} 00:00:00`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.adminToken}`,
+          },
+        },
+      )
       .then((res) => {
         alert("등록완료!");
       })
@@ -49,21 +64,26 @@ export default function DiscountEnrollTable() {
 
   const makeDiscountProduct = async () => {
     await axios
-      .post("/api/coupons/discount", {
-        categoryId: null,
-        productId: productId,
-        name: promotionName,
-        discount: discount,
-        discountType: "PRODUCT_DISCOUNT",
-        startedAt: `${startDate} 00:00:00`,
-        expiredAt: `${endDate} 00:00:00`,
-      }, {
-        headers: {
-          Authorization: `Bearer ${userData.adminToken}`
-        }
-      })
+      .post(
+        "/api/coupons/discount",
+        {
+          categoryId: null,
+          productId: productId,
+          name: promotionName,
+          discount: discount,
+          discountType: "PRODUCT_DISCOUNT",
+          startedAt: `${startDate} 00:00:00`,
+          expiredAt: `${endDate} 00:00:00`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.adminToken}`,
+          },
+        },
+      )
       .then((res) => {
         alert("등록완료!");
+        initStates();
       })
       .catch((err) => {
         alert("등록실패!");
@@ -104,7 +124,7 @@ export default function DiscountEnrollTable() {
                     className="inputTypeText"
                     size="25"
                     type="text"
-                    defaultValue={promotionName}
+                    value={promotionName}
                     onChange={(e) => {
                       if (e.target.value.length > 0) {
                         setPromotionName(e.target.value);
@@ -133,7 +153,7 @@ export default function DiscountEnrollTable() {
                     className="inputTypeText"
                     size="2"
                     type="text"
-                    defaultValue={discount}
+                    value={discount}
                     onChange={(e) => {
                       if (isNumber(e.target.value)) {
                         setDiscount(e.target.value);
@@ -147,8 +167,8 @@ export default function DiscountEnrollTable() {
                         e.target.value = "";
                       }
                     }}
-                  />{" "}
-                  %
+                  />
+                  <span> % </span>
                 </div>
               </td>
             </tr>
@@ -163,7 +183,7 @@ export default function DiscountEnrollTable() {
                       id="oname"
                       className="inputTypeText"
                       type="date"
-                      defaultValue={startDate}
+                      value={startDate}
                       onChange={(e) => {
                         if (e.target.value >= endDate) {
                           alert("날짜를 다시 설정해주세요.");
@@ -176,12 +196,12 @@ export default function DiscountEnrollTable() {
                         }
                       }}
                     />
-                    {"  "}~{"  "}
+                    <span> ~ </span>
                     <input
                       id="oname"
                       className="inputTypeText"
                       type="date"
-                      defaultValue={endDate}
+                      value={endDate}
                       onChange={(e) => {
                         if (
                           e.target.value <= today ||
@@ -270,6 +290,20 @@ export default function DiscountEnrollTable() {
 
             tr {
               border-bottom: 1px solid #dedede;
+
+              td {
+                input {
+                  margin: 0 10px;
+                  line-height: 25px;
+                  padding: 0 0 0 13px;
+                  border-radius: 8px;
+                  font-size: 16px;
+                }
+
+                span {
+                  font-size: 16px;
+                }
+              }
             }
 
             .btn {

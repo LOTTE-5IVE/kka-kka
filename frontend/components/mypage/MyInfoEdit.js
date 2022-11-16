@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 import { PatchHApi } from "../../apis/Apis";
 import ButtonComp from "../../components/common/Button/ButtonComp";
-import { isEng } from "../../hooks/isEng";
 import { getToken } from "../../hooks/getToken";
 import { isLang } from "../../hooks/isLang";
 import { memberInfo } from "../../hooks/memberInfo";
 import { isNumber } from "../../hooks/isNumber";
-import { isText } from "../../hooks/isText";
 import Title from "../common/Title";
 import DaumPost from "../payment/DaumPost";
+import { isEngNum } from "../../hooks/isEngNum";
+import { isEmail } from "../../hooks/isEmail";
 
 export default function MyInfoEdit() {
   const [token, setToken] = useState();
   const [data, setData] = useState();
   const [name, setName] = useState();
   const [email1, setEmail1] = useState();
-  const [email2, setEmail2] = useState();
+  const [email2, setEmail2] = useState("");
   const [phone1, setPhone1] = useState();
   const [phone2, setPhone2] = useState();
   const [phone3, setPhone3] = useState();
@@ -41,6 +41,23 @@ export default function MyInfoEdit() {
     setZipcode(zipcode);
   }
 
+  const initStates = () => {
+    setName();
+    setEmail1();
+    setEmail2();
+    setPhone1();
+    setPhone2();
+    setPhone3();
+    setAddr1("");
+    setAddr2("");
+    setZipcode("");
+    setNameValid(false);
+    setPhoneValid1(false);
+    setPhoneValid2(false);
+    setPhoneValid3(false);
+    setUnValid(true);
+  };
+
   useEffect(() => {
     setToken(getToken());
 
@@ -62,15 +79,30 @@ export default function MyInfoEdit() {
   }, [nameValid, phoneValid1, phoneValid2, phoneValid3]);
 
   const editMemberInfo = async () => {
-    PatchHApi("/api/members/me", { name: name }, token);
+    if (email2.length > 0 && !isEmail(email2)) {
+      alert("이메일 형식에 맞지 않습니다.");
+      return;
+    }
+
+    let add;
+
+    if (addr1) {
+      add = addr1 + " " + addr2;
+    }
+
     PatchHApi(
       "/api/members/me",
       {
+        name: name,
         email: email1 + "@" + email2,
         phone: phone1 + "-" + phone2 + "-" + phone3,
+        address: add,
       },
       token,
-    );
+    ).then((res) => {
+      alert("수정되었습니다.");
+      initStates();
+    });
 
     memberInfo(token).then((res) => {
       if (res) {
@@ -188,7 +220,10 @@ export default function MyInfoEdit() {
                         onChange={(e) => {
                           if (isNumber(e.target.value)) {
                             setPhone2(e.target.value);
-                            if (e.target.value.length == 4)
+                            if (
+                              e.target.value.length == 3 ||
+                              e.target.value.length == 4
+                            )
                               setPhoneValid2(true);
                             else {
                               setPhoneValid2(false);
@@ -230,10 +265,10 @@ export default function MyInfoEdit() {
                         defaultValue={email1}
                         type="text"
                         onChange={(e) => {
-                          if (isEng(e.target.value)) {
+                          if (isEngNum(e.target.value)) {
                             setEmail1(e.target.value);
                           } else {
-                            alert("영어만 입력할 수 없습니다.");
+                            alert("영어 혹은 숫자만 입력할 수 있습니다.");
                             e.target.value = "";
                           }
                         }}
@@ -243,15 +278,10 @@ export default function MyInfoEdit() {
                         <span className="directInput ec-compact-etc">
                           <input
                             placeholder="직접입력"
-                            defaultValue={email2}
+                            value={email2}
                             type="text"
                             onChange={(e) => {
-                              if (isText(e.target.value)) {
-                                setEmail2(e.target.value);
-                              } else {
-                                alert("특수문자는 입력할 수 없습니다.");
-                                e.target.value = "";
-                              }
+                              setEmail2(e.target.value);
                             }}
                           />
                         </span>
@@ -273,7 +303,7 @@ export default function MyInfoEdit() {
                           <option value="korea.com">korea.com</option>
                           <option value="dreamwiz.com">dreamwiz.com</option>
                           <option value="gmail.com">gmail.com</option>
-                          <option value="etc">직접입력</option>
+                          <option value="">직접입력</option>
                         </select>
                       </span>
                     </td>

@@ -14,9 +14,9 @@ export default function ValidDuration({
     <div className="dateWrapper" style={{ display: "flex" }}>
       <div className="date">
         <input
-          id="oname"
           className="inputTypeText"
           type="date"
+          style={{ marginLeft: "0" }}
           defaultValue={tempSdate}
           onChange={(e) => {
             if (e.target.value >= tempEdate) {
@@ -30,10 +30,10 @@ export default function ValidDuration({
               setSDateValid(true);
             }
           }}
-        />{" "}
-        ~{" "}
+        />
+        <span> ~ </span>
+
         <input
-          id="oname"
           className="inputTypeText"
           type="date"
           defaultValue={tempEdate}
@@ -51,6 +51,19 @@ export default function ValidDuration({
           }}
         />
       </div>
+      <style jsx>{`
+        input {
+          margin: 0 10px;
+          line-height: 25px;
+          padding: 0 0 0 13px;
+          border-radius: 8px;
+          font-size: 16px;
+        }
+
+        span {
+          font-size: 16px;
+        }
+      `}</style>
     </div>
   );
 }
