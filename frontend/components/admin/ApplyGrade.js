@@ -1,5 +1,5 @@
 export default function ApplyGrade({ grade, setGrade }) {
-  const grades = ["GOLD", "SILVER", "BRONZE"];
+  const grades = ["VIP", "GOLD", "SILVER", "BRONZE"];
 
   return (
     <>
