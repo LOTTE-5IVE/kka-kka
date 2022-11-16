@@ -40,6 +40,7 @@ public class ReviewTest extends TestContext {
         productOrder = ProductOrder.create(
                 product,
                 product.getPrice(),
+                product.getDiscount(),
                 1
         );
     }

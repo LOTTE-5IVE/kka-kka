@@ -88,7 +88,7 @@ public class SchedulerTest extends TestContext {
         // given
         Member member = Member.create(null, "testName", "test@com", "1234", "ageGroup");
         memberRepository.save(member);
-        ProductOrder productOrder = ProductOrder.create(PRODUCT_1, 15000, 3);
+        ProductOrder productOrder = ProductOrder.create(PRODUCT_1, 15000, 0, 3);
         productOrderRepository.save(productOrder);
         Order order = Order.create(member, null, 15000, List.of(productOrder));
         orderRepository.save(order);
