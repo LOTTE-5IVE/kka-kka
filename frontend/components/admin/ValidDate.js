@@ -45,7 +45,7 @@ export default function ValidDate({
       <style jsx>{`
         input {
           margin: 0 10px;
-          line-height: 40px;
+          line-height: 25px;
           padding: 0 0 0 13px;
           border-radius: 8px;
           font-size: 16px;

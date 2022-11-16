@@ -230,10 +230,13 @@ export default function MyInfoEdit() {
                         defaultValue={email1}
                         type="text"
                         onChange={(e) => {
-                          if (isEng(e.target.value)) {
+                          if (
+                            isEng(e.target.value) ||
+                            isNumber(e.target.value)
+                          ) {
                             setEmail1(e.target.value);
                           } else {
-                            alert("영어만 입력할 수 없습니다.");
+                            alert("영어 혹은 숫자만 입력할 수 없습니다.");
                             e.target.value = "";
                           }
                         }}
@@ -243,7 +246,7 @@ export default function MyInfoEdit() {
                         <span className="directInput ec-compact-etc">
                           <input
                             placeholder="직접입력"
-                            defaultValue={email2}
+                            value={email2}
                             type="text"
                             onChange={(e) => {
                               if (isText(e.target.value)) {
