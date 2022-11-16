@@ -6,8 +6,8 @@ import { DeleteHApi, GetHApi, PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
 import Title from "../../components/common/Title";
-import { CouponApply } from "../../components/coupon/CouponApply";
-import { CouponModal } from "../../components/coupon/CouponModal";
+import { CouponCartApply } from "../../components/coupon/CouponCartApply";
+import { CouponCartModal } from "../../components/coupon/CouponCartModal";
 import { CartCntContext } from "../../context/CartCntContext";
 import { PaymentContext } from "../../context/PaymentContext";
 import { commaMoney } from "../../hooks/commaMoney";
@@ -331,9 +331,9 @@ export default function Cart() {
                             )}
 
                             {product.id === modalVisibleId ? (
-                              <CouponModal>
+                              <CouponCartModal>
                                 <div>
-                                  <CouponApply
+                                  <CouponCartApply
                                     id={product.id}
                                     modalVisibleId={modalVisibleId}
                                     setModalVisibleId={setModalVisibleId}
@@ -341,7 +341,7 @@ export default function Cart() {
                                     product={product}
                                   />
                                 </div>
-                              </CouponModal>
+                              </CouponCartModal>
                             ) : (
                               ""
                             )}
