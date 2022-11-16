@@ -64,7 +64,11 @@ public class CartItem {
     }
 
     public Integer getDiscountedPrice(Coupon coupon) {
-        return product.getDiscountPrice() - product.getMaxDiscount(coupon);
+        Integer productDiscount = product.getDiscountPrice() - (product.getDiscountPrice()- product.getMaxDiscount(coupon));
+        if (productDiscount * this.quantity > coupon.getMaxDiscount()) {
+            return product.getDiscountPrice() * this.quantity - coupon.getMaxDiscount();
+        }
+        return (product.getDiscountPrice() - product.getMaxDiscount(coupon)) * this.quantity;
     }
 
     @Override

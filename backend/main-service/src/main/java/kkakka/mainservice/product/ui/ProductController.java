@@ -50,7 +50,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<SearchResultResponse> showAllProducts(
         @ModelAttribute SearchParamRequest searchParamRequest,
-        Pageable pageable) {
+        @PageableDefault(size = 9) Pageable pageable) {
         SearchResultResponse result;
         if (Objects.isNull(searchParamRequest.getKeyword())) {
             result = productService.showAllProductsWithCategoryAndSearch(
