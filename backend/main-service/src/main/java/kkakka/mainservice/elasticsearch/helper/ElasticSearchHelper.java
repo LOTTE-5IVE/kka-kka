@@ -39,7 +39,7 @@ public class ElasticSearchHelper implements SearchHelper {
         Query query = productDocumentQueryBuilder.searchProduct(searchParamDto, pageable);
 
         SearchHits<ProductDocument> searchHits = elasticsearchRestTemplate.search(query,
-            ProductDocument.class, IndexCoordinates.of(Indices.PRDUCT_INDEX));
+            ProductDocument.class, IndexCoordinates.of(Indices.PRODUCT_INDEX));
         if (!searchHits.hasSearchHits()) {
             return new ProductsSearchResult(
                 new ArrayList<>(),
@@ -71,7 +71,7 @@ public class ElasticSearchHelper implements SearchHelper {
         Query query = productDocumentQueryBuilder.autoCompleteByKeyword(keyword);
 
         SearchHits<ProductDocument> searchHits = elasticsearchRestTemplate.search(query,
-            ProductDocument.class, IndexCoordinates.of(Indices.PRDUCT_INDEX));
+            ProductDocument.class, IndexCoordinates.of(Indices.PRODUCT_INDEX));
 
         return searchHits.stream()
             .map(productDocumentSearchHit -> productDocumentSearchHit.getContent().getName())
