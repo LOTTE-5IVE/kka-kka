@@ -89,4 +89,8 @@ public class ProductOrder {
     public boolean isOrderedAtInDay() {
         return this.order.isOrderedAtInDay();
     }
+
+    public boolean hasCoupon() {
+        return this.coupon != null;
+    }
 }

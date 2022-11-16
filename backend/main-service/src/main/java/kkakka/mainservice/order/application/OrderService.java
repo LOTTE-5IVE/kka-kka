@@ -30,6 +30,7 @@ import kkakka.mainservice.product.domain.repository.ProductRepository;
 import kkakka.mainservice.review.domain.Review;
 import kkakka.mainservice.review.domain.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.jgit.util.io.CountingOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -157,7 +158,28 @@ public class OrderService {
         ProductOrder productOrder) {
         final Optional<Review> review = reviewRepository.findByMemberIdAndProductOrderId(
             memberId, productOrder.getId());
-        return MemberProductOrderDto.create(productOrder, productOrder.getProduct(), review);
+
+        if (review.isEmpty() && !productOrder.hasCoupon()) {
+            return MemberProductOrderDto.create(productOrder, productOrder.getProduct());
+        }
+
+        if (review.isEmpty() && productOrder.hasCoupon()) {
+            return MemberProductOrderDto.create(productOrder, productOrder.getProduct(),
+                    productOrder.getCoupon()
+            );
+        }
+
+        if (review.isPresent() && !productOrder.hasCoupon()) {
+            return MemberProductOrderDto.create(productOrder, productOrder.getProduct(),
+                    review.get()
+            );
+        }
+
+        // review.isPresent() && productOrder.hasCoupon()
+        return MemberProductOrderDto.create(productOrder, productOrder.getProduct(),
+                review.get(),
+                productOrder.getCoupon()
+        );
     }
 
     @Transactional
