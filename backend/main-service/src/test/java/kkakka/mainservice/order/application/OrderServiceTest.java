@@ -63,7 +63,7 @@ class OrderServiceTest extends TestContext {
     @DisplayName("상품1개 주문 - 성공")
     public void productOrderOneTest_success() {
         //given
-        ProductOrderDto productOrderDto1 = new ProductOrderDto(PRODUCT_1.getId(), 2);
+        ProductOrderDto productOrderDto1 = new ProductOrderDto(PRODUCT_1.getId(), null, 2);
         List<ProductOrderDto> productOrderDtos = new ArrayList<>();
         productOrderDtos.add(productOrderDto1);
 
@@ -87,8 +87,8 @@ class OrderServiceTest extends TestContext {
     @DisplayName("상품 2개 이상 주문 - 성공")
     public void productOrderMoreTest_success() {
         //given
-        ProductOrderDto productOrderDto1 = new ProductOrderDto(PRODUCT_1.getId(), 2);
-        ProductOrderDto productOrderDto2 = new ProductOrderDto(PRODUCT_2.getId(), 3);
+        ProductOrderDto productOrderDto1 = new ProductOrderDto(PRODUCT_1.getId(), null, 2);
+        ProductOrderDto productOrderDto2 = new ProductOrderDto(PRODUCT_2.getId(), null, 3);
 
         List<ProductOrderDto> productOrderDtos = new ArrayList<>();
         productOrderDtos.add(productOrderDto1);
@@ -114,7 +114,7 @@ class OrderServiceTest extends TestContext {
     @DisplayName("상품주문 - 실패(재고수량초과)")
     public void productOrder_fail_inventoryExceeded() {
         //given
-        ProductOrderDto productOrderDto1 = new ProductOrderDto(PRODUCT_1.getId(), Integer.MAX_VALUE);
+        ProductOrderDto productOrderDto1 = new ProductOrderDto(PRODUCT_1.getId(), null, Integer.MAX_VALUE);
         List<ProductOrderDto> productOrderDtos = new ArrayList<>();
         productOrderDtos.add(productOrderDto1);
 

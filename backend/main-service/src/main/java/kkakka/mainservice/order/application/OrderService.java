@@ -62,11 +62,16 @@ public class OrderService {
         int orderTotalPrice = 0;
         for (ProductOrderDto productOrderDto : productOrderDtos) {
             Long productId = productOrderDto.getProductId();
+            Long couponId = productOrderDto.getCouponId();
             Integer quantity = productOrderDto.getQuantity();
 
             Product product = productRepository.findById(productId)
-                .orElseThrow(KkaKkaException::new);
+                .orElseThrow(NotFoundProductException::new);
             ProductOrder productOrder = ProductOrder.create(product, product.getPrice(), quantity);
+            if (couponId != null) {
+                Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotFoundCouponException::new);
+                productOrder.applyCoupon(coupon);
+            }
 
             productOrders.add(productOrder);
             orderTotalPrice += productOrder.getTotalPrice();

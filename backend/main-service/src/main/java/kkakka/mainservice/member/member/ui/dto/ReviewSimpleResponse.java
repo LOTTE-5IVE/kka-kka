@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ReviewSimpleRespnse {
+public class ReviewSimpleResponse {
 
     private Long id;
     private String contents;
@@ -19,8 +19,8 @@ public class ReviewSimpleRespnse {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createdAt;
 
-    public static ReviewSimpleRespnse create(Long id, String contents, Double rating,
+    public static ReviewSimpleResponse create(Long id, String contents, Double rating,
             LocalDateTime createdAt) {
-        return new ReviewSimpleRespnse(id, contents, rating, createdAt);
+        return new ReviewSimpleResponse(id, contents, rating, createdAt);
     }
 }
