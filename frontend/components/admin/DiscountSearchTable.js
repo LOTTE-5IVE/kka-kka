@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AdminButton } from "../common/Button/AdminButton";
+import { UserContext } from "../../context/AdminTokenContext";
 
 export default function DiscountSearchTable() {
   const [discounts, setDiscounts] = useState();
+  const userData = useContext(UserContext)?.adminUser;
 
   const cat_name = {
     0: "전체 상품",
@@ -24,7 +26,13 @@ export default function DiscountSearchTable() {
   };
 
   const deleteDiscount = async (id) => {
-    await axios.put(`/api/coupons/discount/${id}`).then((res) => {});
+    await axios.put(
+        `/api/coupons/discount/${id}`, {}, {
+          headers: {
+            'Authorization': `Bearer ${userData.adminToken}`,
+          }
+        }
+        ).then((res) => {});
 
     getDiscount();
   };

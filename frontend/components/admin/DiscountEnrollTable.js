@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ApplyProduct from "./ApplyProduct";
 import axios from "axios";
 import Button from "../common/Button/Button";
 import ApplyCategory from "./ApplyCategory";
-import { isNumber } from "../../hooks/isNumber";
+import { UserContext } from "../../context/AdminTokenContext";
 
 export default function DiscountEnrollTable() {
   const [target, setTarget] = useState("카테고리");
@@ -13,13 +13,12 @@ export default function DiscountEnrollTable() {
   const [endDate, setEndDate] = useState();
   const [targetVal, setTargetVal] = useState(1);
   const [productId, setProductId] = useState(1);
-
   const [nameValid, setNameValid] = useState(false);
+
   const [discountValid, setDiscountValid] = useState(false);
   const [sDateValid, setSDateValid] = useState(false);
   const [eDateValid, setEDateValid] = useState(false);
   const [unvalid, setUnValid] = useState(true);
-
   const today = new Date().toISOString().substring(0, 10);
 
   const initStates = () => {
@@ -33,18 +32,27 @@ export default function DiscountEnrollTable() {
     setEDateValid(false);
     setUnValid(true);
   };
+  const userData = useContext(UserContext)?.adminUser;
 
   const makeDiscount = async () => {
     await axios
-      .post("/api/coupons/discount", {
-        categoryId: targetVal,
-        productId: null,
-        name: promotionName,
-        discount: discount,
-        discountType: "CATEGORY_DISCOUNT",
-        startedAt: `${startDate} 00:00:00`,
-        expiredAt: `${endDate} 00:00:00`,
-      })
+      .post(
+        "/api/coupons/discount",
+        {
+          categoryId: targetVal,
+          productId: null,
+          name: promotionName,
+          discount: discount,
+          discountType: "CATEGORY_DISCOUNT",
+          startedAt: `${startDate} 00:00:00`,
+          expiredAt: `${endDate} 00:00:00`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.adminToken}`,
+          },
+        },
+      )
       .then((res) => {
         alert("등록완료!");
         initStates();
@@ -56,15 +64,23 @@ export default function DiscountEnrollTable() {
 
   const makeDiscountProduct = async () => {
     await axios
-      .post("/api/coupons/discount", {
-        categoryId: null,
-        productId: productId,
-        name: promotionName,
-        discount: discount,
-        discountType: "PRODUCT_DISCOUNT",
-        startedAt: `${startDate} 00:00:00`,
-        expiredAt: `${endDate} 00:00:00`,
-      })
+      .post(
+        "/api/coupons/discount",
+        {
+          categoryId: null,
+          productId: productId,
+          name: promotionName,
+          discount: discount,
+          discountType: "PRODUCT_DISCOUNT",
+          startedAt: `${startDate} 00:00:00`,
+          expiredAt: `${endDate} 00:00:00`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.adminToken}`,
+          },
+        },
+      )
       .then((res) => {
         alert("등록완료!");
         initStates();

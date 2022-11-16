@@ -3,7 +3,7 @@ package kkakka.mainservice.member.auth.application;
 import kkakka.mainservice.member.auth.application.dto.SocialProviderCodeDto;
 import kkakka.mainservice.member.auth.application.dto.UserProfile;
 import kkakka.mainservice.member.auth.ui.dto.TokenDto;
-import kkakka.mainservice.member.auth.util.JwtTokenProvider;
+import kkakka.mainservice.common.auth.util.JwtTokenProvider;
 import kkakka.mainservice.member.member.application.MemberService;
 import kkakka.mainservice.member.member.domain.Member;
 import lombok.RequiredArgsConstructor;

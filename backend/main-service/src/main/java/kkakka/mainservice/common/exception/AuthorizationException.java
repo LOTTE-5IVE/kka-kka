@@ -1,4 +1,4 @@
-package kkakka.mainservice.member.auth.exception;
+package kkakka.mainservice.common.exception;
 
 import kkakka.mainservice.common.exception.KkaKkaException;
 
