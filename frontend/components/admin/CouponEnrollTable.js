@@ -31,11 +31,9 @@ export default function CouponEnrollTable() {
 
   const initStates = () => {
     setPromotionName("");
-    setDiscount("");
     setMaxdis("");
     setMinorder("");
     setNameValid(false);
-    setDiscountValid(false);
     setMaxdisValid(false);
     setMinorderValid(false);
     setUnValid(true);

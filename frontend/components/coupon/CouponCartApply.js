@@ -17,6 +17,21 @@ export function CouponCartApply({
   const [coupons, setCoupons] = useState();
   const { payment, setPayment } = useContext(PaymentContext);
 
+  const calcMaxDis = (product, coupon) => {
+    if (
+      (product.price * (1 - 0.01 * product.discount) - coupon.discountedPrice) *
+        product.quantity >
+      coupon.maxDiscount
+    ) {
+      return (
+        product.price * (1 - 0.01 * product.discount) * product.quantity -
+        coupon.maxDiscount
+      );
+    } else {
+      return coupon.discountedPrice * product.quantity;
+    }
+  };
+
   const getProductMemberCoupon = async () => {
     await GetHApi(`/api/coupons/me/products/${product.id}`, token).then(
       (res) => {
@@ -191,12 +206,7 @@ export function CouponCartApply({
                         <td>{commaMoney(coupon.minOrderPrice)}원</td>
                         <td>{commaMoney(coupon.maxDiscount)}원</td>
                         <td>{coupon.expiredAt.slice(0, 10)}</td>
-                        <td>
-                          {commaMoney(
-                            coupon.discountedPrice * product.quantity,
-                          )}
-                          원
-                        </td>
+                        <td>{commaMoney(calcMaxDis(product, coupon))}원</td>
                         <td
                           style={{
                             height: "59px",
@@ -264,12 +274,7 @@ export function CouponCartApply({
                         <td>{commaMoney(coupon.minOrderPrice)}원</td>
                         <td>{commaMoney(coupon.maxDiscount)}원</td>
                         <td>{coupon.expiredAt.slice(0, 10)}</td>
-                        <td>
-                          {commaMoney(
-                            coupon.discountedPrice * product.quantity,
-                          )}
-                          원
-                        </td>
+                        <td>{commaMoney(calcMaxDis(product, coupon))}원</td>
                         <td
                           style={{
                             height: "59px",
@@ -328,7 +333,7 @@ export function CouponCartApply({
                         <td>{commaMoney(coupon.minOrderPrice)}원</td>
                         <td>{commaMoney(coupon.maxDiscount)}원</td>
                         <td>{coupon.expiredAt.slice(0, 10)}</td>
-                        <td>{commaMoney(coupon.discountedPrice)}원</td>
+                        <td>{commaMoney(calcMaxDis(product, coupon))}원</td>
                         <td
                           style={{
                             height: "59px",

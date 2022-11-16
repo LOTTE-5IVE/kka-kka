@@ -46,6 +46,21 @@ export default function Cart() {
     });
   };
 
+  const calcMaxDis = (product, coupon) => {
+    if (
+      (product.price * (1 - 0.01 * product.discount) - coupon.discountedPrice) *
+        product.quantity >
+      coupon.maxDiscount
+    ) {
+      return (
+        product.price * (1 - 0.01 * product.discount) * product.quantity -
+        coupon.maxDiscount
+      );
+    } else {
+      return coupon.discountedPrice * product.quantity;
+    }
+  };
+
   const handleSingleCheck = (checked, product) => {
     if (checked) {
       setCheckItems((prev) => [...prev, product]);
