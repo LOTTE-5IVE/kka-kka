@@ -42,7 +42,7 @@ public class OrderController {
                 orderRequest.toRecipientDto(),
                 orderRequest
             ));
-        cartService.emptyCart(loginMember);
+        cartService.emptyCart(loginMember, orderId);
         return ResponseEntity.created(URI.create(orderId.toString())).build();
     }
 

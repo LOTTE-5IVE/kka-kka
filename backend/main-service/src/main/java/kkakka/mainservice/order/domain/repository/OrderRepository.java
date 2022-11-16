@@ -21,4 +21,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("select sum(o.totalPrice) from Order o where o.member.id = :memberId")
     Optional<Integer> findTotalPriceByMemberId(@Param(value = "memberId") Long memberId);
+
+    @Query("select o from Order o join fetch o.productOrders po join fetch po.product where o.id = :id")
+    Optional<Order> findById(Long id);
 }

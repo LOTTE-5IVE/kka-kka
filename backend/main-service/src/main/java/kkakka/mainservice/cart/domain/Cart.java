@@ -51,6 +51,10 @@ public class Cart {
         cartItems = new ArrayList<>();
     }
 
+    public void empty(List<CartItem> items) {
+        cartItems.removeAll(items);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

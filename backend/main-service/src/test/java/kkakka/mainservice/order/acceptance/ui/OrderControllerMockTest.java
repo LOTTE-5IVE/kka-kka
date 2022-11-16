@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 
 @SpringBootTest
 public class OrderControllerMockTest extends TestContext {
@@ -48,10 +49,11 @@ public class OrderControllerMockTest extends TestContext {
         LoginMember loginMember = new LoginMember(member.getId(), Authority.MEMBER);
 
         // when
-        orderController.order(loginMember, orderRequest);
+        final ResponseEntity<Void> order = orderController.order(loginMember, orderRequest);
+        final Long orderId = Long.valueOf(order.getHeaders().get("Location").get(0));
 
         // then
         inOrder.verify(mockOrderService, times(1)).order(any());
-        inOrder.verify(mockCartService, times(1)).emptyCart(loginMember);
+        inOrder.verify(mockCartService, times(1)).emptyCart(loginMember, orderId);
     }
 }

@@ -23,6 +23,9 @@ import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
 import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
+import kkakka.mainservice.order.domain.Order;
+import kkakka.mainservice.order.domain.ProductOrder;
+import kkakka.mainservice.order.domain.repository.OrderRepository;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +47,7 @@ public class CartService {
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
     private final MemberCouponRepository memberCouponRepository;
+    private final OrderRepository orderRepository;
 
     @Transactional
     public Long addCartItem(CartRequestDto cartRequestDto, LoginMember loginMember) {
@@ -107,11 +111,30 @@ public class CartService {
     }
 
     @Transactional
-    public void emptyCart(LoginMember loginMember) {
+    public void emptyCart(LoginMember loginMember, Long orderId) {
         try {
             final Cart cart = cartRepository.findByMemberId(loginMember.getId()).orElseThrow();
-            cartItemRepository.deleteAllByMemberId(loginMember.getId());
-            cart.empty();
+            final Order order = orderRepository.findById(orderId).orElseThrow();
+
+            final List<Product> products = order.getProductOrders()
+                    .stream()
+                    .map(ProductOrder::getProduct)
+                    .collect(Collectors.toList());
+
+            final List<CartItem> orderedItems = cart.getCartItems()
+                    .stream()
+                    .filter(cartItem -> products.contains(cartItem.getProduct()))
+                    .collect(Collectors.toList());
+
+            if (orderedItems.size() < 1) {
+                return;
+            }
+
+            cart.empty(orderedItems);
+            final List<Long> orderedIds = orderedItems.stream()
+                    .map(CartItem::getId)
+                    .collect(Collectors.toList());
+            cartItemRepository.deleteAllById(orderedIds);
         } catch (Exception e) {
             log.warn("-------- CartService Error start ---------");
             log.warn("Fail to Empty CartItems: {}", e.getMessage());
