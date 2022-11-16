@@ -65,8 +65,8 @@ public class OrderMessageTest extends AcceptanceTest {
                 ORDER_TOPIC_NAME);
         String accessToken = 액세스_토큰_가져옴();
         
-        ProductOrderDto productOrderDto1 = new ProductOrderDto(PRODUCT_1.getId(), 2);
-        ProductOrderDto productOrderDto2 = new ProductOrderDto(PRODUCT_2.getId(), 1);
+        ProductOrderDto productOrderDto1 = new ProductOrderDto(PRODUCT_1.getId(), null, 2);
+        ProductOrderDto productOrderDto2 = new ProductOrderDto(PRODUCT_2.getId(), null, 1);
         List<ProductOrderDto> productOrderDtos = new ArrayList<>();
         productOrderDtos.add(productOrderDto1);
         productOrderDtos.add(productOrderDto2);

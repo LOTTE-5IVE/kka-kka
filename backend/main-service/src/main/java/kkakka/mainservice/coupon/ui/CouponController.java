@@ -12,6 +12,7 @@ import kkakka.mainservice.coupon.ui.dto.DiscountRequestDto;
 import kkakka.mainservice.coupon.ui.dto.DiscountResponseDto;
 import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
 import kkakka.mainservice.member.auth.ui.LoginMember;
+import kkakka.mainservice.member.auth.ui.MemberOnly;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,6 +71,7 @@ public class CouponController {
     }
 
     /* 사용 가능한 쿠폰 조회 */
+    @MemberOnly
     @GetMapping("/me/available")
     public ResponseEntity<List<CouponResponseDto>> findUsableCoupons(
         @AuthenticationPrincipal LoginMember loginMember) {
@@ -81,6 +83,7 @@ public class CouponController {
     }
 
     /* 사용한 쿠폰 조회 */
+    @MemberOnly
     @GetMapping("/me/unavailable")
     public ResponseEntity<List<CouponResponseDto>> findUsedCoupons(
         @AuthenticationPrincipal LoginMember loginMember) {
@@ -113,6 +116,7 @@ public class CouponController {
     }
 
     /* 상품, 멤버에 대해 적용 가능한 쿠폰 조회 */
+    @MemberOnly
     @GetMapping("/me/products/{productId}")
     public ResponseEntity<List<CouponProductDto>> showCouponsByProductIdAndMemberId(
         @PathVariable Long productId, @AuthenticationPrincipal LoginMember loginMember) {
@@ -131,6 +135,7 @@ public class CouponController {
     }
 
     /* 쿠폰 사용 */
+    @MemberOnly
     @PostMapping("/use/{couponId}")
     public ResponseEntity<Void> useCoupon(@PathVariable Long couponId,
         @AuthenticationPrincipal LoginMember loginMember) {
@@ -139,6 +144,7 @@ public class CouponController {
     }
 
     /* 사용자의 상품 쿠폰 다운로드 */
+    @MemberOnly
     @PostMapping("/{productId}/{couponId}")
     public ResponseEntity<List<CouponProductDto>> downloadAndShowProductCoupons(
         @PathVariable Long couponId,
