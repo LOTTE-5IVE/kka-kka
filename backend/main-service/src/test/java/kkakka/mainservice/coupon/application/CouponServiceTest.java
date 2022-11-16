@@ -411,7 +411,7 @@ public class CouponServiceTest extends TestContext {
             null, 2000, 10000
         ));
         couponService.downloadCoupon(couponId, member.getId());
-        orderService.applyProductCoupon(member.getId(), new ProductOrderDto(product.getId(), 2), couponId);
+        orderService.applyProductCoupon(member.getId(), new ProductOrderDto(product.getId(), null, 2), couponId);
 
         // when
         orderService.cancelProductCoupon(member.getId(), couponId);
