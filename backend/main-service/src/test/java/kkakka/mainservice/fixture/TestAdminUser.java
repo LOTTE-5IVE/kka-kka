@@ -4,8 +4,8 @@ public enum TestAdminUser {
 
     TEST_ADMIN("test", "test");
 
-    String userId;
-    String password;
+    final String userId;
+    final String password;
 
     TestAdminUser(String userId, String password) {
         this.userId = userId;

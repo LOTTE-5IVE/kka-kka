@@ -18,6 +18,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
+    @ExceptionHandler(LoginFailException.class)
+    public ResponseEntity<Void> AuthenticateFailExceptionHandler(LoginFailException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Void> internalExceptionHandler(Exception e) {
         return ResponseEntity.internalServerError().build();

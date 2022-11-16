@@ -1,8 +1,8 @@
 package kkakka.mainservice.admin.application;
 
 import kkakka.mainservice.admin.ui.dto.AdminUserRequest;
-import kkakka.mainservice.common.exception.AuthorizationException;
 import kkakka.mainservice.common.auth.util.JwtTokenProvider;
+import kkakka.mainservice.common.exception.LoginFailException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,6 +25,6 @@ public class AdminService {
                 && adminUserRequest.getPassword().equals(adminPassword)) {
             return jwtTokenProvider.generateToken(adminKey);
         }
-        throw new AuthorizationException();
+        throw new LoginFailException();
     }
 }

@@ -12,13 +12,14 @@ import java.util.Map;
 import kkakka.mainservice.DocumentConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 public class AdminAcceptanceTest extends DocumentConfiguration {
 
     @DisplayName("관리자 로그인 - 성공")
     @Test
-    void adminLogin(){
+    void adminLogin() {
         // given
         Map<String, String> request = new HashMap<>();
         request.put("userId", TEST_ADMIN.getUserId());
@@ -36,5 +37,27 @@ public class AdminAcceptanceTest extends DocumentConfiguration {
 
         // then
         assertThat(response.body().jsonPath().get("adminToken").toString()).isNotNull();
+    }
+
+    @DisplayName("관리자 로그인 - 실패")
+    @Test
+    void adminLogin_fail() {
+        // given
+        Map<String, String> request = new HashMap<>();
+        request.put("userId", "wrong-id");
+        request.put("password", "password-id");
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("admin-login-fail"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/api/admin/login")
+                .then().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 }
