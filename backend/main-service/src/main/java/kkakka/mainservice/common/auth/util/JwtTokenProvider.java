@@ -1,4 +1,4 @@
-package kkakka.mainservice.member.auth.util;
+package kkakka.mainservice.common.auth.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

@@ -1,0 +1,156 @@
+= 관리자 API
+
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlight.js
+:toc: left
+:toclevels: 3
+:sectlinks:
+:nofooter:
+
+*link:index.html[메인 화면]*
+
+== 관리자
+
+아래의 API 는 모두 관리자 로그인을 전제합니다.
+
+(Authrization 헤더에 Bearer 토큰 필요)
+
+=== 인증
+
+==== 관리자 로그인
+
+- Request
+
+include::{snippets}/admin-login-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/admin-login-success/http-response.adoc[]
+
+==== 관리자 로그인 실패
+
+- Request
+
+include::{snippets}/admin-login-fail/http-request.adoc[]
+
+- Response
+
+include::{snippets}/admin-login-fail/http-response.adoc[]
+
+=== Coupon
+
+==== 일반 쿠폰 생성 성공
+
+- Request
+
+include::{snippets}/create-coupon/http-request.adoc[]
+
+- Response
+
+include::{snippets}/create-coupon/http-response.adoc[]
+
+==== 등급 쿠폰 생성 성공
+
+- Request
+
+include::{snippets}/create-grade-coupon/http-request.adoc[]
+
+- Response
+
+include::{snippets}/create-grade-coupon/http-response.adoc[]
+
+==== 쿠폰 생성 실패 (관리자가 아닐 경우)
+
+- Request
+
+include::{snippets}/create-coupon-fail-unauthorized/http-request.adoc[]
+
+- Response
+
+include::{snippets}/create-coupon-fail-unauthorized/http-response.adoc[]
+
+==== 모든 쿠폰 조회 성공
+
+- Request
+
+include::{snippets}/find-all-coupons/http-request.adoc[]
+
+- Response
+
+include::{snippets}/find-all-coupons/http-response.adoc[]
+
+==== 일반 쿠폰 삭제 성공
+
+- Request
+
+include::{snippets}/delete-coupon/http-request.adoc[]
+
+- Response
+
+include::{snippets}/delete-coupon/http-response.adoc[]
+
+==== 다운로드 된 쿠폰 삭제 성공
+
+- Request
+
+include::{snippets}/delete-downloaded-coupon/http-request.adoc[]
+
+- Response
+
+include::{snippets}/delete-downloaded-coupon/http-response.adoc[]
+
+=== Discount
+
+==== 상품 할인 생성
+
+- Request
+
+include::{snippets}/create-product-discount-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/create-product-discount-success/http-response.adoc[]
+
+==== 할인 생성 실패 - 유효하지않은 날짜
+
+- Request
+
+include::{snippets}/create-discount-fail-invalid-date/http-request.adoc[]
+
+- Response
+
+include::{snippets}/create-discount-fail-invalid-date/http-response.adoc[]
+
+==== 할인 생성 실패 - 관리자가 아닐 경우
+
+- Request
+
+include::{snippets}/create-product-discount-fail-unauthorized/http-request.adoc[]
+
+- Response
+
+include::{snippets}/create-product-discount-fail-unauthorized/http-response.adoc[]
+
+==== 상품 할인 삭제
+
+- Request
+
+include::{snippets}/delete-product-discount-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/delete-product-discount-success/http-response.adoc[]
+
+==== 할인 조회
+
+- Request
+
+include::{snippets}/show-discounts-success/http-request.adoc[]
+
+- Response
+
+include::{snippets}/show-discounts-success/http-response.adoc[]

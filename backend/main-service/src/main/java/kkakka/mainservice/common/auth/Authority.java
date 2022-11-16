@@ -1,9 +1,10 @@
-package kkakka.mainservice.member.auth.ui;
+package kkakka.mainservice.common.auth;
 
 public enum Authority {
 
     ANONYMOUS,
-    MEMBER;
+    MEMBER,
+    ADMIN;
 
     boolean isAnonymous() {
         return this.equals(Authority.ANONYMOUS);
@@ -11,5 +12,9 @@ public enum Authority {
 
     boolean isMember() {
         return this.equals(Authority.MEMBER);
+    }
+
+    boolean isAdmin() {
+        return this.equals(Authority.ADMIN);
     }
 }

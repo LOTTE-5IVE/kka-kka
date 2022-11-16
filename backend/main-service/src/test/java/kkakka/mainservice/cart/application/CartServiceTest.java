@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import kkakka.mainservice.TestContext;
 import kkakka.mainservice.cart.ui.dto.CartRequestDto;
-import kkakka.mainservice.member.auth.ui.Authority;
-import kkakka.mainservice.member.auth.ui.LoginMember;
+import kkakka.mainservice.common.auth.Authority;
+import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

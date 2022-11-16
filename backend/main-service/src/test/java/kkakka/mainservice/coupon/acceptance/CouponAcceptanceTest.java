@@ -1,5 +1,6 @@
 package kkakka.mainservice.coupon.acceptance;
 
+import static kkakka.mainservice.fixture.TestAdminUser.TEST_ADMIN;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
 import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
@@ -14,6 +15,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.ProviderName;
@@ -51,11 +56,14 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void createGradeCoupon() {
         // given
+        final String adminToken = 관리자_로그인();
+
         // when
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
             .filter(document("create-grade-coupon"))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("Authorization", "Bearer " + adminToken)
             .body("{\n"
                 + "  \"categoryId\": null,\n"
                 + "  \"grade\": \"GOLD\",\n"
@@ -80,12 +88,14 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void createCoupon() {
         // given
-        tearDown();
+        final String adminToken = 관리자_로그인();
+
         // when
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
             .filter(document("create-coupon"))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("Authorization", "Bearer " + adminToken)
             .body("{\n"
                 + "  \"categoryId\": null,\n"
                 + "  \"grade\": null,\n"
@@ -107,15 +117,47 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         Assertions.assertThat(response.header("Location")).isNotNull();
     }
 
+    @DisplayName("쿠폰 생성 - 실패(권한이 없는 경우)")
+    @Test
+    void createCoupon_fail(){
+        // given
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given(spec).log().all()
+                .filter(document("create-coupon-fail-unauthorized"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("{\n"
+                        + "  \"categoryId\": null,\n"
+                        + "  \"grade\": null,\n"
+                        + "  \"productId\": " + PRODUCT_1.getId() + ",\n"
+                        + "  \"name\": \"test\",\n"
+                        + "  \"priceRule\": \"COUPON\",\n"
+                        + "  \"startedAt\": \"2020-01-01 00:00:00\",\n"
+                        + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
+                        + "  \"percentage\": 10,\n"
+                        + "  \"maxDiscount\": 2000,\n"
+                        + "  \"minOrderPrice\": 20000\n"
+                        + "}")
+                .when()
+                .post("/api/coupons")
+                .then().log().all().extract();
+
+        // then
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        Assertions.assertThat(response.header("Location")).isNull();
+    }
+
     @DisplayName("쿠폰 조회 - 성공")
     @Test
     void findAllCoupons() {
         tearDown();
         쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", null, 1000);
+        final String adminToken = 관리자_로그인();
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
             .filter(document("find-all-coupons"))
+            .header("Authorization", "Bearer " + adminToken)
             .when()
             .get("/api/coupons")
             .then().log().all().extract();
@@ -128,11 +170,13 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void deleteCouponByAdmin() {
         tearDown();
+        final String adminToken = 관리자_로그인();
         String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 12, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
             .filter(document("delete-coupon"))
+            .header("Authorization", "Bearer " + adminToken)
             .when()
             .put("/api/coupons/" + couponId)
             .then().log().all().extract();
@@ -147,9 +191,11 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         String accessToken = 액세스_토큰_가져옴();
         String coupon = 상품_쿠폰_다운로드(accessToken);
 
+        final String adminToken = 관리자_로그인();
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
             .filter(document("delete-downloaded-coupon"))
+            .header("Authorization", "Bearer " + adminToken)
             .when()
             .put("/api/coupons/" + coupon)
             .then().log().all().extract();
@@ -229,9 +275,11 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         if (grade != null) {
             grade = "\"" + grade + "\"";
         }
+        final String adminToken = 관리자_로그인();
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("Authorization", "Bearer " + adminToken)
             .body("{\n"
                 + "  \"categoryId\": null,\n"
                 + "  \"grade\": " + grade + ",\n"
@@ -356,11 +404,13 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     void createMoneyCoupon() {
         // given
         tearDown();
+        final String adminToken = 관리자_로그인();
 
         // when
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("Authorization", "Bearer " + adminToken)
             .body("{\n"
                 + "  \"categoryId\": null,\n"
                 + "  \"grade\": null,\n"
@@ -484,5 +534,19 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
             .then().log().all().extract();
 
         return couponId;
+    }
+
+    private String 관리자_로그인() {
+        Map<String, String> request = new HashMap<>();
+        request.put("userId", TEST_ADMIN.getUserId());
+        request.put("password", TEST_ADMIN.getPassword());
+
+        final ExtractableResponse<Response> response = RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/api/admin/login")
+                .then().extract();
+        return response.body().jsonPath().get("adminToken");
     }
 }

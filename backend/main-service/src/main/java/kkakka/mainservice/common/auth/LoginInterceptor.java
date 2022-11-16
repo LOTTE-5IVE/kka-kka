@@ -1,10 +1,10 @@
-package kkakka.mainservice.member.auth.infrastructure;
+package kkakka.mainservice.common.auth;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import kkakka.mainservice.member.auth.exception.AuthorizationException;
-import kkakka.mainservice.member.auth.util.AuthorizationExtractor;
-import kkakka.mainservice.member.auth.util.JwtTokenProvider;
+import kkakka.mainservice.common.auth.util.AuthorizationExtractor;
+import kkakka.mainservice.common.auth.util.JwtTokenProvider;
+import kkakka.mainservice.common.exception.AuthorizationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;

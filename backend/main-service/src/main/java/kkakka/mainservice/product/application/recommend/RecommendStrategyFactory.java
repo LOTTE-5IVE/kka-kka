@@ -3,7 +3,7 @@ package kkakka.mainservice.product.application.recommend;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import kkakka.mainservice.member.auth.ui.Authority;
+import kkakka.mainservice.common.auth.Authority;
 import kkakka.mainservice.product.application.recommend.strategy.AnonymousRecommendStrategy;
 import kkakka.mainservice.product.application.recommend.strategy.MemberRecommendStrategy;
 import kkakka.mainservice.product.application.recommend.strategy.ProductRecommendStrategy;

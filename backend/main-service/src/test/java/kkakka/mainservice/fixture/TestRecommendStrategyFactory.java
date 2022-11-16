@@ -9,7 +9,7 @@ import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_5;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Optional;
-import kkakka.mainservice.member.auth.ui.Authority;
+import kkakka.mainservice.common.auth.Authority;
 import kkakka.mainservice.product.application.recommend.strategy.ProductRecommender;
 import kkakka.mainservice.product.application.recommend.RecommendStrategy;
 import kkakka.mainservice.product.application.recommend.RecommenderFactory;

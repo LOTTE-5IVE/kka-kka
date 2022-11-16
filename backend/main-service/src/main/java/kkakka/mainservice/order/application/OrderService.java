@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import kkakka.mainservice.common.exception.KkaKkaException;
+import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.common.exception.NotFoundCouponException;
 import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.common.exception.NotFoundProductException;
@@ -14,7 +14,6 @@ import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
-import kkakka.mainservice.member.auth.ui.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.application.dto.MemberOrderDto;
@@ -119,7 +118,6 @@ public class OrderService {
 
     @Transactional
     public void cancelOrder(List<Long> productOrderIds, LoginMember loginMember) {
-
         Long loginMemberId = loginMember.getId();
 
         productOrderIds.forEach(productOrderId -> {

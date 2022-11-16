@@ -13,35 +13,11 @@ endif::[]
 *link:index.html[메인 화면]*
 
 == Coupon
-=== 일반 쿠폰 생성 성공
 
-- Request
+회원이 쿠폰에 접근하는 경우의 API 입니다.
 
-include::{snippets}/create-coupon/http-request.adoc[]
+관리자 페이지의 쿠폰&할인 => *link:admin.html[관리자 API]*
 
-- Response
-
-include::{snippets}/create-coupon/http-response.adoc[]
-
-=== 등급 쿠폰 생성 성공
-
-- Request
-
-include::{snippets}/create-grade-coupon/http-request.adoc[]
-
-- Response
-
-include::{snippets}/create-grade-coupon/http-response.adoc[]
-
-=== 모든 쿠폰 조회 성공
-
-- Request
-
-include::{snippets}/find-all-coupons/http-request.adoc[]
-
-- Response
-
-include::{snippets}/find-all-coupons/http-response.adoc[]
 
 === 다운 가능한 쿠폰 조회 성공
 
@@ -63,25 +39,6 @@ include::{snippets}/find-usable-coupons/http-request.adoc[]
 
 include::{snippets}/find-usable-coupons/http-response.adoc[]
 
-=== 일반 쿠폰 삭제 성공
-
-- Request
-
-include::{snippets}/delete-coupon/http-request.adoc[]
-
-- Response
-
-include::{snippets}/delete-coupon/http-response.adoc[]
-
-=== 다운로드 된 쿠폰 삭제 성공
-
-- Request
-
-include::{snippets}/delete-downloaded-coupon/http-request.adoc[]
-
-- Response
-
-include::{snippets}/delete-downloaded-coupon/http-response.adoc[]
 
 === 상품 쿠폰 다운로드
 
@@ -132,44 +89,3 @@ include::{snippets}/find-used-coupons/http-request.adoc[]
 - Response
 
 include::{snippets}/find-used-coupons/http-response.adoc[]
-
-== Discount
-=== 상품 할인 생성
-
-- Request
-
-include::{snippets}/create-product-discount-success/http-request.adoc[]
-
-- Response
-
-include::{snippets}/create-product-discount-success/http-response.adoc[]
-
-=== 할인 생성 실패 - 유효하지않은 날짜
-
-- Request
-
-include::{snippets}/create-discount-fail-invalid-date/http-request.adoc[]
-
-- Response
-
-include::{snippets}/create-discount-fail-invalid-date/http-response.adoc[]
-
-=== 상품 할인 삭제
-
-- Request
-
-include::{snippets}/delete-product-discount-success/http-request.adoc[]
-
-- Response
-
-include::{snippets}/delete-product-discount-success/http-response.adoc[]
-
-=== 할인 조회
-
-- Request
-
-include::{snippets}/show-discounts-success/http-request.adoc[]
-
-- Response
-
-include::{snippets}/show-discounts-success/http-response.adoc[]
