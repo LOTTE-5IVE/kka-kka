@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfig
 @Configuration
 public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 
-    @Value("${elasticsearch.url2}")
+    @Value("${elasticsearch.url}")
     private String elasticsearchUrl;
     @Value("${elasticsearch.user_name}")
     private String userName;
