@@ -1,11 +1,17 @@
 import { commaMoney } from "../../hooks/commaMoney";
 import MyProductOrder from "./MyProductOrder";
 
-export default function MyOrderDetail({ orderDetail }) {
+export default function MyOrderDetail({ orderDetail, handleDetail }) {
   return (
     <>
       <div>
         <div className="wrapper">
+          <button
+            className="back-btn"
+            onClick={() => {
+              handleDetail(false);
+            }}
+          >← 전체 주문내역으로 돌아가기</button>
           <div className="myorder">
             <div className="myorderTitle">주문내역</div>
             {orderDetail && (
@@ -162,6 +168,16 @@ export default function MyOrderDetail({ orderDetail }) {
               color: #3e3e3e;
               margin: 0 1rem 0 1rem;
             }
+            
+            .back-btn {
+              border: 1px solid #cfcfcf;
+              background-color: white;
+              color: #5e5e5e;
+              font-size: 0.8rem;
+              padding: 0.5rem;
+              cursor: pointer;
+              margin: 1rem 0 0.5rem 0;
+            }
           }
 
           @media screen and (max-width: 768px) {
@@ -253,6 +269,16 @@ export default function MyOrderDetail({ orderDetail }) {
             .title-divider {
               color: #3e3e3e;
               margin: 0 1rem 0 1rem;
+            }
+            
+            .back-btn {
+              border: 1px solid #cfcfcf;
+              background-color: white;
+              color: #5e5e5e;
+              font-size: 0.8rem;
+              padding: 0.5rem;
+              cursor: pointer;
+              margin: 1rem 0 0.5rem 0;
             }
           }
 

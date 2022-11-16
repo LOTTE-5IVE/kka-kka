@@ -20,21 +20,21 @@ export default function MyProductOrder({ productOrder }) {
               <div className="title-label">상품주문번호</div>
               <div className="title-id">{productOrder.id}</div>
             </div>
-            <div className="d-flex align-start w-100">
+            <div className="product-info w-100">
               <img
                 className="mt-3"
                 src={productOrder.product.imageUrl}
                 alt={productOrder.product.name}
               />
               <div className="d-flex justify-space-between w-100">
-                <div className="d-flex flex-column align-start w-80">
+                <div className="d-flex flex-column align-start product-wrapper">
                   <p className="w-100">{productOrder.product.name}</p>
                   <div className="w-100">
                     <span className="detail">
                       수량: {productOrder.quantity}
                     </span>
                   </div>
-                  <div className="w-50">
+                  <div className="price-info">
                     <div className="d-flex justify-space-between detail-price">
                       <div>
                         상품 가격
@@ -88,6 +88,39 @@ export default function MyProductOrder({ productOrder }) {
       </div>
       <style jsx>
         {`
+          @media screen and (min-width: 769px) {
+            .product-info {
+              display: flex;
+              justify-content: center;
+              align-items: start;
+            }
+            
+            .product-wrapper {
+              width: 100%;
+            }
+            
+            .price-info {
+              width: 70%;
+            }
+          }
+          
+          @media screen and (max-width: 768px) {
+            .product-info {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: start;
+            }
+            
+            .product-wrapper {
+              width: 100%;
+            }
+            
+            .price-info {
+              width: 80%;
+            }
+          }
+          
           .wrapper {
             margin: 1rem 0 0.5rem 0;
             padding: 0.3rem;

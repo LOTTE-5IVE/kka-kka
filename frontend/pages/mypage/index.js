@@ -46,7 +46,10 @@ export default function MyPage() {
                   setOrderDetail={setOrderDetail}
                 />
               ) : (
-                <MyOrderDetail orderDetail={orderDetail} />
+                <MyOrderDetail
+                    orderDetail={orderDetail}
+                    handleDetail={handleDetail}
+                />
               )}
             </div>
           </div>
