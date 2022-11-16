@@ -1,4 +1,5 @@
 = 관리자 API
+
 ifndef::snippets[]
 :snippets: ./build/generated-snippets
 endif::[]
@@ -29,6 +30,16 @@ include::{snippets}/admin-login-success/http-request.adoc[]
 - Response
 
 include::{snippets}/admin-login-success/http-response.adoc[]
+
+==== 관리자 로그인 실패
+
+- Request
+
+include::{snippets}/admin-login-fail/http-request.adoc[]
+
+- Response
+
+include::{snippets}/admin-login-fail/http-response.adoc[]
 
 === Coupon
 
@@ -93,6 +104,7 @@ include::{snippets}/delete-downloaded-coupon/http-request.adoc[]
 include::{snippets}/delete-downloaded-coupon/http-response.adoc[]
 
 === Discount
+
 ==== 상품 할인 생성
 
 - Request
