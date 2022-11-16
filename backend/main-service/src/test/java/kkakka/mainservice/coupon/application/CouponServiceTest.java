@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import kkakka.mainservice.TestContext;
 import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.coupon.domain.Coupon;
@@ -22,6 +20,8 @@ import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.member.member.domain.Grade;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
+import kkakka.mainservice.order.application.OrderService;
+import kkakka.mainservice.order.application.dto.ProductOrderDto;
 import kkakka.mainservice.product.domain.Product;
 import kkakka.mainservice.product.domain.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -44,6 +44,8 @@ public class CouponServiceTest extends TestContext {
     MemberCouponRepository memberCouponRepository;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    OrderService orderService;
 
     @Test
     @DisplayName("쿠폰 사용 여부 확인 - 성공")
@@ -390,5 +392,32 @@ public class CouponServiceTest extends TestContext {
             }
         }
         assertThat(selectedDto.getIsDownloadable()).isEqualTo(false);
+    }
+
+    @DisplayName("바로결제 쿠폰 적용 취소")
+    @Test
+    void cancelProductCoupon() {
+        // given
+        Product product = new Product(null, null, "product",
+            1000, 20, "", "", "", null);
+        Member member = new Member();
+        productRepository.save(product);
+        memberRepository.save(member);
+        Long couponId = couponService.createCoupon(new CouponRequestDto(
+            null, null, product.getId(),
+            "test", "COUPON",
+            LocalDateTime.of(2020, 3, 16, 3, 16),
+            LocalDateTime.of(2025, 3, 16, 3, 16),
+            null, 2000, 10000
+        ));
+        couponService.downloadCoupon(couponId, member.getId());
+        orderService.applyProductCoupon(member.getId(), new ProductOrderDto(product.getId(), null, 2), couponId);
+
+        // when
+        orderService.cancelProductCoupon(member.getId(), couponId);
+
+        // then
+        MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId, member.getId());
+        assertThat(memberCoupon.getIsApply()).isEqualTo(false);
     }
 }
