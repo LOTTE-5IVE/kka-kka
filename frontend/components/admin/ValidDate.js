@@ -19,7 +19,7 @@ export default function ValidDate({
   return (
     <div className="dateWrapper" style={{ display: "flex" }}>
       <div>
-        발급일로부터{" "}
+        <span> 발급일로부터 </span>
         <input
           type="text"
           size="1"
@@ -38,9 +38,23 @@ export default function ValidDate({
               setEDateValid(false);
             }
           }}
-        />{" "}
-        일 유효
+        />
+        <span> 일 유효 </span>
       </div>
+
+      <style jsx>{`
+        input {
+          margin: 0 10px;
+          line-height: 25px;
+          padding: 0 0 0 13px;
+          border-radius: 8px;
+          font-size: 16px;
+        }
+
+        span {
+          font-size: 16px;
+        }
+      `}</style>
     </div>
   );
 }

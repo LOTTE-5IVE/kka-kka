@@ -44,10 +44,23 @@ export function CouponApply({
         { productId: product.id, quantity: product.quantity },
         token,
       ).then((res) => {
-        product = res;
+        // product = res;
         setPayment([res]);
         onCloseHandler();
       });
+    }
+  };
+
+  const downloadCoupon = async (id) => {
+    if (isLogin()) {
+      await PostHApi(`/api/coupons/${product.id}/${id}`, null, token).then(
+        (res) => {
+          getProductMemberCoupon();
+          alert("다운 완료");
+        },
+      );
+    } else {
+      alert("로그인이 필요한 서비스입니다.");
     }
   };
 
@@ -245,7 +258,16 @@ export function CouponApply({
                             alignItems: "center",
                           }}
                         >
-                          <DownloadIcon />
+                          {coupon.isDownloadable ? (
+                            <DownloadIcon
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                downloadCoupon(coupon.id);
+                              }}
+                            />
+                          ) : (
+                            "✔"
+                          )}
                         </td>
                       </tr>
                     );
