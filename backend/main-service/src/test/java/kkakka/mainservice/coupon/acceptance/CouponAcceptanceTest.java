@@ -12,7 +12,6 @@ import io.restassured.response.Response;
 import java.util.ArrayList;
 import java.util.List;
 import kkakka.mainservice.DocumentConfiguration;
-import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.order.application.dto.ProductOrderDto;
@@ -21,14 +20,10 @@ import kkakka.mainservice.order.ui.dto.RecipientRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 public class CouponAcceptanceTest extends DocumentConfiguration {
-
-    @Autowired
-    CouponRepository couponRepository;
 
     @DisplayName("등급쿠폰 생성 - 성공")
     @Test
@@ -174,7 +169,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
 
     @DisplayName("회원별 사용한 쿠폰 조회 - 성공")
     @Test
-    void showUsedCoupons() {
+    void usedCoupons() {
         String accessToken = 액세스_토큰_가져옴();
         String couponId = 상품_쿠폰_다운로드(accessToken);
         쿠폰_사용(couponId, accessToken);
@@ -443,5 +438,41 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("상품 바로주문 쿠폰 적용 취소 - 성공")
+    @Test
+    void cancelProductCoupon_success() {
+        // given
+        String accessToken = 액세스_토큰_가져옴();
+        String couponId = 바로주문_쿠폰_적용(accessToken);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .filter(document("orders-products-cancel-coupon"))
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .put("/api/orders/" + couponId)
+            .then().log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    private String 바로주문_쿠폰_적용(String accessToken) {
+        String couponId = 상품_쿠폰_다운로드(accessToken);
+        ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(), null, 3);
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(productOrderDto)
+            .when()
+            .post("/api/orders/" + couponId)
+            .then().log().all().extract();
+
+        return couponId;
     }
 }
