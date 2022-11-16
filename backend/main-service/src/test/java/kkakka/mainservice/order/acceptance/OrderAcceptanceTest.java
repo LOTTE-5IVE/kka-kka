@@ -84,6 +84,67 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("쿠폰 적용 상품 주문 - 성공")
+    @Test
+    public void orderWithCoupon() {
+        // given
+        tearDown();
+        String accessToken = 액세스_토큰_가져옴();
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000, 200);
+        상품_쿠폰_다운로드(accessToken, couponId);
+        ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(),
+            Long.parseLong(couponId), 3);
+        List<ProductOrderDto> productOrderDtoList = new ArrayList<>();
+        productOrderDtoList.add(productOrderDto);
+        OrderRequest orderRequest = new OrderRequest(
+            new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getEmail(),
+                TEST_MEMBER_01.getPhone(), TEST_MEMBER_01.getAddress()), productOrderDtoList);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .filter(document("order-with-coupon"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(orderRequest)
+            .when()
+            .post("/api/orders/")
+            .then().log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("쿠폰 적용 상품 주문 - 실패(최소주문금액 부족)")
+    @Test
+    void orderUnderMinOrderPrice_fail() {
+        // given
+        String accessToken = 액세스_토큰_가져옴();
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000, 20000);
+        상품_쿠폰_다운로드(accessToken, couponId);
+        ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(),
+            Long.parseLong(couponId), 3);
+        List<ProductOrderDto> productOrderDtoList = new ArrayList<>();
+        productOrderDtoList.add(productOrderDto);
+        OrderRequest orderRequest = new OrderRequest(
+            new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getEmail(),
+                TEST_MEMBER_01.getPhone(), TEST_MEMBER_01.getAddress()), productOrderDtoList);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(orderRequest)
+            .when()
+            .post("/api/orders")
+            .then().log().all()
+            .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("주문내역 조회 - 성공")
     @Test
     void findMemberOrders_success() {
@@ -181,7 +242,8 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         tearDown();
         // given
         String accessToken = 액세스_토큰_가져옴();
-        String couponId = 상품_쿠폰_다운로드(accessToken);
+        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000, 200);
+        상품_쿠폰_다운로드(accessToken, couponId);
         주문_요청함(accessToken, PRODUCT_1.getId(), Long.parseLong(couponId));
 
         // when
@@ -200,7 +262,7 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
     }
 
     private String 쿠폰_생성함(String grade, Long productId, String priceRule, Integer percentage,
-        Integer maxDiscount) {
+        Integer maxDiscount, Integer minOrderPrice) {
         if (grade != null) {
             grade = "\"" + grade + "\"";
         }
@@ -217,7 +279,7 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
                 + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
                 + "  \"percentage\": " + percentage + ",\n"
                 + "  \"maxDiscount\": " + maxDiscount + ",\n"
-                + "  \"minOrderPrice\": 20000\n"
+                + "  \"minOrderPrice\": " + minOrderPrice + "\n"
                 + "}")
             .when()
             .post("/api/coupons")
@@ -225,8 +287,7 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         return response.header("Location");
     }
 
-    private String 상품_쿠폰_다운로드(String accessToken) {
-        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
+    private String 상품_쿠폰_다운로드(String accessToken, String couponId) {
 
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
