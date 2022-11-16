@@ -75,7 +75,7 @@ public class ProductOrder {
     }
 
     public int getTotalPrice() {
-        return (int) ((getPrice() - Math.ceil(getPrice() * getDiscount() * 0.01)) * getQuantity());
+        return getPrice() * getQuantity();
     }
 
     public void setOrder(Order order) {
