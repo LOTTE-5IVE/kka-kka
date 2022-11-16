@@ -146,18 +146,22 @@ export function CouponApply({
           <div className="tableWrapper">
             <table>
               <colgroup>
-                <col style={{ width: "30%" }} />
-                <col style={{ width: "13%" }} />
-                <col style={{ width: "30%" }} />
                 <col style={{ width: "20%" }} />
-                <col style={{ width: "7%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "20%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "5%" }} />
               </colgroup>
               <thead style={{ height: "59px" }}>
                 <tr>
                   <th>쿠폰명</th>
                   <th>할인</th>
+                  <th>최소 주문금액</th>
+                  <th>최대 할인금액</th>
                   <th>사용기한</th>
-                  <th>쿠폰 적용가</th>
+                  <th>적용가</th>
                   <th></th>
                 </tr>
               </thead>
@@ -175,10 +179,10 @@ export function CouponApply({
                       >
                         <td>{coupon.name}</td>
                         <td>
-                          {coupon.percentage
-                            ? `${coupon.percentage}%`
-                            : `${commaMoney(coupon.maxDiscount)}원`}
+                          {coupon.percentage ? `${coupon.percentage}%` : "X"}
                         </td>
+                        <td>{commaMoney(coupon.minOrderPrice)}원</td>
+                        <td>{commaMoney(coupon.maxDiscount)}원</td>
                         <td>{coupon.expiredAt.slice(0, 10)}</td>
                         <td>
                           {commaMoney(
@@ -215,18 +219,22 @@ export function CouponApply({
           <div className="tableWrapper">
             <table>
               <colgroup>
-                <col style={{ width: "30%" }} />
-                <col style={{ width: "13%" }} />
-                <col style={{ width: "30%" }} />
                 <col style={{ width: "20%" }} />
-                <col style={{ width: "7%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "20%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "5%" }} />
               </colgroup>
               <thead style={{ height: "59px" }}>
                 <tr>
                   <th>쿠폰명</th>
                   <th>할인</th>
+                  <th>최소 주문금액</th>
+                  <th>최대 할인금액</th>
                   <th>사용기한</th>
-                  <th>쿠폰 적용가</th>
+                  <th>적용가</th>
                   <th></th>
                 </tr>
               </thead>
@@ -244,10 +252,10 @@ export function CouponApply({
                       >
                         <td>{coupon.name}</td>
                         <td>
-                          {coupon.percentage
-                            ? `${coupon.percentage}%`
-                            : `${commaMoney(coupon.maxDiscount)}원`}
+                          {coupon.percentage ? `${coupon.percentage}%` : "X"}
                         </td>
+                        <td>{commaMoney(coupon.minOrderPrice)}원</td>
+                        <td>{commaMoney(coupon.maxDiscount)}원</td>
                         <td>{coupon.expiredAt.slice(0, 10)}</td>
                         <td>{commaMoney(coupon.discountedPrice)}원</td>
                         <td
@@ -286,7 +294,7 @@ export function CouponApply({
         @media screen and (min-width: 769px) {
           /* 데스크탑에서 사용될 스타일을 여기에 작성합니다. */
           .wrapper {
-            width: 700px;
+            width: 800px;
             height: 900px;
             margin-top: 5px;
             .container {

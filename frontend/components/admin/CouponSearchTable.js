@@ -102,6 +102,7 @@ export default function CouponSearchTable() {
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
           </tr>
         </tbody>
       </table>

@@ -37,7 +37,7 @@ export function CouponModal({ children }) {
               .container {
                 margin: 40px auto 0;
                 background-color: white;
-                width: 700px;
+                width: 800px;
 
                 border: 1px solid #dedede;
                 box-shadow: 4px 5px 3px #595959;
