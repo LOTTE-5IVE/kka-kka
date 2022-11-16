@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { useEffect, useState } from "react";
-import { DeleteHApi, PostHApi } from "../../apis/Apis";
+import { DeleteHApi, PostHApi, PutHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
 import Title from "../../components/common/Title";
@@ -41,8 +41,32 @@ export default function Payment() {
   const { payment, setPayment } = useContext(PaymentContext);
   const { token, setToken } = useContext(TokenContext);
 
+  const router = useRouter();
+
   const onModalHandler = (id) => {
     setModalVisibleId(id);
+  };
+
+  function popupHandler() {
+    setPopup(!popup);
+  }
+
+  function zipcodeHandler(zipcode) {
+    setZipcode(zipcode);
+  }
+
+  function addr1Handler(addr1) {
+    setAddr1(addr1);
+
+    if (addr1) {
+      setAddressValid1(true);
+    } else {
+      setAddressValid1(false);
+    }
+  }
+
+  const handleCheck = (e) => {
+    setCheck(e.target.checked);
   };
 
   const cancelCoupon = async (cartItemId, couponId) => {
@@ -59,24 +83,60 @@ export default function Payment() {
         },
       );
     } else {
-      payment[0].couponDto = null;
-      setOrderItems(payment);
-      console.log("ttt:::", payment, orderItems);
+      await PutHApi(`/api/orders/${couponId}`, null, token).then((res) => {
+        setPayment(
+          payment.map((product, idx) =>
+            idx === 0 ? { ...product, couponDto: null } : product,
+          ),
+        );
+      });
     }
   };
 
-  const router = useRouter();
+  const orderItem = async () => {
+    const arr = [];
+
+    orderItems?.map((x) => {
+      return arr.push({
+        productId: x.id || x.productId,
+        couponId: x.couponDto?.id || null,
+        quantity: x.quantity,
+      });
+    });
+
+    PostHApi(
+      "/api/orders",
+      {
+        productOrders: arr,
+        recipient: {
+          name: name,
+          email: email1 + "@" + email2,
+          phone: phone1 + "-" + phone2 + "-" + phone3,
+          address: addr1 + " " + addr2,
+        },
+      },
+      token,
+    )
+      .then((res) => {
+        alert("결제 되었습니다.");
+      })
+      .catch(function (error) {
+        alert("결제 실패했습니다.");
+      });
+
+    document.location.href = "/";
+  };
 
   useEffect(() => {
     if (!router.isReady) {
       return;
     }
 
-    // if (!router.query.orderItems) {
-    //   alert("주문/결제가 취소되었습니다.");
-    //   history.back();
-    // }
-  }, [router.isReady, orderItems]);
+    if (!payment) {
+      alert("주문/결제가 취소되었습니다.");
+      history.back();
+    }
+  }, [router.isReady]);
 
   useEffect(() => {
     if (!check) return;
@@ -142,57 +202,6 @@ export default function Payment() {
     addressValid1,
     addressValid2,
   ]);
-
-  const orderItem = async () => {
-    const arr = [];
-
-    orderItems?.map((x) => {
-      return arr.push({
-        productId: x.id,
-        quantity: x.quantity,
-      });
-    });
-
-    PostHApi(
-      "/api/orders",
-      {
-        productOrders: arr,
-        recipient: {
-          name: name,
-          email: email1 + "@" + email2,
-          phone: phone1 + "-" + phone2 + "-" + phone3,
-          address: addr1 + " " + addr2,
-        },
-      },
-      token,
-    ).then((res) => {});
-
-    alert("결제되었습니다.");
-
-    document.location.href = "/";
-  };
-
-  function popupHandler() {
-    setPopup(!popup);
-  }
-
-  function zipcodeHandler(zipcode) {
-    setZipcode(zipcode);
-  }
-
-  function addr1Handler(addr1) {
-    setAddr1(addr1);
-
-    if (addr1) {
-      setAddressValid1(true);
-    } else {
-      setAddressValid1(false);
-    }
-  }
-
-  const handleCheck = (e) => {
-    setCheck(e.target.checked);
-  };
 
   return (
     <>
@@ -271,7 +280,6 @@ export default function Payment() {
                               <div
                                 onClick={() => {
                                   onModalHandler(product.id);
-                                  // setCouponProduct(product);
                                 }}
                               >
                                 <AdminButton
@@ -299,7 +307,6 @@ export default function Payment() {
                             <div
                               onClick={() => {
                                 onModalHandler(product.id);
-                                // setCouponProduct(product);
                               }}
                             >
                               <AdminButton
@@ -411,7 +418,11 @@ export default function Payment() {
                         setCheck(false);
                         if (isNumber(e.target.value)) {
                           setPhone2(e.target.value);
-                          if (e.target.value.length == 4) setPhoneValid2(true);
+                          if (
+                            e.target.value.length == 3 ||
+                            e.target.value.length == 4
+                          )
+                            setPhoneValid2(true);
                           else {
                             setPhoneValid2(false);
                           }
@@ -519,14 +530,16 @@ export default function Payment() {
             <table>
               <colgroup>
                 <col style={{ width: "15%" }} />
+
                 <col style={{ width: "85%" }} />
               </colgroup>
               <tbody>
                 <tr>
                   <th scope="row">주문상품</th>
+
                   <td>
                     {commaMoney(
-                      orderItems.reduce(
+                      orderItems?.reduce(
                         (prev, cur) => prev + cur.price * cur.quantity,
                         0,
                       ),
@@ -536,10 +549,11 @@ export default function Payment() {
                 </tr>
                 <tr>
                   <th scope="row">할인</th>
+
                   <td>
                     -{" "}
                     {commaMoney(
-                      orderItems.reduce((prev, cur) => {
+                      orderItems?.reduce((prev, cur) => {
                         if (cur.couponDto) {
                           return prev + Math.floor(cur.totalDiscount);
                         } else {
@@ -557,17 +571,19 @@ export default function Payment() {
                 </tr>
                 <tr>
                   <th scope="row">배송비</th>
+
                   <td>0 원</td>
                 </tr>
                 <tr>
                   <th scope="row">결제금액</th>
+
                   <td>
                     {commaMoney(
-                      orderItems.reduce(
+                      orderItems?.reduce(
                         (prev, cur) => prev + cur.price * cur.quantity,
                         0,
                       ) -
-                        orderItems.reduce((prev, cur) => {
+                        orderItems?.reduce((prev, cur) => {
                           if (cur.couponDto) {
                             return prev + Math.floor(cur.totalDiscount);
                           } else {
@@ -785,6 +801,11 @@ export default function Payment() {
                 font-size: 16px;
               }
             }
+            .payInfo {
+              td {
+                padding-right: 65px;
+              }
+            }
 
             .payBtn {
               width: 200px;
@@ -882,6 +903,12 @@ export default function Payment() {
                 padding: 0 0.7vw;
                 border-radius: 8px;
                 font-size: 2vw;
+              }
+            }
+
+            .payInfo {
+              td {
+                padding-right: 3vw;
               }
             }
 
@@ -994,6 +1021,10 @@ export default function Payment() {
 
             .payInfo {
               font-size: 15px;
+
+              td {
+                padding-right: 10px;
+              }
             }
 
             .payBtn {
