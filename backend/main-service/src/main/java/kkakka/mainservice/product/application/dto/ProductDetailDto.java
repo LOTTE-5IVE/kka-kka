@@ -36,7 +36,25 @@ public class ProductDetailDto {
         );
     }
 
+    public static ProductDetailDto toDtoWithoutNutrition(Product product, CategoryDto categoryDto,
+                                         NutritionDto nutritionDto) {
+        return new ProductDetailDto(product.getId(),
+                categoryDto,
+                product.getName(),
+                product.getPrice(),
+                product.getStock(),
+                product.getImageUrl(),
+                product.getDetailImageUrl(),
+                product.getNutritionInfoUrl(),
+                product.getDiscount(),
+                nutritionDto,
+                product.getRatingAvg()
+        );
+    }
+
+
     public ProductDetailResponse toResponseDto() {
+
         return new ProductDetailResponse(
                 this.id,
                 this.categoryDto.toResponseDto(),

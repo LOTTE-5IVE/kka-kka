@@ -82,12 +82,12 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
         if("DESC".equals(sortBy)) {
             return new OrderSpecifier<>(Order.DESC, QProduct.product.price);
         }
+//
+//        if("ASC".equals(sortBy)) {
+//            return new OrderSpecifier<>(Order.ASC, QProduct.product.price);
+//        }
 
-        if("ASC".equals(sortBy)) {
-            return new OrderSpecifier<>(Order.ASC, QProduct.product.price);
-        }
-
-        return new OrderSpecifier<Long>(Order.DESC, QProduct.product.id);
+        return new OrderSpecifier<Long>(Order.ASC, QProduct.product.id);
     }
 
     public List<Product> findTopNByKeyword(String keyword) {
