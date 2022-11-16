@@ -151,8 +151,8 @@ export default function DiscountEnrollTable() {
                         e.target.value = "";
                       }
                     }}
-                  />{" "}
-                  %
+                  />
+                  <span> % </span>
                 </div>
               </td>
             </tr>
@@ -180,7 +180,7 @@ export default function DiscountEnrollTable() {
                         }
                       }}
                     />
-                    {"  "}~{"  "}
+                    <span> ~ </span>
                     <input
                       id="oname"
                       className="inputTypeText"
@@ -274,6 +274,20 @@ export default function DiscountEnrollTable() {
 
             tr {
               border-bottom: 1px solid #dedede;
+
+              td {
+                input {
+                  margin: 0 10px;
+                  line-height: 40px;
+                  padding: 0 0 0 13px;
+                  border-radius: 8px;
+                  font-size: 16px;
+                }
+
+                span {
+                  font-size: 16px;
+                }
+              }
             }
 
             .btn {

@@ -189,12 +189,12 @@ export default function CouponEnrollTable() {
                         e.target.value = "";
                       }
                     }}
-                  />{" "}
-                  %
+                  />
+                  <span> % </span>
                 </div>
 
                 <div style={{ width: "25%" }}>
-                  최대{" "}
+                  <span> 최대 </span>
                   <input
                     id="oname"
                     className="inputTypeText"
@@ -214,8 +214,8 @@ export default function CouponEnrollTable() {
                         e.target.value = "";
                       }
                     }}
-                  />{" "}
-                  원
+                  />
+                  <span> 원 </span>
                 </div>
                 <span style={{ color: "red" }}>
                   *최대 금액만 설정시 정액 할인
@@ -247,7 +247,7 @@ export default function CouponEnrollTable() {
                     }
                   }}
                 />
-                원
+                <span> 원 </span>
               </td>
             </tr>
 
@@ -364,6 +364,20 @@ export default function CouponEnrollTable() {
 
             tr {
               border-bottom: 1px solid #dedede;
+
+              td {
+                input {
+                  margin: 0 10px;
+                  line-height: 40px;
+                  padding: 0 0 0 13px;
+                  border-radius: 8px;
+                  font-size: 16px;
+                }
+
+                span {
+                  font-size: 16px;
+                }
+              }
             }
 
             .btn {
