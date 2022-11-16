@@ -401,7 +401,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         // given
         String accessToken = 액세스_토큰_가져옴();
         String couponId = 상품_쿠폰_다운로드(accessToken);
-        ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(),null, 3);
+        ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(), null, 3);
 
         // when
         final ExtractableResponse<Response> response = RestAssured

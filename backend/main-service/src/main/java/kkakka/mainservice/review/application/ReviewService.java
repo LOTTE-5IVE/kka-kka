@@ -40,8 +40,8 @@ public class ReviewService {
     public Long writeReview(Long memberId, Long productOrderId, ReviewRequest reviewRequest) {
         validateAlreadyWritten(memberId, productOrderId);
 
-        ProductOrder productOrder = productOrderRepository.findById(productOrderId).orElseThrow(
-            NotFoundProductException::new);
+        ProductOrder productOrder = productOrderRepository.findById(productOrderId)
+            .orElseThrow(NotFoundProductException::new);
         final Review review = Review.create(
                 reviewRequest.getContents(),
                 reviewRequest.getRating(),
