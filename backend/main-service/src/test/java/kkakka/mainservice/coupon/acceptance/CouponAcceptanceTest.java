@@ -10,6 +10,11 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
@@ -18,15 +23,34 @@ import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.order.application.dto.ProductOrderDto;
-import kkakka.mainservice.order.ui.dto.OrderRequest;
-import kkakka.mainservice.order.ui.dto.RecipientRequest;
 import org.assertj.core.api.Assertions;
+import org.hibernate.Session;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 public class CouponAcceptanceTest extends DocumentConfiguration {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @AfterEach
+    public void tearDown() {
+        entityManager.unwrap(Session.class)
+            .doWork(this::cleanUpTable);
+    }
+
+    private void cleanUpTable(Connection conn) throws SQLException {
+        Statement statement = conn.createStatement();
+        statement.executeUpdate("SET REFERENTIAL_INTEGRITY FALSE");
+
+        statement.executeUpdate("TRUNCATE TABLE coupon");
+        statement.executeUpdate("TRUNCATE TABLE member_coupon");
+
+        statement.executeUpdate("SET REFERENTIAL_INTEGRITY TRUE");
+    }
 
     @DisplayName("등급쿠폰 생성 - 성공")
     @Test
@@ -126,6 +150,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("쿠폰 조회 - 성공")
     @Test
     void findAllCoupons() {
+        tearDown();
         쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", null, 1000);
         final String adminToken = 관리자_로그인();
 
@@ -144,6 +169,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("일반쿠폰 삭제 - 성공")
     @Test
     void deleteCouponByAdmin() {
+        tearDown();
         final String adminToken = 관리자_로그인();
         String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 12, 2000);
 
@@ -161,6 +187,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("다운받은 쿠폰 삭제 - 성공")
     @Test
     void deleteMemberCouponByAdmin() {
+        tearDown();
         String accessToken = 액세스_토큰_가져옴();
         String coupon = 상품_쿠폰_다운로드(accessToken);
 
@@ -179,6 +206,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("다운 가능한 쿠폰 조회 - 성공")
     @Test
     void downloadableCoupons() {
+        tearDown();
         String accessToken = 액세스_토큰_가져옴();
         쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 15, 2000);
 
@@ -197,6 +225,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("회원별 사용 가능한 쿠폰 조회 - 성공")
     @Test
     void usableCoupons() {
+        tearDown();
         String accessToken = 액세스_토큰_가져옴();
         상품_쿠폰_다운로드(accessToken);
 
@@ -215,6 +244,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("회원별 사용한 쿠폰 조회 - 성공")
     @Test
     void usedCoupons() {
+        tearDown();
         String accessToken = 액세스_토큰_가져옴();
         String couponId = 상품_쿠폰_다운로드(accessToken);
         쿠폰_사용(couponId, accessToken);
@@ -245,7 +275,6 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         if (grade != null) {
             grade = "\"" + grade + "\"";
         }
-
         final String adminToken = 관리자_로그인();
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
@@ -272,6 +301,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("쿠폰 다운로드")
     @Test
     void downloadCoupon() {
+        tearDown();
         String accessToken = 액세스_토큰_가져옴();
         String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
 
@@ -316,7 +346,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     }
 
     private String 등급_쿠폰_다운로드(String accessToken) {
-        String couponId = 쿠폰_생성함("GOLD", null, "GRADE_COUPON", 50, 2000);
+        String couponId = 쿠폰_생성함("BRONZE", null, "GRADE_COUPON", 50, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
@@ -331,6 +361,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("회원 - 상품 사용가능한 쿠폰 조회")
     @Test
     void showProductCouponsByProductIdAndMemberId() {
+        tearDown();
         String accessToken = 액세스_토큰_가져옴();
         상품_쿠폰_다운로드(accessToken);
         등급_쿠폰_다운로드(accessToken);
@@ -351,6 +382,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @DisplayName("비회원 - 상품 적용가능한 쿠폰 조회")
     @Test
     void showProductCouponsByProductId() {
+        tearDown();
         String accessToken = 액세스_토큰_가져옴();
         상품_쿠폰_다운로드(accessToken);
         등급_쿠폰_다운로드(accessToken);
@@ -371,6 +403,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void createMoneyCoupon() {
         // given
+        tearDown();
         final String adminToken = 관리자_로그인();
 
         // when
@@ -403,6 +436,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void findMemberCouponCount_success() {
         // given
+        tearDown();
         String accessToken = 액세스_토큰_가져옴();
         상품_쿠폰_다운로드(accessToken);
         등급_쿠폰_다운로드(accessToken);
@@ -425,6 +459,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void downloadProductCoupon_success() {
         // given
+        tearDown();
         String accessToken = 액세스_토큰_가져옴();
         String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
 
@@ -445,6 +480,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void applyProductCoupon_success() {
         // given
+        tearDown();
         String accessToken = 액세스_토큰_가져옴();
         String couponId = 상품_쿠폰_다운로드(accessToken);
         ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(), null, 3);
@@ -463,38 +499,11 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    @DisplayName("쿠폰 적용 결제 - 성공")
-    @Test
-    public void orderWithCoupon() {
-        // given
-        String accessToken = 액세스_토큰_가져옴();
-        String couponId = 상품_쿠폰_다운로드(accessToken);
-        ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(), Long.parseLong(couponId), 3);
-        List<ProductOrderDto> productOrderDtoList = new ArrayList<>();
-        productOrderDtoList.add(productOrderDto);
-        OrderRequest orderRequest = new OrderRequest(
-            new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getEmail(),
-            TEST_MEMBER_01.getPhone(), TEST_MEMBER_01.getAddress()), productOrderDtoList);
-
-        // when
-        final ExtractableResponse<Response> response = RestAssured
-            .given(spec).log().all()
-            .header("Authorization", "Bearer " + accessToken)
-            .filter(document("order-with-coupon"))
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(orderRequest)
-            .when()
-            .post("/api/orders/")
-            .then().log().all().extract();
-
-        // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-    }
-
     @DisplayName("상품 바로주문 쿠폰 적용 취소 - 성공")
     @Test
     void cancelProductCoupon_success() {
         // given
+        tearDown();
         String accessToken = 액세스_토큰_가져옴();
         String couponId = 바로주문_쿠폰_적용(accessToken);
 

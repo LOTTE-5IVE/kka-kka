@@ -52,7 +52,7 @@ public class MemberCoupon {
     }
 
     public Boolean isUsable() {
-        return this.isApply;
+        return !this.isApply;
     }
 
     public boolean isUsed() {
