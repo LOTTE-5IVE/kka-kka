@@ -102,7 +102,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
         장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
         final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
-        String couponId = 퍼센트_쿠폰_생성();
+        String couponId = 퍼센트_쿠폰_생성(200);
         장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getCartItemId(), couponId, accessToken);
 
         //when
@@ -184,7 +184,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         final String accessToken = 액세스_토큰_가져옴();
         장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
         final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
-        String couponId = 퍼센트_쿠폰_생성();
+        String couponId = 퍼센트_쿠폰_생성(200);
         상품_쿠폰_다운로드(accessToken, couponId);
 
         //when
@@ -201,7 +201,31 @@ class CartAcceptanceTest extends DocumentConfiguration {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    @DisplayName("장바구니 쿠폰 적용 취소 성공")
+    @Test
+    @DisplayName("장바구니 쿠폰 적용 - 실패(최소주문금액 부족)")
+    void applyCouponCartItem_fail() {
+        //given
+        final String accessToken = 액세스_토큰_가져옴();
+        장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
+        final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
+        String couponId = 퍼센트_쿠폰_생성(20000);
+        상품_쿠폰_다운로드(accessToken, couponId);
+
+        //when
+        ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
+            .filter(document("applyCartItemCoupon-fail"))
+            .header("Authorization", "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/carts/" + cart.getCartItemDtos().get(0).getCartItemId() + "/"
+                + couponId)
+            .then().log().all().extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("장바구니 쿠폰 적용 취소 - 성공")
     @Test
     void testCancelCouponCartItem_success() {
         //given
@@ -209,7 +233,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         장바구니_추가함(accessToken, PRODUCT_1.getId(), 1);
         장바구니_추가함(accessToken, PRODUCT_2.getId(), 1);
         final CartResponseDto cart = 장바구니에서_찾아옴(accessToken);
-        String couponId = 퍼센트_쿠폰_생성();
+        String couponId = 퍼센트_쿠폰_생성(200);
         상품_쿠폰_다운로드(accessToken, couponId);
         장바구니_쿠폰_적용(cart.getCartItemDtos().get(0).getCartItemId(), couponId, accessToken);
 
@@ -291,7 +315,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
         return response.body().jsonPath().get("accessToken");
     }
 
-    private String 퍼센트_쿠폰_생성() {
+    private String 퍼센트_쿠폰_생성(Integer minOrderPrice) {
         final ExtractableResponse<Response> response = RestAssured.given(spec).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("{\n"
@@ -304,7 +328,7 @@ class CartAcceptanceTest extends DocumentConfiguration {
                         + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
                         + "  \"percentage\": 10,\n"
                         + "  \"maxDiscount\": 2000,\n"
-                        + "  \"minOrderPrice\": 20000\n"
+                        + "  \"minOrderPrice\": " + minOrderPrice + "\n"
                         + "}")
                 .when()
                 .post("/api/coupons")
