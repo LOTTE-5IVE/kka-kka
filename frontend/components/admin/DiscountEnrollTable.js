@@ -1,9 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import ApplyProduct from "./ApplyProduct";
 import axios from "axios";
 import Button from "../common/Button/Button";
 import ApplyCategory from "./ApplyCategory";
 import { UserContext } from "../../context/AdminTokenContext";
+import {isNumber} from "../../hooks/isNumber";
 
 export default function DiscountEnrollTable() {
   const [target, setTarget] = useState("카테고리");
