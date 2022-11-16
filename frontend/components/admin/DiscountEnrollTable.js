@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import {useContext, useEffect, useState} from "react";
 import ApplyProduct from "./ApplyProduct";
 import axios from "axios";
 import Button from "../common/Button/Button";
