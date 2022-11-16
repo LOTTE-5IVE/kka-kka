@@ -1,6 +1,5 @@
 package kkakka.mainservice.common.exception;
 
-import kkakka.mainservice.member.auth.exception.AuthorizationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,6 +16,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthorizationException.class)
     public ResponseEntity<Void> AuthorityExceptionHandler(AuthorizationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @ExceptionHandler(LoginFailException.class)
+    public ResponseEntity<Void> AuthenticateFailExceptionHandler(LoginFailException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @ExceptionHandler(Exception.class)

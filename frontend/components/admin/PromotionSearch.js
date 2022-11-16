@@ -1,6 +1,4 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { AdminButton } from "../common/Button/AdminButton";
+import { useState } from "react";
 import CouponSearchTable from "./CouponSearchTable";
 import DiscountSearchTable from "./DiscountSearchTable";
 

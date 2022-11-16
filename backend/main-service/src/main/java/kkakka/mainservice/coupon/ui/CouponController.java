@@ -3,6 +3,10 @@ package kkakka.mainservice.coupon.ui;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+import kkakka.mainservice.common.auth.AuthenticationPrincipal;
+import kkakka.mainservice.common.auth.LoginMember;
+import kkakka.mainservice.common.auth.aop.AdminOnly;
+import kkakka.mainservice.common.auth.aop.MemberOnly;
 import kkakka.mainservice.coupon.application.CouponService;
 import kkakka.mainservice.coupon.application.DiscountService;
 import kkakka.mainservice.coupon.ui.dto.CouponProductDto;
@@ -10,9 +14,6 @@ import kkakka.mainservice.coupon.ui.dto.CouponRequestDto;
 import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.coupon.ui.dto.DiscountRequestDto;
 import kkakka.mainservice.coupon.ui.dto.DiscountResponseDto;
-import kkakka.mainservice.member.auth.ui.AuthenticationPrincipal;
-import kkakka.mainservice.member.auth.ui.LoginMember;
-import kkakka.mainservice.member.auth.ui.MemberOnly;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,27 +34,39 @@ public class CouponController {
     private final DiscountService discountService;
 
     /* 쿠폰 등록 */
+    @AdminOnly
     @PostMapping
-    public ResponseEntity<Void> createCoupon(@RequestBody CouponRequestDto couponRequestDto) {
+    public ResponseEntity<Void> createCoupon(
+            @RequestBody CouponRequestDto couponRequestDto,
+            @AuthenticationPrincipal LoginMember loginMember
+    ) {
         Long couponId = couponService.createCoupon(couponRequestDto);
         return ResponseEntity.created(URI.create(couponId.toString())).build();
     }
 
     /* 쿠폰 삭제 */
+    @AdminOnly
     @PutMapping("/{couponId}")
-    public ResponseEntity<Void> deleteCouponByAdmin(@PathVariable Long couponId) {
+    public ResponseEntity<Void> deleteCouponByAdmin(
+            @PathVariable Long couponId,
+            @AuthenticationPrincipal LoginMember loginMember
+    ) {
         couponService.deleteCouponByCouponId(couponId);
         return ResponseEntity.ok().build();
     }
 
     /* 쿠폰 조회 */
+    @AdminOnly
     @GetMapping
-    public ResponseEntity<List<CouponResponseDto>> findAllCoupons() {
+    public ResponseEntity<List<CouponResponseDto>> findAllCoupons(
+            @AuthenticationPrincipal LoginMember loginMember
+    ) {
         List<CouponResponseDto> couponResponseDto = couponService.showAllCouponsNotDeleted();
         return ResponseEntity.status(HttpStatus.OK).body(couponResponseDto);
     }
 
     /* 다운로드 가능한 쿠폰 조회 */
+    @MemberOnly
     @GetMapping("/download")
     public ResponseEntity<List<CouponResponseDto>> findDownloadableCoupons(
         @AuthenticationPrincipal LoginMember loginMember) {
@@ -63,6 +76,7 @@ public class CouponController {
     }
 
     /* 사용자의 쿠폰 다운로드 */
+    @MemberOnly
     @PostMapping("/download/{couponId}")
     public ResponseEntity<Void> downloadCoupon(@PathVariable Long couponId,
         @AuthenticationPrincipal LoginMember loginMember) {
@@ -95,22 +109,33 @@ public class CouponController {
     }
 
     /* 할인 등록 */
+    @AdminOnly
     @PostMapping("/discount")
-    public ResponseEntity<Long> createDiscount(@RequestBody DiscountRequestDto discountRequestDto) {
+    public ResponseEntity<Long> createDiscount(
+            @RequestBody DiscountRequestDto discountRequestDto,
+            @AuthenticationPrincipal LoginMember loginMember
+    ) {
         Long discountId = discountService.createDiscount(discountRequestDto);
         return ResponseEntity.created(URI.create(discountId.toString())).build();
     }
 
     /* 할인 삭제 */
+    @AdminOnly
     @PutMapping("/discount/{discountId}")
-    public ResponseEntity<Void> deleteDiscount(@PathVariable Long discountId) {
+    public ResponseEntity<Void> deleteDiscount(
+            @PathVariable Long discountId,
+            @AuthenticationPrincipal LoginMember loginMember
+    ) {
         discountService.deleteDiscount(discountId);
         return ResponseEntity.ok().build();
     }
 
     /* 할인 조회 */
+    @AdminOnly
     @GetMapping("/discount")
-    public ResponseEntity<List<DiscountResponseDto>> showAllDiscounts() {
+    public ResponseEntity<List<DiscountResponseDto>> showAllDiscounts(
+            @AuthenticationPrincipal LoginMember loginMember
+    ) {
         List<DiscountResponseDto> discounts = discountService.showAllDiscountsNotDeleted();
         return ResponseEntity.status(HttpStatus.OK).body(discounts);
     }

@@ -1,5 +1,6 @@
 package kkakka.mainservice.order.acceptance;
 
+import static kkakka.mainservice.fixture.TestAdminUser.TEST_ADMIN;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_1;
 import static kkakka.mainservice.fixture.TestDataLoader.PRODUCT_2;
 import static kkakka.mainservice.fixture.TestMember.TEST_MEMBER_01;
@@ -13,7 +14,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import kkakka.mainservice.DocumentConfiguration;
@@ -204,9 +207,12 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
         if (grade != null) {
             grade = "\"" + grade + "\"";
         }
+
+        final String adminToken = 관리자_로그인();
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("Authorization", "Bearer " + adminToken)
             .body("{\n"
                 + "  \"categoryId\": null,\n"
                 + "  \"grade\": " + grade + ",\n"
@@ -294,5 +300,19 @@ public class OrderAcceptanceTest extends DocumentConfiguration {
                 .then().log().all().extract();
 
         return response.body().jsonPath().get("accessToken");
+    }
+
+    private String 관리자_로그인() {
+        Map<String, String> request = new HashMap<>();
+        request.put("userId", TEST_ADMIN.getUserId());
+        request.put("password", TEST_ADMIN.getPassword());
+
+        final ExtractableResponse<Response> response = RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/api/admin/login")
+                .then().extract();
+        return response.body().jsonPath().get("adminToken");
     }
 }

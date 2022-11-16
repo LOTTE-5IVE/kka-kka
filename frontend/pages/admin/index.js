@@ -1,14 +1,19 @@
-import { useState } from "react";
+import {useContext, useState, useEffect} from "react";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import ProductSearch from "../../components/admin/ProductSearch";
 import PromotionEnroll from "../../components/admin/PromotionEnroll";
 import PromotionSearch from "../../components/admin/PromotionSearch";
 
 import Title from "../../components/common/Title";
+import {UserContext} from "../../context/AdminTokenContext";
+import {useRouter} from "next/router";
 
 export default function Admin() {
   const [Lmenu, setLmenu] = useState("프로모션");
   const [Smenu, setSmenu] = useState("혜택 등록");
+
+  const isLoggedIn = useContext(UserContext)?.isLoggedIn;
+  const router = useRouter();
 
   function LmenuHandler(text) {
     setLmenu(text);
@@ -17,6 +22,12 @@ export default function Admin() {
   function SmenuHandler(text) {
     setSmenu(text);
   }
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/admin/login')
+    }
+  }, [isLoggedIn])
 
   return (
     <>

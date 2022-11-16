@@ -1,4 +1,4 @@
-package kkakka.mainservice.member.auth.ui;
+package kkakka.mainservice.common.auth.aop;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package kkakka.mainservice.member.auth.ui;
+package kkakka.mainservice.common.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,5 +22,9 @@ public class LoginMember {
 
     public boolean isMember() {
         return this.authority.isMember();
+    }
+
+    public boolean isAdmin() {
+        return this.authority.isAdmin();
     }
 }

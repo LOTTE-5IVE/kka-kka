@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import DiscountEnrollTable from "./DiscountEnrollTable";
 import CouponEnrollTable from "./CouponEnrollTable";
 

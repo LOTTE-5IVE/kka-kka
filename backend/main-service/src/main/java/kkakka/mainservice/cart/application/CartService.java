@@ -18,7 +18,7 @@ import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.domain.MemberCoupon;
 import kkakka.mainservice.coupon.domain.repository.CouponRepository;
 import kkakka.mainservice.coupon.domain.repository.MemberCouponRepository;
-import kkakka.mainservice.member.auth.ui.LoginMember;
+import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.member.member.domain.Member;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.product.domain.Product;
