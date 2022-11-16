@@ -42,8 +42,8 @@ public class ProductOrder {
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
-    private Integer price; //주문가격
-    private Integer quantity; //주문수량
+    private Integer price;
+    private Integer quantity;
     private Integer deleted;
 
     public static ProductOrder create(Product product, int price, int quantity) {
@@ -58,6 +58,10 @@ public class ProductOrder {
             return productOrder;
         }
         throw new OutOfStockException();
+    }
+
+    public void applyCoupon(Coupon coupon) {
+        this.coupon = coupon;
     }
 
     public int getTotalPrice() {

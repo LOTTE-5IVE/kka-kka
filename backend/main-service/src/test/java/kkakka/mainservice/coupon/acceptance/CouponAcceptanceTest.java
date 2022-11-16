@@ -9,10 +9,14 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.ArrayList;
+import java.util.List;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.order.application.dto.ProductOrderDto;
+import kkakka.mainservice.order.ui.dto.OrderRequest;
+import kkakka.mainservice.order.ui.dto.RecipientRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -392,7 +396,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         // given
         String accessToken = 액세스_토큰_가져옴();
         String couponId = 상품_쿠폰_다운로드(accessToken);
-        ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(), 3);
+        ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(), null, 3);
 
         // when
         final ExtractableResponse<Response> response = RestAssured
@@ -406,6 +410,34 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("쿠폰 적용 결제 - 성공")
+    @Test
+    public void orderWithCoupon() {
+        // given
+        String accessToken = 액세스_토큰_가져옴();
+        String couponId = 상품_쿠폰_다운로드(accessToken);
+        ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(), Long.parseLong(couponId), 3);
+        List<ProductOrderDto> productOrderDtoList = new ArrayList<>();
+        productOrderDtoList.add(productOrderDto);
+        OrderRequest orderRequest = new OrderRequest(
+            new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getEmail(),
+            TEST_MEMBER_01.getPhone(), TEST_MEMBER_01.getAddress()), productOrderDtoList);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .filter(document("order-with-coupon"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(orderRequest)
+            .when()
+            .post("/api/orders/")
+            .then().log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @DisplayName("상품 바로주문 쿠폰 적용 취소 - 성공")
@@ -430,7 +462,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
 
     private String 바로주문_쿠폰_적용(String accessToken) {
         String couponId = 상품_쿠폰_다운로드(accessToken);
-        ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(), 3);
+        ProductOrderDto productOrderDto = new ProductOrderDto(PRODUCT_1.getId(), null, 3);
 
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
