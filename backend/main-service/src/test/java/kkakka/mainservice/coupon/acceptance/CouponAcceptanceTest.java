@@ -13,11 +13,11 @@ import io.restassured.response.Response;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.ProviderName;
@@ -120,7 +120,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
 
     @DisplayName("쿠폰 생성 - 실패(권한이 없는 경우)")
     @Test
-    void createCoupon_fail(){
+    void createCoupon_fail() {
         // given
         // when
         final ExtractableResponse<Response> response = RestAssured
@@ -152,7 +152,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     @Test
     void findAllCoupons() {
         tearDown();
-        쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", null, 1000);
+        쿠폰_생성함(null, null, PRODUCT_1.getId(), "COUPON", null, 1000);
         final String adminToken = 관리자_로그인();
 
         final ExtractableResponse<Response> response = RestAssured
@@ -172,7 +172,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     void deleteCouponByAdmin() {
         tearDown();
         final String adminToken = 관리자_로그인();
-        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 12, 2000);
+        String couponId = 쿠폰_생성함(null, null, PRODUCT_1.getId(), "COUPON", 12, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -209,7 +209,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     void downloadableCoupons() {
         tearDown();
         String accessToken = 액세스_토큰_가져옴();
-        쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 15, 2000);
+        쿠폰_생성함(null, null, PRODUCT_1.getId(), "COUPON", 15, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -262,7 +262,8 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         assertThat(response.body()).isNotNull();
     }
 
-    private String 쿠폰_생성함(String grade, Long productId, String priceRule, Integer percentage,
+    private String 쿠폰_생성함(Long categoryId, String grade, Long productId, String priceRule,
+        Integer percentage,
         Integer maxDiscount) {
         if (grade != null) {
             grade = "\"" + grade + "\"";
@@ -295,7 +296,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     void downloadCoupon() {
         tearDown();
         String accessToken = 액세스_토큰_가져옴();
-        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
+        String couponId = 쿠폰_생성함(null, null, PRODUCT_1.getId(), "COUPON", 20, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -325,7 +326,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     }
 
     private String 상품_쿠폰_다운로드(String accessToken) {
-        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
+        String couponId = 쿠폰_생성함(null, null, PRODUCT_1.getId(), "COUPON", 20, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
@@ -338,7 +339,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     }
 
     private String 등급_쿠폰_다운로드(String accessToken) {
-        String couponId = 쿠폰_생성함("BRONZE", null, "GRADE_COUPON", 50, 2000);
+        String couponId = 쿠폰_생성함(null, "BRONZE", null, "GRADE_COUPON", 50, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
@@ -357,7 +358,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         String accessToken = 액세스_토큰_가져옴();
         상품_쿠폰_다운로드(accessToken);
         등급_쿠폰_다운로드(accessToken);
-        쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 14, 2000);
+        쿠폰_생성함(PRODUCT_1.getCategory().getId(), null, null, "COUPON", 14, 200);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -378,7 +379,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         String accessToken = 액세스_토큰_가져옴();
         상품_쿠폰_다운로드(accessToken);
         등급_쿠폰_다운로드(accessToken);
-        쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 14, 2000);
+        쿠폰_생성함(PRODUCT_1.getCategory().getId(), null, null, "COUPON", 14, 2000);
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -432,7 +433,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         String accessToken = 액세스_토큰_가져옴();
         상품_쿠폰_다운로드(accessToken);
         등급_쿠폰_다운로드(accessToken);
-        쿠폰_생성함(null, PRODUCT_2.getId(), "COUPON", 14, 2000);
+        쿠폰_생성함(null, null, PRODUCT_2.getId(), "COUPON", 14, 2000);
 
         // when
         final ExtractableResponse<Response> response = RestAssured
@@ -453,7 +454,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         // given
         tearDown();
         String accessToken = 액세스_토큰_가져옴();
-        String couponId = 쿠폰_생성함(null, PRODUCT_1.getId(), "COUPON", 20, 2000);
+        String couponId = 쿠폰_생성함(null, null, PRODUCT_1.getId(), "COUPON", 20, 2000);
 
         // when
         final ExtractableResponse<Response> response = RestAssured
@@ -534,11 +535,11 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
         request.put("password", TEST_ADMIN.getPassword());
 
         final ExtractableResponse<Response> response = RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .post("/api/admin/login")
-                .then().extract();
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(request)
+            .when()
+            .post("/api/admin/login")
+            .then().extract();
         return response.body().jsonPath().get("adminToken");
     }
 
