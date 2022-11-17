@@ -46,21 +46,6 @@ export default function Cart() {
     });
   };
 
-  const calcMaxDis = (product, coupon) => {
-    if (
-      (product.price * (1 - 0.01 * product.discount) - coupon.discountedPrice) *
-        product.quantity >
-      coupon.maxDiscount
-    ) {
-      return (
-        product.price * (1 - 0.01 * product.discount) * product.quantity -
-        coupon.maxDiscount
-      );
-    } else {
-      return coupon.discountedPrice * product.quantity;
-    }
-  };
-
   const handleSingleCheck = (checked, product) => {
     if (checked) {
       setCheckItems((prev) => [...prev, product]);
@@ -114,6 +99,20 @@ export default function Cart() {
         product.id === id ? { ...product, quantity: quantity } : product,
       ),
     );
+  };
+
+  const chkMinOrd = (product, coupon, quantityNum) => {
+    let quantity = quantityNum || product.quantity - 1;
+
+    if (
+      !coupon ||
+      product.price * (1 - 0.01 * product.discount) * quantity >
+        coupon.minOrderPrice
+    ) {
+      return true;
+    }
+
+    return false;
   };
 
   const getCartItem = async () => {
@@ -373,6 +372,9 @@ export default function Cart() {
                               handleMinus(product.id);
                             }}
                             value="-"
+                            disabled={
+                              !chkMinOrd(product, product.couponDto, null)
+                            }
                           />
 
                           <input
@@ -386,9 +388,17 @@ export default function Cart() {
 
                               if (Number(e.target.value) > product.stock) {
                                 alert("수량 한도를 초과했습니다.");
-                              } else {
+                              } else if (
+                                chkMinOrd(
+                                  product,
+                                  product.couponDto,
+                                  Number(e.target.value),
+                                )
+                              ) {
                                 handleQuantity(product.id, e.target.value);
                                 editCartItem(product.id, e.target.value);
+                              } else {
+                                alert("최소 주문금액 이하입니다.");
                               }
                             }}
                             onBlur={(e) => {
@@ -401,6 +411,7 @@ export default function Cart() {
                             size="1"
                             value={product.quantity}
                             style={{ textAlign: "center" }}
+                            disabled={!chkMinOrd(product, product.couponDto)}
                           />
                           <input
                             className="plusBtn"
@@ -570,6 +581,12 @@ export default function Cart() {
                   background-color: #fff;
                   border: 1px solid #c8c8c8;
                   border-radius: 50%;
+                }
+
+                input[type="button"]:disabled {
+                  background: #dadada;
+                  color: white;
+                  border: none;
                 }
 
                 p {
