@@ -1,6 +1,7 @@
 import {commaMoney} from "../../hooks/commaMoney";
 import Review from "./review/Review";
 import {useEffect, useState} from "react";
+import Reviewed from "./review/Reviewed";
 
 export default function MyProductOrder({ productOrder }) {
   const [reviewed, setReviewed] = useState(productOrder.review != null);
@@ -10,8 +11,6 @@ export default function MyProductOrder({ productOrder }) {
   };
 
   useEffect(() => {}, [reviewed]);
-
-  console.log(productOrder)
 
   return (
     <>
@@ -73,19 +72,28 @@ export default function MyProductOrder({ productOrder }) {
               </div>
             </div>
           </div>
-          <div className="reviewed">
-            {reviewed && <span>후기작성완료</span>}
+        </div>
+        <div className="divider"></div>
+        <div className="wrapper">
+          <div className="d-flex flex-column align-center">
+            {reviewed ?
+                (
+                    <>
+                      <Reviewed
+                          review={productOrder.review}
+                      />
+                    </>
+                )
+                : (
+                  <>
+                    <Review
+                      productOrderId={productOrder.id}
+                      setReviewed={setReviewedState}
+                    />
+                </>
+            )}
           </div>
         </div>
-        {!reviewed && (
-            <>
-            <div className="divider"></div>
-            <Review
-              productOrderId={productOrder.id}
-              setReviewed={setReviewedState}
-            />
-            </>
-        )}
       </div>
       <style jsx>
         {`

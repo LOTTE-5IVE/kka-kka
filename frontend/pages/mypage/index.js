@@ -11,6 +11,8 @@ export default function MyPage() {
   const [tab, setTab] = useState("order");
   const [detail, setDetail] = useState(false);
   const [orderDetail, setOrderDetail] = useState();
+  const [reviewed, setReviewed] = useState(false);
+  const [orderLoaded, setOrderLoaded] = useState(false);
 
   function handleTab(menu) {
     setTab(menu);

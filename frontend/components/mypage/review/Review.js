@@ -50,38 +50,34 @@ export default function Review({ productOrderId, setReviewed }) {
 
   return (
     <>
-      <div className="wrapper">
-        <div className="d-flex flex-column align-center">
-          <span className="detail">상품은 어떠셨나요?</span>
-          <RangeWithIcons
-            labelText="선호도 입력"
-            color={"#ffd151"}
-            max={5}
-            min={0.5}
-            step={0.5}
-            value={rating}
-            setValue={setRatingValue}
-            onStart={onRatingStart}
-            borderColor={"#ffd151"}
-            starWidth={"25px"}
-          />
-          <textarea
-            value={contents}
-            cols="5"
-            rows="3"
-            placeholder="5글자 이상 100글자 이하로 입력해주세요."
-            maxLength={100}
-            onChange={onWriteContents}
-          />
-          <p>
-            <span>({contents.slice(0, 100).length} / 100자)</span>
-          </p>
+      <span className="detail">상품은 어떠셨나요?</span>
+      <RangeWithIcons
+        labelText="선호도 입력"
+        color={"#ffd151"}
+        max={5}
+        min={0.5}
+        step={0.5}
+        value={rating}
+        setValue={setRatingValue}
+        onStart={onRatingStart}
+        borderColor={"#ffd151"}
+        starWidth={"25px"}
+      />
+      <textarea
+        value={contents}
+        cols="5"
+        rows="3"
+        placeholder="5글자 이상 100글자 이하로 입력해주세요."
+        maxLength={100}
+        onChange={onWriteContents}
+      />
+      <p>
+        <span>({contents.slice(0, 100).length} / 100자)</span>
+      </p>
 
-          <span className="submitBtn" onClick={() => handleSubmit()}>
-            상품후기 등록하기
-          </span>
-        </div>
-      </div>
+      <span className="submitBtn" onClick={() => handleSubmit()}>
+        상품후기 등록하기
+      </span>
       <style jsx>
         {`
           .wrapper {
