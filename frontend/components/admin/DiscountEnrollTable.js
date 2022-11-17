@@ -4,6 +4,7 @@ import axios from "axios";
 import Button from "../common/Button/Button";
 import ApplyCategory from "./ApplyCategory";
 import { UserContext } from "../../context/AdminTokenContext";
+import { isNumber } from "../../hooks/isNumber";
 
 export default function DiscountEnrollTable() {
   const [target, setTarget] = useState("카테고리");
@@ -56,9 +57,6 @@ export default function DiscountEnrollTable() {
       .then((res) => {
         alert("등록완료!");
         initStates();
-      })
-      .catch((err) => {
-        alert("등록실패!");
       });
   };
 
@@ -84,9 +82,6 @@ export default function DiscountEnrollTable() {
       .then((res) => {
         alert("등록완료!");
         initStates();
-      })
-      .catch((err) => {
-        alert("등록실패!");
       });
   };
 

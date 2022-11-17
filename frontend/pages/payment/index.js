@@ -16,6 +16,7 @@ import { isNumber } from "../../hooks/isNumber";
 import { NGray } from "../../typings/NormalColor";
 import { PaymentContext } from "../../context/PaymentContext";
 import Image from "next/image";
+import { CartCntContext } from "../../context/CartCntContext";
 
 export default function Payment() {
   const [zipcode, setZipcode] = useState("");
@@ -40,6 +41,7 @@ export default function Payment() {
   const [modalVisibleId, setModalVisibleId] = useState("");
   const { payment, setPayment } = useContext(PaymentContext);
   const { token, setToken } = useContext(TokenContext);
+  const { cartCnt, setCartCnt } = useContext(CartCntContext);
 
   const router = useRouter();
 
@@ -119,6 +121,7 @@ export default function Payment() {
     )
       .then((res) => {
         alert("결제 되었습니다.");
+        if (arr[0].cartItemId) setCartCnt(cartCnt - arr.length);
       })
       .catch(function (error) {
         alert("결제 실패했습니다.");
@@ -176,6 +179,7 @@ export default function Payment() {
   }, [check]);
 
   useEffect(() => {
+    console.log("payment: ", payment);
     if (token !== "") {
       setOrderItems(payment);
     }
@@ -267,7 +271,7 @@ export default function Payment() {
                             key={product.cartItemId}
                             type="text"
                             size="15"
-                            defaultValue={product.couponDto.name}
+                            value={product.couponDto.name}
                             readOnly
                             style={{ fontWeight: "bold" }}
                           />
