@@ -1,11 +1,29 @@
 import { commaMoney } from "../../hooks/commaMoney";
 import MyProductOrder from "./MyProductOrder";
 
-export default function MyOrderDetail({ orderDetail }) {
+export default function MyOrderDetail({ orderDetail, handleDetail }) {
+
+  const totalDiscountPrice = () => {
+    return orderDetail.productOrders.reduce((prev, curr) => {
+          let discount = (curr.price * (0.01 * curr.discount)) * curr.quantity;
+          if (curr.coupon) {
+            discount += curr.coupon.discountedPrice;
+          }
+          return prev + discount
+        }, 0
+    )
+  }
+
   return (
     <>
       <div>
         <div className="wrapper">
+          <button
+            className="back-btn"
+            onClick={() => {
+              handleDetail(false);
+            }}
+          >← 전체 주문내역으로 돌아가기</button>
           <div className="myorder">
             <div className="myorderTitle">주문내역</div>
             {orderDetail && (
@@ -16,10 +34,22 @@ export default function MyOrderDetail({ orderDetail }) {
                       <span className="title-label mr-2">주문번호</span>
                       <span className="title-id">{orderDetail.id}</span>
                     </div>
-                    <div>
-                      <span className="title-content">
-                        총 결제금액: <b>{commaMoney(orderDetail.totalPrice)}</b>
+                    <div className="title-price-info">
+                      <span className="title-content mr-2">
+                        총 결제 금액: <b>{commaMoney(
+                            orderDetail.totalPrice - totalDiscountPrice()
+                      ) || 0}</b>
                         원
+                      </span>
+                      <span 
+                          className="title-content" 
+                          style={{ 
+                            fontSize: "0.9rem",
+                            color: "#aaa"
+                          }}
+                      >
+                          (총 금액: {commaMoney(orderDetail.totalPrice) || 0} 원,
+                        할인금액: {commaMoney(totalDiscountPrice()) || 0} 원)
                       </span>
                       <span className="title-divider">|</span>
                       <span className="title-content">
@@ -157,7 +187,17 @@ export default function MyOrderDetail({ orderDetail }) {
 
             .title-divider {
               color: #3e3e3e;
-              margin: 0 1rem 0 1rem;
+              margin: 0 1.3rem 0 1.3rem;
+            }
+            
+            .back-btn {
+              border: 1px solid #cfcfcf;
+              background-color: white;
+              color: #5e5e5e;
+              font-size: 0.8rem;
+              padding: 0.5rem;
+              cursor: pointer;
+              margin: 1rem 0 0.5rem 0;
             }
           }
 
@@ -248,8 +288,22 @@ export default function MyOrderDetail({ orderDetail }) {
             }
 
             .title-divider {
-              color: #3e3e3e;
-              margin: 0 1rem 0 1rem;
+              display: none;
+            }
+            
+            .back-btn {
+              border: 1px solid #cfcfcf;
+              background-color: white;
+              color: #5e5e5e;
+              font-size: 0.8rem;
+              padding: 0.5rem;
+              cursor: pointer;
+              margin: 1rem 0 0.5rem 0;
+            }
+            
+            .title-price-info {
+              display: flex;
+              flex-direction: column;
             }
           }
 

@@ -13,6 +13,7 @@ public class ProductOrderResponse {
 
     private Long id;
     private Integer price;
+    private Integer discount;
     private Integer quantity;
     private Integer deleted;
     @JsonProperty("coupon")
@@ -25,12 +26,13 @@ public class ProductOrderResponse {
     public static ProductOrderResponse create(
         Long id,
         Integer price,
+        Integer discount,
         Integer quantity,
         Integer deleted,
         CouponResponse couponResponse,
         ProductResponse productResponse,
         ReviewSimpleResponse reviewResponse) {
-        return new ProductOrderResponse(id, price, quantity, deleted, couponResponse,
+        return new ProductOrderResponse(id, price, discount, quantity, deleted, couponResponse,
             productResponse, reviewResponse);
     }
 }

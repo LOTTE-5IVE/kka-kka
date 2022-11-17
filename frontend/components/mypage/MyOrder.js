@@ -38,6 +38,17 @@ export default function MyOrder({ handleDetail, setOrderDetail }) {
     );
   };
 
+  const totalPriceDiscountApplied = (order) => {
+    return order.totalPrice - order.productOrders.reduce((prev, curr) => {
+          let discount = (curr.price * (0.01 * curr.discount)) * curr.quantity;
+          if (curr.coupon) {
+            discount += curr.coupon.discountedPrice;
+          }
+          return prev + discount
+        }, 0
+    )
+  }
+
   useEffect(() => {
     setToken(getToken());
     if (token !== "") {
@@ -73,7 +84,7 @@ export default function MyOrder({ handleDetail, setOrderDetail }) {
                       </div>
                       <div>
                         <span className="title-content">
-                          총 결제금액: <b>{commaMoney(order.totalPrice)}</b>원
+                          총 결제금액: <b>{commaMoney(totalPriceDiscountApplied(order))}</b>원
                         </span>
                         <span className="title-divider">|</span>
                         <span className="title-content">{order.orderedAt}</span>

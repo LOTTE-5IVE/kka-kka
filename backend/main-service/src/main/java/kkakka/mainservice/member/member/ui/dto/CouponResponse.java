@@ -16,22 +16,13 @@ public class CouponResponse {
 
     private Long id;
     private String name;
-    private PriceRule priceRule;
-
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private LocalDateTime registeredAt;
-
-    private Integer percentage;
-    private Integer maxDiscount;
+    private Integer discountedPrice;
 
     public static CouponResponse create(
         Long id,
         String name,
-        PriceRule priceRule,
-        LocalDateTime registeredAt,
-        Integer percentage,
-        Integer maxDiscount
+        Integer discountedPrice
     ) {
-        return new CouponResponse(id, name, priceRule, registeredAt, percentage, maxDiscount);
+        return new CouponResponse(id, name, discountedPrice);
     }
 }

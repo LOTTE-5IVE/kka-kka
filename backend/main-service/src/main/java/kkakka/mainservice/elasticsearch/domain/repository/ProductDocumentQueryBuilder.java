@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import kkakka.mainservice.elasticsearch.application.dto.SearchParamDto;
 import lombok.NoArgsConstructor;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.index.query.TermsQueryBuilder;
@@ -21,18 +22,19 @@ public class ProductDocumentQueryBuilder {
 
     public Query searchProduct(SearchParamDto searchParamDto, Pageable pageable) {
         NativeSearchQueryBuilder query = new NativeSearchQueryBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        query.withQuery(QueryBuilders.boolQuery()
+        query.withQuery(boolQueryBuilder
                 .must(QueryBuilders.queryStringQuery(searchParamDto.getKeyword())))
             .withFilter(selectFilter("categoryid", searchParamDto.getCatecodes()));
 
         if (searchParamDto.isPrice()) {
-            query.withQuery(QueryBuilders.boolQuery()
+            query.withQuery(boolQueryBuilder
                 .filter(rangeFilter("price", searchParamDto.getMinPrice(),
                     searchParamDto.getMaxPrice())));
         }
         if (searchParamDto.isCalorie()) {
-            query.withQuery(QueryBuilders.boolQuery()
+            query.withQuery(boolQueryBuilder
                 .filter(rangeFilter("calorie", searchParamDto.getMinCalorie(),
                     searchParamDto.getMaxCalorie())));
         }

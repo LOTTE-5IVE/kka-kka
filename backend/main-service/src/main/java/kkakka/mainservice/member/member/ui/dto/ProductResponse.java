@@ -12,12 +12,9 @@ public class ProductResponse {
 
     private Long id;
     private String name;
-    private Integer price;
     private String imageUrl;
-    private Integer discount;
 
-    public static ProductResponse create(Long id, String name, Integer price, String imageUrl,
-            Integer discount) {
-        return new ProductResponse(id, name, price, imageUrl, discount);
+    public static ProductResponse create(Long id, String name, String imageUrl) {
+        return new ProductResponse(id, name, imageUrl);
     }
 }
