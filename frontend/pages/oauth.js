@@ -36,7 +36,6 @@ export default function Oauth() {
           setLoginFlag(true);
           const obj = {
             value: res.data.accessToken,
-            expire: new Date().getTime() + 1000 * 60 * 60,
           };
           localStorage.setItem("accessToken", JSON.stringify(obj));
         })

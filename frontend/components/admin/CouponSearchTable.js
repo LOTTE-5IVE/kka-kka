@@ -34,7 +34,7 @@ export default function CouponSearchTable() {
 
   const deleteCoupon = async (id) => {
     await axios
-      .put(`/api/coupons/${id}`, {
+      .put(`/api/coupons/${id}`, null, {
         headers: {
           Authorization: `Bearer ${userData.adminToken}`,
         },

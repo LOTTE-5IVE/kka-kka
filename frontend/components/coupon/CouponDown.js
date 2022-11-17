@@ -10,7 +10,7 @@ import axios from "axios";
 
 export function CouponDown({ handleModal, product }) {
   const [token, setToken] = useState();
-  const [coupons, setCoupons] = useState();
+  const [coupons, setCoupons] = useState([]);
 
   const getProductMemberCoupon = async () => {
     await GetHApi(`/api/coupons/me/products/${product.id}`, token).then(
