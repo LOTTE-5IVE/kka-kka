@@ -82,6 +82,11 @@ export default function ProductDetail({ product, reviewCount }) {
         confirmButtonText: "장바구니 담기",
         cancelButtonText: "취소",
       }).then((result) => {
+        if (cartCnt >= 15) {
+          alert("장바구니 최대 상품 종류는 15개까지입니다.");
+          return;
+        }
+
         if (result.isConfirmed) {
           PostHApi(
             "/api/carts",
