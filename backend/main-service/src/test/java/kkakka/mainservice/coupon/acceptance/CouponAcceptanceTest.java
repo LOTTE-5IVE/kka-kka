@@ -17,12 +17,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.List;
 import kkakka.mainservice.DocumentConfiguration;
 import kkakka.mainservice.member.auth.ui.dto.SocialProviderCodeRequest;
 import kkakka.mainservice.member.member.domain.ProviderName;
 import kkakka.mainservice.order.application.dto.ProductOrderDto;
+import kkakka.mainservice.order.ui.dto.OrderRequest;
+import kkakka.mainservice.order.ui.dto.RecipientRequest;
 import org.assertj.core.api.Assertions;
 import org.hibernate.Session;
 import org.junit.jupiter.api.AfterEach;
@@ -224,7 +225,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
 
     @DisplayName("회원별 사용 가능한 쿠폰 조회 - 성공")
     @Test
-    void usableCoupons() {
+    void showUsableCoupons() {
         tearDown();
         String accessToken = 액세스_토큰_가져옴();
         상품_쿠폰_다운로드(accessToken);
@@ -243,11 +244,11 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
 
     @DisplayName("회원별 사용한 쿠폰 조회 - 성공")
     @Test
-    void usedCoupons() {
+    void showUsedCoupons() {
         tearDown();
         String accessToken = 액세스_토큰_가져옴();
         String couponId = 상품_쿠폰_다운로드(accessToken);
-        쿠폰_사용(couponId, accessToken);
+        주문_요청함(accessToken, PRODUCT_1.getId(), Long.parseLong(couponId));
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
@@ -259,15 +260,6 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.body()).isNotNull();
-    }
-
-    private void 쿠폰_사용(String couponId, String accessToken) {
-        final ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
-            .header("Authorization", "Bearer " + accessToken)
-            .when()
-            .post("/api/coupons/use/" + couponId)
-            .then().log().all().extract();
     }
 
     private String 쿠폰_생성함(String grade, Long productId, String priceRule, Integer percentage,
@@ -290,7 +282,7 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
                 + "  \"expiredAt\": \"2025-01-01 00:00:00\",\n"
                 + "  \"percentage\": " + percentage + ",\n"
                 + "  \"maxDiscount\": " + maxDiscount + ",\n"
-                + "  \"minOrderPrice\": 20000\n"
+                + "  \"minOrderPrice\": 200\n"
                 + "}")
             .when()
             .post("/api/coupons")
@@ -548,5 +540,23 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
                 .post("/api/admin/login")
                 .then().extract();
         return response.body().jsonPath().get("adminToken");
+    }
+
+    private void 주문_요청함(String accessToken, Long productId, Long couponId) {
+        OrderRequest orderRequest = new OrderRequest(
+            new RecipientRequest(TEST_MEMBER_01.getName(), TEST_MEMBER_01.getEmail(),
+                TEST_MEMBER_01.getPhone(), TEST_MEMBER_01.getAddress()),
+            List.of(new ProductOrderDto(productId, couponId, 1))
+        );
+
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(orderRequest)
+            .when()
+            .post("/api/orders")
+            .then().log().all()
+            .extract();
     }
 }

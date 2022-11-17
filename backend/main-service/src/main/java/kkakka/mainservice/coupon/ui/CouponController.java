@@ -37,8 +37,8 @@ public class CouponController {
     @AdminOnly
     @PostMapping
     public ResponseEntity<Void> createCoupon(
-            @RequestBody CouponRequestDto couponRequestDto,
-            @AuthenticationPrincipal LoginMember loginMember
+        @RequestBody CouponRequestDto couponRequestDto,
+        @AuthenticationPrincipal LoginMember loginMember
     ) {
         Long couponId = couponService.createCoupon(couponRequestDto);
         return ResponseEntity.created(URI.create(couponId.toString())).build();
@@ -48,8 +48,8 @@ public class CouponController {
     @AdminOnly
     @PutMapping("/{couponId}")
     public ResponseEntity<Void> deleteCouponByAdmin(
-            @PathVariable Long couponId,
-            @AuthenticationPrincipal LoginMember loginMember
+        @PathVariable Long couponId,
+        @AuthenticationPrincipal LoginMember loginMember
     ) {
         couponService.deleteCouponByCouponId(couponId);
         return ResponseEntity.ok().build();
@@ -59,7 +59,7 @@ public class CouponController {
     @AdminOnly
     @GetMapping
     public ResponseEntity<List<CouponResponseDto>> findAllCoupons(
-            @AuthenticationPrincipal LoginMember loginMember
+        @AuthenticationPrincipal LoginMember loginMember
     ) {
         List<CouponResponseDto> couponResponseDto = couponService.showAllCouponsNotDeleted();
         return ResponseEntity.status(HttpStatus.OK).body(couponResponseDto);
@@ -112,8 +112,8 @@ public class CouponController {
     @AdminOnly
     @PostMapping("/discount")
     public ResponseEntity<Long> createDiscount(
-            @RequestBody DiscountRequestDto discountRequestDto,
-            @AuthenticationPrincipal LoginMember loginMember
+        @RequestBody DiscountRequestDto discountRequestDto,
+        @AuthenticationPrincipal LoginMember loginMember
     ) {
         Long discountId = discountService.createDiscount(discountRequestDto);
         return ResponseEntity.created(URI.create(discountId.toString())).build();
@@ -123,8 +123,8 @@ public class CouponController {
     @AdminOnly
     @PutMapping("/discount/{discountId}")
     public ResponseEntity<Void> deleteDiscount(
-            @PathVariable Long discountId,
-            @AuthenticationPrincipal LoginMember loginMember
+        @PathVariable Long discountId,
+        @AuthenticationPrincipal LoginMember loginMember
     ) {
         discountService.deleteDiscount(discountId);
         return ResponseEntity.ok().build();
@@ -134,7 +134,7 @@ public class CouponController {
     @AdminOnly
     @GetMapping("/discount")
     public ResponseEntity<List<DiscountResponseDto>> showAllDiscounts(
-            @AuthenticationPrincipal LoginMember loginMember
+        @AuthenticationPrincipal LoginMember loginMember
     ) {
         List<DiscountResponseDto> discounts = discountService.showAllDiscountsNotDeleted();
         return ResponseEntity.status(HttpStatus.OK).body(discounts);
@@ -157,15 +157,6 @@ public class CouponController {
         List<CouponProductDto> couponResponseDtos = couponService.showCouponsByProductId(
             productId);
         return ResponseEntity.status(HttpStatus.OK).body(couponResponseDtos);
-    }
-
-    /* 쿠폰 사용 */
-    @MemberOnly
-    @PostMapping("/use/{couponId}")
-    public ResponseEntity<Void> useCoupon(@PathVariable Long couponId,
-        @AuthenticationPrincipal LoginMember loginMember) {
-        couponService.useCouponByMember(couponId, loginMember.getId());
-        return ResponseEntity.ok().build();
     }
 
     /* 사용자의 상품 쿠폰 다운로드 */

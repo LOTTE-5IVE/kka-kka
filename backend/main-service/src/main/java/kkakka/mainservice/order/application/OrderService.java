@@ -95,6 +95,8 @@ public class OrderService {
                     throw new OutOfMinOrderPriceException();
                 }
                 productOrder.applyCoupon(coupon);
+                MemberCoupon memberCoupon = memberCouponRepository.findAllByCouponIdAndMemberId(couponId, memberId);
+                memberCoupon.useCoupon();
             }
             productOrders.add(productOrder);
             orderTotalPrice += productOrder.getTotalPrice();
