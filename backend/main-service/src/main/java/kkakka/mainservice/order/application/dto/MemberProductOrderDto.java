@@ -3,6 +3,7 @@ package kkakka.mainservice.order.application.dto;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import kkakka.mainservice.coupon.domain.Coupon;
 import kkakka.mainservice.coupon.ui.dto.CouponResponseDto;
 import kkakka.mainservice.member.member.ui.dto.CouponResponse;
 import kkakka.mainservice.member.member.ui.dto.ProductOrderResponse;
@@ -24,78 +25,37 @@ public class MemberProductOrderDto {
 
     private Long id;
     private Integer price;
+    private Integer discount;
     private Integer quantity;
     private Integer deleted;
     @Nullable
-    private CouponResponseDto couponDto;
+    private MemberCouponDto couponDto;
     private MemberProductDto productDto;
     @Nullable
     private MemberReviewDto reviewDto;
 
-    public static MemberProductOrderDto create(ProductOrder productOrder, Product product,
-            Optional<Review> optionalReview) {
-        if (optionalReview.isEmpty() && Objects.isNull(productOrder.getCoupon())) {
-            return new MemberProductOrderDto(
-                productOrder.getId(),
-                productOrder.getPrice(),
-                productOrder.getQuantity(),
-                productOrder.getDeleted(),
-                null,
-                new MemberProductDto(
-                    product.getId(),
-                    product.getName(),
-                    product.getPrice(),
-                    product.getImageUrl(),
-                    product.getDiscount()
-                ),
-                null
-            );
-        } else if (optionalReview.isEmpty()) {
-            return new MemberProductOrderDto(
-                productOrder.getId(),
-                productOrder.getPrice(),
-                productOrder.getQuantity(),
-                productOrder.getDeleted(),
-                CouponResponseDto.create(productOrder.getCoupon()),
-                new MemberProductDto(
-                    product.getId(),
-                    product.getName(),
-                    product.getPrice(),
-                    product.getImageUrl(),
-                    product.getDiscount()
-                ), null);
-        } else if (Objects.isNull(productOrder.getCoupon())) {
-            Review review = optionalReview.get();
-            return new MemberProductOrderDto(
-                productOrder.getId(),
-                productOrder.getPrice(),
-                productOrder.getQuantity(),
-                productOrder.getDeleted(),
-                null,
-                new MemberProductDto(
-                    product.getId(),
-                    product.getName(),
-                    product.getPrice(),
-                    product.getImageUrl(),
-                    product.getDiscount()
-                ),
-                new MemberReviewDto(
-                review.getId(), review.getContents(), review.getRating(), review.getCreatedAt()
-            ));
-        }
-        Review review = optionalReview.get();
+    public static MemberProductOrderDto create(
+            ProductOrder productOrder,
+            Product product,
+            Review review,
+            Coupon coupon,
+            int discountedPrice
+    ) {
         return new MemberProductOrderDto(
                 productOrder.getId(),
                 productOrder.getPrice(),
+                productOrder.getDiscount(),
                 productOrder.getQuantity(),
                 productOrder.getDeleted(),
-                CouponResponseDto.create(productOrder.getCoupon()),
+                new MemberCouponDto(
+                        coupon.getId(),
+                        coupon.getName(),
+                        discountedPrice
+                ),
                 new MemberProductDto(
                         product.getId(),
                         product.getName(),
-                        product.getPrice(),
-                        product.getImageUrl(),
-                        product.getDiscount()
+                        product.getImageUrl()
                 ),
                 new MemberReviewDto(
                         review.getId(), review.getContents(), review.getRating(), review.getCreatedAt()
@@ -103,36 +63,104 @@ public class MemberProductOrderDto {
         );
     }
 
+    public static MemberProductOrderDto create(
+            ProductOrder productOrder,
+            Product product,
+            Review review
+    ) {
+        return new MemberProductOrderDto(
+                productOrder.getId(),
+                productOrder.getPrice(),
+                productOrder.getDiscount(),
+                productOrder.getQuantity(),
+                productOrder.getDeleted(),
+                null,
+                new MemberProductDto(
+                        product.getId(),
+                        product.getName(),
+                        product.getImageUrl()
+                ),
+                new MemberReviewDto(
+                        review.getId(), review.getContents(), review.getRating(), review.getCreatedAt()
+                ));
+    }
+
+    public static MemberProductOrderDto create (
+            ProductOrder productOrder,
+            Product product,
+            Coupon coupon,
+            int discountedPrice
+    ) {
+        return new MemberProductOrderDto(
+                productOrder.getId(),
+                productOrder.getPrice(),
+                productOrder.getDiscount(),
+                productOrder.getQuantity(),
+                productOrder.getDeleted(),
+                new MemberCouponDto(
+                        coupon.getId(),
+                        coupon.getName(),
+                        discountedPrice
+                ),
+                new MemberProductDto(
+                        product.getId(),
+                        product.getName(),
+                        product.getImageUrl()
+                ),
+                null
+        );
+    }
+
+    public static MemberProductOrderDto create(
+            ProductOrder productOrder,
+            Product product
+    ) {
+        return new MemberProductOrderDto(
+                productOrder.getId(),
+                productOrder.getPrice(),
+                productOrder.getDiscount(),
+                productOrder.getQuantity(),
+                productOrder.getDeleted(),
+                null,
+                new MemberProductDto(
+                        product.getId(),
+                        product.getName(),
+                        product.getImageUrl()
+                ),
+                null
+        );
+    }
+
     public ProductOrderResponse toResponse() {
-        if (Optional.ofNullable(reviewDto).isEmpty() && Optional.ofNullable(couponDto).isEmpty()) {
+        if (reviewDto == null && couponDto == null) {
             return ProductOrderResponse.create(
                     this.id,
                     this.price,
+                    this.discount,
                     this.quantity,
                     this.deleted,
                     null,
                     ProductResponse.create(
                             this.productDto.getId(),
                             this.productDto.getName(),
-                            this.productDto.getPrice(),
-                            this.productDto.imageUrl,
-                            this.productDto.getDiscount()
+                            this.productDto.imageUrl
                     ),
                     null
             );
-        } else if(Optional.ofNullable(couponDto).isEmpty()) {
+        }
+
+        if (couponDto == null) {
             return ProductOrderResponse.create(
                 this.id,
                 this.price,
+                this.discount,
                 this.quantity,
                 this.deleted,
                 null,
                 ProductResponse.create(
                     this.productDto.getId(),
                     this.productDto.getName(),
-                    this.productDto.getPrice(),
-                    this.productDto.imageUrl,
-                    this.productDto.getDiscount()
+                    this.productDto.imageUrl
                 ),
                 ReviewSimpleResponse.create(
                     this.reviewDto.getId(),
@@ -141,49 +169,44 @@ public class MemberProductOrderDto {
                     this.reviewDto.createdAt
                 )
             );
-        } else if(Optional.ofNullable(reviewDto).isEmpty()) {
+        }
+
+        if (reviewDto == null) {
             return ProductOrderResponse.create(
                 this.id,
                 this.price,
+                this.discount,
                 this.quantity,
                 this.deleted,
                 CouponResponse.create(
                     this.couponDto.getId(),
                     this.couponDto.getName(),
-                    this.couponDto.getPriceRule(),
-                    this.couponDto.getRegisteredAt(),
-                    this.couponDto.getPercentage(),
-                    this.couponDto.getMaxDiscount()
+                    this.couponDto.getDiscountedPrice()
                 ),
                 ProductResponse.create(
                     this.productDto.getId(),
                     this.productDto.getName(),
-                    this.productDto.getPrice(),
-                    this.productDto.imageUrl,
-                    this.productDto.getDiscount()
+                    this.productDto.imageUrl
                 ),
                 null
             );
         }
+
         return ProductOrderResponse.create(
                 this.id,
                 this.price,
+                this.discount,
                 this.quantity,
                 this.deleted,
                 CouponResponse.create(
                     this.couponDto.getId(),
                     this.couponDto.getName(),
-                    this.couponDto.getPriceRule(),
-                    this.couponDto.getRegisteredAt(),
-                    this.couponDto.getPercentage(),
-                    this.couponDto.getMaxDiscount()
+                    this.couponDto.getDiscountedPrice()
                 ),
                 ProductResponse.create(
                     this.productDto.getId(),
                     this.productDto.getName(),
-                    this.productDto.getPrice(),
-                    this.productDto.imageUrl,
-                    this.productDto.getDiscount()
+                    this.productDto.imageUrl
                 ),
                 ReviewSimpleResponse.create(
                     this.reviewDto.getId(),
@@ -200,9 +223,7 @@ public class MemberProductOrderDto {
 
         private Long id;
         private String name;
-        private Integer price;
         private String imageUrl;
-        private Integer discount;
     }
 
     @Getter
@@ -213,5 +234,14 @@ public class MemberProductOrderDto {
         private String contents;
         private Double rating;
         private LocalDateTime createdAt;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private static class MemberCouponDto {
+
+        private Long id;
+        private String name;
+        private Integer discountedPrice;
     }
 }

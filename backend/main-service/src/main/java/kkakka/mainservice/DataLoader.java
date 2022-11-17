@@ -64,13 +64,13 @@ public class DataLoader {
     private void saveOrderAndReview() {
         final List<ProductOrder> productOrders = productOrderRepository.saveAll(
                 Arrays.asList(
-                        ProductOrder.create(testProduct, testProduct.getPrice(), 1),
-                        ProductOrder.create(testProduct, testProduct.getPrice(), 1),
-                        ProductOrder.create(testProduct, testProduct.getPrice(), 1),
-                        ProductOrder.create(testProduct, testProduct.getPrice(), 1),
-                        ProductOrder.create(testProduct, testProduct.getPrice(), 1),
-                        ProductOrder.create(testProduct, testProduct.getPrice(), 1),
-                        ProductOrder.create(testProduct, testProduct.getPrice(), 1)
+                        ProductOrder.create(testProduct, testProduct.getPrice(), testProduct.getDiscount(), 1),
+                        ProductOrder.create(testProduct, testProduct.getPrice(), testProduct.getDiscount(), 1),
+                        ProductOrder.create(testProduct, testProduct.getPrice(), testProduct.getDiscount(), 1),
+                        ProductOrder.create(testProduct, testProduct.getPrice(), testProduct.getDiscount(), 1),
+                        ProductOrder.create(testProduct, testProduct.getPrice(), testProduct.getDiscount(), 1),
+                        ProductOrder.create(testProduct, testProduct.getPrice(), testProduct.getDiscount(), 1),
+                        ProductOrder.create(testProduct, testProduct.getPrice(), testProduct.getDiscount(), 1)
                 ));
 
         Recipient testRecipient = Recipient.from(RecipientDto.create(

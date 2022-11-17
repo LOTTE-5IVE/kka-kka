@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.common.exception.NotFoundCouponException;
 import kkakka.mainservice.common.exception.NotFoundMemberException;
@@ -51,6 +52,20 @@ public class OrderService {
     private final CouponRepository couponRepository;
     private final MemberCouponRepository memberCouponRepository;
 
+    final BiFunction<Integer, Integer, Integer> calculateStaticPrice = new BiFunction<Integer, Integer, Integer>() {
+        @Override
+        public Integer apply(Integer productPrice, Integer couponDiscount) {
+            return productPrice - couponDiscount;
+        }
+    };
+
+    final BiFunction<Integer, Integer, Integer> calculatePercentage = new BiFunction<Integer, Integer, Integer>() {
+        @Override
+        public Integer apply(Integer productPrice, Integer couponPercentage) {
+            return (int) Math.ceil(productPrice * (couponPercentage * 0.01));
+        }
+    };
+
     @Transactional
     public Long order(OrderDto orderDto) {
         Long memberId = orderDto.getMemberId();
@@ -67,8 +82,13 @@ public class OrderService {
             Integer quantity = productOrderDto.getQuantity();
 
             Product product = productRepository.findById(productId)
-                .orElseThrow(NotFoundProductException::new);
-            ProductOrder productOrder = ProductOrder.create(product, product.getPrice(), quantity);
+                    .orElseThrow(NotFoundProductException::new);
+            ProductOrder productOrder = ProductOrder.create(
+                    product,
+                    product.getPrice(),
+                    product.getDiscount(),
+                    quantity
+            );
             if (!Objects.isNull(couponId)) {
                 Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotFoundCouponException::new);
                 if (product.getDiscountPrice() * quantity < coupon.getMinOrderPrice()) {
@@ -156,7 +176,46 @@ public class OrderService {
         ProductOrder productOrder) {
         final Optional<Review> review = reviewRepository.findByMemberIdAndProductOrderId(
             memberId, productOrder.getId());
-        return MemberProductOrderDto.create(productOrder, productOrder.getProduct(), review);
+
+        if (review.isEmpty() && !productOrder.hasCoupon()) {
+            return MemberProductOrderDto.create(productOrder, productOrder.getProduct());
+        }
+
+        if (review.isEmpty() && productOrder.hasCoupon()) {
+            Coupon coupon = productOrder.getCoupon();
+            int couponDiscountPrice = calculateCouponDiscountPrice(productOrder, coupon);
+            return MemberProductOrderDto.create(productOrder, productOrder.getProduct(),
+                    coupon, couponDiscountPrice
+            );
+        }
+
+        if (review.isPresent() && !productOrder.hasCoupon()) {
+            return MemberProductOrderDto.create(productOrder, productOrder.getProduct(),
+                    review.get()
+            );
+        }
+
+        // review.isPresent() && productOrder.hasCoupon()
+        Coupon coupon = productOrder.getCoupon();
+        int couponDiscountPrice = calculateCouponDiscountPrice(productOrder, coupon);
+        return MemberProductOrderDto.create(productOrder, productOrder.getProduct(),
+                review.get(),
+                coupon, couponDiscountPrice
+        );
+    }
+
+    private int calculateCouponDiscountPrice(ProductOrder productOrder, Coupon coupon) {
+        final int discountedPrice = productOrder.getPrice() - (int) Math.ceil(
+                productOrder.getPrice() * (0.01 * productOrder.getDiscount()));
+
+        if (coupon.getPercentage() != null) {
+            int calculatedPercentValue = calculatePercentage
+                    .apply(discountedPrice, coupon.getPercentage());
+            int calculatedStaticValue = calculateStaticPrice
+                    .apply(discountedPrice, coupon.getMaxDiscount());
+            return Math.max(calculatedPercentValue, calculatedStaticValue);
+        }
+        return calculateStaticPrice.apply(discountedPrice, coupon.getMaxDiscount());
     }
 
     @Transactional

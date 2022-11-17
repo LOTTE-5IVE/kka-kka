@@ -75,6 +75,7 @@ public class ReviewRepositoryTest extends TestContext {
                 ProductOrder.create(
                         product,
                         product.getPrice(),
+                        product.getDiscount(),
                         1
                 )
         );
@@ -124,6 +125,7 @@ public class ReviewRepositoryTest extends TestContext {
                 ProductOrder.create(
                         product,
                         product.getPrice(),
+                        product.getDiscount(),
                         1
                 )
         );

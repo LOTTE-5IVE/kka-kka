@@ -112,19 +112,19 @@ public class TestDataLoader implements CommandLineRunner {
         ALL_PRODUCTS = List.of(PRODUCT_1, PRODUCT_2, PRODUCT_3, PRODUCT_4, PRODUCT_5);
 
         PRODUCT_ORDER_1 = productOrderRepository.save(
-                ProductOrder.create(PRODUCT_1, PRODUCT_1.getPrice(), 1)
+                ProductOrder.create(PRODUCT_1, PRODUCT_1.getPrice(), PRODUCT_1.getDiscount(), 1)
         );
         PRODUCT_ORDER_2 = productOrderRepository.save(
-                ProductOrder.create(PRODUCT_1, PRODUCT_1.getPrice(), 1)
+                ProductOrder.create(PRODUCT_1, PRODUCT_1.getPrice(), PRODUCT_1.getDiscount(), 1)
         );
         PRODUCT_ORDER_3 = productOrderRepository.save(
-                ProductOrder.create(PRODUCT_1, PRODUCT_1.getPrice(), 1)
+                ProductOrder.create(PRODUCT_1, PRODUCT_1.getPrice(), PRODUCT_1.getDiscount(), 1)
         );
         PRODUCT_ORDER_4 = productOrderRepository.save(
-                ProductOrder.create(PRODUCT_1, PRODUCT_1.getPrice(), 1)
+                ProductOrder.create(PRODUCT_1, PRODUCT_1.getPrice(), PRODUCT_1.getDiscount(), 1)
         );
         PRODUCT_ORDER_5 = productOrderRepository.save(
-                ProductOrder.create(PRODUCT_1, PRODUCT_1.getPrice(), 1)
+                ProductOrder.create(PRODUCT_1, PRODUCT_1.getPrice(), PRODUCT_1.getDiscount(), 1)
         );
 
         final List<ProductOrder> productOrders = List.of(PRODUCT_ORDER_1, PRODUCT_ORDER_2,
