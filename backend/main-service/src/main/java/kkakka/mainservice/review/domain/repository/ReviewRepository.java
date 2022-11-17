@@ -37,4 +37,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
                     + "order by r.rating desc")
     List<Review> findTopRatingReviewByMemberId(@Param(value = "memberId") Long memberId,
             Pageable pageable);
+
+    Optional<Review> findByIdAndMemberId(Long id, Long memberId);
 }

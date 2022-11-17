@@ -215,7 +215,7 @@ public class OrderService {
                     .apply(discountedPrice, coupon.getPercentage());
             int calculatedStaticValue = calculateStaticPrice
                     .apply(discountedPrice, coupon.getMaxDiscount());
-            return Math.max(calculatedPercentValue, calculatedStaticValue);
+            return Math.min(calculatedPercentValue, calculatedStaticValue);
         }
         return calculateStaticPrice.apply(discountedPrice, coupon.getMaxDiscount());
     }

@@ -1,17 +1,31 @@
 import {commaMoney} from "../../hooks/commaMoney";
 import Review from "./review/Review";
 import {useEffect, useState} from "react";
+import Reviewed from "./review/Reviewed";
+import {GetHApi} from "../../apis/Apis";
+import {getToken} from "../../hooks/getToken";
 
 export default function MyProductOrder({ productOrder }) {
-  const [reviewed, setReviewed] = useState(productOrder.review != null);
+  const [token, setToken] = useState("");
+  const [reviewed, setReviewed] = useState(productOrder.review?.id);
+  const [review, setReview] = useState(
+      productOrder.review && productOrder.review);
 
-  const setReviewedState = () => {
-    setReviewed(true);
+  const setReviewedState = async (val) => {
+    let response = await GetHApi(
+        `/api/reviews/${val}`,
+        token
+    );
+
+    setReviewed(val);
+    setReview(response)
   };
 
-  useEffect(() => {}, [reviewed]);
+  useEffect(() => {
+    setToken(getToken());
+  }, [token]);
 
-  console.log(productOrder)
+  useEffect(() => {}, [reviewed]);
 
   return (
     <>
@@ -64,7 +78,6 @@ export default function MyProductOrder({ productOrder }) {
                       <div>
                         - {productOrder.coupon ? commaMoney(
                           productOrder.coupon.discountedPrice
-                          * productOrder.quantity
                       ) : 0}{" "}
                         원
                       </div>
@@ -74,19 +87,28 @@ export default function MyProductOrder({ productOrder }) {
               </div>
             </div>
           </div>
-          <div className="reviewed">
-            {reviewed && <span>후기작성완료</span>}
+        </div>
+        <div className="divider"></div>
+        <div className="wrapper">
+          <div className="d-flex flex-column align-center">
+            {reviewed ?
+                (
+                    <>
+                      <Reviewed
+                          review={review}
+                      />
+                    </>
+                )
+                : (
+                  <>
+                    <Review
+                      productOrderId={productOrder.id}
+                      setReviewed={setReviewedState}
+                    />
+                </>
+            )}
           </div>
         </div>
-        {!reviewed && (
-            <>
-            <div className="divider"></div>
-            <Review
-              productOrderId={productOrder.id}
-              setReviewed={setReviewedState}
-            />
-            </>
-        )}
       </div>
       <style jsx>
         {`
