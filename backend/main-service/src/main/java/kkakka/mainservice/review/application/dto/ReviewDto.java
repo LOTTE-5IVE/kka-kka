@@ -19,8 +19,14 @@ public class ReviewDto {
     private MemberDto memberDto;
 
     public static ReviewDto create(Review review, MemberDto memberDto) {
-        return new ReviewDto(review.getId(), review.getContents(), review.getRating(), review.getCreatedAt(),
+        return new ReviewDto(review.getId(), review.getContents(), review.getRating(),
+                review.getCreatedAt(),
                 memberDto);
+    }
+
+    public static ReviewDto create(Review review) {
+        return new ReviewDto(review.getId(), review.getContents(), review.getRating(),
+                review.getCreatedAt(), null);
     }
 
     public String getMemberName() {

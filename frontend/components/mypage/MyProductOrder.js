@@ -2,13 +2,28 @@ import {commaMoney} from "../../hooks/commaMoney";
 import Review from "./review/Review";
 import {useEffect, useState} from "react";
 import Reviewed from "./review/Reviewed";
+import {GetHApi} from "../../apis/Apis";
+import {getToken} from "../../hooks/getToken";
 
 export default function MyProductOrder({ productOrder }) {
-  const [reviewed, setReviewed] = useState(productOrder.review != null);
+  const [token, setToken] = useState("");
+  const [reviewed, setReviewed] = useState(productOrder.review?.id);
+  const [review, setReview] = useState(
+      productOrder.review && productOrder.review);
 
-  const setReviewedState = () => {
-    setReviewed(true);
+  const setReviewedState = async (val) => {
+    let response = await GetHApi(
+        `/api/reviews/${val}`,
+        token
+    );
+
+    setReviewed(val);
+    setReview(response)
   };
+
+  useEffect(() => {
+    setToken(getToken());
+  }, [token]);
 
   useEffect(() => {}, [reviewed]);
 
@@ -80,7 +95,7 @@ export default function MyProductOrder({ productOrder }) {
                 (
                     <>
                       <Reviewed
-                          review={productOrder.review}
+                          review={review}
                       />
                     </>
                 )

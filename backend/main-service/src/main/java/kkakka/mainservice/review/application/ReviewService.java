@@ -3,6 +3,7 @@ package kkakka.mainservice.review.application;
 import kkakka.mainservice.common.exception.KkaKkaException;
 import kkakka.mainservice.common.exception.NotFoundMemberException;
 import kkakka.mainservice.common.exception.NotFoundProductException;
+import kkakka.mainservice.common.exception.NotFoundReviewException;
 import kkakka.mainservice.member.member.domain.repository.MemberRepository;
 import kkakka.mainservice.order.domain.ProductOrder;
 import kkakka.mainservice.order.domain.repository.ProductOrderRepository;
@@ -41,7 +42,7 @@ public class ReviewService {
         validateAlreadyWritten(memberId, productOrderId);
 
         ProductOrder productOrder = productOrderRepository.findById(productOrderId)
-            .orElseThrow(NotFoundProductException::new);
+                .orElseThrow(NotFoundProductException::new);
         final Review review = Review.create(
                 reviewRequest.getContents(),
                 reviewRequest.getRating(),
@@ -70,5 +71,11 @@ public class ReviewService {
 
     public int countReviews(Long productId) {
         return reviewRepository.countAllByProductId(productId);
+    }
+
+    public ReviewDto showReviewById(Long memberId, Long id) {
+        final Review review = reviewRepository.findByIdAndMemberId(id, memberId)
+                .orElseThrow(() -> new NotFoundReviewException());
+        return ReviewDto.create(review);
     }
 }

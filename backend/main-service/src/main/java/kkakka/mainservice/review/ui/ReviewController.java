@@ -15,6 +15,7 @@ import kkakka.mainservice.review.application.dto.ReviewDto;
 import kkakka.mainservice.review.ui.dto.MemberSimpleResponse;
 import kkakka.mainservice.review.ui.dto.ReviewRequest;
 import kkakka.mainservice.review.ui.dto.ReviewResponse;
+import kkakka.mainservice.review.ui.dto.ReviewSimpleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -71,7 +72,19 @@ public class ReviewController {
         return ResponseEntity.created(URI.create(reviewId.toString())).build();
     }
 
+    @MemberOnly
+    @GetMapping("/{id}")
+    public ResponseEntity<ReviewSimpleResponse> showReview(
+            @AuthenticationPrincipal LoginMember loginMember,
+            @PathVariable("id") Long id
+    ) {
+        final ReviewDto reviewDto = reviewService.showReviewById(loginMember.getId(), id);
+        return ResponseEntity.ok(ReviewSimpleResponse.create(reviewDto));
+    }
+
+
     @GetMapping("/{productId}/all")
+
     public ResponseEntity<Map<String, Integer>> showReviewCount(
             @PathVariable("productId") Long productId
     ) {

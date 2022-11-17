@@ -3,6 +3,7 @@ import RangeWithIcons from "./RangeWithIcons";
 import useNoticeToInputPreference from "./useInputRating";
 import { PostHApi } from "../../../apis/Apis";
 import { getToken } from "../../../hooks/getToken";
+import axios from "axios";
 
 export default function Review({ productOrderId, setReviewed }) {
   const [token, setToken] = useState("");
@@ -32,16 +33,21 @@ export default function Review({ productOrderId, setReviewed }) {
       return;
     }
 
-    PostHApi(
+    await axios.post(
       `/api/reviews?productOrder=${productOrderId}`,
       {
         rating: rating,
         contents: contents.slice(0, 100),
       },
-      token,
-    ).then(() => {
-      setReviewed(true);
-    });
+      {
+        headers:{
+          "Authorization": `Bearer ${token}`
+        }
+      },
+    ).then((res) => {
+      const reviewId = res.headers.location
+      setReviewed(reviewId);
+    })
   };
 
   useEffect(() => {
