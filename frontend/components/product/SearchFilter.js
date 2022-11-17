@@ -47,6 +47,12 @@ export default function SearchFilter({ setResource, search, page, cat_id }) {
     searchFilter();
   }, [sort]);
 
+  useEffect(() => {
+    if (!search) {
+      setToggle(false);
+    }
+  }, [search]);
+
   return (
     <div className="SFWrapper">
       <div className="menu">
