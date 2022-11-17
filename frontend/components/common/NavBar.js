@@ -4,13 +4,10 @@ import { useRouter } from "next/router";
 export default function NavBar() {
   const router = useRouter();
   const category = (cat_id) => {
-    router.push(
-      {
-        pathname: `/product`,
-        query: { cat_id },
-      },
-      `/product`,
-    );
+    router.push({
+      pathname: `/product`,
+      query: { cat_id },
+    });
   };
 
   return (

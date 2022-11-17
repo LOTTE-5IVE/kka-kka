@@ -58,8 +58,8 @@ export default function ProductList() {
     const data = resource.productList.read();
 
     useEffect(() => {
-      setLastPage(data.pageInfo.lastPage);
-      setTotalHits(data.totalHits);
+      setLastPage(data?.pageInfo.lastPage);
+      setTotalHits(data?.totalHits);
     }, [data]);
 
     return (
