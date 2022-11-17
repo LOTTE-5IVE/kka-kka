@@ -52,9 +52,9 @@ public class NutritionDto {
         );
     }
 
-    public static NutritionDto createEmptyDto(){
+    public static NutritionDto createEmptyDto() {
         return new NutritionDto(
-                0L,"","","","","","","","","",""
+                0L, "", "", "", "", "", "", "", "", "", ""
         );
     }
 }
