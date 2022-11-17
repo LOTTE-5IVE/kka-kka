@@ -229,7 +229,7 @@ public class CouponService {
         List<Coupon> coupons = findProductCouponsByProductId(productId);
 
         if (product.getCategory() != null) {
-            coupons.addAll(findCategoryCouponsByCategoryId(productId));
+            coupons.addAll(findCategoryCouponsByCategoryId(product.getCategory().getId()));
         }
 
         List<CouponProductDto> couponProductResponseDtos = new ArrayList<>();
@@ -284,8 +284,8 @@ public class CouponService {
         return count == 0;
     }
 
-    private List<Coupon> findCategoryCouponsByCategoryId(Long productId) {
-        return couponRepository.findCouponsByCategoryIdAndNotDeleted(productId);
+    private List<Coupon> findCategoryCouponsByCategoryId(Long categoryId) {
+        return couponRepository.findCouponsByCategoryIdAndNotDeleted(categoryId);
     }
 
     private List<Coupon> findProductCouponsByProductId(Long productId) {
@@ -296,6 +296,10 @@ public class CouponService {
     public List<CouponProductDto> showCouponsByProductId(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(KkaKkaException::new);
         List<Coupon> coupons = couponRepository.findCouponsByProductIdAndNotDeleted(productId);
+
+        if (product.getCategory() != null) {
+            coupons.addAll(findCategoryCouponsByCategoryId(product.getCategory().getId()));
+        }
         List<CouponProductDto> couponProductResponseDtos = coupons.stream()
                 .map(coupon -> CouponProductDto.create(coupon, true))
                 .collect(Collectors.toList());
