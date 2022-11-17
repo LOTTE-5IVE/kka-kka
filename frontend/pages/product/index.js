@@ -57,13 +57,13 @@ export default function ProductList() {
 
     useEffect(() => {
       setLastPage(data.pageInfo.lastPage);
+      setTotalHits(data.totalHits);
     }, [data]);
 
     return (
       <>
         {data?.data?.length > 0 ? (
           <ul className="productList">
-            {setTotalHits(data.totalHits)}
             {data?.data?.map((product) => {
               return (
                 <li className="productInner" key={product.id}>
