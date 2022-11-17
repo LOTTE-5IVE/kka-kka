@@ -34,7 +34,7 @@ export default function CouponSearchTable() {
 
   const deleteCoupon = async (id) => {
     await axios
-      .put(`/api/coupons/${id}`, {
+      .put(`/api/coupons/${id}`, null, {
         headers: {
           Authorization: `Bearer ${userData.adminToken}`,
         },
@@ -89,7 +89,7 @@ export default function CouponSearchTable() {
                 <td>쿠폰</td>
                 <td>{coupon.name}</td>
                 <td>{coupon.percentage ? `${coupon.percentage}%` : "x"}</td>
-                <td>{commaMoney(coupon.minOrderPrice)}원</td>
+                <td>{commaMoney(coupon.minOrderPrice) || 0}원</td>
                 <td>{commaMoney(coupon.maxDiscount)}원</td>
                 <td>
                   {coupon.startedAt.slice(0, 10)} ~{" "}

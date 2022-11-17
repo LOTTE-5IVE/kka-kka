@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useEffect, useState } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { Autoplay, Navigation, Pagination, Keyboard } from "swiper";
+import { Autoplay, Navigation, Pagination, Keyboard } from "swiper";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -13,10 +11,6 @@ import { getToken } from "../../hooks/getToken";
 import axios from "axios";
 
 export default function RecommSlider({ tab, handleTab }) {
-  SwiperCore.use([Autoplay, Navigation, Pagination]);
-  const [swiper, setSwiper] = useState(null);
-  const navigationPrevRef = useRef(null);
-  const navigationNextRef = useRef(null);
   const [recommToggle, setRecommToggle] = useState(true);
   const [reviewToggle, setReviewToggle] = useState(true);
   const [recommendProducts, setRecommendProducts] = useState([]);
@@ -110,28 +104,14 @@ export default function RecommSlider({ tab, handleTab }) {
                   className="swiper-wrapper"
                   loop={true}
                   spaceBetween={10}
-                  centeredSlides={true}
                   slidesPerView={SLIDE_SIZE}
-                  cssMode={true}
-                  navigation={{
-                    prevEl: navigationPrevRef.current,
-                    nextEl: navigationNextRef.current,
-                  }}
-                  onInit={(swiper) => {
-                    swiper.params.navigation.prevEl = navigationPrevRef.current;
-                    swiper.params.navigation.nextEl = navigationNextRef.current;
-                    swiper.navigation.init();
-                    swiper.navigation.update();
-                  }}
-                  onSwiper={setSwiper}
+                  navigation={true}
+                  pagination={{ clickable: true }}
+                  keyboard={true}
                   autoplay={{
                     delay: 2500,
                   }}
-                  pagination={true}
-                  keyboard={true}
-                  allowTouchMove={true}
                   modules={[Autoplay, Navigation, Pagination, Keyboard]}
-                  ref={setSwiper}
                 >
                   <>
                     {recommendProducts.map((product, idx) => {
@@ -152,12 +132,6 @@ export default function RecommSlider({ tab, handleTab }) {
               </div>
 
               <div className="swiper-pagination"></div>
-              <div className="swiper-prev">
-                <ArrowBackIcon ref={navigationPrevRef} />
-              </div>
-              <div className="swiper-next">
-                <ArrowForwardIcon ref={navigationNextRef} />
-              </div>
             </div>
           </>
         )}
@@ -168,29 +142,15 @@ export default function RecommSlider({ tab, handleTab }) {
                 <Swiper
                   className="swiper-wrapper"
                   loop={true}
-                  spaceBetween={20}
-                  centeredSlides={true}
-                  slidesPerView={5} // 한 슬라이드에 보여줄 갯수
-                  cssMode={true}
-                  navigation={{
-                    prevEl: navigationPrevRef.current,
-                    nextEl: navigationNextRef.current,
-                  }}
-                  onInit={(swiper) => {
-                    swiper.params.navigation.prevEl = navigationPrevRef.current;
-                    swiper.params.navigation.nextEl = navigationNextRef.current;
-
-                    swiper.navigation.init();
-                    swiper.navigation.update();
-                  }}
-                  onSwiper={setSwiper}
+                  spaceBetween={10}
+                  slidesPerView={SLIDE_SIZE}
+                  navigation={true}
+                  pagination={{ clickable: true }}
+                  keyboard={true}
                   autoplay={{
                     delay: 2500,
                   }}
-                  pagination={true}
-                  keyboard={true}
                   modules={[Autoplay, Navigation, Pagination, Keyboard]}
-                  ref={setSwiper}
                 >
                   <>
                     {reviewProducts.map((product, idx) => {
@@ -211,12 +171,6 @@ export default function RecommSlider({ tab, handleTab }) {
               </div>
 
               <div className="swiper-pagination"></div>
-              <div className="swiper-prev">
-                <ArrowBackIcon ref={navigationPrevRef} />
-              </div>
-              <div className="swiper-next">
-                <ArrowForwardIcon ref={navigationNextRef} />
-              </div>
             </div>
           </>
         )}
@@ -303,35 +257,6 @@ export default function RecommSlider({ tab, handleTab }) {
               left: 0;
               right: 0;
             }
-
-            .swiper-prev,
-            .swiper-next {
-              width: 42px;
-              height: 42px;
-              border: 2px solid #333;
-              border-radius: 50%;
-              position: absolute;
-              top: 300px;
-              z-index: 1;
-              cursor: pointer;
-              outline: none;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              transition: 0.4s;
-            }
-
-            .swiper-prev {
-              left: 35%;
-            }
-            .swiper-next {
-              right: 35%;
-            }
-            .swiper-prev:hover,
-            .swiper-next:hover {
-              background-color: #333;
-              color: #fff;
-            }
           }
           .notice .promotion.hide {
             height: 0;
@@ -416,34 +341,6 @@ export default function RecommSlider({ tab, handleTab }) {
               bottom: 2.1vw;
               left: 0vw;
               right: 0vw;
-            }
-
-            .swiper-prev,
-            .swiper-next {
-              width: 3vw;
-              height: 3vw;
-              border: 1px solid #333;
-              border-radius: 50%;
-              position: absolute;
-              top: 20vw;
-              z-index: 1;
-              cursor: pointer;
-              outline: none;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              transition: 0.4s;
-            }
-
-            .swiper-prev {
-              left: 40vw;
-            }
-            .swiper-next {
-              right: 40vw;
-            }
-            .swiper-prev,
-            .swiper-next {
-              display: none;
             }
           }
           .notice .promotion.hide {
@@ -530,11 +427,6 @@ export default function RecommSlider({ tab, handleTab }) {
               bottom: 40px;
               left: 0;
               right: 0;
-            }
-
-            .swiper-prev,
-            .swiper-next {
-              display: none;
             }
           }
           .notice .promotion.hide {
