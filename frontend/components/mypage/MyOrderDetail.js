@@ -48,8 +48,8 @@ export default function MyOrderDetail({ orderDetail, handleDetail }) {
                             color: "#aaa"
                           }}
                       >
-                          (총 금액: {commaMoney(orderDetail.totalPrice) || 0} 원,
-                        할인금액: {commaMoney(totalDiscountPrice()) || 0} 원)
+                          (총 금액: {commaMoney(orderDetail.totalPrice) || 0}원,
+                        할인금액: {commaMoney(totalDiscountPrice()) || 0}원)
                       </span>
                       <span className="title-divider">|</span>
                       <span className="title-content">
