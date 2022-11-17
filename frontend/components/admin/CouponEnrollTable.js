@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import ApplyGrade from "./ApplyGrade";
 import ApplyProduct from "./ApplyProduct";
 import axios from "axios";
@@ -31,11 +31,9 @@ export default function CouponEnrollTable() {
 
   const initStates = () => {
     setPromotionName("");
-    setDiscount("");
     setMaxdis("");
     setMinorder("");
     setNameValid(false);
-    setDiscountValid(false);
     setMaxdisValid(false);
     setMinorderValid(false);
     setUnValid(true);
@@ -45,83 +43,86 @@ export default function CouponEnrollTable() {
 
   const makeCoupon = async () => {
     await axios
-      .post("/api/coupons", {
-        categoryId: targetVal,
-        grade: null,
-        productId: null,
-        name: promotionName,
+      .post(
+        "/api/coupons",
+        {
+          categoryId: targetVal,
+          grade: null,
+          productId: null,
+          name: promotionName,
 
-        priceRule: "COUPON",
-        startedAt: `${startDate} 00:00:00`,
-        expiredAt: `${endDate} 00:00:00`,
-        percentage: discount,
-        maxDiscount: maxdis,
-        minOrderPrice: minorder,
-      }, {
-        headers: {
-          Authorization: `Bearer ${userData.adminToken}`
-        }
-      })
+          priceRule: "COUPON",
+          startedAt: `${startDate} 00:00:00`,
+          expiredAt: `${endDate} 00:00:00`,
+          percentage: discount,
+          maxDiscount: maxdis,
+          minOrderPrice: minorder,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.adminToken}`,
+          },
+        },
+      )
       .then((res) => {
         alert("등록완료!");
         initStates();
-      })
-      .catch((err) => {
-        alert("등록실패!");
       });
   };
 
   const makeCouponProduct = async () => {
     await axios
-      .post("/api/coupons", {
-        categoryId: null,
-        grade: null,
-        productId: productId,
-        name: promotionName,
-        priceRule: "COUPON",
-        startedAt: `${startDate} 00:00:00`,
-        expiredAt: `${endDate} 00:00:00`,
-        percentage: discount,
-        maxDiscount: maxdis,
-        minOrderPrice: minorder,
-      }, {
-        headers: {
-          Authorization: `Bearer ${userData.adminToken}`
-        }
-      })
+      .post(
+        "/api/coupons",
+        {
+          categoryId: null,
+          grade: null,
+          productId: productId,
+          name: promotionName,
+          priceRule: "COUPON",
+          startedAt: `${startDate} 00:00:00`,
+          expiredAt: `${endDate} 00:00:00`,
+          percentage: discount,
+          maxDiscount: maxdis,
+          minOrderPrice: minorder,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.adminToken}`,
+          },
+        },
+      )
       .then((res) => {
         alert("등록완료!");
         initStates();
-      })
-      .catch((err) => {
-        alert("등록실패!");
       });
   };
 
   const makeCouponGrade = async () => {
     await axios
-      .post("/api/coupons", {
-        categoryId: null,
-        grade: grade,
-        productId: null,
-        name: promotionName,
-        priceRule: "GRADE_COUPON",
-        startedAt: `${startDate} 00:00:00`,
-        expiredAt: `${endDate} 00:00:00`,
-        percentage: discount,
-        maxDiscount: maxdis,
-        minOrderPrice: minorder,
-      }, {
-        headers: {
-          Authorization: `Bearer ${userData.adminToken}`
-        }
-      })
+      .post(
+        "/api/coupons",
+        {
+          categoryId: null,
+          grade: grade,
+          productId: null,
+          name: promotionName,
+          priceRule: "GRADE_COUPON",
+          startedAt: `${startDate} 00:00:00`,
+          expiredAt: `${endDate} 00:00:00`,
+          percentage: discount,
+          maxDiscount: maxdis,
+          minOrderPrice: minorder,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.adminToken}`,
+          },
+        },
+      )
       .then((res) => {
         alert("등록완료!");
         initStates();
-      })
-      .catch((err) => {
-        alert("등록실패!");
       });
   };
 

@@ -47,8 +47,8 @@ public class CartItemDto {
                 c.getQuantity(),
                 c.getProduct().getPrice(),
                 c.getPrice(),
-                discountedPrice * c.getQuantity(),
-                c.getPrice() - (discountedPrice * c.getQuantity()),
+                discountedPrice,
+                c.getPrice() - discountedPrice,
                 CouponDto.toDto(coupon));
     }
 

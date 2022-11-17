@@ -6,8 +6,8 @@ import { DeleteHApi, GetHApi, PostHApi } from "../../apis/Apis";
 import { AdminButton } from "../../components/common/Button/AdminButton";
 import ButtonComp from "../../components/common/Button/ButtonComp";
 import Title from "../../components/common/Title";
-import { CouponApply } from "../../components/coupon/CouponApply";
-import { CouponModal } from "../../components/coupon/CouponModal";
+import { CouponCartApply } from "../../components/coupon/CouponCartApply";
+import { CouponCartModal } from "../../components/coupon/CouponCartModal";
 import { CartCntContext } from "../../context/CartCntContext";
 import { PaymentContext } from "../../context/PaymentContext";
 import { commaMoney } from "../../hooks/commaMoney";
@@ -99,6 +99,20 @@ export default function Cart() {
         product.id === id ? { ...product, quantity: quantity } : product,
       ),
     );
+  };
+
+  const chkMinOrd = (product, coupon, quantityNum) => {
+    let quantity = quantityNum || product.quantity - 1;
+
+    if (
+      !coupon ||
+      product.price * (1 - 0.01 * product.discount) * quantity >
+        coupon.minOrderPrice
+    ) {
+      return true;
+    }
+
+    return false;
   };
 
   const getCartItem = async () => {
@@ -331,9 +345,9 @@ export default function Cart() {
                             )}
 
                             {product.id === modalVisibleId ? (
-                              <CouponModal>
+                              <CouponCartModal>
                                 <div>
-                                  <CouponApply
+                                  <CouponCartApply
                                     id={product.id}
                                     modalVisibleId={modalVisibleId}
                                     setModalVisibleId={setModalVisibleId}
@@ -341,7 +355,7 @@ export default function Cart() {
                                     product={product}
                                   />
                                 </div>
-                              </CouponModal>
+                              </CouponCartModal>
                             ) : (
                               ""
                             )}
@@ -358,6 +372,9 @@ export default function Cart() {
                               handleMinus(product.id);
                             }}
                             value="-"
+                            disabled={
+                              !chkMinOrd(product, product.couponDto, null)
+                            }
                           />
 
                           <input
@@ -371,9 +388,17 @@ export default function Cart() {
 
                               if (Number(e.target.value) > product.stock) {
                                 alert("수량 한도를 초과했습니다.");
-                              } else {
+                              } else if (
+                                chkMinOrd(
+                                  product,
+                                  product.couponDto,
+                                  Number(e.target.value),
+                                )
+                              ) {
                                 handleQuantity(product.id, e.target.value);
                                 editCartItem(product.id, e.target.value);
+                              } else {
+                                alert("최소 주문금액 이하입니다.");
                               }
                             }}
                             onBlur={(e) => {
@@ -386,6 +411,7 @@ export default function Cart() {
                             size="1"
                             value={product.quantity}
                             style={{ textAlign: "center" }}
+                            disabled={!chkMinOrd(product, product.couponDto)}
                           />
                           <input
                             className="plusBtn"
@@ -555,6 +581,12 @@ export default function Cart() {
                   background-color: #fff;
                   border: 1px solid #c8c8c8;
                   border-radius: 50%;
+                }
+
+                input[type="button"]:disabled {
+                  background: #dadada;
+                  color: white;
+                  border: none;
                 }
 
                 p {

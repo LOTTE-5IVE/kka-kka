@@ -11,7 +11,6 @@ public class PageConfig {
     public PageableHandlerMethodArgumentResolverCustomizer customizer() {
         return pageSizeConfig -> {
             pageSizeConfig.setOneIndexedParameters(true);
-            pageSizeConfig.setMaxPageSize(9);
         };
     }
 }

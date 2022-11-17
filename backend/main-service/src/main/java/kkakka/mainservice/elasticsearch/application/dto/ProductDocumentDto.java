@@ -20,8 +20,9 @@ public class ProductDocumentDto {
     private String name;
     private Integer price;
     private String imageUrl;
-    private int discount;
-    private double ratingAvg;
+    private Integer discount;
+    private Double ratingAvg;
+    private Integer stock;
 
     public static ProductDocumentDto toDto(Product product,
         CategoryDocumentDto categoryDocumentDto) {
@@ -31,7 +32,8 @@ public class ProductDocumentDto {
             product.getPrice(),
             product.getImageUrl(),
             product.getDiscount(),
-            product.getRatingAvg()
+            product.getRatingAvg(),
+            product.getStock()
         );
     }
 }

@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class ProductOrderWithCouponDto {
 
     private Long id;
-    private Long productId;
     private String name;
     private Integer discount;
     private String imageUrl;
@@ -27,7 +26,6 @@ public class ProductOrderWithCouponDto {
     public static ProductOrderWithCouponDto create(Integer quantity, Product product,
         Integer discountedPrice, Coupon coupon) {
         return new ProductOrderWithCouponDto(
-            null,
             product.getId(),
             product.getName(),
             product.getDiscount(),
@@ -35,8 +33,8 @@ public class ProductOrderWithCouponDto {
             quantity,
             product.getPrice(),
             product.getPrice() * quantity,
-            discountedPrice * quantity,
-            (product.getPrice() * quantity) - (discountedPrice * quantity),
+            discountedPrice,
+            (product.getPrice() * quantity) - discountedPrice,
             CouponDto.toDto(coupon)
         );
     }

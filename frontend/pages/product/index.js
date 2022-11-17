@@ -50,7 +50,9 @@ export default function ProductList() {
     }
   }, [search]);
 
-  useEffect(() => {}, [keyword]);
+  useEffect(() => {
+    setKeyword(search);
+  }, [router]);
 
   const ProductLists = () => {
     const data = resource.productList.read();

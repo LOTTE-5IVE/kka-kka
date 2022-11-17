@@ -1,9 +1,8 @@
 package kkakka.mainservice.product.application;
 
-import java.util.Optional;
+import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.common.dto.PageInfo;
 import kkakka.mainservice.common.exception.KkaKkaException;
-import kkakka.mainservice.common.auth.LoginMember;
 import kkakka.mainservice.elasticsearch.application.dto.CategoryDocumentDto;
 import kkakka.mainservice.elasticsearch.application.dto.ProductDocumentDto;
 import kkakka.mainservice.elasticsearch.application.dto.SearchResultDto;
@@ -23,6 +22,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class ProductService {
@@ -34,6 +36,12 @@ public class ProductService {
     public ProductDetailDto showProductDetail(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(KkaKkaException::new);
+        if (Objects.isNull(product.getNutrition())) {
+            return ProductDetailDto.toDtoWithoutNutrition(
+                    product,
+                    CategoryDto.toDto(product.getCategory()),
+                    NutritionDto.createEmptyDto());
+        }
         return ProductDetailDto.toDto(
                 product,
                 CategoryDto.toDto(product.getCategory()),
@@ -47,26 +55,26 @@ public class ProductService {
             Pageable pageable
     ) {
         Page<ProductDocumentDto> productDtos = productRepositorySupport.findAllByCategoryWithSort(
-                categoryId,
-                sortBy,
-                pageable)
-            .map(product -> ProductDocumentDto.toDto(
-                product,
-                CategoryDocumentDto.toDto(product.getCategory())
-            ));
+                        categoryId,
+                        sortBy,
+                        pageable)
+                .map(product -> ProductDocumentDto.toDto(
+                        product,
+                        CategoryDocumentDto.toDto(product.getCategory())
+                ));
 
         return SearchResultDto.toResponseDto(
-            productDtos.getTotalElements(),
-            productDtos.toList(),
-            PageInfo.from(pageable.getPageNumber(),
-                productDtos.getTotalPages(),
-                pageable.getPageSize(),
-                productDtos.getTotalElements())
+                productDtos.getTotalElements(),
+                productDtos.toList(),
+                PageInfo.from(pageable.getPageNumber(),
+                        productDtos.getTotalPages(),
+                        pageable.getPageSize(),
+                        productDtos.getTotalElements())
         );
     }
 
     public Page<ProductDto> showProductsByRecommendation(LoginMember loginMember,
-            Pageable pageable) {
+                                                         Pageable pageable) {
         final ProductRecommender productRecommender = recommenderFactory.get(
                 loginMember.getAuthority());
         return productRecommender.recommend(Optional.ofNullable(loginMember.getId()), pageable)

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Objects;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "cart_item")
@@ -25,6 +26,7 @@ public class CartItem {
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
+    @BatchSize(size = 10)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
@@ -64,7 +66,11 @@ public class CartItem {
     }
 
     public Integer getDiscountedPrice(Coupon coupon) {
-        return product.getDiscountPrice() - product.getMaxDiscount(coupon);
+        Integer productDiscount = product.getDiscountPrice() - (product.getDiscountPrice()- product.getMaxDiscount(coupon));
+        if (productDiscount * this.quantity > coupon.getMaxDiscount()) {
+            return product.getDiscountPrice() * this.quantity - coupon.getMaxDiscount();
+        }
+        return (product.getDiscountPrice() - product.getMaxDiscount(coupon)) * this.quantity;
     }
 
     @Override
