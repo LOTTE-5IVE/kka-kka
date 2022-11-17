@@ -64,7 +64,6 @@ export default function MyProductOrder({ productOrder }) {
                       <div>
                         - {productOrder.coupon ? commaMoney(
                           productOrder.coupon.discountedPrice
-                          * productOrder.quantity
                       ) : 0}{" "}
                         원
                       </div>
