@@ -56,13 +56,7 @@ export default function DiscountEnrollTable() {
       )
       .then((res) => {
         alert("등록완료!");
-<<<<<<< HEAD
-      })
-      .catch((err) => {
-        alert("등록실패!");
-=======
         initStates();
->>>>>>> develop
       });
   };
 
