@@ -20,19 +20,29 @@ export default function DiscountSearchTable() {
   };
 
   const getDiscount = async () => {
-    await axios.get("/api/coupons/discount").then((res) => {
-      setDiscounts(res.data);
-    });
+    await axios
+      .get("/api/coupons/discount", {
+        headers: {
+          Authorization: `Bearer ${userData.adminToken}`,
+        },
+      })
+      .then((res) => {
+        setDiscounts(res.data);
+      });
   };
 
   const deleteDiscount = async (id) => {
-    await axios.put(
-        `/api/coupons/discount/${id}`, {}, {
+    await axios
+      .put(
+        `/api/coupons/discount/${id}`,
+        {},
+        {
           headers: {
-            'Authorization': `Bearer ${userData.adminToken}`,
-          }
-        }
-        ).then((res) => {});
+            Authorization: `Bearer ${userData.adminToken}`,
+          },
+        },
+      )
+      .then((res) => {});
 
     getDiscount();
   };

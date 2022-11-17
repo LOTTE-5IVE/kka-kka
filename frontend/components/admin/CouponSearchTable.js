@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AdminButton } from "../common/Button/AdminButton";
 import { commaMoney } from "../../hooks/commaMoney";
+import { UserContext } from "../../context/AdminTokenContext";
 
 export default function CouponSearchTable() {
   const cat_name = {
@@ -17,15 +18,28 @@ export default function CouponSearchTable() {
   };
 
   const [coupons, setCoupons] = useState();
+  const userData = useContext(UserContext)?.adminUser;
 
   const getCoupon = async () => {
-    await axios.get("/api/coupons").then((res) => {
-      setCoupons(res.data);
-    });
+    await axios
+      .get("/api/coupons", {
+        headers: {
+          Authorization: `Bearer ${userData.adminToken}`,
+        },
+      })
+      .then((res) => {
+        setCoupons(res.data);
+      });
   };
 
   const deleteCoupon = async (id) => {
-    await axios.put(`/api/coupons/${id}`).then((res) => {});
+    await axios
+      .put(`/api/coupons/${id}`, {
+        headers: {
+          Authorization: `Bearer ${userData.adminToken}`,
+        },
+      })
+      .then((res) => {});
 
     getCoupon();
   };
@@ -94,6 +108,7 @@ export default function CouponSearchTable() {
           })}
 
           <tr style={{ height: "100%" }}>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>

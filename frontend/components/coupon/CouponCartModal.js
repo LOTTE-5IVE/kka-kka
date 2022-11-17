@@ -1,4 +1,4 @@
-export function CouponDownModal({ children }) {
+export function CouponCartModal({ children }) {
   return (
     <>
       <div className="ModalBg"></div>
@@ -30,9 +30,9 @@ export function CouponDownModal({ children }) {
 
             .wrapper {
               position: absolute;
-              top: 465px;
+              top: 50px;
               left: 951px;
-              transform: translate(-50%, -50%);
+              transform: translate(-50%);
 
               .container {
                 margin: 40px auto 0;
@@ -68,9 +68,9 @@ export function CouponDownModal({ children }) {
 
             .wrapper {
               position: absolute;
-              top: 45%;
+              top: 5%;
               left: 50vw;
-              transform: translate(-50%, -50%);
+              transform: translate(-50%);
 
               .container {
                 margin: 10vw auto 0;
@@ -100,14 +100,14 @@ export function CouponDownModal({ children }) {
             z-index: 9999;
             top: 0;
             left: 0;
-            width: 440px;
+            width: 480px;
             height: 1100px;
 
             .wrapper {
               position: absolute;
-              top: 30px;
+              top: 50px;
               left: 240px;
-              transform: translate(-240px, -50%);
+              transform: translate(-50%);
 
               .container {
                 margin: 40px auto 0;

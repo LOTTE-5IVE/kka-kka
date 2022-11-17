@@ -8,7 +8,6 @@ import MyCouponCard from "./MyCouponCard";
 
 export default function MyCoupon() {
   const [tab, setTab] = useState("valid");
-  const [moreToggle, setMoreToggle] = useState(true);
   const [token, setToken] = useState("");
   const [coupons, setCoupons] = useState();
 
@@ -85,16 +84,8 @@ export default function MyCoupon() {
                 )}
                 <tr className="loadMore">
                   <td colSpan="5">
-                    {coupons?.length > 0 && moreToggle ? (
-                      <div
-                        onClick={() => {
-                          console.log("loadMore clicked", coupons);
-                        }}
-                        className={"d-flex align-center moreBtn"}
-                        style={{ cursor: "pointer" }}
-                      >
-                        <span>▼ 더보기</span>
-                      </div>
+                    {coupons?.length > 0 ? (
+                      ""
                     ) : (
                       <div className="couponEmpty">
                         <img
