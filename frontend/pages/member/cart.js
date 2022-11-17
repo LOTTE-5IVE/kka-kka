@@ -51,7 +51,9 @@ export default function Cart() {
       setCheckItems((prev) => [...prev, product]);
       setCheckItemsIdx((prev) => [...prev, product.cartItemId]);
     } else {
-      setCheckItems(checkItems.filter((el) => el !== product));
+      setCheckItems(
+        checkItems.filter((el) => el.cartItemId !== product.cartItemId),
+      );
       setCheckItemsIdx(checkItemsIdx.filter((el) => el !== product.cartItemId));
     }
   };
@@ -172,15 +174,57 @@ export default function Cart() {
     setToken(getToken());
     if (token !== "") {
       getCartItem();
+
+      setDiscountPrice(
+        checkItems.reduce((prev, cur) => {
+          if (cur.couponDto) {
+            return prev + Math.floor(cur.totalDiscount);
+          } else {
+            return (
+              prev + Math.floor(cur.price * 0.01 * cur.discount * cur.quantity)
+            );
+          }
+        }, 0),
+      );
     }
   }, [token, modalVisibleId]);
 
   useEffect(() => {
     if (checkItems.length > 0) {
       setSelectUnValid(false);
+      setTotalPrice(
+        checkItems.reduce((prev, cur) => prev + cur.price * cur.quantity, 0),
+      );
+      setDiscountPrice(
+        checkItems.reduce((prev, cur) => {
+          if (cur.couponDto) {
+            return prev + Math.floor(cur.totalDiscount);
+          } else {
+            return (
+              prev + Math.floor(cur.price * 0.01 * cur.discount * cur.quantity)
+            );
+          }
+        }, 0),
+      );
+
       return;
     } else {
       setSelectUnValid(true);
+
+      setTotalPrice(
+        cartItems.reduce((prev, cur) => prev + cur.price * cur.quantity, 0),
+      );
+      setDiscountPrice(
+        cartItems.reduce((prev, cur) => {
+          if (cur.couponDto) {
+            return prev + Math.floor(cur.totalDiscount);
+          } else {
+            return (
+              prev + Math.floor(cur.price * 0.01 * cur.discount * cur.quantity)
+            );
+          }
+        }, 0),
+      );
     }
   }, [checkItems]);
 
