@@ -51,5 +51,11 @@ public class NutritionDto {
                 this.calcium
         );
     }
+
+    public static NutritionDto createEmptyDto() {
+        return new NutritionDto(
+                0L, "", "", "", "", "", "", "", "", "", ""
+        );
+    }
 }
 
