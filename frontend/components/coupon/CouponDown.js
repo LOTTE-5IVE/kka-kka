@@ -136,7 +136,7 @@ export function CouponDown({ handleModal, product }) {
               </tr>
             </thead>
             <tbody>
-              {coupons && (
+              {coupons.length > 0 && (
                 <tr
                   style={{
                     height: "59px",
