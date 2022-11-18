@@ -1,6 +1,6 @@
 export default function Nutri({ nutrition }) {
   return (
-    <>
+    <div>
       <table>
         <thead>
           <tr>
@@ -72,13 +72,21 @@ export default function Nutri({ nutrition }) {
 
         @media screen and (max-width: 768px) {
           /* 태블릿에 사용될 스트일 시트를 여기에 작성합니다. */
+          div {
+            width: 85vw;
+            overflow-x: scroll;
+          }
         }
 
         @media screen and (max-width: 480px) {
           /* 모바일에 사용될 스트일 시트를 여기에 작성합니다. */
+          div {
+            width: 450px;
+            overflow-x: scroll;
+          }
         }
       `}</style>
-    </>
+    </div>
   );
 }
 

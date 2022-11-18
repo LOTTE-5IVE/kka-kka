@@ -797,7 +797,7 @@ export default function ProductDetail({ product, reviewCount }) {
           .ProductDetailLWrapper {
             margin: 20px auto 0;
             width: 450px;
-            height: 1440px;
+            min-height: 1800px;
 
             .detailTop {
               .detailImg {

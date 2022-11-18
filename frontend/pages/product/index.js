@@ -167,6 +167,7 @@ export default function ProductList() {
             setResource={setResource}
             search={keyword}
             page={page}
+            setPage={setPage}
             cat_id={cat_id}
           />
           <div className="title">
