@@ -4,7 +4,13 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { fetchSearchData } from "../../apis/SearchApi";
 
-export default function SearchFilter({ setResource, search, page, cat_id }) {
+export default function SearchFilter({
+  setResource,
+  search,
+  page,
+  setPage,
+  cat_id,
+}) {
   const [category, setCategory] = useState([]);
   const [sort, setSort] = useState("");
   const [toggle, setToggle] = useState(false);
@@ -229,6 +235,7 @@ export default function SearchFilter({ setResource, search, page, cat_id }) {
                 <td colSpan="2" style={{ border: "0", textAlign: "right" }}>
                   <button
                     onClick={() => {
+                      setPage(1);
                       searchFilter();
                     }}
                   >
