@@ -26,7 +26,6 @@ import { CartCntContext } from "../../../context/CartCntContext";
 import { getToken } from "../../../hooks/getToken";
 import { useContext } from "react";
 import { PaymentContext } from "../../../context/PaymentContext";
-import Image from "next/image";
 
 export default function ProductDetail({ product, reviewCount }) {
   const [quantity, setQuantity] = useState(1);
@@ -122,7 +121,12 @@ export default function ProductDetail({ product, reviewCount }) {
         <div className="ProductDetailLWrapper" key={product.id}>
           <div className="detailTop">
             <div className="detailImg" style={{ position: "relative" }}>
-              <img src={product.imageUrl} alt="" layout="fill" priority />
+              <img
+                src={product.imageUrl}
+                alt=""
+                layout="fill"
+                priority="true"
+              />
             </div>
 
             <div className="detailEtc" key={product.id}>
