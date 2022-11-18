@@ -10,6 +10,15 @@ export default function Review({ productId }) {
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState();
 
+  const dotName = (name) => {
+    if (name.length < 3) {
+      if (name.length == 1) return name;
+      else return name[0] + "*";
+    } else {
+      return name[0] + "*".repeat(name.length - 2) + name[name.length - 1];
+    }
+  };
+
   const getReview = async () => {
     if (productId) {
       await axios
@@ -52,10 +61,9 @@ export default function Review({ productId }) {
                         />
                       </td>
                       <td>
-                        {/* <p className="reviewContents">{review.contents}</p> */}
                         <Ellipsis text={review.contents} />
                       </td>
-                      <td>{review.member.name}</td>
+                      <td>{dotName(review.member.name)}</td>
                       <td>{review.createdAt}</td>
                     </tr>
                   );
