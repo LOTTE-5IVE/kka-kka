@@ -140,6 +140,7 @@ export default function SearchBar() {
               data?.autoKeyword?.map((productName, idx) => {
                 return productName.includes(keyword) ? (
                   <li
+                    key={idx}
                     className={index === idx ? "autoName isFocus" : "autoName"}
                     onClick={() => {
                       searchClick(productName);
@@ -155,6 +156,7 @@ export default function SearchBar() {
                   </li>
                 ) : (
                   <li
+                    key={idx}
                     className={index === idx ? "autoName isFocus" : "autoName"}
                     onClick={() => {
                       searchClick(productName);
