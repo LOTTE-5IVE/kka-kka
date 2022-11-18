@@ -31,7 +31,7 @@ export default function SearchBar() {
     router.push(
       {
         pathname: `/product`,
-        query: { cat_id: 0, search: keyword },
+        query: { cat_id: -1, search: keyword },
       },
       `/product`,
     );
