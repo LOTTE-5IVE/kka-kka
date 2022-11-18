@@ -56,8 +56,15 @@ export default function SearchFilter({
   useEffect(() => {
     if (!search) {
       setToggle(false);
+      return;
     }
+
+    setSort("accuracy");
   }, [search]);
+
+  useEffect(() => {
+    setSort("NEW");
+  }, [cat_id]);
 
   return (
     <div className="SFWrapper">
@@ -94,7 +101,7 @@ export default function SearchFilter({
           onChange={(e) => {
             setSort(e.target.value);
           }}
-          defaultValue={""}
+          value={sort}
         >
           {search && <option value="accuracy">정확도순</option>}
           <option value="NEW">최신순</option>
