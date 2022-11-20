@@ -27,7 +27,7 @@ export default function MyCouponCard({ coupons }) {
             <td>
               {coupon.percentage}% (최대 {commaMoney(coupon.maxDiscount)}원){" "}
             </td>
-            <td>{commaMoney(coupon.minOrderPrice)}원 이상 구매시</td>
+            <td>{commaMoney(coupon.minOrderPrice) || 0}원 이상 구매시</td>
             <td>
               {coupon.startedAt.slice(0, 10)} ~ {coupon.expiredAt.slice(0, 10)}
             </td>
