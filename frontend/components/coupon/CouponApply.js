@@ -35,7 +35,7 @@ export function CouponApply({
     await GetHApi(`/api/coupons/me/products/${product.id}`, token).then(
       (res) => {
         setCoupons(res);
-      },
+      }
     );
   };
 
@@ -45,18 +45,18 @@ export function CouponApply({
         (res) => {
           setPayment(
             payment.map((product) =>
-              product.cartItemId === res.cartItemId ? res : product,
-            ),
+              product.cartItemId === res.cartItemId ? res : product
+            )
           );
 
           onCloseHandler();
-        },
+        }
       );
     } else {
       await PostHApi(
         `/api/orders/${couponId}`,
         { productId: product.id, quantity: product.quantity },
-        token,
+        token
       ).then((res) => {
         // product = res;
         setPayment([res]);
@@ -120,8 +120,8 @@ export function CouponApply({
                       <p style={{ marginBottom: "0" }}>
                         {commaMoney(
                           Math.ceil(
-                            product.price * (1 - 0.01 * product.discount),
-                          ) * product.quantity,
+                            product.price * (1 - 0.01 * product.discount)
+                          ) * product.quantity
                         )}
                         원
                       </p>
@@ -175,7 +175,7 @@ export function CouponApply({
                       product.price *
                         product.quantity *
                         (1 - 0.01 * product.discount) >
-                        coupon.minOrderPrice,
+                        coupon.minOrderPrice
                   )
                   .map((coupon, idx) => {
                     return (
@@ -190,7 +190,7 @@ export function CouponApply({
                         <td>
                           {coupon.percentage ? `${coupon.percentage}%` : "X"}
                         </td>
-                        <td>{commaMoney(coupon.minOrderPrice)}원</td>
+                        <td>{commaMoney(coupon.minOrderPrice) || 0}원</td>
                         <td>{commaMoney(coupon.maxDiscount)}원</td>
                         <td>{coupon.expiredAt.slice(0, 10)}</td>
                         <td>{commaMoney(calcMaxDis(product, coupon))}원</td>
