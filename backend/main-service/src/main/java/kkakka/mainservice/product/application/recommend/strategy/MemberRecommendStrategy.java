@@ -137,14 +137,18 @@ public class MemberRecommendStrategy implements ProductRecommender {
             return savedRecommendIds.get();
         }
 
-        final ResponseEntity<String> response = restTemplate.exchange(
-                RECOMMENDATION_SERVER_URL + pivotProduct.getId(),
-                HttpMethod.GET,
-                new HttpEntity<>(new HttpHeaders()),
-                String.class
-        );
+        try {
+            final ResponseEntity<String> response = restTemplate.exchange(
+                    RECOMMENDATION_SERVER_URL + pivotProduct.getId(),
+                    HttpMethod.GET,
+                    new HttpEntity<>(new HttpHeaders()),
+                    String.class
+            );
 
-        return convertResponseBody(pivotProduct.getId(), response);
+            return convertResponseBody(response);
+        } catch (Exception e) {
+            return new RecommendProductIds(pivotProduct.getId().toString(), Collections.emptyList());
+        }
     }
 
     private int selectRandomPivotIndex(int itemSize) {
@@ -191,19 +195,13 @@ public class MemberRecommendStrategy implements ProductRecommender {
         return Math.min(pageable.getPageSize(), (int) (productIds.size() - pageable.getOffset()));
     }
 
-    private RecommendProductIds convertResponseBody(Long pivotId, ResponseEntity<String> response) {
-        try {
-            if (Objects.isNull(response.getBody())) {
-                return new RecommendProductIds(pivotId.toString(), Collections.emptyList());
-            }
-            return objectMapper.readValue(
-                    response.getBody(),
-                    new TypeReference<RecommendProductIds>() {
-                    }
-            );
-        } catch (JsonProcessingException e) {
-            throw new InvalidRecommendResponseException();
-        }
+    private RecommendProductIds convertResponseBody(ResponseEntity<String> response)
+            throws JsonProcessingException {
+        return objectMapper.readValue(
+                response.getBody(),
+                new TypeReference<RecommendProductIds>() {
+                }
+        );
     }
 
     private Member validateMember(Optional<Long> memberId) {

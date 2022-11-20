@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import ProductRecCard from "../ProductRecCard";
@@ -8,6 +8,26 @@ export default function RecommendList() {
   const productId = router.query.id;
 
   const [products, setProducts] = useState([]);
+
+  const recommendRef = useRef(null);
+  const [isDrag, setIsDrag] = useState(false);
+  const [startX, setStartX] = useState();
+
+  const onDragStart = (e) => {
+    e.preventDefault();
+    setIsDrag(true);
+    setStartX(e.pageX + recommendRef.current.scrollLeft);
+  }
+
+  const onDragEnd = () => {
+    setIsDrag(false);
+  }
+
+  const onDragMove = (e) => {
+    if (isDrag) {
+      recommendRef.current.scrollLeft = startX - e.pageX;
+    }
+  }
 
   const getRecommendProducts = async () => {
     await axios.get(`/api/products/${productId}/recommend`).then((res) => {
@@ -26,7 +46,14 @@ export default function RecommendList() {
         <div className="recommendText">
           다른 고객들은 이런 상품도 구매했어요.
         </div>
-        <div className="productList">
+        <div
+            className="productList"
+            ref={recommendRef}
+            onMouseDown={onDragStart}
+            onMouseMove={onDragMove}
+            onMouseUp={onDragEnd}
+            onMouseLeave={onDragEnd}
+        >
           {products?.map((product) => {
             return (
               <div className="productInner" key={product.id}>
@@ -68,7 +95,6 @@ export default function RecommendList() {
             overflow: hidden;
             overflow-x: scroll;
             overflow-y: hidden;
-            white-space: no-wrap;
 
             margin-top: 0.7rem;
 
