@@ -65,17 +65,21 @@ public class ProductRecommendStrategy implements ProductRecommender {
             return recommendProductIdsSavedInRedis.get();
         }
 
-        final ResponseEntity<String> response = restTemplate.exchange(
-                RECOMMENDATION_SERVER_URL + pivotProduct.getId(),
-                HttpMethod.GET,
-                new HttpEntity<>(new HttpHeaders()),
-                String.class
-        );
+        try {
+            final ResponseEntity<String> response = restTemplate.exchange(
+                    RECOMMENDATION_SERVER_URL + pivotProduct.getId(),
+                    HttpMethod.GET,
+                    new HttpEntity<>(new HttpHeaders()),
+                    String.class
+            );
 
-        final RecommendProductIds recommendProductIds = convertResponseBody(pivotProduct.getId(),
-                response);
-        saveInRedis(recommendProductIds);
-        return recommendProductIds;
+            final RecommendProductIds recommendProductIds = convertResponseBody(response);
+            saveInRedis(recommendProductIds);
+            return recommendProductIds;
+        } catch (Exception e) {
+            return new RecommendProductIds(pivotProduct.getId().toString(),
+                    Collections.emptyList());
+        }
     }
 
     private void saveInRedis(RecommendProductIds recommendProductIds) {
@@ -95,19 +99,13 @@ public class ProductRecommendStrategy implements ProductRecommender {
         return Optional.empty();
     }
 
-    private RecommendProductIds convertResponseBody(Long pivotId, ResponseEntity<String> response) {
-        try {
-            if (Objects.isNull(response.getBody())) {
-                return new RecommendProductIds(pivotId.toString(), Collections.emptyList());
-            }
-            return objectMapper.readValue(
-                    response.getBody(),
-                    new TypeReference<RecommendProductIds>() {
-                    }
-            );
-        } catch (JsonProcessingException e) {
-            throw new InvalidRecommendResponseException();
-        }
+    private RecommendProductIds convertResponseBody(ResponseEntity<String> response)
+            throws JsonProcessingException {
+        return objectMapper.readValue(
+                response.getBody(),
+                new TypeReference<RecommendProductIds>() {
+                }
+        );
     }
 
     private PageImpl<Product> findRecommendedProducts(
