@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5a5d7a81-5865-4a99-8554-d6f403882193" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/components/mypage/review/RangeWithIcons.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/mypage/review/RangeWithIcons.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/mypage/review/Review.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/mypage/review/Review.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/mypage/review/StartIcon.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/mypage/review/StartIcon.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/product/productDetail/Review.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/product/productDetail/Review.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/layouts/ProductDetailLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/layouts/ProductDetailLayout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2GOVADEOok3aYUUrRK2jCkoVYqs" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/components/mypage/review" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5a5d7a81-5865-4a99-8554-d6f403882193" name="Default Changelist" comment="" />
+      <created>1666259473050</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1666259473050</updated>
+      <workItem from="1666259477320" duration="70000" />
+      <workItem from="1666259570816" duration="476000" />
+      <workItem from="1666260075819" duration="70000" />
+      <workItem from="1666260300046" duration="23688000" />
+      <workItem from="1666319507978" duration="9000" />
+      <workItem from="1666319591650" duration="35000" />
+      <workItem from="1666319967712" duration="741000" />
+      <workItem from="1666320713225" duration="8000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: 주문내역 페이지 레이아웃 수정, 더보기 페이징 적용" />
+  </component>
+</project>

@@ -52,13 +52,6 @@ public class OrderService {
     private final CouponRepository couponRepository;
     private final MemberCouponRepository memberCouponRepository;
 
-    final BiFunction<Integer, Integer, Integer> calculateStaticPrice = new BiFunction<Integer, Integer, Integer>() {
-        @Override
-        public Integer apply(Integer productPrice, Integer couponDiscount) {
-            return productPrice - couponDiscount;
-        }
-    };
-
     final BiFunction<Integer, Integer, Integer> calculatePercentage = new BiFunction<Integer, Integer, Integer>() {
         @Override
         public Integer apply(Integer productPrice, Integer couponPercentage) {
@@ -213,11 +206,9 @@ public class OrderService {
         if (coupon.getPercentage() != null) {
             int calculatedPercentValue = calculatePercentage
                     .apply(discountedPrice, coupon.getPercentage());
-            int calculatedStaticValue = calculateStaticPrice
-                    .apply(discountedPrice, coupon.getMaxDiscount());
-            return Math.min(calculatedPercentValue, calculatedStaticValue);
+            return Math.min(calculatedPercentValue, coupon.getMaxDiscount());
         }
-        return calculateStaticPrice.apply(discountedPrice, coupon.getMaxDiscount());
+        return coupon.getMaxDiscount();
     }
 
     @Transactional
