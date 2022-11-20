@@ -12,7 +12,7 @@ export default function ProductSearch() {
 
   const getProducts = async () => {
     await axios
-      .get(`/api/products?category=0&page=${page}&size=10`)
+      .get(`/api/products?category=0&page=${page}&size=9`)
       .then((res) => {
         setProducts(res.data.data);
         setLastPage(res.data.pageInfo.lastPage);
@@ -76,16 +76,18 @@ export default function ProductSearch() {
                 </tr>
               );
             })}
+            {products?.length < 9 && (
+              <tr style={{ height: "100%" }}>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            )}
 
-            <tr style={{ height: "100%" }}>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
             <tr>
               <td colSpan="7">
                 <div

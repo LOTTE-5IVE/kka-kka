@@ -52,7 +52,7 @@ export default function Cart() {
       setCheckItemsIdx((prev) => [...prev, product.cartItemId]);
     } else {
       setCheckItems(
-        checkItems.filter((el) => el.cartItemId !== product.cartItemId),
+        checkItems.filter((el) => el.cartItemId !== product.cartItemId)
       );
       setCheckItemsIdx(checkItemsIdx.filter((el) => el !== product.cartItemId));
     }
@@ -80,8 +80,8 @@ export default function Cart() {
       cartItems.map((product) =>
         product.id === id
           ? { ...product, quantity: product.quantity + 1 }
-          : product,
-      ),
+          : product
+      )
     );
   };
 
@@ -90,16 +90,16 @@ export default function Cart() {
       cartItems.map((product) =>
         product.id === id && product.quantity > 1
           ? { ...product, quantity: product.quantity - 1 }
-          : product,
-      ),
+          : product
+      )
     );
   };
 
   const handleQuantity = (id, quantity) => {
     setCartItems(
       cartItems.map((product) =>
-        product.id === id ? { ...product, quantity: quantity } : product,
-      ),
+        product.id === id ? { ...product, quantity: quantity } : product
+      )
     );
   };
 
@@ -123,7 +123,7 @@ export default function Cart() {
       setPayment(res.cartItems);
 
       setTotalPrice(
-        res.cartItems.reduce((prev, cur) => prev + cur.price * cur.quantity, 0),
+        res.cartItems.reduce((prev, cur) => prev + cur.price * cur.quantity, 0)
       );
       setDiscountPrice(
         res.cartItems.reduce((prev, cur) => {
@@ -134,7 +134,7 @@ export default function Cart() {
               prev + Math.floor(cur.price * 0.01 * cur.discount * cur.quantity)
             );
           }
-        }, 0),
+        }, 0)
       );
     });
   };
@@ -144,7 +144,7 @@ export default function Cart() {
       PostHApi("/api/carts", { productId: id, quantity: quantity }, token).then(
         (res) => {
           getCartItem();
-        },
+        }
       );
     }
   };
@@ -166,7 +166,7 @@ export default function Cart() {
     await DeleteHApi(`/api/carts/${cartItemId}/${couponId}`, token).then(
       (res) => {
         getCartItem();
-      },
+      }
     );
   };
 
@@ -184,7 +184,7 @@ export default function Cart() {
               prev + Math.floor(cur.price * 0.01 * cur.discount * cur.quantity)
             );
           }
-        }, 0),
+        }, 0)
       );
     }
   }, [token, modalVisibleId]);
@@ -193,7 +193,7 @@ export default function Cart() {
     if (checkItems.length > 0) {
       setSelectUnValid(false);
       setTotalPrice(
-        checkItems.reduce((prev, cur) => prev + cur.price * cur.quantity, 0),
+        checkItems.reduce((prev, cur) => prev + cur.price * cur.quantity, 0)
       );
       setDiscountPrice(
         checkItems.reduce((prev, cur) => {
@@ -204,7 +204,7 @@ export default function Cart() {
               prev + Math.floor(cur.price * 0.01 * cur.discount * cur.quantity)
             );
           }
-        }, 0),
+        }, 0)
       );
 
       return;
@@ -212,7 +212,7 @@ export default function Cart() {
       setSelectUnValid(true);
 
       setTotalPrice(
-        cartItems.reduce((prev, cur) => prev + cur.price * cur.quantity, 0),
+        cartItems.reduce((prev, cur) => prev + cur.price * cur.quantity, 0)
       );
       setDiscountPrice(
         cartItems.reduce((prev, cur) => {
@@ -223,7 +223,7 @@ export default function Cart() {
               prev + Math.floor(cur.price * 0.01 * cur.discount * cur.quantity)
             );
           }
-        }, 0),
+        }, 0)
       );
     }
   }, [checkItems]);
@@ -363,7 +363,7 @@ export default function Cart() {
                                   onClick={() => {
                                     cancelCoupon(
                                       product.cartItemId,
-                                      product.couponDto.id,
+                                      product.couponDto.id
                                     );
                                   }}
                                 >
@@ -436,7 +436,7 @@ export default function Cart() {
                                 chkMinOrd(
                                   product,
                                   product.couponDto,
-                                  Number(e.target.value),
+                                  Number(e.target.value)
                                 )
                               ) {
                                 handleQuantity(product.id, e.target.value);
@@ -478,8 +478,8 @@ export default function Cart() {
                                 : commaMoney(
                                     Math.ceil(
                                       product.price *
-                                        (1 - 0.01 * product.discount),
-                                    ) * product.quantity,
+                                        (1 - 0.01 * product.discount)
+                                    ) * product.quantity
                                   )}
                               원
                             </p>
@@ -569,6 +569,10 @@ export default function Cart() {
         </div>
       </div>
       <style jsx>{`
+        input {
+          -webkit-appearance: none;
+          -webkit-border-radius: 0;
+        }
         .CartTitle {
           text-align: center;
           padding: 0;
