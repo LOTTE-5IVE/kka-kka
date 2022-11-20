@@ -1,5 +1,10 @@
 package kkakka.mainservice.coupon.application;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 import kkakka.mainservice.category.domain.Category;
 import kkakka.mainservice.category.domain.repository.CategoryRepository;
 import kkakka.mainservice.common.exception.InvalidCouponRequestException;
@@ -21,12 +26,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -238,7 +237,9 @@ public class CouponService {
                 couponProductResponseDtos.add(CouponProductDto.create(coupon, true));
                 continue;
             }
-            couponProductResponseDtos.add(CouponProductDto.create(coupon, false));
+            if (isNotApplyAndIsNotUsed(memberId, coupon.getId())) {
+                couponProductResponseDtos.add(CouponProductDto.create(coupon, false));
+            }
         }
 
         List<MemberCoupon> memberCoupons = memberCouponRepository.findGradeCouponByMemberId(
@@ -256,6 +257,12 @@ public class CouponService {
                 .stream()
                 .sorted(Comparator.comparing(CouponProductDto::getDiscountedPrice))
                 .collect(Collectors.toList());
+    }
+
+    private boolean isNotApplyAndIsNotUsed(Long memberId, Long couponId) {
+        MemberCoupon memberCoupon = memberCouponRepository.findAllByMemberIdAndIsUsedFalseAndIsApplyFalse(
+            memberId, couponId);
+        return memberCoupon != null;
     }
 
     private List<CouponProductDto> sortWithMaximumDiscountAmount(

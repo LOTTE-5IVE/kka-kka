@@ -12,7 +12,7 @@ export default function ProductSearch() {
 
   const getProducts = async () => {
     await axios
-      .get(`/api/products?category=0&page=${page}&size=11`)
+      .get(`/api/products?category=0&page=${page}&size=9`)
       .then((res) => {
         setProducts(res.data.data);
         setLastPage(res.data.pageInfo.lastPage);
@@ -52,7 +52,11 @@ export default function ProductSearch() {
               return (
                 <tr style={{ height: "3vw" }} key={product.id}>
                   <td>
-                    <img width="60px" src={product.imageUrl} alt={product.name} />
+                    <img
+                      width="60px"
+                      src={product.imageUrl}
+                      alt={product.name}
+                    />
                   </td>
                   <td>{product.name}</td>
 
@@ -72,16 +76,18 @@ export default function ProductSearch() {
                 </tr>
               );
             })}
+            {products?.length < 9 && (
+              <tr style={{ height: "100%" }}>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            )}
 
-            <tr style={{ height: "100%" }}>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
             <tr>
               <td colSpan="7">
                 <div

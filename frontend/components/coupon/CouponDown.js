@@ -16,7 +16,7 @@ export function CouponDown({ handleModal, product }) {
     await GetHApi(`/api/coupons/me/products/${product.id}`, token).then(
       (res) => {
         setCoupons(res);
-      },
+      }
     );
   };
 
@@ -32,7 +32,7 @@ export function CouponDown({ handleModal, product }) {
         (res) => {
           getProductMemberCoupon();
           alert("다운 완료");
-        },
+        }
       );
     } else {
       alert("로그인이 필요한 서비스입니다.");
@@ -91,8 +91,8 @@ export function CouponDown({ handleModal, product }) {
                       <p style={{ marginBottom: "0" }}>
                         {commaMoney(
                           Math.ceil(
-                            product.price * (1 - 0.01 * product.discount),
-                          ),
+                            product.price * (1 - 0.01 * product.discount)
+                          )
                         )}
                         원
                       </p>
@@ -147,7 +147,7 @@ export function CouponDown({ handleModal, product }) {
                   <td>
                     {coupons[0].percentage ? `${coupons[0].percentage}%` : "X"}
                   </td>
-                  <td>{commaMoney(coupons[0].minOrderPrice)}원</td>
+                  <td>{commaMoney(coupons[0].minOrderPrice) || 0}원</td>
                   <td>{commaMoney(coupons[0].maxDiscount)}원</td>
                   <td>{coupons[0].expiredAt.slice(0, 10)}</td>
                   <td>{commaMoney(coupons[0].discountedPrice)}원</td>
@@ -212,7 +212,7 @@ export function CouponDown({ handleModal, product }) {
                       <td>
                         {coupon.percentage ? `${coupon.percentage}%` : "X"}
                       </td>
-                      <td>{commaMoney(coupon.minOrderPrice)}원</td>
+                      <td>{commaMoney(coupon.minOrderPrice) || 0}원</td>
                       <td>{commaMoney(coupon.maxDiscount)}원</td>
                       <td>{coupon.expiredAt.slice(0, 10)}</td>
                       <td>{commaMoney(coupon.discountedPrice)}원</td>

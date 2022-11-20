@@ -356,9 +356,10 @@ public class CouponAcceptanceTest extends DocumentConfiguration {
     void showProductCouponsByProductIdAndMemberId() {
         tearDown();
         String accessToken = 액세스_토큰_가져옴();
-        상품_쿠폰_다운로드(accessToken);
         등급_쿠폰_다운로드(accessToken);
-        쿠폰_생성함(PRODUCT_1.getCategory().getId(), null, null, "COUPON", 14, 200);
+        쿠폰_생성함(null, null, PRODUCT_1.getId(), "COUPON", 10, 200);
+        String couponId = 상품_쿠폰_다운로드(accessToken);
+        주문_요청함(accessToken, PRODUCT_1.getId(), Long.parseLong(couponId));
 
         final ExtractableResponse<Response> response = RestAssured
             .given(spec).log().all()
