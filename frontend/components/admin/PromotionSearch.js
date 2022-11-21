@@ -48,7 +48,7 @@ export default function ProductSearch() {
           }
 
           .contents {
-            height: 100%;
+            height: 90%;
             border: 2px solid #dedede;
             color: #7a7a7a;
             background: #fcfcfc;

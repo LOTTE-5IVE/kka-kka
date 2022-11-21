@@ -1,12 +1,12 @@
-import {useContext, useState, useEffect} from "react";
+import { useContext, useState, useEffect } from "react";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import ProductSearch from "../../components/admin/ProductSearch";
 import PromotionEnroll from "../../components/admin/PromotionEnroll";
 import PromotionSearch from "../../components/admin/PromotionSearch";
 
 import Title from "../../components/common/Title";
-import {UserContext} from "../../context/AdminTokenContext";
-import {useRouter} from "next/router";
+import { UserContext } from "../../context/AdminTokenContext";
+import { useRouter } from "next/router";
 
 export default function Admin() {
   const [Lmenu, setLmenu] = useState("프로모션");
@@ -25,9 +25,9 @@ export default function Admin() {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      router.push('/admin/login')
+      router.push("/admin/login");
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn]);
 
   return (
     <>
@@ -60,8 +60,7 @@ export default function Admin() {
           .sidebar {
             display: inline-block;
             width: 15%;
-            height: 110%;
-            border-right: 1px solid;
+            height: 100%;
           }
 
           .promotions {
@@ -70,13 +69,15 @@ export default function Admin() {
               height: 8%;
               width: 100%;
               padding: 15px 20px;
+              border-left: 1px solid;
               border-bottom: 1px solid;
             }
 
             .contents {
-              height: 110%;
+              height: 100%;
               padding: 40px 30px;
               background: #ebebeb;
+              border-left: 1px solid;
             }
           }
         }
