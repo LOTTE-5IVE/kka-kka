@@ -89,7 +89,7 @@ export default function ApplyProduct({ productId, setProductId }) {
         .wrapper {
           width: 730px;
           overflow: auto;
-          height: 16vw;
+          height: 15vw;
           .title {
             display: flex;
 
