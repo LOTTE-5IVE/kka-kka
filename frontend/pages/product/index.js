@@ -25,7 +25,7 @@ export default function ProductList() {
   };
 
   const router = useRouter();
-  const cat_id = router.query.cat_id;
+  const cat_id = router.query.cat_id || 0;
   const search = router.query.search;
 
   const [page, setPage] = useState(1);
